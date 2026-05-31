@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>내 업무</title>
+  <meta name="description" content="개인 업무 통합 관리 페이지" />
+
+  <link rel="preconnect" href="https://guild-backend-production-75a6.up.railway.app" crossorigin />
+  <link rel="dns-prefetch" href="https://guild-backend-production-75a6.up.railway.app" />
+  <link rel="preload" href="./me.css?v=19" as="style" />
+  <link rel="preload" href="../assets/js/common.js?v=28" as="script" />
+  <link rel="preload" href="./me.js?v=19" as="script" />
+
+  <link rel="stylesheet" href="./me.css?v=19" />
+</head>
+<body>
+  <!-- 로그인 안 됐을 때 -->
+  <div id="loginGate" class="login-gate" hidden>
+    <div class="login-card">
+      <h1>내 업무</h1>
+      <p>로그인이 필요합니다.</p>
+      <a class="login-btn" href="../login?redirect=/hq/">로그인하러 가기</a>
+    </div>
+  </div>
+
+  <!-- 메인 앱 -->
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="brand-icon">✓</span>
+          <span class="brand-text">내 업무</span>
+        </div>
+        <nav class="nav-tabs" id="navTabs" role="tablist">
+          <button class="nav-tab is-active" data-tab="dashboard" role="tab">홈</button>
+          <button class="nav-tab" data-tab="tasks" role="tab">할 일</button>
+          <button class="nav-tab" data-tab="projects" role="tab">프로젝트</button>
+          <button class="nav-tab" data-tab="calendar" role="tab">캘린더</button>
+          <button class="nav-tab" data-tab="daily" role="tab">로그</button>
+        </nav>
+        <div class="topbar-actions">
+          <button class="cmdk-trigger" id="cmdkTrigger" title="명령 팔레트 열기 (Cmd/Ctrl+K)">
+            <span class="cmdk-trigger-icon">🔍</span>
+            <span class="cmdk-trigger-text">검색·명령</span>
+            <span class="cmdk-trigger-kbd">⌘K</span>
+          </button>
+          <button class="icon-btn" id="manageCategoriesBtn" title="카테고리 관리">⚙</button>
+          <div class="user-chip" id="userChip"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+
+      <!-- ═══════════════════════ 1) 대시보드 ═══════════════════════ -->
+      <section class="page" id="pageDashboard">
+        <!-- 🪄 Life OS 히어로 -->
+        <section class="hero" id="hero" hidden>
+          <div class="hero-row">
+            <div class="hero-main">
+              <p class="hero-eyebrow" id="heroDate"></p>
+              <h1 class="hero-title" id="heroGreeting"></h1>
+              <div class="hero-stats" id="heroStats"></div>
+            </div>
+            <div class="hero-dday" id="heroDday"></div>
+          </div>
+          <div class="hero-year">
+            <div class="hero-year-head">
+              <span id="heroYearLabel"></span>
+              <span id="heroYearPct"></span>
+            </div>
+            <div class="hero-year-bar">
+              <div class="hero-year-fill" id="heroYearFill" style="width:0%"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🌅 오늘의 브리핑 (Phase 7) -->
+        <div class="briefing" id="briefing" hidden>
+          <div class="briefing-head">
+            <h3 class="briefing-title">🌅 오늘의 브리핑 <span class="ai-badge">AI</span></h3>
+            <div class="briefing-actions">
+              <span class="briefing-meta" id="briefingMeta"></span>
+              <button class="briefing-refresh" id="briefingRefreshBtn" title="다시 분석">↻</button>
+            </div>
+          </div>
+          <p class="briefing-text" id="briefingText"></p>
+          <div class="briefing-cards" id="briefingCards"></div>
+        </div>
+
+        <!-- 📣 1주 사용 피드백 가이드 배너 (Phase 7) -->
+        <div class="feedback-banner" id="feedbackBanner" hidden>
+          <button class="feedback-banner-close" id="feedbackBannerCloseBtn" title="오늘 동안 숨기기">✕</button>
+          이번 주 사용 피드백 수집 중. 어색한 점·자동화 후보·반복 입력을 메모 끝에 다음 태그로 던져주세요:
+          <code>#friction</code> <code>#unused</code> <code>#automate</code> <code>#repeat</code>.
+          <strong>1주 뒤 자동 정리됩니다.</strong>
+        </div>
+
+        <div class="quick-capture">
+          <form id="quickCaptureForm" class="quick-capture-form">
+            <input
+              type="text"
+              id="quickCaptureInput"
+              placeholder="예: 내일 오후 3시 회의 / 6월 8일 신혼여행 출발 / 그냥 할 일도 OK (피드백은 #friction / #unused / #automate / #repeat)"
+              maxlength="500"
+              autocomplete="off"
+            />
+            <button type="submit" class="btn btn-primary">저장</button>
+          </form>
+          <div id="quickCapturePreview" class="quick-capture-preview" hidden></div>
+          <div class="quick-capture-hint">날짜·시간이 인식되면 일정으로, 아니면 그냥 할 일로 저장돼요.</div>
+        </div>
+
+        <div class="widget-grid">
+          <!-- 오늘 — primary -->
+          <div class="widget widget-primary widget-today">
+            <div class="widget-head">
+              <h3>오늘 해야 할 일</h3>
+              <span class="widget-count" id="dashTodayCount">0</span>
+            </div>
+            <div class="widget-body" id="dashToday"></div>
+          </div>
+
+          <!-- 마감 임박 -->
+          <div class="widget widget-upcoming">
+            <div class="widget-head">
+              <h3>마감 임박 (D-3 이내)</h3>
+              <span class="widget-count" id="dashUpcomingCount">0</span>
+            </div>
+            <div class="widget-body" id="dashUpcoming"></div>
+          </div>
+
+          <!-- 이번 주 -->
+          <div class="widget widget-week">
+            <div class="widget-head">
+              <h3>이번 주 일정 (7일)</h3>
+              <span class="widget-count" id="dashWeekCount">0</span>
+            </div>
+            <div class="widget-body" id="dashWeek"></div>
+          </div>
+
+          <!-- 진행 중 프로젝트 -->
+          <div class="widget widget-projects">
+            <div class="widget-head">
+              <h3>진행 중 프로젝트</h3>
+              <span class="widget-count" id="dashProjectsCount">0</span>
+            </div>
+            <div class="widget-body" id="dashProjects"></div>
+          </div>
+
+          <!-- 오늘의 영어 -->
+          <div class="widget widget-english">
+            <div class="widget-head">
+              <h3>🗣 오늘의 영어</h3>
+              <span class="widget-count" id="dashEngStreak">0일</span>
+            </div>
+            <div class="widget-body" id="dashEnglish"></div>
+          </div>
+
+          <!-- 최근 하루 로그 -->
+          <div class="widget widget-logs">
+            <div class="widget-head">
+              <h3>최근 로그</h3>
+            </div>
+            <div class="widget-body" id="dashLogs"></div>
+          </div>
+        </div>
+
+        <!-- 보조 위젯 — 평소엔 접어둠 -->
+        <details class="dash-more">
+          <summary>더보기 — 이번 주 피드백 · AI 사용량</summary>
+          <div class="dash-more-grid">
+            <!-- 이번 주 피드백 카운트 (Phase 7) -->
+            <div class="widget" id="feedbackCountsWidget" hidden>
+              <div class="widget-head">
+                <h3>이번 주 피드백</h3>
+                <span class="widget-count" id="feedbackTotalCount">0</span>
+              </div>
+              <div class="widget-body">
+                <div class="feedback-counts" id="feedbackCounts"></div>
+              </div>
+            </div>
+
+            <!-- 💰 AI 사용량 (Phase 8) -->
+            <div class="widget aiu-widget" id="aiUsageWidget">
+              <div class="widget-head">
+                <h3>💰 AI 사용량</h3>
+                <div class="aiu-widget-actions">
+                  <button class="aiu-icon-btn" id="aiUsageRefreshBtn" title="새로고침">↻</button>
+                  <button class="aiu-icon-btn" id="aiUsageDetailBtn" title="자세히">📊</button>
+                </div>
+              </div>
+              <div class="widget-body">
+                <div class="aiu-cost-line">
+                  <span class="aiu-cost-now" id="aiUsageCostNow">$0.00</span>
+                  <span class="aiu-cost-sep">/</span>
+                  <span class="aiu-cost-cap" id="aiUsageCostCap">$10.00</span>
+                </div>
+                <div class="aiu-bar" aria-label="월 한도 진행률">
+                  <div class="aiu-bar-fill" id="aiUsageBarFill" style="width:0%"></div>
+                </div>
+                <div class="aiu-meta" id="aiUsageMeta">불러오는 중…</div>
+                <div class="aiu-meta aiu-meta-sub" id="aiUsageSub" hidden></div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- ═══════════════════════ 2) Inbox ══════════════════════════ -->
+      <section class="page" id="pageInbox" hidden>
+        <div class="quick-capture">
+          <form id="inboxAddForm" class="quick-capture-form">
+            <input
+              type="text"
+              id="inboxAddInput"
+              placeholder="떠오른 생각, 할 일, 아이디어 — 일단 적어두세요 (피드백은 #friction / #unused / #automate / #repeat)"
+              maxlength="2000"
+              autocomplete="off"
+            />
+            <button type="submit" class="btn btn-primary">담기</button>
+          </form>
+        </div>
+
+        <div class="inbox-tabs">
+          <button class="inbox-tab is-active" data-inbox-tab="active">미처리</button>
+          <button class="inbox-tab" data-inbox-tab="processed">처리됨</button>
+        </div>
+
+        <div class="inbox-ai-bar" id="inboxAiBar" hidden>
+          <div class="inbox-ai-bar-text">
+            <strong>✨ AI 정리</strong>
+            <span id="inboxAiBarHint">— 미처리 메모 각각에 카테고리·우선순위·태그·제목을 제안받습니다.</span>
+          </div>
+          <button class="btn-ai" id="inboxAiBtn">
+            <span class="btn-ai-label">AI로 정리</span>
+          </button>
+        </div>
+
+        <div class="inbox-list" id="inboxList"></div>
+      </section>
+
+      <!-- ═══════════════════════ 3) Tasks ══════════════════════════ -->
+      <section class="page" id="pageTasks" hidden>
+        <div class="task-toolbar">
+          <div class="view-toggle" role="tablist">
+            <button class="view-btn is-active" data-view="list" role="tab">리스트</button>
+            <button class="view-btn" data-view="kanban" role="tab">칸반</button>
+          </div>
+          <div class="task-toolbar-side">
+            <input type="search" id="searchInput" placeholder="검색..." />
+            <select id="sortSelect">
+              <option value="created_desc">최근 추가순</option>
+              <option value="due_asc">마감일 가까운순</option>
+              <option value="priority">우선순위 높은순</option>
+              <option value="title">제목순</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-bar-inline">
+          <div class="category-chips" id="categoryChips"></div>
+        </div>
+
+        <!-- 리스트 뷰 -->
+        <section class="view-list" id="viewList">
+          <div class="list-stack" id="listStack"></div>
+        </section>
+
+        <!-- 칸반 뷰 -->
+        <section class="view-kanban" id="viewKanban" hidden>
+          <div class="kanban-board">
+            <div class="kanban-col" data-status="todo">
+              <header class="kanban-col-header">
+                <span class="col-title">할 일</span>
+                <span class="col-count" data-count="todo">0</span>
+              </header>
+              <div class="kanban-list" data-drop="todo"></div>
+            </div>
+            <div class="kanban-col" data-status="in_progress">
+              <header class="kanban-col-header">
+                <span class="col-title">진행 중</span>
+                <span class="col-count" data-count="in_progress">0</span>
+              </header>
+              <div class="kanban-list" data-drop="in_progress"></div>
+            </div>
+            <div class="kanban-col" data-status="waiting">
+              <header class="kanban-col-header">
+                <span class="col-title">대기</span>
+                <span class="col-count" data-count="waiting">0</span>
+              </header>
+              <div class="kanban-list" data-drop="waiting"></div>
+            </div>
+            <div class="kanban-col" data-status="done">
+              <header class="kanban-col-header">
+                <span class="col-title">완료</span>
+                <span class="col-count" data-count="done">0</span>
+              </header>
+              <div class="kanban-list" data-drop="done"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ═══════════════════════ 4) Projects ═══════════════════════ -->
+      <section class="page" id="pageProjects" hidden>
+        <div class="page-header">
+          <h2>프로젝트</h2>
+          <button class="btn btn-primary" id="newProjectBtn">＋ 새 프로젝트</button>
+        </div>
+        <div class="project-grid" id="projectGrid"></div>
+      </section>
+
+      <!-- ═══════════════════ 4b) 프로젝트 상세 (워크스페이스) ═══════════ -->
+      <section class="page" id="pageProjectDetail" hidden>
+        <button class="detail-back" id="projectDetailBack" type="button">← 프로젝트</button>
+        <div id="projectDetailBody"></div>
+      </section>
+
+      <!-- ═══════════════════════ 5) Calendar ═══════════════════════ -->
+      <section class="page" id="pageCalendar" hidden>
+        <div class="cal-header">
+          <button class="icon-btn" id="calPrevBtn">‹</button>
+          <h2 id="calMonthLabel">2026년 5월</h2>
+          <button class="icon-btn" id="calNextBtn">›</button>
+          <button class="btn btn-outline" id="calTodayBtn">오늘</button>
+        </div>
+        <div class="cal-grid-head">
+          <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </section>
+
+      <!-- ═══════════════════════ 6) Gantt (365일) ══════════════════ -->
+      <section class="page" id="pageGantt" hidden>
+        <div class="page-header">
+          <h2>간트차트 — 365일 일단위</h2>
+          <div class="gantt-controls">
+            <button class="btn btn-outline" id="ganttJumpToday">오늘로</button>
+            <select id="ganttZoom">
+              <option value="20">상세 (1일=20px)</option>
+              <option value="32" selected>기본 (1일=32px)</option>
+              <option value="48">크게 (1일=48px)</option>
+            </select>
+          </div>
+        </div>
+        <div class="gantt-wrap" id="ganttWrap"></div>
+        <div class="gantt-legend">
+          프로젝트 막대 = start_date ~ end_date · 빨간 세로선 = 오늘
+        </div>
+      </section>
+
+      <!-- ═══════════════════════ 7) Daily Log ══════════════════════ -->
+      <section class="page" id="pageDaily" hidden>
+        <div class="page-header">
+          <h2>로그</h2>
+          <input type="date" id="dailyDateInput" class="daily-date" />
+        </div>
+        <div class="daily-edit">
+          <textarea
+            id="dailyContent"
+            placeholder="오늘 뭐 했나요? 떠오르는 대로 적어두세요. (피드백은 #friction / #unused / #automate / #repeat)"
+            rows="14"
+          ></textarea>
+          <div class="daily-meta">
+            <span id="dailySaveStatus" class="daily-save-status">변경사항 없음</span>
+            <div class="daily-meta-right">
+              <button class="btn btn-magic" id="dailyAutoFillBtn" type="button" title="오늘 완료 task / 일정으로 초안 채우기">🪄 자동 채우기</button>
+              <button class="btn btn-outline" id="dailyAnalyzeBtn" type="button" title="AI 가 할 일/결정사항을 뽑아냅니다">✨ AI 정리</button>
+              <button class="btn btn-primary" id="dailySaveBtn">저장</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI 추출 결과 -->
+        <section class="ai-extracts" id="aiExtracts" hidden>
+          <header class="ai-extracts-head">
+            <h3>
+              <span class="ai-badge">AI 의견</span>
+              <span id="aiExtractsTitle">하루 로그에서 뽑은 항목</span>
+            </h3>
+            <div class="ai-extracts-meta">
+              <span class="ai-status" id="aiExtractsStatus"></span>
+              <button class="icon-btn" id="aiExtractsRefresh" title="다시 분석">↻</button>
+            </div>
+          </header>
+          <div class="ai-extracts-body" id="aiExtractsBody"></div>
+        </section>
+
+        <!-- 스마트 검색 -->
+        <section class="smart-search">
+          <header class="smart-search-head">
+            <h3>🔍 스마트 검색
+              <span class="ai-badge">AI</span>
+            </h3>
+            <p class="smart-search-hint">자연어로 물어보세요. 최근 90일치 하루 로그에서 답을 찾아드립니다.</p>
+          </header>
+          <form id="smartSearchForm" class="smart-search-form">
+            <input
+              type="text"
+              id="smartSearchInput"
+              placeholder="예) 지난주 ㅇㅇ팀이랑 회의에서 결정난 거 뭐였더라?"
+              maxlength="500"
+              autocomplete="off"
+            />
+            <button type="submit" class="btn btn-primary" id="smartSearchBtn">물어보기</button>
+          </form>
+          <div class="smart-search-result" id="smartSearchResult" hidden></div>
+        </section>
+
+        <div class="daily-recent">
+          <h3>최근 로그</h3>
+          <input type="search" id="dailySearchInput" class="daily-search" placeholder="로그 내용 검색 (단순 일치)..." />
+          <div class="daily-list" id="dailyList"></div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════ 8) English ════════════════════════ -->
+      <section class="page" id="pageEnglish" hidden>
+        <div class="page-header">
+          <h2>영어 한 입</h2>
+          <div class="eng-streak" id="engStreak"></div>
+        </div>
+        <div class="eng-card" id="engCard"></div>
+        <div class="eng-history">
+          <h3>지난 표현</h3>
+          <div class="eng-history-list" id="engHistoryList"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <button class="fab" id="newTaskBtn" title="새 업무 추가" hidden>＋</button>
+
+    <!-- 업무 작성/편집 모달 -->
+    <div class="modal-backdrop" id="taskModal" hidden>
+      <div class="modal" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h2 id="taskModalTitle">새 업무</h2>
+          <button class="modal-close" data-close="task">✕</button>
+        </header>
+        <form id="taskForm" class="modal-body">
+          <input type="hidden" id="taskId" />
+          <label class="field">
+            <span>제목</span>
+            <input type="text" id="taskTitle" required maxlength="200" placeholder="할 일 제목" />
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>카테고리</span>
+              <select id="taskCategory">
+                <option value="">(없음)</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>프로젝트</span>
+              <select id="taskProject">
+                <option value="">(없음)</option>
+              </select>
+            </label>
+          </div>
+          <div class="field-row">
+            <label class="field">
+              <span>상태</span>
+              <select id="taskStatus">
+                <option value="todo">할 일</option>
+                <option value="in_progress">진행 중</option>
+                <option value="waiting">대기</option>
+                <option value="done">완료</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>우선순위</span>
+              <select id="taskPriority">
+                <option value="high">높음</option>
+                <option value="medium" selected>보통</option>
+                <option value="low">낮음</option>
+              </select>
+            </label>
+          </div>
+          <div class="field-row">
+            <label class="field">
+              <span>계획 시작</span>
+              <input type="date" id="taskStartDate" />
+            </label>
+            <label class="field">
+              <span>계획 마감</span>
+              <input type="date" id="taskDueDate" />
+            </label>
+          </div>
+          <div class="field-row">
+            <label class="field">
+              <span>실제 시작</span>
+              <input type="date" id="taskActualStart" />
+            </label>
+            <label class="field">
+              <span>실제 완료</span>
+              <input type="date" id="taskActualEnd" />
+            </label>
+          </div>
+          <label class="field">
+            <span>태그 (쉼표로 구분)</span>
+            <input type="text" id="taskTags" placeholder="예: Q2-OKR, 우선과제" />
+          </label>
+          <label class="field">
+            <span>메모</span>
+            <textarea id="taskNotes" rows="4" placeholder="상세 내용, 링크, 메모..."></textarea>
+          </label>
+          <footer class="modal-foot">
+            <button type="button" class="btn btn-ghost" id="deleteTaskBtn" hidden>삭제</button>
+            <div class="modal-foot-right">
+              <button type="button" class="btn btn-outline" data-close="task">취소</button>
+              <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </div>
+
+    <!-- 카테고리 관리 모달 -->
+    <div class="modal-backdrop" id="categoryModal" hidden>
+      <div class="modal modal-sm" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h2>카테고리 관리</h2>
+          <button class="modal-close" data-close="category">✕</button>
+        </header>
+        <div class="modal-body">
+          <ul class="category-list" id="categoryList"></ul>
+          <form id="categoryAddForm" class="category-add">
+            <input type="text" id="newCategoryName" placeholder="새 카테고리 이름" maxlength="30" required />
+            <input type="color" id="newCategoryColor" value="#6366f1" />
+            <button type="submit" class="btn btn-primary">추가</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 프로젝트 작성/편집 모달 -->
+    <div class="modal-backdrop" id="projectModal" hidden>
+      <div class="modal" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h2 id="projectModalTitle">새 프로젝트</h2>
+          <button class="modal-close" data-close="project">✕</button>
+        </header>
+        <form id="projectForm" class="modal-body">
+          <input type="hidden" id="projectId" />
+          <label class="field">
+            <span>이름</span>
+            <input type="text" id="projectName" required maxlength="100" placeholder="예: 결혼 준비, 신혼집, 쿠팡 Q3 OKR" />
+          </label>
+          <label class="field">
+            <span>설명</span>
+            <textarea id="projectDescription" rows="2" placeholder="한 줄 설명"></textarea>
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>상태</span>
+              <select id="projectStatus">
+                <option value="active">진행 중</option>
+                <option value="paused">일시정지</option>
+                <option value="done">완료</option>
+                <option value="dropped">중단</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>색상</span>
+              <input type="color" id="projectColor" value="#6366f1" />
+            </label>
+          </div>
+          <div class="field-row">
+            <label class="field">
+              <span>시작일</span>
+              <input type="date" id="projectStartDate" />
+            </label>
+            <label class="field">
+              <span>종료일</span>
+              <input type="date" id="projectEndDate" />
+            </label>
+          </div>
+          <label class="field">
+            <span>진행률 (%, 비워두면 Tasks 완료율 자동)</span>
+            <input type="number" id="projectProgress" min="0" max="100" placeholder="자동 계산" />
+          </label>
+          <label class="field">
+            <span>메모</span>
+            <textarea id="projectNotes" rows="3" placeholder="자세한 내용, 체크리스트, 링크..."></textarea>
+          </label>
+          <footer class="modal-foot">
+            <button type="button" class="btn btn-ghost" id="deleteProjectBtn" hidden>삭제</button>
+            <div class="modal-foot-right">
+              <button type="button" class="btn btn-outline" data-close="project">취소</button>
+              <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </div>
+
+    <!-- Inbox → Task 승격 모달 -->
+    <div class="modal-backdrop" id="promoteModal" hidden>
+      <div class="modal" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h2>받은 메모 → 할 일로</h2>
+          <button class="modal-close" data-close="promote">✕</button>
+        </header>
+        <form id="promoteForm" class="modal-body">
+          <input type="hidden" id="promoteInboxId" />
+          <label class="field">
+            <span>제목</span>
+            <input type="text" id="promoteTitle" required maxlength="200" />
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>카테고리</span>
+              <select id="promoteCategory">
+                <option value="">(없음)</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>프로젝트</span>
+              <select id="promoteProject">
+                <option value="">(없음)</option>
+              </select>
+            </label>
+          </div>
+          <div class="field-row">
+            <label class="field">
+              <span>우선순위</span>
+              <select id="promotePriority">
+                <option value="high">높음</option>
+                <option value="medium" selected>보통</option>
+                <option value="low">낮음</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>마감일</span>
+              <input type="date" id="promoteDueDate" />
+            </label>
+          </div>
+          <footer class="modal-foot">
+            <div class="modal-foot-right">
+              <button type="button" class="btn btn-outline" data-close="promote">취소</button>
+              <button type="submit" class="btn btn-primary">할 일로 만들기</button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </div>
+
+    <!-- 💰 AI 사용량 상세 모달 (Phase 8) -->
+    <div class="modal-backdrop" id="aiUsageModal" hidden>
+      <div class="modal modal-lg" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h2>💰 AI 사용량 — 자세히</h2>
+          <button class="modal-close" data-close="aiUsage">✕</button>
+        </header>
+        <div class="modal-body aiu-modal-body" id="aiUsageModalBody">
+          <div class="aiu-loading">불러오는 중…</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <!-- # 태그 자동완성 popup (Phase 7) -->
+    <div class="tag-suggest" id="tagSuggest" hidden></div>
+
+    <!-- Quick Memo (Cmd/Ctrl + N) — Phase 7 -->
+    <div class="qmemo-backdrop" id="qmemoBackdrop" hidden>
+      <div class="qmemo-panel" role="dialog" aria-modal="true" aria-label="빠른 메모">
+        <div class="qmemo-head">
+          <span>📥 빠른 메모</span>
+          <small>Enter 저장 · Shift+Enter 줄바꿈 · Esc 닫기</small>
+        </div>
+        <textarea
+          id="qmemoTextarea"
+          class="qmemo-textarea"
+          placeholder="떠오른 생각을 적어두세요. (피드백은 #friction / #unused / #automate / #repeat)"
+          maxlength="2000"
+        ></textarea>
+        <div class="qmemo-foot">
+          <span class="qmemo-hint">바로 받은 메모(Inbox)에 담깁니다.</span>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-outline" type="button" id="qmemoCancelBtn">취소</button>
+            <button class="btn btn-primary" type="button" id="qmemoSaveBtn">저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Command Palette (Cmd/Ctrl + K) -->
+    <div class="cmdk-backdrop" id="cmdkBackdrop" hidden>
+      <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="명령 팔레트">
+        <div class="cmdk-header">
+          <svg class="cmdk-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="cmdkInput"
+            class="cmdk-input"
+            placeholder="검색하거나 명령을 입력하세요  (예: /t 회의 준비)"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <span class="cmdk-kbd">ESC</span>
+        </div>
+        <div class="cmdk-list" id="cmdkList"></div>
+        <div class="cmdk-footer">
+          <span><span class="cmdk-kbd">↑</span> <span class="cmdk-kbd">↓</span> 이동</span>
+          <span><span class="cmdk-kbd">Enter</span> 선택</span>
+          <span><span class="cmdk-kbd">/t</span> 할일 ·
+                <span class="cmdk-kbd">/p</span> 프로젝트 ·
+                <span class="cmdk-kbd">/m</span> 메모 ·
+                <span class="cmdk-kbd">/d</span> 하루로그 ·
+                <span class="cmdk-kbd">/usage</span> AI사용량</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/common.js?v=28"></script>
+  <script src="./me.js?v=19"></script>
+</body>
+</html>
