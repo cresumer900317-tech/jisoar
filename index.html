@@ -92,6 +92,14 @@
   .card .t{font-size:18px; font-weight:500; margin-bottom:6px}
   .card .d{font-size:13.5px; color:var(--muted); font-weight:300; line-height:1.6}
   .card .go{margin-top:14px; font-size:13px; color:var(--muted)}
+  .card.soon{cursor:default; opacity:.55; border-style:dashed}
+  .card.soon:hover{transform:none; border-color:var(--line); background:rgba(255,255,255,.02)}
+
+  .role{color:var(--muted); font-weight:300; line-height:2; font-size:clamp(15px,3.8vw,17px); letter-spacing:.01em}
+  .role b{color:var(--ink); font-weight:500}
+  .philo{font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500;
+    font-size:clamp(34px,9vw,58px); line-height:1.05; letter-spacing:-.01em;
+    background:linear-gradient(180deg,#fff 0%,#cdd6f0 70%); -webkit-background-clip:text; background-clip:text; color:transparent}
 
   .contact{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
   .btn{display:inline-flex; align-items:center; gap:8px; padding:13px 22px; border-radius:999px;
@@ -114,56 +122,58 @@
     <h1 class="mark">jisoar<span class="dot">.</span></h1>
     <div class="pron">ji·soar &nbsp;/dʒiˈsɔːr/&nbsp; · &nbsp;지소어</div>
     <div class="tag">where ambition takes flight</div>
-    <p class="sub">품은 뜻이 <b>날아오른다</b>.<br/>박기백이 만드는 것들의 시작점.</p>
+    <p class="sub">품은 뜻이 높이 <b>날아오른다</b>.</p>
   </div>
   <div class="scroll">SCROLL ↓</div>
 </section>
 
 <section class="block">
   <div class="wrap">
-    <div class="eyebrow">The name</div>
-    <h2>뜻, 날아오르다.</h2>
-    <p class="lead">
-      <b>jisoar</b> = 志(뜻 지) + soar(날아오르다).<br/>
-      품은 뜻이 높이 날아오른다는 말. 쿠팡의 로켓처럼 빠르게, 제트기처럼
-      솟아오르겠다는 마음에서 시작했습니다. 무엇을 만들든, <b>여기서 출발합니다.</b>
+    <div class="eyebrow">About</div>
+    <h2>박기백</h2>
+    <p class="role">
+      <b>System Engineer</b><br/>
+      Automation Emerging Technology Team<br/>
+      Coupang
     </p>
+    <div class="contact">
+      <a class="btn ghost" href="mailto:qkqhrnfl@icloud.com">✉ Email</a>
+      <a class="btn ghost" href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">💬 KakaoTalk</a>
+    </div>
   </div>
 </section>
 
 <section class="block">
   <div class="wrap">
-    <div class="eyebrow">Things I’ve built</div>
-    <h2>만든 것들.</h2>
+    <div class="eyebrow">What I Build</div>
     <div class="cards">
       <a class="card" href="https://친구들.com" target="_blank" rel="noopener">
-        <div class="k">Community</div>
-        <div class="t">친구들 길드 홈페이지</div>
-        <div class="d">메이플키우기 길드 커뮤니티. FastAPI · Supabase · GitHub Pages로 직접 구축·운영.</div>
+        <div class="k">Guild Platform</div>
+        <div class="t">Friends</div>
+        <div class="d">메이플키우기 길드 커뮤니티 플랫폼. 직접 설계하고 운영합니다.</div>
         <div class="go">친구들.com →</div>
       </a>
       <a class="card" href="https://친구들.com/wedding" target="_blank" rel="noopener">
-        <div class="k">Web App</div>
+        <div class="k">Photo Cloud</div>
         <div class="t">Wedding Memory Cloud</div>
-        <div class="d">하객이 QR로 사진·영상을 올리는 결혼식 갤러리. 로그인 없이, 업로드 장벽 0.</div>
-        <div class="go">보러 가기 →</div>
+        <div class="d">하객이 QR로 사진·영상을 올리는 결혼식 갤러리.</div>
+        <div class="go">Visit →</div>
       </a>
+      <div class="card soon">
+        <div class="k">Project 03</div>
+        <div class="t">Coming Soon</div>
+        <div class="d">다음 프로젝트를 준비 중입니다.</div>
+        <div class="go">—</div>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="block">
   <div class="wrap">
-    <div class="eyebrow">Who</div>
-    <h2>만드는 사람.</h2>
-    <p class="lead">
-      <b>박기백</b> · 쿠팡 자동화 엔지니어(AET). 산업 현장의 데이터와 설비를 다루고,
-      퇴근 후엔 웹으로 뭔가를 만듭니다. 막연한 아이디어를 <b>실제 주소가 있는 것</b>으로 바꾸는 걸 좋아합니다.
-    </p>
-    <div class="contact">
-      <a class="btn primary" href="mailto:qkqhrnfl@icloud.com">✉ 이메일</a>
-      <a class="btn ghost" href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">💬 카카오톡</a>
-    </div>
+    <div class="eyebrow">Philosophy</div>
+    <h2 class="philo">Ideas into reality.</h2>
+    <p class="lead">막연한 생각을, 실재하는 것으로. 무엇을 만들든 여기서 출발합니다.</p>
   </div>
 </section>
 
