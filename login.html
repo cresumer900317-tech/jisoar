@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>친구패밀리 | Guild Portal</title>
+  <title>JISOAR — Sign in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/css/style.css?v=4" />
   <style>
     .auth-wrap {
@@ -184,6 +187,49 @@
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
+  <!-- JISOAR 다크/새벽 테마 오버라이드 (기능·마크업 불변, 색만 덮어씀) -->
+  <style>
+    body{background:#0a0e1a; font-family:'Inter',-apple-system,'Segoe UI',sans-serif; -webkit-font-smoothing:antialiased}
+    .auth-wrap{background:
+      radial-gradient(120% 80% at 50% 115%, rgba(255,157,108,.18), transparent 55%),
+      linear-gradient(180deg,#0a0e1a 0%, #141b33 60%, #1d2547 100%);}
+    .auth-box{background:#141b33; border:1px solid rgba(255,255,255,.08); box-shadow:0 20px 60px rgba(0,0,0,.45)}
+    .auth-header{background:transparent; padding:34px 32px 18px}
+    .auth-header .logo-icon{background:transparent; box-shadow:none; width:auto; height:auto; margin-bottom:10px}
+    .auth-header h1{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:2rem; color:#f4f6fb; letter-spacing:-.01em}
+    .auth-header h1 .dot{color:#ff9d6c}
+    .auth-header p{color:#9aa6c4; letter-spacing:.18em; text-transform:uppercase; font-size:.7rem; margin-top:8px}
+    .auth-tabs{border-bottom:1px solid rgba(255,255,255,.08)}
+    .auth-tab{color:#9aa6c4}
+    .auth-tab:hover{color:#cdd6f0}
+    .auth-tab.active{color:#ff9d6c}
+    .auth-tab.active::after{background:#ff9d6c}
+    .form-group label{color:#cdd6f0}
+    .form-group input{background:rgba(255,255,255,.04); border:1.5px solid rgba(255,255,255,.12); color:#f4f6fb}
+    .form-group input::placeholder{color:#6e7a98}
+    .form-group input:focus{border-color:#ff9d6c; background:rgba(255,255,255,.06); box-shadow:0 0 0 3px rgba(255,157,108,.15)}
+    .form-group input.invalid{border-color:#ef4444; background:rgba(239,68,68,.08)}
+    .form-group input.valid{border-color:#22c55e; background:rgba(34,197,94,.08)}
+    .form-desc{color:#8a93ad}
+    .submit-btn{background:linear-gradient(135deg,#ff9d6c,#ff7e54); color:#1a0f08}
+    .submit-btn:hover{box-shadow:0 6px 18px rgba(255,126,84,.3)}
+    .submit-btn:disabled{background:rgba(255,255,255,.12); color:#6e7a98}
+    .notice-box{background:rgba(255,157,108,.08); border-left:3px solid #ff9d6c; color:#ffd9a8}
+    .notice-box .notice-title{color:#ffd9a8}
+    .info-box{border:1px dashed rgba(255,255,255,.15); background:transparent; color:#9aa6c4}
+    .info-box strong{color:#cdd6f0}
+    .sub-tabs{background:rgba(255,255,255,.05)}
+    .sub-tab{color:#9aa6c4}
+    .sub-tab.active{background:#1d2547; color:#ff9d6c; box-shadow:none}
+    .link-btn{background:rgba(255,255,255,.03); border:1.5px solid rgba(255,255,255,.12); color:#cdd6f0}
+    .link-btn:hover{border-color:#ff9d6c; color:#ff9d6c; background:rgba(255,157,108,.06)}
+    .text-link{color:#8a93ad}
+    .text-link:hover{color:#ff9d6c}
+    .auth-footer{color:#8a93ad}
+    .auth-footer a{color:#ff9d6c}
+    .auth-msg.error{background:rgba(220,38,38,.12); color:#fca5a5; border:1px solid rgba(220,38,38,.3)}
+    .auth-msg.success{background:rgba(34,197,94,.12); color:#86efac; border:1px solid rgba(34,197,94,.3)}
+  </style>
 </head>
 <body>
 <div id="app-shell"></div>
@@ -192,9 +238,14 @@
   <div class="auth-box">
 
     <div class="auth-header">
-      <div class="logo-icon">🛡️</div>
-      <h1>친구패밀리 길드 포털</h1>
-      <p>Guild Member Portal</p>
+      <div class="logo-icon">
+        <svg width="48" height="48" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M6 18 L16 8 L26 18" stroke="#ffae82" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 24 L16 19.5 L20 24" stroke="#aa5638" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>jisoar<span class="dot">.</span></h1>
+      <p>Sign in to continue</p>
     </div>
 
     <div class="auth-tabs">
