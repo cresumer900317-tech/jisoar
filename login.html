@@ -522,7 +522,7 @@ async function doLogin() {
 
     sessionStorage.setItem("user", JSON.stringify(data.user));
     if (data.token) sessionStorage.setItem("token", data.token);
-    const redirect = new URLSearchParams(location.search).get("redirect") || "./";
+    const redirect = new URLSearchParams(location.search).get("redirect") || "/hq/";
     location.href = redirect;
   } catch {
     showMsg("loginMsg", "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
@@ -642,7 +642,7 @@ async function doRecover() {
 
 // ── 초기화 ──
 if (sessionStorage.getItem("user")) {
-  const redirect = new URLSearchParams(location.search).get("redirect") || "./";
+  const redirect = new URLSearchParams(location.search).get("redirect") || "/hq/";
   location.href = redirect;
 }
 const tabParam = new URLSearchParams(location.search).get("tab");
