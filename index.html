@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>jisoar — where ambition takes flight</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M7 21 L16 9 L25 21' fill='none' stroke='%23ff9d6c' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="jisoar · 지은과 함께 날아오른다. 박기백이 만드는 것들." />
 <meta property="og:title" content="jisoar" />
 <meta property="og:description" content="where ambition takes flight — 만드는 사람 박기백" />
@@ -82,6 +83,7 @@
 
   .cards{display:grid; gap:14px; margin-top:30px}
   @media(min-width:600px){.cards{grid-template-columns:1fr 1fr}}
+  @media(min-width:820px){.cards{grid-template-columns:repeat(3,1fr)}}
   .card{
     display:block; text-decoration:none; color:inherit; padding:22px 24px;
     border:1px solid var(--line); border-radius:16px; background:rgba(255,255,255,.02);
@@ -97,6 +99,8 @@
 
   .role{color:var(--muted); font-weight:300; line-height:2; font-size:clamp(15px,3.8vw,17px); letter-spacing:.01em}
   .role b{color:var(--ink); font-weight:500}
+  .about-line{margin-top:20px; font-family:'Cormorant Garamond',serif; font-style:italic;
+    font-size:clamp(19px,5vw,26px); color:var(--dawn-2); letter-spacing:.01em}
   .philo{font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500;
     font-size:clamp(34px,9vw,58px); line-height:1.05; letter-spacing:-.01em;
     background:linear-gradient(180deg,#fff 0%,#cdd6f0 70%); -webkit-background-clip:text; background-clip:text; color:transparent}
@@ -122,7 +126,8 @@
     <h1 class="mark">jisoar<span class="dot">.</span></h1>
     <div class="pron">ji·soar &nbsp;/dʒiˈsɔːr/&nbsp; · &nbsp;지소어</div>
     <div class="tag">where ambition takes flight</div>
-    <p class="sub">품은 뜻이 높이 <b>날아오른다</b>.</p>
+    <p class="sub">Projects, systems and ideas — <b>built by Gibaek Pak.</b><br/>
+      <span style="opacity:.65">품은 뜻이 높이 날아오른다.</span></p>
   </div>
   <div class="scroll">SCROLL ↓</div>
 </section>
@@ -136,6 +141,7 @@
       Automation Emerging Technology Team<br/>
       Coupang
     </p>
+    <p class="about-line">Building projects, systems and communities.</p>
     <div class="contact">
       <a class="btn ghost" href="mailto:qkqhrnfl@icloud.com">✉ Email</a>
       <a class="btn ghost" href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">💬 KakaoTalk</a>
@@ -163,6 +169,18 @@
         <div class="k">Project 03</div>
         <div class="t">Coming Soon</div>
         <div class="d">다음 프로젝트를 준비 중입니다.</div>
+        <div class="go">—</div>
+      </div>
+      <div class="card soon">
+        <div class="k">Project 04</div>
+        <div class="t">In Planning</div>
+        <div class="d">구상 단계의 아이디어.</div>
+        <div class="go">—</div>
+      </div>
+      <div class="card soon">
+        <div class="k">Project 05</div>
+        <div class="t">Future Idea</div>
+        <div class="d">언젠가 만들 것.</div>
         <div class="go">—</div>
       </div>
     </div>
