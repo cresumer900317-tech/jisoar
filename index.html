@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>jisoar — where ambition takes flight</title>
+<title>JISOAR — Ideas into reality</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffae82' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23aa5638' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="JISOAR — 아이디어를 실재하는 것으로 만드는 프로젝트 스튜디오. Friends, Wedding Memory Cloud 등 Jett Pak이 만든 것들." />
 <meta property="og:type" content="website" />
@@ -133,6 +133,12 @@
   footer{padding:50px 0 60px; border-top:1px solid var(--line); text-align:center; color:var(--muted); font-size:13px; font-weight:300}
   footer .name{font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--ink); letter-spacing:.02em}
   footer .em{font-style:italic}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+    .mark,.pron,.tag,.sub,.scroll{opacity:1 !important; transform:none !important}
+  }
 </style>
 </head>
 <body>
@@ -151,7 +157,7 @@
   <div class="wrap">
     <h1 class="mark">jisoar<span class="dot">.</span></h1>
     <div class="pron">ji·soar &nbsp;/dʒiˈsɔːr/&nbsp; · &nbsp;지소어</div>
-    <div class="tag">where ambition takes flight</div>
+    <div class="tag">Ideas into reality</div>
     <p class="sub"><b>Projects. Systems. Ideas.</b><br/>
       Built by Jett Pak.<br/>
       <span style="opacity:.5">품은 뜻이 높이 날아오른다.</span></p>
@@ -180,6 +186,7 @@
 <section class="block">
   <div class="wrap">
     <div class="eyebrow">What I Build</div>
+    <h2 class="sr-only">What I Build</h2>
     <div class="cards">
       <a class="card" href="https://친구들.com" target="_blank" rel="noopener">
         <div class="k">Guild Platform</div>
@@ -187,11 +194,11 @@
         <div class="d">메이플키우기 길드 커뮤니티 플랫폼. 직접 설계하고 운영합니다.</div>
         <div class="go">친구들.com →</div>
       </a>
-      <a class="card" href="https://친구들.com/wedding" target="_blank" rel="noopener">
+      <a class="card" href="https://jisoar.com/wedding" target="_blank" rel="noopener">
         <div class="k">Photo Cloud</div>
         <div class="t">Wedding Memory Cloud</div>
         <div class="d">하객이 QR로 사진·영상을 올리는 결혼식 갤러리.</div>
-        <div class="go">Visit →</div>
+        <div class="go">jisoar.com/wedding →</div>
       </a>
       <div class="card soon">
         <div class="k">Project 03</div>
@@ -218,7 +225,7 @@
 <section class="block">
   <div class="wrap">
     <div class="eyebrow">Philosophy</div>
-    <h2 class="philo">Ideas into reality.</h2>
+    <h2 class="philo">Make it real.</h2>
     <p class="lead">막연한 생각을, 실재하는 것으로. 무엇을 만들든 여기서 출발합니다.</p>
   </div>
 </section>
