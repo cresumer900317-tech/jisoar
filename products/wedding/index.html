@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wedding Memory Cloud — JISOAR</title>
+<meta name="description" content="하객이 QR로 사진·영상을 올리는 결혼식 갤러리. JISOAR가 만든 프로젝트." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffae82' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23aa5638' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../case.css" />
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/"><span>←</span><span class="m">jisoar<span class="dot">.</span></span></a>
+
+  <header class="cs">
+    <div class="eyebrow">Project · Photo Cloud</div>
+    <h1>Wedding Memory Cloud</h1>
+    <p class="tagline">Guests share photos &amp; videos by QR.</p>
+  </header>
+
+  <section class="cs">
+    <h2>Overview</h2>
+    <p>하객이 부채에 인쇄된 QR을 찍으면 <b>로그인 없이</b> 사진·영상을 올리고, 신랑·신부는 한곳에서 모아 보고 ZIP으로 받는 결혼식 갤러리입니다.</p>
+  </section>
+
+  <section class="cs">
+    <h2>Why I built it</h2>
+    <p>결혼식의 가장 좋은 순간들은 정작 하객들의 폰 속에 흩어집니다. 그걸 한곳에 모으고 싶었어요. 핵심은 <b>업로드 장벽을 0으로</b> — 앱 설치도, 로그인도, 이름 입력도 없이 QR 한 번이면 끝나게.</p>
+  </section>
+
+  <section class="cs">
+    <h2>What it does</h2>
+    <ul class="feat">
+      <li>QR 스캔 → 로그인 없이 즉시 업로드</li>
+      <li>사진 + 동영상 지원, 클라이언트 압축 · 병렬 업로드</li>
+      <li>신랑·신부용 실시간 갤러리, 식장 스크린용 풀스크린 슬라이드쇼</li>
+      <li>전체 ZIP 다운로드, 관리자 사진 회수</li>
+    </ul>
+  </section>
+
+  <section class="cs">
+    <h2>Details</h2>
+    <div class="meta">
+      <div class="row"><span class="k">Stack</span><span class="v">Vanilla JS · FastAPI · Supabase · GitHub Pages / Railway</span></div>
+      <div class="row"><span class="k">Role</span><span class="v">기획 · 디자인 · 개발 · 운영 (solo)</span></div>
+      <div class="row"><span class="k">Status</span><span class="v">실제 결혼식에서 운영</span></div>
+    </div>
+    <p class="note">라이브 인스턴스는 실제 행사·하객 사진이 담겨 비공개로 운영됩니다. 서비스화(다른 예식에서도 사용) 준비 중.</p>
+  </section>
+
+  <footer><div class="name">jisoar<span class="dot">.</span></div></footer>
+</div>
+</body>
+</html>
