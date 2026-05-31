@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>박기백 · 박지은 결혼식 — 오늘의 순간을 선물해주세요</title>
+  <meta name="description" content="박기백·박지은 결혼식, 당신의 시선으로 담긴 사진·영상을 함께 모아요." />
+  <meta name="theme-color" content="#f3e9dc" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jisoar.com/wedding/" />
+  <meta property="og:title" content="박기백 ♥ 박지은 결혼식" />
+  <meta property="og:description" content="오늘의 순간을 선물해주세요 · 당신의 시선으로 담긴 결혼식이 우리의 가장 소중한 추억이 됩니다." />
+  <meta property="og:image" content="https://jisoar.com/wedding/hero-1.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://jisoar.com/wedding/hero-1.jpg" />
+
+  <!-- favicon: 아이보리 바탕에 블러시 하트 (브랜드 톤) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23f3e9dc'/><path d='M16 25C9 20 5 16.2 5 12.2A4.8 4.8 0 0 1 14 9a4.8 4.8 0 0 1 9 3.2c0 4-4 7.8-7 9.8z' fill='%23c98a7d'/></svg>" />
+
+  <link rel="preconnect" href="https://guild-backend-production-75a6.up.railway.app" crossorigin />
+  <link rel="dns-prefetch" href="https://guild-backend-production-75a6.up.railway.app" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./wedding.css?v=18" />
+</head>
+<body>
+  <!-- 시네마틱 배경 / 필름 그레인 / 꽃잎 -->
+  <div class="wp-bg" aria-hidden="true"></div>
+  <div class="wp-grain" aria-hidden="true"></div>
+  <div class="wp-petals" id="petals" aria-hidden="true"></div>
+  <div class="wp-confetti" id="confetti" aria-hidden="true"></div>
+
+  <main class="wp-shell">
+    <!-- ── 첫 화면: 갤러리 입장 ── -->
+    <header class="wp-hero">
+      <div class="wp-hero-photos" aria-hidden="true">
+        <div class="wp-hero-layer" style="background-image:url('hero-1.jpg')"></div>
+        <div class="wp-hero-layer" style="background-image:url('hero-2.jpg')"></div>
+        <div class="wp-hero-layer" style="background-image:url('hero-3.jpg')"></div>
+      </div>
+      <p class="wp-eyebrow">THE WEDDING OF</p>
+      <h1 class="wp-names">
+        <span class="wp-name">박기백</span> <span class="wp-amp">&amp;</span> <span class="wp-name">박지은</span>
+      </h1>
+      <p class="wp-slogan">One Day, Forever</p>
+      <p class="wp-invite"><span class="wp-invite-l">오늘 하루는 지나가지만,</span><span class="wp-invite-l">당신이 담아주신 순간은 평생 남습니다.</span></p>
+      <div class="wp-ornament" aria-hidden="true"><span></span>❀<span></span></div>
+      <p class="wp-date">2026. 06. 06</p>
+      <p class="wp-invite-sub">여러분의 시선으로 완성되는 결혼식,<br/>작가님이 담지 못한 순간까지 함께 남겨주세요.</p>
+      <p class="wp-livecount" id="liveCount" hidden>지금 <b id="liveNum">0</b>개의 순간이 모였어요</p>
+      <div class="wp-scroll-hint" aria-hidden="true">아래에서 사진·영상 담기 ↓</div>
+    </header>
+
+    <!-- ── 업로드: 필름 프레임 ── -->
+    <section class="wp-card" id="uploadCard">
+      <label class="wp-drop" id="dropZone" for="fileInput">
+        <input id="fileInput" type="file" accept="image/*,video/*" multiple hidden />
+        <span class="wp-film-perf wp-film-perf-top" aria-hidden="true"></span>
+        <div class="wp-drop-body">
+          <div class="wp-drop-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3l2-2.5h8L18 7h3v12H3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+          </div>
+          <div class="wp-drop-text">
+            <strong>사진 · 영상 담기</strong>
+            <span>탭하여 선택 · 여러 장·동영상 가능</span>
+          </div>
+        </div>
+        <span class="wp-film-perf wp-film-perf-bottom" aria-hidden="true"></span>
+      </label>
+
+      <p class="wp-reassure">
+        <span aria-hidden="true">🔒</span> 올려주신 사진·영상은 <b>신랑·신부만</b> 볼 수 있어요.<br/>
+        외부에 공개되지 않아요.
+      </p>
+
+      <div class="wp-previews" id="previews" hidden></div>
+
+      <button id="uploadBtn" type="button" class="wp-btn wp-btn-primary" disabled>
+        <span class="wp-btn-label">사진 담기</span>
+      </button>
+
+      <div class="wp-status" id="status" hidden></div>
+      <div class="wp-progress" id="progressWrap" hidden>
+        <div class="wp-progress-bar"><div class="wp-progress-fill" id="progressFill"></div></div>
+        <div class="wp-progress-text" id="progressText">0 / 0</div>
+      </div>
+    </section>
+
+    <!-- ── 완료 화면 ── -->
+    <section class="wp-card wp-done" id="doneCard" hidden>
+      <div class="wp-check" aria-hidden="true">
+        <svg viewBox="0 0 52 52"><circle class="wp-check-circle" cx="26" cy="26" r="24" fill="none"/><path class="wp-check-mark" fill="none" d="M14 27l8 8 16-18"/></svg>
+      </div>
+      <h2 id="doneTitle">추억이 전달되었어요! 🎉</h2>
+      <p class="wp-done-rank" id="doneRank" hidden></p>
+      <div class="wp-done-grid" id="doneGrid" aria-label="방금 올린 사진"></div>
+      <p class="wp-done-recall-hint">잘못 올렸다면 사진의 <b>×</b>를 눌러 회수할 수 있어요.</p>
+      <p class="wp-done-thanks">신랑·신부가 평생 간직할게요.<br/>소중한 순간 나눠주셔서 감사합니다 💕</p>
+      <p class="wp-maker">이 페이지는 신랑 <b>박기백</b>이 오늘 하루를 위해 직접 만들었어요.</p>
+      <div class="wp-done-actions">
+        <button type="button" class="wp-btn wp-btn-ghost" id="moreBtn">한 장 더 담기</button>
+        <button type="button" class="wp-btn wp-btn-share" id="shareBtnDone">
+          <span aria-hidden="true">💌</span> 친구에게 공유하기
+        </button>
+      </div>
+    </section>
+
+    <footer class="wp-footer">
+      <button type="button" class="wp-brand" id="brandBtn" aria-haspopup="dialog">
+        <span class="wp-brand-made">Designed &amp; Developed by <b>박기백</b></span>
+        <span class="wp-brand-name">Wedding Memory Cloud</span>
+        <span class="wp-brand-tag">One Day, Forever</span>
+      </button>
+    </footer>
+  </main>
+
+  <!-- 기술 스택 모달 (개발자용 이스터에그) -->
+  <div class="wp-modal" id="techModal" hidden role="dialog" aria-modal="true" aria-labelledby="techTitle">
+    <div class="wp-modal-card" role="document">
+      <button type="button" class="wp-modal-close" id="techClose" aria-label="닫기">×</button>
+      <p class="wp-modal-eyebrow">A PRODUCT BY 박기백</p>
+      <h3 class="wp-modal-title" id="techTitle">Wedding Memory Cloud</h3>
+      <p class="wp-modal-desc">여러분의 시선으로 완성되는<br/>우리의 결혼식 기록.</p>
+
+      <div class="wp-stack">
+        <div class="wp-stack-row">
+          <span class="wp-stack-key">Features</span>
+          <span class="wp-stack-val wp-feats">
+            <span class="wp-feat">QR 즉시 업로드</span>
+            <span class="wp-feat">로그인 없음</span>
+            <span class="wp-feat">신랑·신부 갤러리</span>
+            <span class="wp-feat">슬라이드쇼</span>
+            <span class="wp-feat">원본 자동 백업</span>
+          </span>
+        </div>
+      </div>
+
+      <p class="wp-modal-story">사랑하는 사람과의 단 하루를 더 오래 남기고 싶어서,<br/>신랑이 AI를 활용해 직접 설계하고 만들었습니다.</p>
+
+      <div class="wp-stack wp-stack-tech">
+        <div class="wp-stack-row">
+          <span class="wp-stack-key">Built with</span>
+          <span class="wp-stack-val">Vanilla JS <em>(no framework · AI 페어코딩)</em> · FastAPI · Supabase</span>
+        </div>
+        <div class="wp-stack-row">
+          <span class="wp-stack-key">Architecture</span>
+          <span class="wp-stack-val wp-arch">Frontend <i>→</i> API <i>→</i> Storage</span>
+        </div>
+      </div>
+      <details class="wp-tech-more">
+        <summary>기술 상세 보기</summary>
+        <div class="wp-tech-more-body">
+          <p>Hosting · GitHub Pages(정적) + Railway(FastAPI)</p>
+          <p>Storage · Supabase Postgres + Object Storage(퍼블릭 버킷)</p>
+          <p>업로드 · 클라이언트 이미지 압축(1920px) · 동시 3개 병렬 전송</p>
+        </div>
+      </details>
+
+      <div class="wp-modal-contact">
+        <p class="wp-modal-contact-q">이런 걸 만들어보고 싶으세요?</p>
+        <a class="wp-modal-contact-link" id="contactLink" href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">
+          <span class="wp-modal-contact-ico" aria-hidden="true">💬</span>
+          <span>제작자에게 가볍게 물어보기</span>
+          <span class="wp-modal-contact-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <p class="wp-modal-foot">© 2026 · 박기백 ♥ 박지은</p>
+    </div>
+  </div>
+
+  <script src="./wedding.js?v=15"></script>
+</body>
+</html>

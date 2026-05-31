@@ -1,0 +1,425 @@
+/* 박기백·박지은 — 웨딩 사진 갤러리 (관리자 전용) */
+
+.wg-shell {
+  min-height: 100vh;
+  background: linear-gradient(170deg, var(--wp-bg-soft) 0%, var(--wp-bg) 60%, #fdf9f3 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ─────────────────────────── */
+.wg-header {
+  background: rgba(255, 255, 255, .9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--wp-card-edge);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.wg-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.wg-title h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--wp-text);
+  letter-spacing: -.3px;
+}
+.wg-title .wp-and {
+  color: var(--wp-accent);
+  font-weight: 400;
+  font-style: italic;
+  margin: 0 4px;
+}
+.wg-sub {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--wp-text-soft);
+}
+.wg-sub strong { color: var(--wp-accent-dk); }
+
+.wg-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.wg-sort {
+  display: inline-flex;
+  background: #fdfaf4;
+  border: 1px solid var(--wp-card-edge);
+  border-radius: 12px;
+  padding: 3px;
+}
+.wg-sort-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--wp-text-soft);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.wg-sort-btn.is-active {
+  background: #fff;
+  color: var(--wp-accent-dk);
+  box-shadow: 0 1px 4px rgba(160, 110, 80, .15);
+}
+
+.wg-zip-btn {
+  height: 40px;
+  padding: 0 18px;
+  font-size: 14px;
+  border-radius: 11px;
+}
+
+/* ── Grid ───────────────────────────── */
+.wg-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 22px;
+  width: 100%;
+  flex: 1;
+}
+.wg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .wg-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .wg-grid { grid-template-columns: 1fr; gap: 12px; }
+  .wg-header-inner { padding: 12px 14px; }
+  .wg-main { padding: 14px; }
+  .wg-title h1 { font-size: 18px; }
+  .wg-zip-btn { width: 100%; }
+  .wg-controls { width: 100%; }
+}
+
+.wg-card {
+  background: #fff;
+  border: 1px solid var(--wp-card-edge);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--wp-shadow);
+  display: flex;
+  flex-direction: column;
+  transition: transform .15s, box-shadow .15s;
+}
+.wg-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--wp-shadow-lg);
+}
+.wg-card-img {
+  aspect-ratio: 4 / 3;
+  background: #f0e7da;
+  position: relative;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+.wg-card-img img,
+.wg-card-img video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.wg-card-img .wg-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .5);
+  color: #fff;
+  font-size: 17px;
+  display: flex; align-items: center; justify-content: center;
+  padding-left: 3px;
+  pointer-events: none;
+}
+.wg-card-meta {
+  padding: 10px 14px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--wp-text-soft);
+}
+.wg-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.wg-card-uploader {
+  font-weight: 600;
+  color: var(--wp-text);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wg-card-time {
+  font-size: 11.5px;
+  color: #b9a896;
+}
+.wg-card-actions {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.wg-card-actions button,
+.wg-card-actions a {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  border: 1px solid var(--wp-card-edge);
+  background: #fdfaf4;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  color: var(--wp-text-soft);
+  transition: all .15s;
+  padding: 0;
+  font-family: inherit;
+}
+.wg-card-actions button:hover,
+.wg-card-actions a:hover {
+  border-color: var(--wp-accent);
+  color: var(--wp-accent-dk);
+  background: #fff;
+}
+.wg-card-del:hover {
+  border-color: #d88 !important;
+  color: #c44 !important;
+}
+
+/* ── Empty / loading ────────────────── */
+.wg-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--wp-text-soft);
+}
+.wg-empty h2 { margin: 8px 0 4px; color: var(--wp-text); }
+.wg-loading {
+  text-align: center;
+  padding: 24px;
+  color: var(--wp-text-soft);
+  font-size: 14px;
+}
+.wg-loading[hidden] { display: none; }
+
+/* ── Lightbox ───────────────────────── */
+.wg-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(35, 24, 18, .92);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 60px;
+  cursor: zoom-out;
+}
+.wg-lb-figure {
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: default;
+}
+.wg-lb-stage { display: flex; align-items: center; justify-content: center; max-width: 100%; }
+.wg-lb-figure img,
+.wg-lb-stage img,
+.wg-lb-stage video {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .4);
+  background: #000;
+}
+.wg-lb-figure figcaption {
+  color: rgba(255, 255, 255, .85);
+  font-size: 13px;
+  text-align: center;
+  font-family: var(--wp-font);
+}
+.wg-lb-close, .wg-lb-nav {
+  position: absolute;
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 50%;
+  transition: background .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.wg-lb-close:hover, .wg-lb-nav:hover { background: rgba(255, 255, 255, .25); }
+.wg-lb-close {
+  top: 20px; right: 22px;
+  width: 40px; height: 40px;
+  font-size: 24px;
+  line-height: 1;
+}
+.wg-lb-nav {
+  top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px;
+  font-size: 32px;
+  line-height: 1;
+}
+.wg-lb-prev { left: 16px; }
+.wg-lb-next { right: 16px; }
+
+@media (max-width: 560px) {
+  .wg-lightbox { padding: 20px 14px; }
+  .wg-lb-nav { width: 40px; height: 40px; font-size: 26px; }
+  .wg-lb-prev { left: 6px; }
+  .wg-lb-next { right: 6px; }
+  .wg-lb-close { top: 10px; right: 10px; }
+}
+
+.wg-slide-btn { height: 40px; padding: 0 16px; font-size: 14px; border-radius: 11px; }
+@media (max-width: 560px) { .wg-slide-btn { width: 100%; } }
+
+/* ── 선택 삭제 모드 ─────────────────── */
+.wg-select-btn { height: 40px; padding: 0 16px; font-size: 14px; border-radius: 11px; }
+.wg-select-btn.is-active {
+  background: var(--wp-sage-dk);
+  color: #fff;
+  border-color: var(--wp-sage-dk);
+}
+@media (max-width: 560px) { .wg-select-btn { width: 100%; } }
+
+/* 카드 체크 배지 — 선택 모드에서만 표시 */
+.wg-card-check {
+  position: absolute;
+  top: 10px; left: 10px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .8);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, .28);
+  color: transparent;
+  font-size: 15px; font-weight: 800;
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 2;
+}
+.wg-grid.is-selectmode .wg-card-check { display: flex; }
+.wg-grid.is-selectmode .wg-card-img { cursor: pointer; }
+.wg-grid.is-selectmode .wg-card:hover { transform: none; }   /* 선택 모드에선 hover 들썩임 끔 */
+.wg-card.is-selected { outline: 3px solid var(--wp-sage-dk); outline-offset: -3px; }
+.wg-card.is-selected .wg-card-check { background: var(--wp-sage-dk); border-color: #fff; color: #fff; }
+.wg-card.is-selected .wg-card-img::after {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(111, 132, 102, .2);
+  pointer-events: none;
+}
+.wg-grid.is-selectmode { margin-bottom: 84px; }   /* 하단 바에 안 가리게 */
+
+/* 하단 액션 바 */
+.wg-selbar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 90;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--wp-card-edge);
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  box-shadow: 0 -6px 20px rgba(160, 110, 80, .12);
+  animation: wg-selbar-in .2s ease;
+}
+@keyframes wg-selbar-in { from { transform: translateY(100%); } to { transform: none; } }
+.wg-selbar[hidden] { display: none; }
+.wg-selbar-count { font-size: 14px; color: var(--wp-text); white-space: nowrap; }
+.wg-selbar-count strong { color: var(--wp-accent-dk); font-size: 16px; }
+.wg-selbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.wg-selbar-btn {
+  height: 40px; padding: 0 16px;
+  border-radius: 11px;
+  border: 1px solid var(--wp-card-edge);
+  background: #fdfaf4;
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  color: var(--wp-text-soft);
+  cursor: pointer;
+  transition: all .15s;
+}
+.wg-selbar-btn:hover { background: #fff; border-color: var(--wp-accent); color: var(--wp-accent-dk); }
+.wg-selbar-del {
+  background: linear-gradient(135deg, #c27f72, #9a5247);
+  color: #fff; border: none;
+  text-shadow: 0 1px 2px rgba(80, 30, 25, .28);
+}
+.wg-selbar-del:not(:disabled):hover { color: #fff; box-shadow: 0 6px 16px rgba(150, 85, 72, .35); }
+.wg-selbar-del:disabled { background: #e6dacb; color: #9a8a78; cursor: not-allowed; text-shadow: none; }
+@media (max-width: 560px) {
+  .wg-selbar { padding-left: 14px; padding-right: 14px; }
+  .wg-selbar-btn { padding: 0 12px; font-size: 13px; }
+}
+
+/* ── Slideshow (식장 스크린용 자동 재생) ─────── */
+.wg-slideshow {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wg-ss-stage {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.wg-ss-img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  animation: wg-ssfade .8s ease;
+}
+@keyframes wg-ssfade { from { opacity: 0; } to { opacity: 1; } }
+.wg-ss-caption {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  left: 0; right: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, .8);
+  font-family: var(--wp-font);
+  font-size: 16px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .7);
+}
+.wg-ss-close {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  right: 18px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .15);
+  color: #fff;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}

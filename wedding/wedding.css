@@ -1,0 +1,805 @@
+/* 박기백·박지은 웨딩 — 업로드 페이지 (v3, 시네마틱)
+   따뜻한 아이보리/블러시/샴페인 톤 + 세리프 타이포 + 꽃잎 + 필름 그레인.
+   ※ 갤러리(gallery.css/html)가 쓰는 변수·공용 클래스(.wp-shell/.wp-hero/.wp-heart/
+     .wp-title/.wp-subtitle/.wp-and/.wp-btn*/.wp-done-icon)는 그대로 유지함. */
+
+:root {
+  --wp-bg:        #f3e9dc;
+  --wp-bg-soft:   #efe2d2;
+  --wp-card:      #fffdf9;
+  --wp-card-edge: #e7d8c3;
+  --wp-text:      #46382a;
+  --wp-text-soft: #6e5c4b;          /* 보조 텍스트 — 아이보리 위 대비 ↑ (WCAG AA 근접, 어르신 가독성) */
+  --wp-accent:    #c98a7d;          /* 로즈 */
+  --wp-accent-2:  #a7b89a;          /* 세이지 */
+  --wp-sage-dk:   #6f8466;          /* 진한 세이지 — 포인트 컬러 */
+  --wp-accent-dk: #a6695e;
+  --wp-gold:      #c5a368;          /* 샴페인 골드 */
+  --wp-shadow:    0 8px 28px rgba(160, 110, 80, .12);
+  --wp-shadow-lg: 0 18px 50px rgba(150, 100, 70, .22);
+  --wp-radius:    18px;
+  --wp-font: ui-rounded, -apple-system, "Apple SD Gothic Neo", "Pretendard",
+             "Noto Sans KR", system-ui, sans-serif;
+  --wp-serif: "Cormorant Garamond", "Nanum Myeongjo", serif;
+}
+
+* { box-sizing: border-box; }
+
+/* hidden 속성이 항상 우선하도록 (display:flex 등 클래스 규칙에 안 밀리게).
+   이게 없으면 .wp-modal/.wg-lightbox 같이 display 가 지정된 요소가 hidden 으로 안 꺼짐. */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: #f3e9dc;
+  color: var(--wp-text);
+  font-family: var(--wp-font);
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+/* ── 시네마틱 배경 ───────────────────── */
+.wp-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(120% 80% at 50% -10%, #fff6ec 0%, rgba(255,246,236,0) 55%),
+    radial-gradient(90% 60% at 85% 8%, rgba(201,138,125,.16) 0%, rgba(201,138,125,0) 60%),
+    radial-gradient(90% 70% at 10% 100%, rgba(167,184,154,.18) 0%, rgba(167,184,154,0) 55%),
+    linear-gradient(170deg, #f6ede1 0%, #f1e6d6 55%, #f7efe4 100%);
+}
+/* 모서리 은은한 플로럴 실루엣 */
+.wp-bg::before, .wp-bg::after {
+  content: "";
+  position: absolute;
+  width: 46vmax; height: 46vmax;
+  background: radial-gradient(circle at 50% 50%, rgba(197,163,104,.10), rgba(197,163,104,0) 62%);
+  filter: blur(2px);
+}
+.wp-bg::before { top: -14vmax; right: -12vmax; }
+.wp-bg::after  { bottom: -16vmax; left: -14vmax; }
+
+/* ── 필름 그레인 ─────────────────────── */
+.wp-grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .055;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+/* ── 꽃잎 ────────────────────────────── */
+.wp-petals {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.wp-petal {
+  position: absolute;
+  top: -8%;
+  width: 14px; height: 12px;
+  background: radial-gradient(120% 120% at 30% 20%, #f6d9d0 0%, #e8b3a6 70%, #d99e90 100%);
+  border-radius: 76% 24% 70% 30% / 70% 30% 70% 30%;
+  opacity: .0;
+  will-change: transform, opacity;
+  animation: wp-fall linear infinite;
+}
+@keyframes wp-fall {
+  0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  8%   { opacity: .8; }
+  92%  { opacity: .8; }
+  100% { transform: translate3d(var(--wp-drift, 40px), 112vh, 0) rotate(540deg); opacity: 0; }
+}
+
+/* ── Shell ───────────────────────────── */
+.wp-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 18px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  word-break: keep-all;   /* 한글이 단어 중간(예: 만들었/어요)에서 안 끊기게 — 띄어쓰기 단위로만 */
+}
+
+/* ── 첫 화면 (갤러리 입장) ────────────── */
+.wp-hero {
+  text-align: center;
+  padding: clamp(40px, 9vh, 86px) 14px 30px;
+  position: relative;
+  isolation: isolate;
+}
+/* 베스트컷 3장 크로스페이드 (배경, 8~9초 간격) */
+.wp-hero-photos { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+.wp-hero-layer {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center 40%;
+  opacity: 0;
+  animation: wp-heroswap 27s infinite;
+}
+.wp-hero-layer:nth-child(1) { animation-delay: 0s; }
+.wp-hero-layer:nth-child(2) { animation-delay: 9s; }
+.wp-hero-layer:nth-child(3) { animation-delay: 18s; }
+@keyframes wp-heroswap {
+  0%   { opacity: 0; }
+  3%   { opacity: 1; }
+  30%  { opacity: 1; }
+  36%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+/* 아이보리 베일 — 사진 위, 텍스트 아래. 글씨가 주인공, 사진은 분위기 */
+.wp-hero::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom,
+    rgba(247, 240, 230, .82) 0%,
+    rgba(246, 238, 227, .84) 45%,
+    rgba(244, 235, 223, .93) 80%,
+    #f3e9dc 100%);
+}
+.wp-hero > *:not(.wp-hero-photos) { position: relative; }
+/* 글씨가 주인공 — 사진은 분위기. 텍스트엔 아주 옅은 화이트 그림자만 */
+.wp-names, .wp-date { text-shadow: 0 1px 2px rgba(255, 253, 248, .6); }
+/* 얇은 글씨(아이브로·슬로건)는 사진 위에서 묻히기 쉬워 화이트 글로우로 또렷하게 */
+.wp-eyebrow { text-shadow: 0 1px 2px rgba(255,255,255,.95), 0 0 12px rgba(255,250,242,.85); }
+.wp-invite { text-shadow: 0 1px 2px rgba(255, 255, 255, .55); }
+.wp-invite-sub { text-shadow: 0 1px 2px rgba(255, 253, 248, .5); }
+.wp-eyebrow {
+  font-family: var(--wp-serif);
+  letter-spacing: .42em;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--wp-gold);
+  margin: 0 0 14px;
+  padding-left: .42em;
+  text-transform: uppercase;
+}
+.wp-names {
+  font-family: "Cormorant Garamond", "Gowun Batang", "Nanum Myeongjo", serif;
+  font-weight: 700;
+  font-size: clamp(30px, 9vw, 50px);
+  line-height: 1.15;
+  letter-spacing: .005em;
+  margin: 0;
+  color: #38291b;
+  word-break: keep-all;          /* 한글이 음절 단위로 끊기지 않게 */
+  overflow-wrap: normal;
+}
+.wp-name { white-space: nowrap; }  /* 이름 하나는 절대 쪼개지지 않게 (박지은 → 박지/은 방지) */
+.wp-names .wp-amp {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.15em;
+  opacity: .85;
+  color: var(--wp-accent);
+  margin: 0 .36em;          /* 이름 둘 사이 넉넉한 간격 */
+  vertical-align: -.02em;
+}
+.wp-slogan {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: .18em;
+  color: #54684c;            /* 사진 위에서도 또렷하게 살짝 더 진한 세이지 */
+  margin: 9px 0 0;
+  padding-left: .18em;
+  text-shadow: 0 1px 2px rgba(255,255,255,.95), 0 0 12px rgba(255,250,242,.85);
+}
+.wp-date {
+  font-family: var(--wp-serif);
+  font-size: 16px;
+  letter-spacing: .18em;
+  color: var(--wp-accent-dk);
+  margin: 2px 0 0;
+  padding-left: .18em;
+}
+.wp-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--wp-sage-dk);
+  font-size: 14px;
+  margin: 18px 0 14px;
+}
+.wp-ornament span {
+  display: block;
+  width: 46px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--wp-sage-dk));
+}
+.wp-ornament span:last-child { background: linear-gradient(90deg, var(--wp-sage-dk), transparent); }
+.wp-invite {
+  font-family: "Gowun Batang", "Nanum Myeongjo", serif;
+  font-weight: 700;
+  /* 화면 폭에 맞춰 글자크기가 자동 조절돼 항상 정확히 2줄로 고정 (320px도 여유) */
+  font-size: clamp(13px, 4.2vw, 24px);
+  color: #34271a;
+  margin: 20px 0 0;
+  line-height: 1.55;
+  letter-spacing: -.01em;
+}
+.wp-invite-l { display: block; white-space: nowrap; }   /* 각 줄은 절대 안 쪼개짐 → 항상 2줄 */
+.wp-invite-sub {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--wp-text-soft);
+  margin: 0;
+}
+.wp-livecount {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 20px auto 0;
+  padding: 7px 16px 7px 13px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(167,184,154,.55);
+  backdrop-filter: blur(6px);
+  font-size: 13px;
+  color: var(--wp-text-soft);
+  animation: wp-fadein .8s ease both;
+}
+.wp-livecount::before {
+  content: "";
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--wp-sage-dk);
+  box-shadow: 0 0 0 0 rgba(111,132,102,.5);
+  animation: wp-livedot 2s ease-in-out infinite;
+}
+@keyframes wp-livedot {
+  0%,100% { box-shadow: 0 0 0 0 rgba(111,132,102,.45); }
+  70% { box-shadow: 0 0 0 6px rgba(111,132,102,0); }
+}
+.wp-livecount b { color: var(--wp-sage-dk); font-weight: 700; }
+.wp-scroll-hint {
+  margin-top: 26px;
+  font-size: 12.5px;
+  letter-spacing: .08em;
+  color: var(--wp-text-soft);
+  opacity: .8;
+  animation: wp-bob 1.8s ease-in-out infinite;
+}
+@keyframes wp-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+@keyframes wp-fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ── 공용 카드 ───────────────────────── */
+.wp-card {
+  background: rgba(255, 253, 249, .82);
+  border: 1px solid var(--wp-card-edge);
+  border-radius: var(--wp-radius);
+  padding: 22px;
+  box-shadow: var(--wp-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* (갤러리 gate 가 쓰는 잔존 클래스 — 유지) */
+.wp-hero-deco { display: flex; justify-content: center; margin-bottom: 14px; }
+.wp-heart {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #fff; color: var(--wp-accent); font-size: 28px;
+  box-shadow: var(--wp-shadow);
+}
+.wp-title { font-family: var(--wp-serif); font-size: 32px; font-weight: 600; margin: 0 0 6px; color: var(--wp-text); }
+.wp-title .wp-and, .wp-and { color: var(--wp-accent); font-style: italic; margin: 0 6px; }
+.wp-subtitle { font-size: 14.5px; line-height: 1.6; color: var(--wp-text-soft); margin: 0; }
+
+/* ── 필름 프레임 업로드 ──────────────── */
+.wp-drop {
+  position: relative;
+  display: block;
+  border-radius: 14px;
+  padding: 0;
+  background: #1c1714;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 6px 20px rgba(120,80,55,.16);
+  transition: transform .16s ease, box-shadow .16s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.wp-drop:hover, .wp-drop.is-drag {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(120,80,55,.26);
+}
+.wp-film-perf {
+  display: block;
+  height: 14px;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0 8px,
+      rgba(255,255,255,.82) 8px 16px,
+      transparent 16px 24px);
+  background-size: 24px 8px;
+  background-position: center;
+  background-repeat: repeat-x;
+  opacity: .9;
+}
+.wp-film-perf-top { box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+.wp-drop-body {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)),
+    repeating-linear-gradient(180deg, #221b16 0 2px, #1d1713 2px 4px);
+}
+.wp-drop-icon {
+  flex: 0 0 auto;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #fff, #f4e8da);
+  color: var(--wp-accent-dk);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,.28);
+}
+.wp-drop-text { display: flex; flex-direction: column; gap: 3px; }
+.wp-drop-text strong { font-size: 17px; font-weight: 600; color: #fdf6ec; letter-spacing: .01em; }
+.wp-drop-text span { font-size: 12.5px; color: #cdbba8; }
+
+/* ── Previews ───────────────────────── */
+.wp-previews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+}
+.wp-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f0e7da;
+  border: 1px solid var(--wp-card-edge);
+}
+.wp-thumb img, .wp-thumb video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.wp-thumb-play {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(0,0,0,.5); color: #fff; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  padding-left: 2px; pointer-events: none;
+}
+.wp-thumb-status {
+  position: absolute; top: 4px; right: 4px;
+  width: 19px; height: 19px; border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.wp-thumb.is-done .wp-thumb-status { color: #fff; background: var(--wp-accent-2); animation: wp-pop .35s ease; }
+.wp-thumb.is-fail .wp-thumb-status { color: #fff; background: #c66; }
+@keyframes wp-pop { 0% { transform: scale(0); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.wp-thumb.is-uploading::after {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(255,255,255,.5); backdrop-filter: blur(1px);
+}
+.wp-thumb-remove {
+  position: absolute; top: 4px; left: 4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(0,0,0,.55); color: #fff; border: none; cursor: pointer;
+  font-size: 12px; line-height: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.wp-thumb-remove:hover { background: rgba(0,0,0,.75); }
+/* 보이는 원은 작게, 탭 영역만 넓게 (손가락 오탭 방지) */
+.wp-thumb-remove::after { content: ""; position: absolute; inset: -11px; border-radius: 50%; }
+
+/* ── Buttons ────────────────────────── */
+.wp-btn {
+  height: 54px;
+  border-radius: 14px;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+.wp-btn-primary {
+  background: linear-gradient(135deg, #c27f72 0%, #9a5247 100%);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-shadow: 0 1px 2px rgba(80, 30, 25, .28);   /* 흰 글씨 가독성 보장 */
+  box-shadow: 0 10px 24px rgba(150, 85, 72, .4);
+}
+.wp-btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(150, 85, 72, .46); }
+.wp-btn-primary:disabled {
+  background: #e6dacb;
+  color: #9a8a78;            /* 흰색 대신 읽히는 톤 */
+  text-shadow: none;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.wp-btn-ghost {
+  background: rgba(255,255,255,.6);
+  color: var(--wp-accent-dk);
+  border: 1px solid var(--wp-card-edge);
+}
+.wp-btn-ghost:hover { background: #fff; }
+
+/* ── Status / progress ──────────────── */
+.wp-status {
+  font-size: 14px; text-align: center;
+  padding: 9px 12px; border-radius: 10px;
+  background: #fdf3ec; color: var(--wp-accent-dk);
+}
+.wp-status.is-error { background: #fbecec; color: #b04a4a; }
+.wp-progress { display: flex; flex-direction: column; gap: 6px; }
+.wp-progress-bar { height: 8px; background: var(--wp-card-edge); border-radius: 4px; overflow: hidden; }
+.wp-progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--wp-accent), var(--wp-gold));
+  transition: width .25s;
+}
+.wp-progress-text { font-size: 13.5px; font-weight: 600; color: var(--wp-accent-dk); text-align: center; letter-spacing: .01em; }
+
+/* ── 완료 화면 ──────────────────────── */
+.wp-done { text-align: center; align-items: center; animation: wp-fadein .5s ease both; }
+.wp-done-icon { font-size: 48px; }   /* 갤러리 빈 상태가 재사용 */
+
+.wp-check { width: 76px; height: 76px; }
+.wp-check svg { width: 100%; height: 100%; }
+.wp-check-circle {
+  stroke: var(--wp-accent-2); stroke-width: 2.5;
+  stroke-dasharray: 151; stroke-dashoffset: 151;
+  animation: wp-stroke .5s ease forwards;
+}
+.wp-check-mark {
+  stroke: var(--wp-accent-2); stroke-width: 3.2;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 44; stroke-dashoffset: 44;
+  animation: wp-stroke .35s .45s ease forwards;
+}
+@keyframes wp-stroke { to { stroke-dashoffset: 0; } }
+
+.wp-done h2 { margin: 4px 0 0; font-size: 23px; font-family: var(--wp-serif); font-weight: 600; color: var(--wp-accent-dk); }
+.wp-done p { margin: 0; color: var(--wp-text-soft); font-size: 14.5px; line-height: 1.65; }
+.wp-done-rank {
+  display: inline-block;
+  padding: 8px 18px; border-radius: 999px;
+  background: linear-gradient(135deg, rgba(201,138,125,.14), rgba(197,163,104,.16));
+  border: 1px solid rgba(197,163,104,.3);
+  color: var(--wp-accent-dk) !important; font-size: 13.5px;
+}
+.wp-done-rank b { font-family: var(--wp-serif); font-size: 18px; font-weight: 700; }
+
+.wp-done-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 8px; width: 100%;
+}
+.wp-done-grid:empty { display: none; }
+.wp-done-cell {
+  position: relative; aspect-ratio: 1;
+  border-radius: 10px; overflow: hidden;
+  background: #f0e7da; border: 1px solid var(--wp-card-edge);
+}
+.wp-done-cell img, .wp-done-cell video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wp-done-check {
+  position: absolute; top: 4px; right: 4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--wp-accent-2); color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.wp-done-play {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(0,0,0,.5); color: #fff; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  padding-left: 2px; pointer-events: none;
+}
+/* 회수 버튼 (완료 셀 위) */
+.wp-done-recall {
+  position: absolute; top: 4px; left: 4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(0,0,0,.55); color: #fff; border: none; cursor: pointer;
+  font-size: 13px; line-height: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, transform .15s;
+}
+.wp-done-recall:hover { background: rgba(180,60,50,.9); transform: scale(1.08); }
+.wp-done-recall:disabled { opacity: .6; cursor: default; }
+.wp-done-recall::after { content: ""; position: absolute; inset: -11px; border-radius: 50%; }
+.wp-done-cell.is-removed { animation: wp-cell-out .26s ease forwards; }
+@keyframes wp-cell-out { to { opacity: 0; transform: scale(.7); } }
+
+.wp-done-recall-hint {
+  font-size: 12px;
+  color: var(--wp-text-soft);
+  margin: 0;
+  opacity: .85;
+}
+.wp-done-recall-hint b { color: var(--wp-accent-dk); font-weight: 700; }
+.wp-done-grid.is-empty + .wp-done-recall-hint { display: none; }
+
+.wp-done-thanks { font-size: 14.5px; }
+.wp-maker {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.55);
+  border: 1px dashed var(--wp-card-edge);
+  font-size: 13px; color: var(--wp-text-soft) !important; line-height: 1.6;
+}
+.wp-maker b { color: var(--wp-accent-dk); font-weight: 700; }
+
+/* ── Footer (제작자 브랜딩 — 누르면 기술스택 모달) ── */
+.wp-footer { text-align: center; margin-top: 6px; }
+.wp-brand {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 10px 14px;
+  border-radius: 12px;
+  transition: background .15s, transform .15s;
+}
+.wp-brand:hover { background: rgba(255,255,255,.5); transform: translateY(-1px); }
+.wp-brand-made { font-size: 13px; color: var(--wp-text-soft); }
+.wp-brand-made b { color: var(--wp-accent-dk); font-weight: 700; }
+.wp-brand-heart { color: var(--wp-accent); }
+.wp-brand-name {
+  font-family: var(--wp-serif);
+  font-size: 14.5px; letter-spacing: .06em;
+  color: var(--wp-text);
+}
+.wp-brand-ver { color: var(--wp-gold); font-size: 12px; letter-spacing: .1em; }
+.wp-brand-tag {
+  margin-top: 5px;
+  font-family: var(--wp-serif);
+  font-size: 13.5px;
+  letter-spacing: .02em;
+  color: var(--wp-text-soft);
+}
+.wp-brand:hover .wp-brand-name { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── 기술 스택 모달 ─────────────────── */
+.wp-modal {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(40, 28, 20, .55);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: wp-fadein .2s ease;
+}
+.wp-modal-card {
+  position: relative;
+  width: 100%; max-width: 420px;
+  max-height: 88vh; overflow-y: auto;
+  background: linear-gradient(180deg, #fffdf9, #fbf4ea);
+  border: 1px solid var(--wp-card-edge);
+  border-radius: 20px;
+  padding: 30px 24px 24px;
+  box-shadow: var(--wp-shadow-lg);
+  animation: wp-modal-in .28s cubic-bezier(.2,.7,.3,1.2);
+  word-break: keep-all;
+}
+@keyframes wp-modal-in { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
+.wp-modal-close {
+  position: absolute; top: 12px; right: 14px;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: none; background: rgba(0,0,0,.06); color: var(--wp-text-soft);
+  font-size: 20px; cursor: pointer; line-height: 1;
+}
+.wp-modal-close:hover { background: rgba(0,0,0,.12); }
+.wp-modal-eyebrow {
+  font-family: var(--wp-serif);
+  letter-spacing: .3em; font-size: 11px; text-transform: uppercase;
+  color: var(--wp-gold); margin: 0 0 6px;
+}
+.wp-modal-title {
+  font-family: var(--wp-serif);
+  font-size: 26px; font-weight: 600; margin: 0 0 8px;
+  color: var(--wp-accent-dk);
+}
+.wp-modal-desc { font-size: 13px; line-height: 1.65; color: var(--wp-text-soft); margin: 0 0 18px; }
+.wp-stack { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--wp-card-edge); }
+.wp-stack-row {
+  display: flex; gap: 12px; align-items: baseline;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--wp-card-edge);
+}
+.wp-stack-key {
+  flex: 0 0 76px;
+  font-family: var(--wp-serif);
+  font-size: 13px; font-weight: 600; letter-spacing: .04em;
+  color: var(--wp-accent-dk);
+}
+.wp-stack-val { flex: 1; font-size: 13px; line-height: 1.5; color: var(--wp-text); }
+.wp-stack-val em { font-style: normal; color: var(--wp-text-soft); font-size: 12px; }
+.wp-modal-tagline {
+  font-family: var(--wp-serif);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: .06em;
+  color: var(--wp-gold);
+  margin: 0 0 14px;
+}
+.wp-modal-tagline span { color: var(--wp-text-soft); font-style: normal; letter-spacing: .02em; }
+
+/* Features → 가치 칩 */
+.wp-feats { display: flex; flex-wrap: wrap; gap: 6px; }
+.wp-feat {
+  display: inline-flex; align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(201,138,125,.12), rgba(197,163,104,.12));
+  border: 1px solid rgba(197,163,104,.28);
+  font-size: 12px; color: var(--wp-accent-dk);
+  white-space: nowrap;
+}
+/* Architecture 흐름 */
+.wp-arch { display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+.wp-arch i { color: var(--wp-gold); font-style: normal; font-weight: 700; }
+/* 기술 블록은 맨 아래에서 살짝 차분하게 */
+.wp-stack-tech { margin-top: 16px; }
+.wp-stack-tech .wp-stack-val { color: var(--wp-text-soft); }
+
+/* 기술 상세 토글 */
+.wp-tech-more { margin-top: 14px; }
+.wp-tech-more summary {
+  cursor: pointer; list-style: none;
+  font-size: 12.5px; color: var(--wp-text-soft);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 0;
+}
+.wp-tech-more summary::-webkit-details-marker { display: none; }
+.wp-tech-more summary::before { content: "▸"; color: var(--wp-gold); transition: transform .15s; display: inline-block; }
+.wp-tech-more[open] summary::before { transform: rotate(90deg); }
+.wp-tech-more-body { padding: 8px 2px 2px; }
+.wp-tech-more-body p { margin: 4px 0; font-size: 12px; color: var(--wp-text-soft); line-height: 1.5; }
+
+/* 스토리 한 줄 (왜 만들었는지) */
+.wp-modal-story {
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--wp-card-edge);
+  text-align: center;
+  font-family: var(--wp-serif);
+  font-size: 14.5px; line-height: 1.6;
+  color: var(--wp-text);
+}
+/* 거래 경로 — 점잖게, 모달 안쪽에만 */
+.wp-modal-contact {
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--wp-card-edge);
+  text-align: center;
+}
+.wp-modal-contact-q {
+  margin: 0 0 9px;
+  font-size: 12.5px;
+  color: var(--wp-text-soft);
+  letter-spacing: .01em;
+}
+.wp-modal-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(197,163,104,.32);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wp-accent-dk);
+  text-decoration: none;
+  transition: background .15s, transform .15s, box-shadow .15s;
+}
+.wp-modal-contact-link:hover {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(180,140,70,.18);
+}
+.wp-modal-contact-ico { font-size: 14px; }
+.wp-modal-contact-arrow { color: var(--wp-gold); transition: transform .15s; }
+.wp-modal-contact-link:hover .wp-modal-contact-arrow { transform: translateX(3px); }
+
+.wp-modal-foot {
+  text-align: center; margin: 14px 0 0;
+  font-family: var(--wp-serif); font-style: italic;
+  font-size: 12px; color: #b9a896;
+}
+
+/* ── 업로드 안심 문구 ───────────────── */
+.wp-reassure {
+  margin: -4px 0 0;
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--wp-text-soft);
+  letter-spacing: -.005em;
+}
+.wp-reassure b { color: var(--wp-sage-dk); font-weight: 700; }
+
+/* ── 완료: 공유 버튼 / 액션 묶음 ─────── */
+.wp-done-actions {
+  display: flex;
+  flex-direction: column;   /* 가로 분할 시 '친구에게 공유하기'가 반폭에 안 들어가 '공유하/기'로 깨짐 → 세로 적층 */
+  gap: 10px;
+  width: 100%;
+}
+.wp-done-actions .wp-btn { width: 100%; }
+.wp-btn-share {
+  background: linear-gradient(135deg, #cdab6c 0%, #b08a4d 100%);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-shadow: 0 1px 2px rgba(90, 65, 20, .28);
+  box-shadow: 0 8px 20px rgba(180, 140, 70, .34);
+}
+.wp-btn-share:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(180, 140, 70, .42); }
+.wp-btn-share.is-copied { background: linear-gradient(135deg, #8aa07e, #6f8466); box-shadow: 0 8px 20px rgba(111,132,102,.34); }
+
+/* ── 컨페티 버스트 (업로드 성공 연출) ── */
+.wp-confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  pointer-events: none;
+  overflow: hidden;
+}
+.wp-confetti-piece {
+  position: absolute;
+  top: 40%; left: 50%;
+  width: 11px; height: 9px;
+  border-radius: 76% 24% 70% 30% / 70% 30% 70% 30%;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: wp-burst var(--wp-bd, 1.5s) cubic-bezier(.16,.62,.4,1) forwards;
+  animation-delay: var(--wp-bdelay, 0s);
+}
+@keyframes wp-burst {
+  0%   { transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(.3); opacity: 0; }
+  12%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(var(--wp-bx, 0), var(--wp-by, 60vh)) rotate(var(--wp-br, 540deg)) scale(1); opacity: 0; }
+}
+
+/* ── 반응형 ─────────────────────────── */
+@media (min-width: 640px) {
+  .wp-shell { max-width: 600px; }
+}
+
+/* ── 모션 최소화 선호 ────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .wp-petals, .wp-confetti { display: none; }
+  .wp-scroll-hint, .wp-check-circle, .wp-check-mark, .wp-thumb.is-done .wp-thumb-status,
+  .wp-livecount::before { animation: none; }
+  .wp-check-circle, .wp-check-mark { stroke-dashoffset: 0; }
+  .wp-hero-layer { animation: none; opacity: 0; }
+  .wp-hero-layer:nth-child(1) { opacity: 1; }
+}

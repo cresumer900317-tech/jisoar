@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>박기백 · 박지은 — 웨딩 사진 갤러리</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23f3e9dc'/><path d='M16 25C9 20 5 16.2 5 12.2A4.8 4.8 0 0 1 14 9a4.8 4.8 0 0 1 9 3.2c0 4-4 7.8-7 9.8z' fill='%23c98a7d'/></svg>" />
+
+  <link rel="preconnect" href="https://guild-backend-production-75a6.up.railway.app" crossorigin />
+  <link rel="stylesheet" href="./wedding.css?v=16" />
+  <link rel="stylesheet" href="./gallery.css?v=3" />
+</head>
+<body data-page="gallery">
+  <!-- 권한 없음 -->
+  <main class="wp-shell" id="gate" hidden>
+    <header class="wp-hero">
+      <div class="wp-hero-deco" aria-hidden="true"><span class="wp-heart">🔒</span></div>
+      <h1 class="wp-title">비공개 페이지</h1>
+      <p class="wp-subtitle">접근 권한이 없습니다.</p>
+    </header>
+  </main>
+
+  <!-- 갤러리 본체 -->
+  <div class="wg-shell" id="app" hidden>
+    <header class="wg-header">
+      <div class="wg-header-inner">
+        <div class="wg-title">
+          <h1>박기백 <span class="wp-and">&amp;</span> 박지은</h1>
+          <p class="wg-sub">웨딩 사진 갤러리 · 총 <strong id="totalCount">0</strong>개</p>
+        </div>
+        <div class="wg-controls">
+          <button class="wp-btn wp-btn-ghost wg-select-btn" id="selectBtn">선택</button>
+          <button class="wp-btn wp-btn-ghost wg-slide-btn" id="slideBtn">▶︎ 슬라이드쇼</button>
+          <button class="wp-btn wp-btn-primary wg-zip-btn" id="zipBtn">
+            <span class="wp-btn-label">전체 ZIP 다운로드</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="wg-main" id="grid">
+      <div class="wg-empty" id="empty" hidden>
+        <div class="wp-done-icon">📷</div>
+        <h2>아직 사진이 없습니다</h2>
+        <p>하객 분들이 사진을 올리시면 여기에 표시됩니다.</p>
+      </div>
+    </main>
+
+    <div class="wg-loading" id="loading">불러오는 중…</div>
+
+    <!-- 선택 삭제 액션 바 (선택 모드일 때만) -->
+    <div class="wg-selbar" id="selBar" hidden>
+      <span class="wg-selbar-count"><strong id="selCount">0</strong>개 선택됨</span>
+      <div class="wg-selbar-actions">
+        <button type="button" class="wg-selbar-btn" id="selAllBtn">전체 선택</button>
+        <button type="button" class="wg-selbar-btn wg-selbar-cancel" id="selCancelBtn">취소</button>
+        <button type="button" class="wg-selbar-btn wg-selbar-del" id="selDelBtn" disabled>선택 삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="wg-lightbox" id="lightbox" hidden>
+    <button class="wg-lb-close" type="button" id="lbClose" aria-label="닫기">×</button>
+    <button class="wg-lb-nav wg-lb-prev" type="button" id="lbPrev" aria-label="이전">‹</button>
+    <button class="wg-lb-nav wg-lb-next" type="button" id="lbNext" aria-label="다음">›</button>
+    <figure class="wg-lb-figure">
+      <div class="wg-lb-stage" id="lbStage"></div>
+      <figcaption id="lbCap"></figcaption>
+    </figure>
+  </div>
+
+  <!-- Slideshow (식장 스크린용 자동 재생) -->
+  <div class="wg-slideshow" id="slideshow" hidden>
+    <div class="wg-ss-stage" id="ssStage"></div>
+    <div class="wg-ss-caption" id="ssCaption"></div>
+    <button class="wg-ss-close" type="button" id="ssClose" aria-label="닫기">×</button>
+  </div>
+
+  <script src="./gallery.js?v=3"></script>
+</body>
+</html>
