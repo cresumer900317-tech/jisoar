@@ -38,6 +38,14 @@
     animation:tw 4s ease-in-out infinite}
   @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
 
+  /* ── fixed nav (스크롤 시 등장) ── */
+  .nav{position:fixed; top:20px; left:26px; z-index:50; display:flex; align-items:center; gap:9px;
+    text-decoration:none; opacity:0; transform:translateY(-8px); pointer-events:none;
+    transition:opacity .45s ease, transform .45s ease}
+  .nav.show{opacity:1; transform:translateY(0); pointer-events:auto}
+  .navwm{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:20px; letter-spacing:-.01em; color:var(--ink)}
+  .navwm .dot{color:var(--dawn)}
+
   /* ── layout ── */
   .wrap{max-width:760px; margin:0 auto; padding:0 28px}
   section{min-height:auto}
@@ -122,7 +130,15 @@
 <div class="sky"></div>
 <div class="stars" id="stars"></div>
 
-<section class="hero">
+<a class="nav" id="nav" href="#top" aria-label="jisoar home">
+  <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <path d="M6 18 L16 8 L26 18" stroke="#ffae82" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 24 L16 19.5 L20 24" stroke="#aa5638" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <span class="navwm">jisoar<span class="dot">.</span></span>
+</a>
+
+<section class="hero" id="top">
   <div class="wrap">
     <h1 class="mark">jisoar<span class="dot">.</span></h1>
     <div class="pron">ji·soar &nbsp;/dʒiˈsɔːr/&nbsp; · &nbsp;지소어</div>
@@ -212,6 +228,17 @@
       h+='<span class="star" style="left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;animation-delay:'+d+'s"></span>';
     }
     c.innerHTML=h;
+  })();
+
+  // 스크롤하면 상단 네비 등장 (첫 화면에선 숨김)
+  (function(){
+    var nav=document.getElementById('nav');
+    function onScroll(){
+      if(window.scrollY > window.innerHeight*0.6){ nav.classList.add('show'); }
+      else{ nav.classList.remove('show'); }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
   })();
 </script>
 </body>
