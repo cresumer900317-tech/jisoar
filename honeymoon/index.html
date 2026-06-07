@@ -150,6 +150,8 @@
   .check.on .box svg{opacity:1}
   .check.on span{color:var(--muted-2); text-decoration:line-through}
   .check b{color:var(--ink); font-weight:600}
+  .chk-cat{font-size:11px; letter-spacing:.1em; color:var(--dawn-2); margin:15px 0 3px; font-weight:600}
+  .chk-cat:first-child{margin-top:2px}
 
   /* phrases */
   .ph{display:grid; grid-template-columns:1fr; gap:0}
@@ -701,14 +703,37 @@
 <section class="sec" id="transport">
   <div class="sec-eyebrow">Getting Around</div>
   <h2>교통 &amp; 패스<span class="ko">이동 팁</span></h2>
-  <div class="grid two">
+  <!-- 도착 직후 할 일 -->
+  <div class="ic" style="border-color:rgba(142,202,230,.4); background:rgba(142,202,230,.05)">
+    <h3><span class="ico">🛬</span> 삿포로 도착하자마자 (6/8, 신치토세공항) <span class="citytag s">순서대로</span></h3>
+    <ul>
+      <li><b>① 입국</b> — <b>Visit Japan Web</b> 미리 등록(입국+세관 QR, 부부 각자) → 도착해서 QR 스캔만</li>
+      <li><b>② 데이터</b> — eSIM 켜기 / 포켓와이파이 도착층 카운터 수령</li>
+      <li><b>③ 🎫 Kitaca IC카드 2장 발급 + 현금충전</b> — 지하 <b>JR 신치토세공항역</b> 매표기·창구에서 구입, 각 <b>¥3,000~5,000</b> 충전 (게이트는 1인 1장 태그)</li>
+      <li><b>④ 🚄 쾌속 에어포트</b> — Kitaca 태그 → 삿포로역(약 37분) → 그란벨 체크인</li>
+      <li><b>⑤ 🍣 18:00 스시 시라</b> (예약 CRLFY465JM)</li>
+      <li class="tip">Kitaca = 전국 호환. 삿포로·도쿄(JR 포함)·오사카 9일 내내 이거 한 장이면 끝</li>
+    </ul>
+  </div>
+
+  <div class="grid two" style="margin-top:13px">
     <div class="ic">
-      <h3><span class="ico">💳</span> IC카드 (제일 중요)</h3>
+      <h3><span class="ico">💳</span> IC카드 (메인 · 제일 안전)</h3>
       <ul>
-        <li><b>카드 충전</b> — 모바일 스이카는 <b>마스터/아멕스(현대카드 등)</b>만 충전돼요. <span class="tip">한국 VISA는 충전 불가</span></li>
-        <li><b>카드 안 돼도 OK · 현금 충전</b> — 편의점 계산대("스이카 차지"), 세븐뱅크 ATM, JR역 충전기(트레이에 폰 올림)</li>
-        <li><b>제일 쉬운 길</b> — 공항에서 <b>실물 Welcome Suica·Kitaca·ICOCA</b> 사서 현금 충전(카드 등록 불필요). 도착지 신치토세공항에서 발급</li>
-        <li>삿포로 SAPICA·전국 IC 호환 — 지하철·버스·편의점 탭 결제 한 장이면 끝</li>
+        <li><b>실물 Kitaca/Suica/ICOCA</b>를 현금충전해서 쓰는 게 가장 확실 — <b>전 도시·전 노선(JR 포함) 100% 커버</b></li>
+        <li><b>현금충전</b> — 편의점 계산대("스이카 차지"), 세븐뱅크 ATM, 역 충전기</li>
+        <li><b>모바일 스이카 카드충전</b>은 <b>마스터/아멕스(현대카드)</b>만 가능 — <span class="tip">한국 VISA는 충전 불가</span></li>
+        <li>1인 1장 필요(게이트 각자 태그)</li>
+      </ul>
+    </div>
+    <div class="ic">
+      <h3><span class="ico">📲</span> 카드 직접 태그(오픈루프)</h3>
+      <ul>
+        <li><b>트래블월렛(VISA)을 게이트에 바로 태그</b> — 후쿠오카에서 됐던 그 방식. 도시마다 다름:</li>
+        <li>🐙 <b>오사카 ✅ 완벽</b> — 오사카메트로·한큐·한신·긴테츠·<b>난카이(공항선)</b></li>
+        <li>🗼 <b>도쿄 △ 부분</b> — 메트로·도에이·사철 OK, <span class="tip">JR동일본(디즈니 케이요선·야마노테)은 ✗</span></li>
+        <li>❄️ <b>삿포로 ✗</b> — 대부분 미지원 → IC카드 사용</li>
+        <li class="tip">→ IC카드를 메인, 트래블월렛은 오사카 태그+결제용 보조로</li>
       </ul>
     </div>
     <div class="ic">
@@ -716,24 +741,17 @@
       <ul>
         <li><b>삿포로</b>: 지하철·도보, 6/9는 렌터카</li>
         <li><b>하네다→디즈니</b>: 모노레일+환승 or 리무진버스 직행</li>
-        <li><b>도쿄</b>: JR 야마노테선·지하철 (구글/네이버 지도)</li>
-        <li><b>오사카</b>: 미도스지선 중심, 난바·우메다·신사이바시</li>
+        <li><b>도쿄</b>: JR 야마노테선·지하철 (전철 환승 잦음)</li>
+        <li><b>오사카</b>: 난바 숙소라 도톤보리·신사이바시 도보권, 미도스지선</li>
         <li><b>도쿄→오사카</b>: 신칸센 QR (예약완료 ✅)</li>
       </ul>
     </div>
     <div class="ic">
-      <h3><span class="ico">📶</span> 인터넷</h3>
+      <h3><span class="ico">📶</span> 인터넷 &amp; 패스</h3>
       <ul>
         <li><b>eSIM</b> 또는 포켓와이파이 미리 준비 (구글맵 필수)</li>
-        <li>아이폰 eSIM이 가장 편함 — 도착 즉시 데이터</li>
-      </ul>
-    </div>
-    <div class="ic">
-      <h3><span class="ico">🎫</span> 패스 참고</h3>
-      <ul>
-        <li>구간 이동(신칸센)을 개별 예약했으니 <b>JR패스 불필요</b>할 가능성 큼</li>
-        <li>오사카 관광 많으면 <b>오사카 e패스/주유패스</b> 검토</li>
-        <li>도쿄는 지하철 1·2일권보다 스이카 종량제가 보통 이득</li>
+        <li>신칸센 개별예약 → <b>JR패스 불필요</b></li>
+        <li>오사카 관광 많으면 <b>오사카 e패스</b> 검토</li>
       </ul>
     </div>
   </div>
@@ -766,20 +784,46 @@
   </div>
 
   <div class="ic" style="margin-top:13px">
-    <h3><span class="ico">✅</span> 출발 전 체크 (탭하면 체크)</h3>
+    <h3><span class="ico">✅</span> 출발 전 체크리스트 (탭하면 체크 · 저장됨)</h3>
     <div id="checklist">
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>여권 + 양가 신분증, 유효기간 확인</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>항공권(KE769/AIRDO) · 신칸센 QR · 디즈니 QR 캡처</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>엔화 환전 + 트래블카드 충전</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>모바일 스이카 추가 · eSIM 설치</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>AIRDO 온라인 체크인 (6/9 15:00 오픈)</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>렌터카 운전면허증 + <b>국제운전면허증</b>(필수!) 챙기기</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>돼지코·보조배터리·충전기·우산</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>여행자보험 가입 확인</span></div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>디즈니 앱 설치 + 계정 로그인</span></div>
+      <div class="chk-cat">📄 서류·신분</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>여권 2개</b> (유효기간 6개월↑) + 사본·사진 별도 보관</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Visit Japan Web</b> 등록 (입국+세관 QR, 부부 각자)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>국제운전면허증(IDP)</b> + 한국 면허증 원본 + 여권 (6/9 렌터카 필수)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>여행자보험 가입 (영문 증서 캡처)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>e티켓(KE769·AIRDO·KE724) + 호텔 예약확인 6곳</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>QR 캡처+양쪽 폰 공유</b>: 신칸센·디즈니·렌터카 바우처·식당</span></div>
+
+      <div class="chk-cat">💳 금융·결제</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>엔화 현금</b> 1인 ¥30,000~50,000 (자판기·신사·게이트 충전)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>트래블월렛 충전 (가능하면 2장 — 오사카 태그용)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>해외결제 신용카드 1장+ / 해외결제 한도·차단 확인</span></div>
+
+      <div class="chk-cat">🔌 전자기기</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>보조배터리</b>(기내 휴대만) + 충전 케이블</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>돼지코/멀티어댑터</b>(110V) · eSIM/포켓와이파이</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>카메라+여분배터리·메모리 · 셀카봉/미니삼각대 (신혼 사진!)</span></div>
+
+      <div class="chk-cat">👕 의류 (삿포로 선선 / 도쿄·오사카 장마)</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>반팔 + <b>삿포로용 얇은 겉옷/가디건</b></span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>접이식 우산 + 우비</b> (장마 ☔) · 편한 운동화·여벌 양말</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>스마트캐주얼 1벌</b>(스시 개인실·호텔 디너) · 속옷·잠옷 넉넉히</span></div>
+
+      <div class="chk-cat">🧴 세면·💊 약</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>기초화장품 + <b>선크림</b> · 칫솔/치약 · 화장솜·면봉 · 여성용품</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>진통·감기·<b>소화/지사제·멀미약</b> · 밴드 · 개인 처방약</span></div>
+
+      <div class="chk-cat">🎒 가방·🏰 디즈니</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>캐리어 + <b>빈 보스턴백</b>(귀국 쇼핑) · 기내백 · 에코백</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>디즈니 앱</b> 설치+로그인+결제등록 · QR 화면밝기 최대 연습</span></div>
+
+      <div class="chk-cat">✈️ 출발 직전 (잊지 말기!)</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>AIRDO 온라인 체크인 — 6/9 15:00 오픈</b></span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>KE 웹체크인 · 짐무게 확인 · <b>위탁에 보조배터리/라이터 X</b></span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>집 정리(가스·택배정지) · 로밍/데이터 설정</span></div>
     </div>
   </div>
-  <p class="note" style="background:rgba(127,214,166,.05)"><b style="color:var(--ok)">TIP</b> &nbsp;6/9 렌터카 운전하려면 <b style="color:var(--ink)">국제운전면허증(IDP)</b>이 반드시 필요해요. 경찰서·운전면허시험장에서 발급(여권사진·여권·면허증 지참).</p>
+  <p class="note" style="background:rgba(127,214,166,.05)"><b style="color:var(--ok)">TIP</b> &nbsp;6/9 렌터카 운전엔 <b style="color:var(--ink)">국제운전면허증(IDP)</b>이 반드시 필요해요(경찰서·면허시험장 발급, 여권사진·여권·면허증 지참). 일본은 <b style="color:var(--ink)">IDP·한국면허·여권 3개를 함께</b> 봐요.</p>
 </section>
 
 <!-- LANGUAGE & EMERGENCY -->
@@ -846,7 +890,7 @@
   })();
   // checklist (persists in localStorage)
   (function(){
-    var KEY='hm_check_v1';
+    var KEY='hm_check_v2';
     var saved={}; try{ saved=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){}
     var items=document.querySelectorAll('#checklist .check');
     items.forEach(function(el,i){
