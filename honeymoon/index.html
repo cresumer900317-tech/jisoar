@@ -934,6 +934,17 @@
     </div>
   </div>
 
+  <div class="ic" style="margin-top:13px; border-color:rgba(255,157,108,.4); background:rgba(255,157,108,.05)">
+    <h3><span class="ico">🧳</span> 짐 구성 (추천)</h3>
+    <ul>
+      <li><b>큰 캐리어 1개</b> (위탁) — 9일치 메인. <span class="tip">삿포로 겉옷은 꺼내기 쉽게 위쪽에</span></li>
+      <li><b>작은 기내용 캐리어 1개</b> — 보조배터리·전자기기·귀중품·1일치 옷. 신칸센은 <b>대형수하물석 예약</b>돼 있어 큰 캐리어도 OK</li>
+      <li><b>접이식 데이백/크로스백 1개</b> — 디즈니·관광·친구 점심날 폰·QR·지갑·물·카메라용 (캐리어에 접어서)</li>
+      <li><span class="tip">이동 많은 일정(호텔 6곳·비행기·신칸센·버스)엔 <b>백팩보다 굴리는 캐리어</b>가 훨씬 편해요</span></li>
+      <li><b>귀국 쇼핑</b> 대비 — 작은 캐리어 절반은 비워서 출발 · 모자라면 돈키호테 보조백</li>
+    </ul>
+  </div>
+
   <div class="ic" style="margin-top:13px">
     <h3><span class="ico">✅</span> 출발 전 체크리스트 (탭하면 체크 · 저장됨)</h3>
     <div id="checklist">
@@ -965,7 +976,8 @@
       <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>진통·감기·<b>소화/지사제·멀미약</b> · 밴드 · 개인 처방약</span></div>
 
       <div class="chk-cat">🎒 가방·🏰 디즈니</div>
-      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>캐리어 + <b>빈 보스턴백</b>(귀국 쇼핑) · 기내백 · 에코백</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>큰 캐리어</b> + <b>작은 기내용 캐리어</b> + 접이식 데이백/크로스백</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>작은 캐리어 절반은 <b>귀국 쇼핑용</b>으로 비우기 · 에코백</span></div>
       <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>디즈니 앱</b> 설치+로그인+결제등록 · QR 화면밝기 최대 연습</span></div>
 
       <div class="chk-cat">✈️ 출발 직전 (잊지 말기!)</div>
@@ -1041,7 +1053,7 @@
   })();
   // checklist (persists in localStorage)
   (function(){
-    var KEY='hm_check_v2';
+    var KEY='hm_check_v3';
     var saved={}; try{ saved=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){}
     var items=document.querySelectorAll('#checklist .check');
     items.forEach(function(el,i){
