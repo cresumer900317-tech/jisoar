@@ -57,7 +57,8 @@
 
   /* hero */
   .hero{min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; padding:64px 22px 40px}
-  .hero-eyebrow{font-size:12px; letter-spacing:.34em; text-transform:uppercase; color:var(--dawn); opacity:0; animation:rise 1s ease .1s forwards}
+  .hero>*{max-width:100%}
+  .hero-eyebrow{font-size:clamp(10px,2.6vw,12px); letter-spacing:.22em; text-transform:uppercase; color:var(--dawn); line-height:1.6; opacity:0; animation:rise 1s ease .1s forwards}
   .hero-title{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(40px,12vw,82px); line-height:1.02; letter-spacing:-.01em; margin:14px 0 4px;
     background:linear-gradient(180deg,#fff 0%,#e7ddf3 55%,#ffb4a2 120%); -webkit-background-clip:text; background-clip:text; color:transparent;
     opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .25s forwards}
@@ -202,7 +203,7 @@
   <p class="hero-eyebrow">Our Honeymoon · 8 Nights 9 Days</p>
   <h1 class="hero-title">Japan</h1>
   <p class="hero-names">박기백 <span class="amp">&amp;</span> 박지은</p>
-  <p class="hero-sub">2026. 06. 08 — 06. 16 · 삿포로 · 도쿄 · 오사카</p>
+  <p class="hero-sub">2026. 06. 08 — 06. 16<br/>삿포로 · 도쿄 · 오사카</p>
   <div class="hero-route">
     <span class="route-chip s">삿포로</span><span class="route-arrow">✈</span>
     <span class="route-chip t">도쿄</span><span class="route-arrow">🚄</span>
@@ -215,11 +216,11 @@
 <div class="daybar">
   <div class="daybar-scroll">
     <a class="pill" href="#d1"><b>D1</b> 6/8 삿포로</a>
-    <a class="pill" href="#d2"><b>D2</b> 6/9 드라이브</a>
+    <a class="pill" href="#d2"><b>D2</b> 6/9 비에이</a>
     <a class="pill" href="#d3"><b>D3</b> 6/10 →도쿄</a>
     <a class="pill" href="#d4"><b>D4</b> 6/11 디즈니</a>
     <a class="pill" href="#d5"><b>D5</b> 6/12 디즈니랜드</a>
-    <a class="pill" href="#d6"><b>D6</b> 6/13 도쿄</a>
+    <a class="pill" href="#d6"><b>D6</b> 6/13 센소지·타워</a>
     <a class="pill" href="#d7"><b>D7</b> 6/14 →오사카</a>
     <a class="pill" href="#d8"><b>D8</b> 6/15 오사카</a>
     <a class="pill" href="#d9"><b>D9</b> 6/16 귀국</a>
@@ -296,6 +297,17 @@
           <a class="maplink" href="https://www.google.com/maps/search/스시시라+삿포로" target="_blank" rel="noopener">📍 지도에서 보기 →</a>
         </div>
       </div>
+      <div class="ev">
+        <div class="ev-time">20:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🌃 밤 · 스스키노</div>
+          <div class="ev-title">스스키노 산책 <span class="en">Susukino</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">즐길거리</span><span class="val">홋카이도 최대 번화가 · 네온거리, 라멘요코초, 디저트·바</span></div>
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">호텔(그란벨)이 스스키노 인근이라 도보로 가볍게</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </article>
 
@@ -304,9 +316,9 @@
     <div class="day-head">
       <span class="day-n">2</span>
       <span class="day-date">6월 9일</span><span class="day-dow">화요일</span>
-      <span class="day-city">Sapporo · Drive</span>
+      <span class="day-city">Biei Drive</span>
     </div>
-    <p class="day-sum">렌터카로 홋카이도 드라이브 (오타루·요이치·삿포로 근교 추천) → 저녁 반납 후 삿포로 야경 🚗</p>
+    <p class="day-sum">렌터카로 <b style="color:var(--ink)">비에이 · 청의호수</b> 드라이브 (와이프 위시 ✨) → 저녁 삿포로 복귀 🚗</p>
     <div class="tl">
       <div class="ev">
         <div class="ev-time">10:00</div>
@@ -327,40 +339,40 @@
         </div>
       </div>
       <div class="ev">
-        <div class="ev-time">코스</div>
+        <div class="ev-time">메인</div>
         <div class="ev-body hi">
-          <div class="ev-kind">🗺️ 추천 A · 오타루 + 요이치 + 샤코탄 (10시간 풀코스)</div>
-          <div class="ev-title">오타루 ↔ 요이치 ↔ <b>샤코탄 블루</b> 바다 <span class="en">신혼 드라이브 정석</span></div>
+          <div class="ev-kind">🌊 비에이 · 청의호수 (와이프 위시 ✨)</div>
+          <div class="ev-title">비에이 청의호수 + 비에이 언덕 <span class="en">青い池 · Biei</span></div>
           <div class="ev-meta">
-            <div class="ev-row"><span class="lbl">10:50</span><span class="val">삿포로→오타루 (고속 약 45분)</span></div>
-            <div class="ev-row"><span class="lbl">11–13</span><span class="val">오타루 운하·사카이마치·오르골당·<b>르타오</b> + 스시 점심</span></div>
-            <div class="ev-row"><span class="lbl">13:30–15</span><span class="val">요이치 <b>닛카 위스키 증류소</b>(무료견학·시음, 예약 권장)</span></div>
-            <div class="ev-row"><span class="lbl">16–17</span><span class="val">🌊 <b>가무이 곶(神威岬)</b> — 에메랄드빛 '샤코탄 블루' 절경·산책</span></div>
-            <div class="ev-row"><span class="lbl">17–19</span><span class="val">삿포로 복귀 (약 2시간)</span></div>
+            <div class="ev-row"><span class="lbl">10:00</span><span class="val">픽업 즉시 출발 (장거리라 지체 X)</span></div>
+            <div class="ev-row"><span class="lbl">~12:30</span><span class="val">삿포로→비에이 (고속 약 2.5h, 휴게소 1회)</span></div>
+            <div class="ev-row"><span class="lbl">13–14</span><span class="val">🌊 <b>청의호수(青い池)</b> + <b>시라히게 폭포</b>(흰수염)</span></div>
+            <div class="ev-row"><span class="lbl">14–15:30</span><span class="val">비에이 언덕(패치워크 로드: 켄과메리·세븐스타 나무) + 점심</span></div>
+            <div class="ev-row"><span class="lbl">~18:00</span><span class="val">비에이→삿포로 복귀 (약 2.5h)</span></div>
             <div class="ev-row"><span class="lbl">19:30</span><span class="val warn">⛽ 만땅 주유 후 20:00 반납</span></div>
           </div>
-          <a class="maplink" href="https://www.google.com/maps/search/神威岬+Cape+Kamui" target="_blank" rel="noopener">📍 가무이 곶 →</a>
+          <a class="maplink" href="https://www.google.com/maps/search/青い池+비에이+청의호수" target="_blank" rel="noopener">📍 청의호수 →</a>
         </div>
       </div>
       <div class="ev">
-        <div class="ev-time">여유형</div>
-        <div class="ev-body">
-          <div class="ev-kind">☕ 추천 A-2 · 느긋 버전 (운전 적게)</div>
-          <div class="ev-title">오타루 + 요이치만, 대신 천천히</div>
+        <div class="ev-time tba">참고</div>
+        <div class="ev-body" style="border-color:rgba(255,209,102,.35)">
+          <div class="ev-kind">⏱️ 장거리 운전일</div>
+          <div class="ev-title">왕복 약 5~6시간 운전 — 일찍 출발이 관건</div>
           <div class="ev-meta">
-            <div class="ev-row"><span class="lbl">코스</span><span class="val">오타루 반나절 만끽 → 요이치 위스키 → 시로이코이비토 파크 → 저녁 일찍 복귀</span></div>
-            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">샤코탄까지 안 가면 운전 부담 적고 오타루를 더 깊게</span></div>
+            <div class="ev-row"><span class="lbl">핵심</span><span class="val"><b>10:00 정시 출발</b> 해야 비에이 3~4시간 여유. 라벤더(후라노)는 6월초 미개화라 패스</span></div>
+            <div class="ev-row"><span class="lbl">교대</span><span class="val tip">두 분이 운전 교대하면 덜 피곤 (아내도 IDP 있으면 무료 등록)</span></div>
           </div>
         </div>
       </div>
       <div class="ev">
         <div class="ev-time">대안</div>
         <div class="ev-body">
-          <div class="ev-kind">🌋 추천 B · 남쪽 자연·온천</div>
-          <div class="ev-title">시코츠호 + 노보리베츠 지옥계곡 ♨️</div>
+          <div class="ev-kind">☕ 가까운 대안 (운전 적게)</div>
+          <div class="ev-title">오타루 + 요이치 + 샤코탄 블루</div>
           <div class="ev-meta">
-            <div class="ev-row"><span class="lbl">코스</span><span class="val">시코츠호(투명 호수)→노보리베츠 지옥계곡·당일온천→복귀</span></div>
-            <div class="ev-row"><span class="lbl">참고</span><span class="val tip">비에이·후라노는 편도 2h+ & 6월초 라벤더 미개화라 비추천</span></div>
+            <div class="ev-row"><span class="lbl">코스</span><span class="val">오타루 운하·르타오(45분)→요이치 닛카 위스키→가무이 곶 '샤코탄 블루' 바다</span></div>
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">비에이가 너무 멀게 느껴지면 이쪽이 여유롭고 신혼 감성도 굿</span></div>
           </div>
         </div>
       </div>
@@ -371,7 +383,7 @@
           <div class="ev-title">좌측통행·우핸들 · IDP+한국면허+여권 지참</div>
           <div class="ev-meta">
             <div class="ev-row"><span class="lbl">주유</span><span class="val warn">반납 전 가득(Full to Full) — 영수증·계기판 사진 보관</span></div>
-            <div class="ev-row"><span class="lbl">고속</span><span class="val">ETC카드 카운터 대여 편리 · 오타루 운하 유료주차</span></div>
+            <div class="ev-row"><span class="lbl">고속</span><span class="val">ETC카드 카운터 대여 편리(비에이 통행료 ↑) · 휴게소 활용</span></div>
             <div class="ev-row"><span class="lbl">반납</span><span class="val">20:00 마감 — 주유 포함 19:30 도착 목표</span></div>
           </div>
         </div>
@@ -388,10 +400,13 @@
         </div>
       </div>
       <div class="ev">
-        <div class="ev-time">저녁</div>
+        <div class="ev-time">20:00+</div>
         <div class="ev-body">
-          <div class="ev-kind">🌃 야경 · 자유</div>
-          <div class="ev-title">모이와산 야경 / 스스키노 · 징기스칸 · 라멘요코초</div>
+          <div class="ev-kind">🍲 늦은 저녁 · 자유</div>
+          <div class="ev-title">반납 후 스스키노에서 가볍게 — 징기스칸 · 라멘요코초</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">장거리 운전 후라 무리 말고 호텔 근처에서 마무리</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -490,32 +505,62 @@
       <span class="day-date">6월 12일</span><span class="day-dow">금요일</span>
       <span class="day-city">Tokyo Disneyland</span>
     </div>
-    <p class="day-sum">도쿄 디즈니랜드 종일! → 저녁에 마루노우치로 이동해 체크인 🎢</p>
+    <p class="day-sum">디즈니랜드 호텔 체크아웃·짐보관 → 해피엔트리로 일찍 입장 → 종일 디즈니 → <b style="color:var(--ink)">밤 퍼레이드</b> → 마루노우치 체크인 🎆</p>
     <div class="tl">
       <div class="ev">
-        <div class="ev-time">개장</div>
-        <div class="ev-body hi">
-          <div class="ev-kind">🎟️ e티켓 · 1-Day Passport</div>
-          <div class="ev-title">도쿄 디즈니랜드 <span class="en">Tokyo Disneyland</span></div>
+        <div class="ev-time">아침</div>
+        <div class="ev-body">
+          <div class="ev-kind">🏨 체크아웃 · 짐보관</div>
+          <div class="ev-title">디즈니랜드 호텔 체크아웃 → 짐은 호텔에 맡기기</div>
           <div class="ev-meta">
-            <div class="ev-row"><span class="lbl">날짜</span><span class="val">2026년 6월 12일 지정 입장</span></div>
-            <div class="ev-row"><span class="lbl">인원</span><span class="val">성인 · 1인 ¥9,400</span></div>
-            <div class="ev-row"><span class="lbl">입장</span><span class="val warn">매표소 통과 X — 스마트폰 QR로 게이트 직접 입장 (인쇄본 불가)</span></div>
-          </div>
-          <div class="ev-tags">
-            <span class="tag">화면 밝기 최대 · QR 미리 캡처</span>
-            <span class="tag tip">DPA(유료 패스)·앱 미리 설치 추천</span>
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">짐은 프런트/벨데스크 보관 후 밤 퍼레이드까지 가볍게, 끝나고 찾아서 이동</span></div>
           </div>
         </div>
       </div>
       <div class="ev">
-        <div class="ev-time">저녁</div>
+        <div class="ev-time">개장전</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">⭐ 해피엔트리 (호텔 특전)</div>
+          <div class="ev-title">일반보다 15분 일찍 입장 <span class="en">Happy Entry</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">방법</span><span class="val">디즈니 호텔 투숙 특전 — 전용 게이트로 개장 15분 전 입장</span></div>
+            <div class="ev-row"><span class="lbl">활용</span><span class="val tip">인기 어트랙션(미녀와야수·뷰티앤더비스트) 먼저 직행</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">종일</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🎟️ e티켓 · 1-Day Passport</div>
+          <div class="ev-title">도쿄 디즈니랜드 <span class="en">Tokyo Disneyland</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">날짜</span><span class="val">2026년 6월 12일 지정 입장 · 성인 1인 ¥9,400</span></div>
+            <div class="ev-row"><span class="lbl">입장</span><span class="val warn">매표소 통과 X — 스마트폰 QR로 게이트 직접 입장 (인쇄본 불가)</span></div>
+          </div>
+          <div class="ev-tags">
+            <span class="tag">화면 밝기 최대 · QR 미리 캡처</span>
+            <span class="tag tip">DPA(유료 패스)·앱 미리 설치</span>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">밤</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🎆 밤 퍼레이드 · 하이라이트</div>
+          <div class="ev-title">일렉트리컬 퍼레이드 '드림라이츠' + 불꽃</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">시작 30~40분 전 퍼레이드 루트(신데렐라성 앞)에 자리 잡기. 끝나면 출구 혼잡</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">늦은밤</div>
         <div class="ev-body hi">
           <div class="ev-kind">🏨 숙소 4 · 체크인</div>
           <div class="ev-title">호텔 메트로폴리탄 마루노우치 <span class="en">Hotel Metropolitan Marunouchi</span></div>
           <div class="ev-meta">
-            <div class="ev-row"><span class="lbl">일정</span><span class="val">6/12 체크인 → 6/13 12:00 체크아웃 (1박)</span></div>
-            <div class="ev-row"><span class="lbl">위치</span><span class="val">도쿄역 직결 (사우스타워) · 고층 야경 🌃</span></div>
+            <div class="ev-row"><span class="lbl">이동</span><span class="val">디즈니랜드 호텔서 짐 찾기 → 마이하마역 JR 케이요선 → 도쿄역(약 15분)</span></div>
+            <div class="ev-row"><span class="lbl">일정</span><span class="val">6/12 체크인 → 6/13 12:00 체크아웃 · 도쿄역 직결, 고층 야경 🌃</span></div>
           </div>
           <a class="maplink" href="https://www.google.com/maps/search/Hotel+Metropolitan+Marunouchi+Tokyo" target="_blank" rel="noopener">📍 지도에서 보기 →</a>
         </div>
@@ -530,33 +575,62 @@
       <span class="day-date">6월 13일</span><span class="day-dow">토요일</span>
       <span class="day-city">Tokyo</span>
     </div>
-    <p class="day-sum">도쿄 시내 자유 관광 (긴자·아사쿠사·시부야 등) 🗼</p>
+    <p class="day-sum">와이프 위시 도쿄 — <b style="color:var(--ink)">아사쿠사 센소지 · 아키하바라 · 도쿄타워(야경)</b> 🗼</p>
     <div class="tl">
       <div class="ev">
         <div class="ev-time">12:00</div>
         <div class="ev-body">
-          <div class="ev-kind">🏨 체크아웃</div>
-          <div class="ev-title">호텔 메트로폴리탄 마루노우치</div>
-        </div>
-      </div>
-      <div class="ev">
-        <div class="ev-time">자유</div>
-        <div class="ev-body">
-          <div class="ev-kind">🗼 추천 관광</div>
-          <div class="ev-title">아사쿠사 센소지 · 긴자 · 시부야 스카이 · 신주쿠 · 도쿄타워</div>
+          <div class="ev-kind">🏨 체크아웃 → 짐 옮기기</div>
+          <div class="ev-title">메트로폴리탄 체크아웃 → 네스트(야에스)에 짐 맡기기</div>
           <div class="ev-meta">
-            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">짐은 호텔 또는 도쿄역 코인로커 보관 후 가볍게 이동</span></div>
+            <div class="ev-row"><span class="lbl">꿀팁</span><span class="val tip">두 호텔 다 도쿄역 (마루노우치↔야에스, 도보 5분). 짐 먼저 맡기고 가볍게 관광</span></div>
           </div>
         </div>
       </div>
       <div class="ev">
-        <div class="ev-time">15:00</div>
+        <div class="ev-time">낮①</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">⛩️ 아사쿠사 센소지</div>
+          <div class="ev-title">센소지·나카미세 거리 <span class="en">Senso-ji</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">즐길거리</span><span class="val">가미나리몬·오층탑, 나카미세 먹거리, 기모노 사진</span></div>
+            <div class="ev-row"><span class="lbl">이동</span><span class="val">도쿄역→아사쿠사 지하철 약 20분</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Senso-ji+Asakusa" target="_blank" rel="noopener">📍 센소지 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">낮②</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🎮 아키하바라</div>
+          <div class="ev-title">전자상가·애니·굿즈 천국 <span class="en">Akihabara</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">즐길거리</span><span class="val">요도바시·게임센터·피규어, 점심</span></div>
+            <div class="ev-row"><span class="lbl">이동</span><span class="val">아사쿠사→아키하바라 약 15분 (긴자선 우에노 환승)</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Akihabara" target="_blank" rel="noopener">📍 아키하바라 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">야경</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🗼 도쿄타워 (해질녘 추천)</div>
+          <div class="ev-title">도쿄타워 전망·라이트업 <span class="en">Tokyo Tower</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">해질녘 올라가 야경까지 보면 신혼 인생샷. 아래 시바공원에서 타워 인증샷도</span></div>
+            <div class="ev-row"><span class="lbl">이동</span><span class="val">아키하바라→도쿄타워 약 25분 (히비야선 등)</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Tokyo+Tower" target="_blank" rel="noopener">📍 도쿄타워 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">15:00~</div>
         <div class="ev-body hi">
           <div class="ev-kind">🏨 숙소 5 · 체크인</div>
           <div class="ev-title">네스트호텔 도쿄 야에스 <span class="en">Nest Hotel Tokyo Yaesu</span></div>
           <div class="ev-meta">
             <div class="ev-row"><span class="lbl">일정</span><span class="val">6/13 15:00 체크인 → 6/14 11:00 체크아웃 (1박)</span></div>
-            <div class="ev-row"><span class="lbl">위치</span><span class="val">도쿄역 야에스 출구 인근 — 다음날 신칸센 탑승에 최적 🚄</span></div>
+            <div class="ev-row"><span class="lbl">위치</span><span class="val">도쿄역 야에스 출구 인근 — 다음날 신칸센에 최적 🚄</span></div>
           </div>
           <a class="maplink" href="https://www.google.com/maps/search/Nest+Hotel+Tokyo+Yaesu" target="_blank" rel="noopener">📍 지도에서 보기 →</a>
         </div>
