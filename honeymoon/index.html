@@ -14,7 +14,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M16 25C10 20.5 6.5 17.4 6.5 13.8A4.3 4.3 0 0 1 14.4 11a4.3 4.3 0 0 1 8 2.8c0 3.6-3.5 6.7-6.4 9.2z' fill='%23ff9d6c'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-dynamic-subset.css" />
 <style>
   :root{
     --bg-top:#0a0e1a; --bg-mid:#141b33; --bg-glow:#2a3a6b;
@@ -28,7 +29,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
-    font-family:'Inter','Nanum Myeongjo',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    font-family:'Aptos Narrow','Aptos','Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',Roboto,sans-serif;
     color:var(--ink); background:var(--bg-top); overflow-x:hidden;
     -webkit-font-smoothing:antialiased; line-height:1.6;
   }
@@ -75,22 +76,27 @@
   @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
 
   /* day pills */
-  .daybar{position:sticky; top:0; z-index:40; padding:10px 0; margin-top:-1px;
-    background:linear-gradient(180deg, rgba(10,14,26,.95), rgba(10,14,26,.82)); backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
-  .daybar-scroll{display:flex; gap:8px; overflow-x:auto; padding:0 22px; max-width:760px; margin:0 auto; -ms-overflow-style:none; scrollbar-width:none}
-  .daybar-scroll::-webkit-scrollbar{display:none}
+  .daybar{position:sticky; top:44px; z-index:55; padding:9px 0 11px; margin-top:-1px;
+    background:linear-gradient(180deg, rgba(10,14,26,.98), rgba(10,14,26,.9)); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .daybar::after{content:""; position:absolute; top:0; bottom:0; right:0; width:40px; pointer-events:none;
+    background:linear-gradient(90deg, transparent, rgba(10,14,26,.92))}
+  .daybar-scroll{display:flex; gap:8px; overflow-x:auto; padding:0 22px 4px; max-width:760px; margin:0 auto;
+    -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:rgba(255,157,108,.6) rgba(255,255,255,.06)}
+  .daybar-scroll::-webkit-scrollbar{height:4px}
+  .daybar-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.06); border-radius:4px}
+  .daybar-scroll::-webkit-scrollbar-thumb{background:rgba(255,157,108,.6); border-radius:4px}
   .pill{flex:0 0 auto; text-decoration:none; font-size:12px; padding:7px 12px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted); white-space:nowrap; transition:.2s}
   .pill b{color:var(--ink); font-weight:600}
   .pill:hover,.pill:focus{border-color:var(--dawn); color:var(--ink)}
 
   /* sections */
-  .sec{padding:46px 0 8px; scroll-margin-top:60px}
+  .sec{padding:46px 0 8px; scroll-margin-top:104px}
   .sec-eyebrow{font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--dawn); margin-bottom:10px}
   .sec h2{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(26px,7vw,40px); letter-spacing:-.01em; margin-bottom:6px}
   .sec h2 .ko{font-family:'Nanum Myeongjo',serif; font-size:.5em; color:var(--muted); letter-spacing:.04em; margin-left:8px}
 
   /* day card */
-  .day{position:relative; border:1px solid var(--line); border-radius:18px; background:var(--card); padding:20px 18px 18px; margin-top:16px; scroll-margin-top:64px}
+  .day{position:relative; border:1px solid var(--line); border-radius:18px; background:var(--card); padding:20px 18px 18px; margin-top:16px; scroll-margin-top:104px}
   .day::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:3px; background:linear-gradient(var(--accent,var(--dawn)), transparent)}
   .day.sap{--accent:var(--sap)} .day.tok{--accent:var(--tok)} .day.osa{--accent:var(--osa)}
   .day-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:4px; padding-left:8px}
