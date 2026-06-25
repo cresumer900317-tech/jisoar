@@ -8,11 +8,11 @@
 
   <link rel="preconnect" href="https://guild-backend-production-75a6.up.railway.app" crossorigin />
   <link rel="dns-prefetch" href="https://guild-backend-production-75a6.up.railway.app" />
-  <link rel="preload" href="./me.css?v=19" as="style" />
+  <link rel="preload" href="./me.css?v=20" as="style" />
   <link rel="preload" href="../assets/js/common.js?v=28" as="script" />
-  <link rel="preload" href="./me.js?v=19" as="script" />
+  <link rel="preload" href="./me.js?v=20" as="script" />
 
-  <link rel="stylesheet" href="./me.css?v=19" />
+  <link rel="stylesheet" href="./me.css?v=20" />
 </head>
 <body>
   <!-- 로그인 안 됐을 때 -->
@@ -45,6 +45,7 @@
             <span class="cmdk-trigger-text">검색·명령</span>
             <span class="cmdk-trigger-kbd">⌘K</span>
           </button>
+          <button class="icon-btn" id="privacyToggle" title="프라이버시 모드 — 화면 블러 (Ctrl+Shift+H: 즉시 가리기)">🔓</button>
           <button class="icon-btn" id="manageCategoriesBtn" title="카테고리 관리">⚙</button>
           <div class="user-chip" id="userChip"></div>
         </div>
@@ -663,6 +664,15 @@
 
     <div id="toast" class="toast" hidden></div>
 
+    <!-- 패닉 커버 — Ctrl/Cmd+Shift+H 로 화면 즉시 가리기 (어깨너머 방어, 네트워크 로그와 무관) -->
+    <div id="privacyCover" class="privacy-cover" hidden>
+      <div class="privacy-cover-inner">
+        <div class="privacy-cover-dots"><span></span><span></span><span></span></div>
+        <p class="privacy-cover-text">연결 확인 중…</p>
+        <p class="privacy-cover-hint">화면을 클릭하거나 Esc 로 돌아갑니다</p>
+      </div>
+    </div>
+
     <!-- # 태그 자동완성 popup (Phase 7) -->
     <div class="tag-suggest" id="tagSuggest" hidden></div>
 
@@ -722,6 +732,6 @@
   </div>
 
   <script src="../assets/js/common.js?v=28"></script>
-  <script src="./me.js?v=19"></script>
+  <script src="./me.js?v=20"></script>
 </body>
 </html>
