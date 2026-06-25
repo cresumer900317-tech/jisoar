@@ -8,11 +8,11 @@
 
   <link rel="preconnect" href="https://guild-backend-production-75a6.up.railway.app" crossorigin />
   <link rel="dns-prefetch" href="https://guild-backend-production-75a6.up.railway.app" />
-  <link rel="preload" href="./me.css?v=20" as="style" />
+  <link rel="preload" href="./me.css?v=21" as="style" />
   <link rel="preload" href="../assets/js/common.js?v=28" as="script" />
-  <link rel="preload" href="./me.js?v=20" as="script" />
+  <link rel="preload" href="./me.js?v=21" as="script" />
 
-  <link rel="stylesheet" href="./me.css?v=20" />
+  <link rel="stylesheet" href="./me.css?v=21" />
 </head>
 <body>
   <!-- 로그인 안 됐을 때 -->
@@ -38,6 +38,7 @@
           <button class="nav-tab" data-tab="projects" role="tab">프로젝트</button>
           <button class="nav-tab" data-tab="calendar" role="tab">캘린더</button>
           <button class="nav-tab" data-tab="daily" role="tab">로그</button>
+          <button class="nav-tab" data-tab="snippets" role="tab">전달함</button>
         </nav>
         <div class="topbar-actions">
           <button class="cmdk-trigger" id="cmdkTrigger" title="명령 팔레트 열기 (Cmd/Ctrl+K)">
@@ -417,6 +418,18 @@
         </div>
       </section>
 
+      <!-- ═══════════════════════ 9) 전달함 (Snippets) ═══════════════ -->
+      <section class="page" id="pageSnippets" hidden>
+        <div class="page-header">
+          <h2>전달함 <span class="snip-sub">맥 → 회사 노트북 코드 브릿지</span></h2>
+          <button class="btn btn-primary" id="newSnippetBtn">＋ 코드 추가</button>
+        </div>
+        <p class="snip-note">
+          🔒 <strong>업무 코드만</strong> 올리세요 (개인정보 X). 회사 노트북에서 열면 IT 네트워크 로그에는 남습니다 — 코드 전달 자체는 안전하지만 민감한 건 넣지 마세요.
+        </p>
+        <div class="snip-list" id="snipList"></div>
+      </section>
+
       <!-- ═══════════════════════ 8) English ════════════════════════ -->
       <section class="page" id="pageEnglish" hidden>
         <div class="page-header">
@@ -662,6 +675,61 @@
       </div>
     </div>
 
+    <!-- 전달함 코드 작성/편집 모달 -->
+    <div class="modal-backdrop" id="snippetModal" hidden>
+      <div class="modal modal-lg" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h2 id="snippetModalTitle">새 코드</h2>
+          <button class="modal-close" data-close="snippet">✕</button>
+        </header>
+        <form id="snippetForm" class="modal-body">
+          <input type="hidden" id="snippetId" />
+          <label class="field">
+            <span>제목</span>
+            <input type="text" id="snipTitle" maxlength="200" placeholder="예: BUC2 스파이럴 게이지 위젯" />
+          </label>
+          <div class="snip-kind-toggle" role="tablist">
+            <button type="button" class="snip-kind-btn is-active" data-snipkind="single">단일 코드</button>
+            <button type="button" class="snip-kind-btn" data-snipkind="tb4">ThingsBoard 4파트</button>
+          </div>
+
+          <div id="snipFieldsSingle">
+            <label class="field">
+              <span>코드</span>
+              <textarea id="snipContent" class="snip-code-input" rows="16" spellcheck="false" placeholder="여기에 코드를 붙여넣으세요"></textarea>
+            </label>
+          </div>
+
+          <div id="snipFieldsTb4" hidden>
+            <label class="field">
+              <span>HTML</span>
+              <textarea id="snipHtml" class="snip-code-input" rows="6" spellcheck="false"></textarea>
+            </label>
+            <label class="field">
+              <span>CSS</span>
+              <textarea id="snipCss" class="snip-code-input" rows="6" spellcheck="false"></textarea>
+            </label>
+            <label class="field">
+              <span>JavaScript</span>
+              <textarea id="snipJs" class="snip-code-input" rows="8" spellcheck="false"></textarea>
+            </label>
+            <label class="field">
+              <span>Settings schema (JSON)</span>
+              <textarea id="snipSettings" class="snip-code-input" rows="6" spellcheck="false"></textarea>
+            </label>
+          </div>
+
+          <footer class="modal-foot">
+            <button type="button" class="btn btn-ghost" id="deleteSnippetBtn" hidden>삭제</button>
+            <div class="modal-foot-right">
+              <button type="button" class="btn btn-outline" data-close="snippet">취소</button>
+              <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </div>
+
     <div id="toast" class="toast" hidden></div>
 
     <!-- 패닉 커버 — Ctrl/Cmd+Shift+H 로 화면 즉시 가리기 (어깨너머 방어, 네트워크 로그와 무관) -->
@@ -732,6 +800,6 @@
   </div>
 
   <script src="../assets/js/common.js?v=28"></script>
-  <script src="./me.js?v=20"></script>
+  <script src="./me.js?v=21"></script>
 </body>
 </html>

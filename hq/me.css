@@ -1926,6 +1926,76 @@ input, button, select, textarea { font: inherit; color: inherit; }
   display: flex; gap: 6px; justify-content: flex-end;
 }
 
+/* ── 전달함 (Snippets) ────────────────────────────────── */
+.snip-sub {
+  font-size: 0.78rem; font-weight: var(--fw-regular);
+  color: var(--text-meta); margin-left: 8px;
+}
+.snip-note {
+  margin: 0 0 16px; padding: 10px 14px;
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem; color: var(--text-meta); line-height: 1.5;
+}
+.snip-list { display: flex; flex-direction: column; gap: 14px; }
+.snip-loading { color: var(--text-meta); padding: 24px; text-align: center; }
+.snip-card {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.snip-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 10px;
+}
+.snip-card-title { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.snip-title-text {
+  font-weight: var(--fw-semibold); color: var(--text-strong);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.snip-kind-badge {
+  flex: none; font-size: 0.68rem; font-weight: var(--fw-semibold);
+  padding: 2px 8px; border-radius: var(--radius-pill);
+  background: var(--surface-3); color: var(--text-meta);
+}
+.snip-kind-badge.is-tb4 { background: rgba(var(--primary-rgb), 0.18); color: #C4BBFF; }
+.snip-card-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+.snip-when { font-size: 0.72rem; color: var(--text-meta); }
+.snip-part { margin-top: 10px; }
+.snip-part:first-child { margin-top: 0; }
+.snip-part-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 4px;
+}
+.snip-part-label {
+  font-size: 0.74rem; font-weight: var(--fw-semibold);
+  color: var(--text-meta); text-transform: uppercase; letter-spacing: 0.03em;
+}
+.snip-pre {
+  margin: 0; padding: 10px 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem; line-height: 1.5; color: var(--text);
+  white-space: pre; overflow-x: auto; max-height: 220px;
+}
+.snip-empty-body { color: var(--text-meta); font-size: 0.82rem; padding: 8px 0; }
+.btn-sm { padding: 4px 10px; font-size: 0.76rem; }
+.snip-kind-toggle {
+  display: inline-flex; gap: 2px; padding: 3px; margin-bottom: 14px;
+  background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px;
+}
+.snip-kind-btn {
+  background: transparent; border: 0; cursor: pointer;
+  padding: 6px 14px; border-radius: 7px;
+  color: var(--text-meta); font-weight: var(--fw-medium); font-size: 0.84rem;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.snip-kind-btn.is-active { background: var(--primary); color: #fff; }
+.snip-code-input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem; line-height: 1.5; white-space: pre;
+}
+
 /* ── Privacy mode (어깨너머 방어) ──────────────────────── */
 /* 화면 블러 — 마우스 올리면 그 부분만 보임. 네트워크 로그는 못 막음(IT 레벨) */
 body.privacy-on .app-main { filter: blur(9px); transition: filter 0.12s var(--ease); }

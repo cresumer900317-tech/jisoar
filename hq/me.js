@@ -14,6 +14,10 @@ const STATE = {
   projects: [],
   inbox: [],
   dailyLogs: [],
+  snippets: [],              // 전달함 — 코드 브릿지 (지연 로드)
+  snippetsLoaded: false,
+  editingSnippetId: null,
+  snippetKind: "single",     // 모달 내 종류 토글: single | tb4
 
   // Phase 6d: AI 분류 제안 { inbox_id: {suggested_title, suggested_category, suggested_priority, suggested_tags, cached} }
   inboxSuggestions: {},
@@ -99,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindQuickMemo();
   bindTagSuggest();
   bindPrivacy();
+  bindSnippets();
   refreshAll();
 
   // Phase 7a: 첫 로드 시 브리핑
@@ -189,6 +194,7 @@ function setTab(name) {
     calendar: "pageCalendar",
     gantt: "pageGantt",
     daily: "pageDaily",
+    snippets: "pageSnippets",
     english: "pageEnglish",
   };
   const page = document.getElementById(map[name]);
@@ -210,6 +216,10 @@ function setTab(name) {
   else if (name === "daily") {
     renderDailyEditor();
     refreshDailyLogsList();
+  }
+  else if (name === "snippets") {
+    renderSnippets();
+    loadSnippets();
   }
   else if (name === "english") renderEnglish();
 
@@ -233,6 +243,7 @@ function renderAll() {
   else if (STATE.tab === "calendar") renderCalendar();
   else if (STATE.tab === "gantt") renderGantt();
   else if (STATE.tab === "daily") renderDailyEditor();
+  else if (STATE.tab === "snippets") renderSnippets();
   else if (STATE.tab === "english") renderEnglish();
 }
 
@@ -2758,6 +2769,7 @@ function bindEvents() {
       else if (target === "project") closeProjectModal();
       else if (target === "promote") closePromoteModal();
       else if (target === "aiUsage") closeAiUsageModal();
+      else if (target === "snippet") closeSnippetModal();
     });
   });
   document.querySelectorAll(".modal-backdrop").forEach(bd => {
@@ -2923,6 +2935,224 @@ function closeCmdk() {
 function fuzzyMatch(text, q) {
   if (!q) return true;
   return (text || "").toLowerCase().includes(q.toLowerCase());
+}
+
+// ════════════════════════════════════════════════════════
+// 전달함 (Snippets) — 맥↔회사 노트북 코드 브릿지
+// ════════════════════════════════════════════════════════
+const TB4_PARTS = [
+  { key: "html", label: "HTML" },
+  { key: "css", label: "CSS" },
+  { key: "js", label: "JavaScript" },
+  { key: "settings", label: "Settings" },
+];
+
+async function loadSnippets() {
+  try {
+    STATE.snippets = (await api("GET", "/api/me/snippets")) || [];
+    STATE.snippetsLoaded = true;
+    if (STATE.tab === "snippets") renderSnippets();
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+async function copyText(text, okMsg) {
+  const s = String(text ?? "");
+  if (!s) { showToast("복사할 내용이 없어요", true); return; }
+  try {
+    await navigator.clipboard.writeText(s);
+    showToast(okMsg || "복사됐어요 📋");
+  } catch {
+    // 비보안 컨텍스트 등 fallback
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = s;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      showToast(okMsg || "복사됐어요 📋");
+    } catch {
+      showToast("복사 실패 — 직접 선택해 주세요", true);
+    }
+  }
+}
+
+function snipKindLabel(kind) {
+  return kind === "tb4" ? "TB 4파트" : "단일";
+}
+
+function snipPreview(text) {
+  const t = String(text || "");
+  const clip = t.length > 600 ? t.slice(0, 600) + "\n…" : t;
+  return escapeHtml(clip);
+}
+
+function snippetCardHtml(s) {
+  const title = escapeHtml(s.title || "(제목 없음)");
+  const when = s.updated_at ? relativeTime(s.updated_at) : "";
+  let body;
+  if (s.kind === "tb4") {
+    body = TB4_PARTS.map(p => {
+      const val = s[p.key] || "";
+      if (!String(val).trim()) return "";
+      return `<div class="snip-part">
+        <div class="snip-part-head">
+          <span class="snip-part-label">${p.label}</span>
+          <button class="btn btn-outline btn-sm snip-copy" data-id="${s.id}" data-part="${p.key}">📋 복사</button>
+        </div>
+        <pre class="snip-pre">${snipPreview(val)}</pre>
+      </div>`;
+    }).join("") || `<div class="snip-empty-body">내용 없음</div>`;
+  } else {
+    body = `<div class="snip-part">
+      <div class="snip-part-head">
+        <span class="snip-part-label">코드</span>
+        <button class="btn btn-primary btn-sm snip-copy" data-id="${s.id}" data-part="content">📋 복사</button>
+      </div>
+      <pre class="snip-pre">${snipPreview(s.content)}</pre>
+    </div>`;
+  }
+  return `<div class="snip-card" data-id="${s.id}">
+    <div class="snip-card-head">
+      <div class="snip-card-title">
+        <span class="snip-kind-badge ${s.kind === "tb4" ? "is-tb4" : ""}">${snipKindLabel(s.kind)}</span>
+        <span class="snip-title-text">${title}</span>
+      </div>
+      <div class="snip-card-actions">
+        ${when ? `<span class="snip-when">${escapeHtml(when)}</span>` : ""}
+        <button class="icon-btn snip-edit" data-id="${s.id}" title="편집">✎</button>
+      </div>
+    </div>
+    ${body}
+  </div>`;
+}
+
+function renderSnippets() {
+  const list = document.getElementById("snipList");
+  if (!list) return;
+  if (!STATE.snippetsLoaded && !STATE.snippets.length) {
+    list.innerHTML = `<div class="snip-loading">불러오는 중…</div>`;
+    return;
+  }
+  if (!STATE.snippets.length) {
+    list.innerHTML = `<div class="empty-state">아직 담아둔 코드가 없어요.<br><small>맥에서 ＋코드 추가로 붙여넣고, 회사 노트북에서 열어 📋복사하세요.</small></div>`;
+    return;
+  }
+  list.innerHTML = STATE.snippets.map(snippetCardHtml).join("");
+  list.querySelectorAll(".snip-copy").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const s = STATE.snippets.find(x => x.id === Number(btn.dataset.id));
+      if (!s) return;
+      const part = btn.dataset.part;
+      const label = part === "content" ? "코드" : part.toUpperCase();
+      copyText(s[part], `${label} 복사됨 📋`);
+    });
+  });
+  list.querySelectorAll(".snip-edit").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      openSnippetModal(Number(btn.dataset.id));
+    });
+  });
+}
+
+function setSnippetKind(kind) {
+  STATE.snippetKind = kind === "tb4" ? "tb4" : "single";
+  document.querySelectorAll(".snip-kind-btn").forEach(b => {
+    b.classList.toggle("is-active", b.dataset.snipkind === STATE.snippetKind);
+  });
+  const single = document.getElementById("snipFieldsSingle");
+  const tb4 = document.getElementById("snipFieldsTb4");
+  if (single) single.hidden = STATE.snippetKind !== "single";
+  if (tb4) tb4.hidden = STATE.snippetKind !== "tb4";
+}
+
+function openSnippetModal(id) {
+  const modal = document.getElementById("snippetModal");
+  if (!modal) return;
+  STATE.editingSnippetId = id || null;
+  const s = id ? STATE.snippets.find(x => x.id === id) : null;
+  document.getElementById("snippetModalTitle").textContent = s ? "코드 편집" : "새 코드";
+  document.getElementById("snippetId").value = s ? s.id : "";
+  document.getElementById("snipTitle").value = s ? (s.title || "") : "";
+  document.getElementById("snipContent").value = s ? (s.content || "") : "";
+  document.getElementById("snipHtml").value = s ? (s.html || "") : "";
+  document.getElementById("snipCss").value = s ? (s.css || "") : "";
+  document.getElementById("snipJs").value = s ? (s.js || "") : "";
+  document.getElementById("snipSettings").value = s ? (s.settings || "") : "";
+  setSnippetKind(s ? s.kind : "single");
+  document.getElementById("deleteSnippetBtn").hidden = !s;
+  modal.hidden = false;
+}
+
+function closeSnippetModal() {
+  const modal = document.getElementById("snippetModal");
+  if (modal) modal.hidden = true;
+  STATE.editingSnippetId = null;
+}
+
+async function saveSnippet(e) {
+  e.preventDefault();
+  const id = STATE.editingSnippetId;
+  const kind = STATE.snippetKind;
+  const payload = { title: document.getElementById("snipTitle").value.trim(), kind };
+  if (kind === "tb4") {
+    payload.html = document.getElementById("snipHtml").value;
+    payload.css = document.getElementById("snipCss").value;
+    payload.js = document.getElementById("snipJs").value;
+    payload.settings = document.getElementById("snipSettings").value;
+    payload.content = "";
+  } else {
+    payload.content = document.getElementById("snipContent").value;
+    payload.html = ""; payload.css = ""; payload.js = ""; payload.settings = "";
+  }
+  try {
+    if (id) {
+      const updated = await api("PATCH", `/api/me/snippets/${id}`, payload);
+      const i = STATE.snippets.findIndex(x => x.id === id);
+      if (i >= 0) STATE.snippets[i] = updated;
+    } else {
+      const created = await api("POST", "/api/me/snippets", payload);
+      STATE.snippets.unshift(created);
+    }
+    closeSnippetModal();
+    renderSnippets();
+    showToast("저장됐어요");
+  } catch (err) {
+    showToast(err.message, true);
+  }
+}
+
+async function deleteSnippet() {
+  const id = STATE.editingSnippetId;
+  if (!id) return;
+  if (!confirm("이 코드를 삭제할까요?")) return;
+  try {
+    await api("DELETE", `/api/me/snippets/${id}`);
+    STATE.snippets = STATE.snippets.filter(x => x.id !== id);
+    closeSnippetModal();
+    renderSnippets();
+    showToast("삭제됐어요");
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+function bindSnippets() {
+  const newBtn = document.getElementById("newSnippetBtn");
+  if (newBtn) newBtn.addEventListener("click", () => openSnippetModal(null));
+  const form = document.getElementById("snippetForm");
+  if (form) form.addEventListener("submit", saveSnippet);
+  const delBtn = document.getElementById("deleteSnippetBtn");
+  if (delBtn) delBtn.addEventListener("click", deleteSnippet);
+  document.querySelectorAll(".snip-kind-btn").forEach(b => {
+    b.addEventListener("click", () => setSnippetKind(b.dataset.snipkind));
+  });
 }
 
 // ════════════════════════════════════════════════════════
@@ -3107,6 +3337,7 @@ function buildCmdkResults(query) {
     { kind: "nav", tab: "projects",  title: "프로젝트로 이동",  icon: "📁", sub: "프로젝트 카드" },
     { kind: "nav", tab: "calendar",  title: "캘린더로 이동",    icon: "📅", sub: "월간 보기" },
     { kind: "nav", tab: "daily",     title: "로그로 이동",      icon: "📓", sub: "하루 기록" },
+    { kind: "nav", tab: "snippets",  title: "전달함으로 이동",  icon: "🧩", sub: "맥↔회사 코드 브릿지" },
     { kind: "nav", tab: "gantt",     title: "간트로 이동",      icon: "📊", sub: "365일 — S3에서 프로젝트 뷰로 통합 예정" },
     { kind: "nav", tab: "inbox",     title: "받은 메모 (이전 보관함)", icon: "📥", sub: "예전에 담아둔 메모" },
   ];
