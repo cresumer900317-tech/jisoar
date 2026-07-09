@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Kansai Getaway — 박기백 · 박지은 · 2026.08.14–17</title>
+<meta name="description" content="오사카 · 교토 · 아리마온천 · 나라 · 고베 3박 4일 여름 여행 가이드. 일정·숙소·비행기·맛집·교통·준비물 한 곳에." />
+<meta name="theme-color" content="#0a0e1a" />
+<meta name="robots" content="noindex" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jisoar.com/osaka/" />
+<meta property="og:title" content="Kansai Getaway — 박기백 ♥ 박지은" />
+<meta property="og:description" content="오사카 · 교토 · 아리마온천 · 나라 · 고베 · 2026.08.14–17" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M10 21h12l-1.2 4H11.2z' fill='%23ff9d6c'/%3E%3Cpath d='M12.5 18c-1.8-1.8.9-3 .3-5M16 18c-1.8-1.8.9-3 .3-5M19.5 18c-1.8-1.8.9-3 .3-5' stroke='%23ffd9a8' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-dynamic-subset.css" />
+<style>
+  :root{
+    --bg-top:#0a0e1a; --bg-mid:#141b33; --bg-glow:#2a3a6b;
+    --dawn:#ff9d6c; --dawn-2:#ffd9a8; --rose:#ffb4a2;
+    --ink:#f4f6fb; --muted:#9aa6c4; --muted-2:#6f7ba0;
+    --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+    --card:rgba(255,255,255,.025); --card-hi:rgba(255,157,108,.06);
+    --ok:#7fd6a6; --warn:#ffd166;
+    --ume:#c8a2ff; --kyo:#8fd6a8; --arm:#ffd166; --nar:#f0b27a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Aptos Narrow','Aptos','Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',Roboto,sans-serif;
+    color:var(--ink); background:var(--bg-top); overflow-x:hidden;
+    -webkit-font-smoothing:antialiased; line-height:1.6;
+  }
+  .sky{position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(120% 80% at 50% 110%, rgba(255,157,108,.18), transparent 55%),
+      radial-gradient(100% 70% at 50% 120%, rgba(255,180,162,.10), transparent 50%),
+      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 60%, #1d2547 100%);}
+  .stars{position:fixed; inset:0; z-index:-1; opacity:.7}
+  .star{position:absolute; width:2px; height:2px; background:#fff; border-radius:50%; animation:tw 4s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
+
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  /* nav */
+  .nav{position:fixed; top:0; left:0; right:0; z-index:60; backdrop-filter:blur(10px);
+    background:linear-gradient(180deg, rgba(10,14,26,.92), rgba(10,14,26,.6) 70%, transparent);
+    transform:translateY(-100%); transition:transform .4s ease;}
+  .nav.show{transform:translateY(0)}
+  .nav-inner{max-width:760px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:10px}
+  .nav-home{display:flex; align-items:center; gap:7px; text-decoration:none; color:var(--ink)}
+  .nav-home .navwm{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:18px}
+  .nav-home .dot{color:var(--dawn)}
+  .nav-sep{color:var(--muted-2); font-size:13px}
+  .nav-title{font-size:13px; color:var(--muted); letter-spacing:.04em}
+
+  /* hero */
+  .hero{min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; padding:64px 22px 40px}
+  .hero>*{max-width:100%}
+  .hero-eyebrow{font-size:clamp(10px,2.6vw,12px); letter-spacing:.22em; text-transform:uppercase; color:var(--dawn); line-height:1.6; opacity:0; animation:rise 1s ease .1s forwards}
+  .hero-title{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(40px,12vw,82px); line-height:1.02; letter-spacing:-.01em; margin:14px 0 4px;
+    background:linear-gradient(180deg,#fff 0%,#e7ddf3 55%,#ffb4a2 120%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .25s forwards}
+  .hero-title .amp{color:var(--rose); -webkit-text-fill-color:var(--rose); font-style:italic; font-size:.7em}
+  .hero-names{font-family:'Nanum Myeongjo',serif; font-size:clamp(18px,5vw,26px); color:var(--ink); letter-spacing:.06em; margin-top:6px; opacity:0; animation:rise 1.1s ease .4s forwards}
+  .hero-sub{margin-top:18px; color:var(--muted); font-weight:300; font-size:clamp(14px,3.6vw,16px); letter-spacing:.04em; opacity:0; animation:rise 1.1s ease .55s forwards}
+  .hero-route{margin-top:22px; display:flex; gap:9px; align-items:center; justify-content:center; flex-wrap:wrap; opacity:0; animation:rise 1.1s ease .7s forwards}
+  .route-chip{font-size:13px; padding:7px 14px; border-radius:999px; border:1px solid var(--line-2); letter-spacing:.05em; color:var(--ink)}
+  .route-chip.u{border-color:rgba(200,162,255,.4)} .route-chip.k{border-color:rgba(143,214,168,.4)}
+  .route-chip.a{border-color:rgba(255,209,102,.4)} .route-chip.n{border-color:rgba(240,178,122,.4)}
+  .route-arrow{color:var(--muted-2)}
+  @keyframes rise{to{opacity:1; transform:translateY(0)}}
+  .hero-eyebrow,.hero-title,.hero-names,.hero-sub,.hero-route{transform:translateY(20px)}
+  .scroll-hint{position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:var(--muted-2); font-size:11px; letter-spacing:.2em; opacity:0; animation:rise 1s ease 1.1s forwards, bob 2.4s ease-in-out 1.1s infinite}
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+  /* day pills */
+  .daybar{position:sticky; top:44px; z-index:55; padding:9px 0 11px; margin-top:-1px;
+    background:linear-gradient(180deg, rgba(10,14,26,.98), rgba(10,14,26,.9)); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .daybar::after{content:""; position:absolute; top:0; bottom:0; right:0; width:40px; pointer-events:none;
+    background:linear-gradient(90deg, transparent, rgba(10,14,26,.92))}
+  .daybar-scroll{display:flex; gap:8px; overflow-x:auto; padding:0 22px 4px; max-width:760px; margin:0 auto;
+    -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:rgba(255,157,108,.6) rgba(255,255,255,.06)}
+  .daybar-scroll::-webkit-scrollbar{height:4px}
+  .daybar-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.06); border-radius:4px}
+  .daybar-scroll::-webkit-scrollbar-thumb{background:rgba(255,157,108,.6); border-radius:4px}
+  .pill{flex:0 0 auto; text-decoration:none; font-size:12px; padding:7px 12px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted); white-space:nowrap; transition:.2s}
+  .pill b{color:var(--ink); font-weight:600}
+  .pill:hover,.pill:focus{border-color:var(--dawn); color:var(--ink)}
+
+  /* sections */
+  .sec{padding:46px 0 8px; scroll-margin-top:104px}
+  .sec-eyebrow{font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--dawn); margin-bottom:10px}
+  .sec h2{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(26px,7vw,40px); letter-spacing:-.01em; margin-bottom:6px}
+  .sec h2 .ko{font-family:'Nanum Myeongjo',serif; font-size:.5em; color:var(--muted); letter-spacing:.04em; margin-left:8px}
+
+  /* day card */
+  .day{position:relative; border:1px solid var(--line); border-radius:18px; background:var(--card); padding:20px 18px 18px; margin-top:16px; scroll-margin-top:104px}
+  .day::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px; border-radius:3px; background:linear-gradient(var(--accent,var(--dawn)), transparent)}
+  .day.ume{--accent:var(--ume)} .day.kyo{--accent:var(--kyo)} .day.arm{--accent:var(--arm)} .day.nar{--accent:var(--nar)}
+  .day-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:4px; padding-left:8px}
+  .day-n{font-family:'Cormorant Garamond',serif; font-size:30px; line-height:1; color:var(--accent,var(--dawn))}
+  .day-date{font-size:14px; color:var(--ink); font-weight:500}
+  .day-dow{font-size:12px; color:var(--muted)}
+  .day-city{margin-left:auto; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent,var(--dawn)); border:1px solid; border-color:color-mix(in srgb, var(--accent) 45%, transparent); padding:3px 9px; border-radius:999px}
+  .day-sum{padding-left:8px; color:var(--muted); font-size:13.5px; margin-bottom:12px}
+
+  /* timeline items */
+  .tl{padding-left:8px; display:flex; flex-direction:column; gap:10px}
+  .ev{display:grid; grid-template-columns:54px 1fr; gap:12px; align-items:start}
+  .ev-time{font-size:12.5px; color:var(--dawn-2); font-weight:500; padding-top:9px; font-variant-numeric:tabular-nums}
+  .ev-time.tba{color:var(--muted-2)}
+  .ev-body{border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.018); padding:11px 13px}
+  .ev-body.hi{border-color:color-mix(in srgb, var(--accent,var(--dawn)) 40%, transparent); background:var(--card-hi)}
+  .ev-kind{font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:inline-flex; align-items:center; gap:5px; margin-bottom:3px}
+  .ev-title{font-size:15px; font-weight:600; color:var(--ink); line-height:1.35}
+  .ev-title .en{font-weight:400; color:var(--muted); font-size:.86em}
+  .ev-meta{margin-top:6px; display:flex; flex-direction:column; gap:3px}
+  .ev-row{font-size:12.5px; color:var(--muted); display:flex; gap:7px}
+  .ev-row .lbl{color:var(--muted-2); flex:0 0 auto; min-width:52px}
+  .ev-row .val{color:var(--ink); font-weight:400}
+  .ev-row .val.mono{font-family:'Inter',monospace; letter-spacing:.02em}
+  .ev-tags{margin-top:8px; display:flex; flex-wrap:wrap; gap:6px}
+  .tag{font-size:11px; padding:3px 9px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted)}
+  .tag.ok{color:var(--ok); border-color:rgba(127,214,166,.35)}
+  .tag.warn{color:var(--warn); border-color:rgba(255,209,102,.35)}
+  .tag.code{color:var(--ink); font-family:monospace; letter-spacing:.04em}
+  .maplink{font-size:12px; color:var(--dawn); text-decoration:none; display:inline-flex; align-items:center; gap:4px; margin-top:7px}
+  .maplink:hover{text-decoration:underline}
+  .needcheck{color:var(--warn); font-weight:500}
+
+  /* generic info cards */
+  .grid{display:grid; gap:13px; margin-top:18px}
+  @media(min-width:620px){.grid.two{grid-template-columns:1fr 1fr}}
+  .ic{border:1px solid var(--line); border-radius:15px; background:var(--card); padding:16px 17px}
+  .ic h3{font-size:15.5px; font-weight:600; margin-bottom:9px; display:flex; align-items:center; gap:8px}
+  .ic h3 .ico{font-size:17px}
+  .ic ul{list-style:none; display:flex; flex-direction:column; gap:8px}
+  .ic li{font-size:13.5px; color:var(--muted); padding-left:15px; position:relative; line-height:1.55}
+  .ic li::before{content:"·"; position:absolute; left:3px; color:var(--dawn); font-weight:700}
+  .ic li b{color:var(--ink); font-weight:600}
+  .ic li .tip{color:var(--dawn-2)}
+  .ic li a{color:var(--dawn); text-decoration:none} .ic li a:hover{text-decoration:underline}
+
+  .citytag{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; padding:2px 8px; border-radius:999px; border:1px solid}
+  .citytag.u{color:var(--ume); border-color:rgba(200,162,255,.4)}
+  .citytag.k{color:var(--kyo); border-color:rgba(143,214,168,.4)}
+  .citytag.a{color:var(--arm); border-color:rgba(255,209,102,.4)}
+  .citytag.n{color:var(--nar); border-color:rgba(240,178,122,.4)}
+
+  /* fare table */
+  .fare{width:100%; border-collapse:collapse; margin-top:6px; font-size:12.5px}
+  .fare th{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2); text-align:left; padding:6px 8px; border-bottom:1px solid var(--line-2)}
+  .fare td{padding:7px 8px; border-bottom:1px solid var(--line); color:var(--muted); vertical-align:top}
+  .fare td:first-child{color:var(--ink); font-weight:500; white-space:nowrap}
+  .fare td .y{color:var(--dawn-2); font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  /* checklist */
+  .check{display:flex; gap:9px; align-items:flex-start; font-size:13.5px; color:var(--muted); padding:7px 0; border-bottom:1px solid var(--line); cursor:pointer; user-select:none}
+  .check:last-child{border-bottom:none}
+  .check .box{flex:0 0 auto; width:18px; height:18px; border-radius:5px; border:1.5px solid var(--line-2); margin-top:1px; display:grid; place-items:center; transition:.15s}
+  .check .box svg{opacity:0; transition:.15s}
+  .check.on .box{background:var(--dawn); border-color:var(--dawn)}
+  .check.on .box svg{opacity:1}
+  .check.on span{color:var(--muted-2); text-decoration:line-through}
+  .check b{color:var(--ink); font-weight:600}
+  .chk-cat{font-size:11px; letter-spacing:.1em; color:var(--dawn-2); margin:15px 0 3px; font-weight:600}
+  .chk-cat:first-child{margin-top:2px}
+
+  /* phrases */
+  .ph{display:grid; grid-template-columns:1fr; gap:0}
+  .ph-row{display:grid; grid-template-columns:1.1fr 1.3fr; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); align-items:baseline}
+  .ph-row:last-child{border-bottom:none}
+  .ph-ko{font-size:13px; color:var(--muted)}
+  .ph-jp{font-size:14px; color:var(--ink); font-weight:500}
+  .ph-jp .rom{display:block; font-size:11.5px; color:var(--muted-2); font-weight:400; margin-top:1px; letter-spacing:.02em}
+
+  .emerg{display:flex; flex-direction:column; gap:9px}
+  .emerg a, .emerg .erow{display:flex; align-items:center; gap:11px; text-decoration:none; color:inherit; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.018)}
+  .emerg a:hover{border-color:var(--dawn)}
+  .emerg .eico{font-size:18px; width:24px; text-align:center}
+  .emerg .etxt{flex:1}
+  .emerg .etxt b{display:block; font-size:14px; color:var(--ink)}
+  .emerg .etxt span{font-size:12px; color:var(--muted)}
+  .emerg .enum{font-family:monospace; font-size:14px; color:var(--dawn-2); letter-spacing:.03em}
+
+  .note{margin-top:14px; font-size:12px; color:var(--muted-2); line-height:1.6; padding:11px 13px; border:1px dashed var(--line-2); border-radius:11px; background:rgba(255,209,102,.03)}
+  .note b{color:var(--warn)}
+
+  footer{margin-top:48px; padding:40px 0 56px; border-top:1px solid var(--line); text-align:center; color:var(--muted); font-size:13px; font-weight:300}
+  footer .fmark{font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink)}
+  footer .fmark .dot{color:var(--dawn)}
+  footer .fline{margin-top:10px; font-style:italic; font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--dawn-2)}
+  footer .fsmall{margin-top:16px; font-size:12px; color:var(--muted-2)}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+    .hero-eyebrow,.hero-title,.hero-names,.hero-sub,.hero-route,.scroll-hint{opacity:1 !important; transform:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-home" href="https://jisoar.com/"><span class="navwm">jisoar<span class="dot">.</span></span></a>
+    <span class="nav-sep">/</span>
+    <span class="nav-title">Kansai · Summer 2026</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <p class="hero-eyebrow">Summer Getaway · 3 Nights 4 Days</p>
+  <h1 class="hero-title">Kansai</h1>
+  <p class="hero-names">박기백 <span class="amp">&amp;</span> 박지은</p>
+  <p class="hero-sub">2026. 08. 14 — 08. 17<br/>오사카 · 교토 · 아리마온천 · 나라 · 고베</p>
+  <div class="hero-route">
+    <span class="route-chip u">우메다</span><span class="route-arrow">🚆</span>
+    <span class="route-chip k">교토 · 우지</span><span class="route-arrow">🚌</span>
+    <span class="route-chip a">아리마 ♨ 고베</span><span class="route-arrow">🦌</span>
+    <span class="route-chip n">나라</span>
+  </div>
+  <div class="scroll-hint">SCROLL ↓</div>
+</header>
+
+<!-- DAY PILLS -->
+<div class="daybar">
+  <div class="daybar-scroll">
+    <a class="pill" href="#d1"><b>D1</b> 8/14 우메다</a>
+    <a class="pill" href="#d2"><b>D2</b> 8/15 교토·우지</a>
+    <a class="pill" href="#d3"><b>D3</b> 8/16 아리마♨고베</a>
+    <a class="pill" href="#d4"><b>D4</b> 8/17 나라→귀국</a>
+    <a class="pill" href="#food">맛집·명소</a>
+    <a class="pill" href="#transport">교통</a>
+    <a class="pill" href="#pack">준비물</a>
+    <a class="pill" href="#lang">회화·비상</a>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- ITINERARY -->
+<section class="sec" id="itinerary">
+  <div class="sec-eyebrow">Itinerary</div>
+  <h2>Day by Day<span class="ko">일정표</span></h2>
+
+  <!-- D1 -->
+  <article class="day ume" id="d1">
+    <div class="day-head">
+      <span class="day-n">1</span>
+      <span class="day-date">8월 14일</span><span class="day-dow">금요일</span>
+      <span class="day-city">Osaka · Umeda</span>
+    </div>
+    <p class="day-sum">이른 아침 출발 → 오전에 오사카 도착. 첫날은 가볍게 <b style="color:var(--ink)">우메다 쇼핑 + 야경 + 스카이스파</b> ♨️</p>
+    <div class="tl">
+      <div class="ev">
+        <div class="ev-time">06:55</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">✈️ 출발 · 아시아나항공</div>
+          <div class="ev-title">인천(ICN) → 오사카 간사이(KIX) <span class="en">OZ112</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">터미널</span><span class="val">인천 제1터미널 출발 · <span class="needcheck">새벽 4:40경 공항 도착 권장</span></span></div>
+            <div class="ev-row"><span class="lbl">도착</span><span class="val">간사이공항(KIX) 09:00 (현지=한국시간 동일)</span></div>
+            <div class="ev-row"><span class="lbl">예약</span><span class="val">트립닷컴 · 2인 84만원 · <span class="needcheck">예약번호 기입 필요</span></span></div>
+          </div>
+          <div class="ev-tags"><span class="tag warn">전날 일찍 자기 · 공항버스/택시 예약</span></div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">09:40</div>
+        <div class="ev-body">
+          <div class="ev-kind">🚆 이동 · 공항 → 우메다</div>
+          <div class="ev-title">JR 하루카 → 오사카역 <span class="en">약 50분</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">방법</span><span class="val">하루카 특급 (사전예매 시 1인 ¥1,800선) 또는 간쿠쾌속 ¥1,210 (약 70분)</span></div>
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">클룩/KKday에서 하루카 미리 사면 현장가보다 훨씬 저렴</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">11:00</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🏨 숙소 · 3박</div>
+          <div class="ev-title">칸데오 호텔 오사카 더 타워 <span class="en">CANDEO HOTELS Osaka The Tower</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">객실</span><span class="val">이그제큐티브 킹룸</span></div>
+            <div class="ev-row"><span class="lbl">일정</span><span class="val">8/14 체크인(15:00) → 8/17 체크아웃 (3박)</span></div>
+            <div class="ev-row"><span class="lbl">위치</span><span class="val">우메다 도보권 — 오사카역·한큐우메다 접근 용이</span></div>
+            <div class="ev-row"><span class="lbl">특전</span><span class="val">최상층 <b>스카이스파(대욕장)</b> ♨️ — 야경 보며 매일 밤 피로 풀기</span></div>
+            <div class="ev-row"><span class="lbl">오전엔</span><span class="val tip">체크인 전이라 프런트에 짐만 맡기고 가볍게 출발</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/CANDEO+HOTELS+Osaka+The+Tower" target="_blank" rel="noopener">📍 지도에서 보기 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">12:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🍜 점심 · 우메다</div>
+          <div class="ev-title">우메다 지하 미식 — 한큐 백화점 지하 or 신우메다식도가</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">추천</span><span class="val">한큐 우메다 본점 지하(디저트 성지) · 오코노미야키 키지(우메다 스카이빌딩)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">오후</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🛍️ 쇼핑 · 우메다</div>
+          <div class="ev-title">그란프론트 → 한큐 백화점 → 루쿠아 → 요도바시</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">코스</span><span class="val">전부 오사카역 반경 5분, 실내 연결통로로 이동 (한낮 더위 회피 ✅)</span></div>
+            <div class="ev-row"><span class="lbl">카페</span><span class="val tip">하브스(HARBS) 밀크레이프 — 그란프론트점</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">18:30</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🌇 야경</div>
+          <div class="ev-title">우메다 스카이빌딩 공중정원 <span class="en">Kuchu Teien</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">해질녘(8월 일몰 ~18:50) 올라가면 노을→야경 풀코스</span></div>
+            <div class="ev-row"><span class="lbl">요금</span><span class="val">성인 ¥2,000 (온라인 할인 있음)</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Umeda+Sky+Building" target="_blank" rel="noopener">📍 지도에서 보기 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">20:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🍶 저녁</div>
+          <div class="ev-title">오하츠텐진 뒷골목 이자카야 or 기타신치</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">마무리</span><span class="val tip">호텔 스카이스파에서 새벽 비행 피로 싹 풀고 취침 ♨️</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- D2 -->
+  <article class="day kyo" id="d2">
+    <div class="day-head">
+      <span class="day-n">2</span>
+      <span class="day-date">8월 15일</span><span class="day-dow">토요일</span>
+      <span class="day-city">Kyoto · Uji</span>
+    </div>
+    <p class="day-sum">신혼 때 못 가본 교토 — 오전 <b style="color:var(--ink)">아라시야마</b>, 오후 <b style="color:var(--ink)">우지 말차 성지순례</b> 🍵</p>
+    <div class="tl">
+      <div class="ev">
+        <div class="ev-time">07:45</div>
+        <div class="ev-body">
+          <div class="ev-kind">🚆 이동</div>
+          <div class="ev-title">오사카역 → 교토 → 사가아라시야마 <span class="en">약 55분</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">방법</span><span class="val">JR 교토선 신쾌속 30분(¥580) → 교토역에서 사가노선 환승 16분(¥240)</span></div>
+            <div class="ev-row"><span class="lbl">핵심</span><span class="val tip">치쿠린은 9시 전이 한산+시원 — 이날만 일찍 일어나기!</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">09:00</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🎋 아라시야마</div>
+          <div class="ev-title">치쿠린(대나무숲) → 노노미야 신사 → 도게츠교 <span class="en">Arashiyama</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">코스</span><span class="val">치쿠린 산책 → 도게츠교 강변 → % Arabica 교토 아라시야마점(강 전망 커피)</span></div>
+            <div class="ev-row"><span class="lbl">옵션</span><span class="val">텐류지(세계유산, ¥800) — 정원이 아름다움</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">📍 치쿠린 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">12:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🍱 점심 · 아라시야마</div>
+          <div class="ev-title">유도후(두부요리) or 우나기</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">추천</span><span class="val">사가토후 이네(두부 코스) · 히로카와(장어, 예약 권장)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">13:30</div>
+        <div class="ev-body">
+          <div class="ev-kind">🚆 이동</div>
+          <div class="ev-title">아라시야마 → 우지 <span class="en">약 50분</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">방법</span><span class="val">사가노선 → 교토역 → JR 나라선 미야코지쾌속 (우지까지 ¥240)</span></div>
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">한낮 제일 더운 시간을 전철 이동으로 소화 ✅</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">14:30</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🍵 우지 · 말차 성지</div>
+          <div class="ev-title">뵤도인 → 나카무라토키치 본점 <span class="en">Uji</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">뵤도인</span><span class="val">10엔 동전의 그 절 (¥700) — 봉황당 내부는 별도 ¥300</span></div>
+            <div class="ev-row"><span class="lbl">말차</span><span class="val"><b>나카무라토키치 본점</b> 말차 파르페·말차젤리 (웨이팅 있음, 태블릿 등록 후 주변 산책)</span></div>
+            <div class="ev-row"><span class="lbl">산책</span><span class="val">우지가와 강변 → 우지가미 신사(세계유산) → 이토큐에몬 본점(선물용 말차과자)</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Nakamura+Tokichi+Honten+Uji" target="_blank" rel="noopener">📍 나카무라토키치 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">18:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🍜 저녁</div>
+          <div class="ev-title">교토역 라멘코지 or 우메다 복귀 후 저녁</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">복귀</span><span class="val">우지 → 교토역 17분 → 오사카역 신쾌속 30분</span></div>
+            <div class="ev-row"><span class="lbl">마무리</span><span class="val tip">스카이스파 ♨️ — 많이 걸은 날엔 필수</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- D3 -->
+  <article class="day arm" id="d3">
+    <div class="day-head">
+      <span class="day-n">3</span>
+      <span class="day-date">8월 16일</span><span class="day-dow">일요일</span>
+      <span class="day-city">Arima ♨ Kobe</span>
+    </div>
+    <p class="day-sum">일본 3대 온천 <b style="color:var(--ink)">아리마온천</b> 당일 여행 → 오후 고베 → <b style="color:var(--ink)">고베규 디너</b> 🥩</p>
+    <div class="tl">
+      <div class="ev">
+        <div class="ev-time">09:20</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🚌 직행버스 · 예약 필수</div>
+          <div class="ev-title">한큐 3번가 → 아리마온천 <span class="en">약 60분 · ¥1,400</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">승차장</span><span class="val">한큐 오사카우메다역 아래 '한큐 3번가' 1층 고속버스터미널</span></div>
+            <div class="ev-row"><span class="lbl">예약</span><span class="val"><span class="needcheck">재팬버스온라인에서 사전 예약 필수</span> — 오본 연휴라 서두르기</span></div>
+          </div>
+          <div class="ev-tags"><span class="tag warn">예약 후 QR/예약번호 여기 기입</span></div>
+          <a class="maplink" href="https://japanbusonline.com/ko/CourseSearch/12700130011" target="_blank" rel="noopener">🎫 버스 예약하기 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">10:30</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">♨️ 아리마온천</div>
+          <div class="ev-title">금탕(킨노유) · 은탕(긴노유) <span class="en">Arima Onsen</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">온천</span><span class="val">공중탕: 금탕 ¥650 · 은탕 ¥550 (수건 지참/구매)</span></div>
+            <div class="ev-row"><span class="lbl">업그레이드</span><span class="val">타이코노유(대형 스파, 금탕+은탕+암반욕) 또는 <b>료칸 당일입욕+점심 플랜</b>(효에 코요카쿠 등)</span></div>
+            <div class="ev-row"><span class="lbl">마을</span><span class="val">유모토자카 언덕길 — 탄산센베 미츠모리 본점, 아리마 사이다, 타케나카니쿠텐 고로케</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Arima+Onsen" target="_blank" rel="noopener">📍 아리마온천 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">12:30</div>
+        <div class="ev-body">
+          <div class="ev-kind">🍱 점심 · 아리마</div>
+          <div class="ev-title">료칸 점심 플랜 or 온천가 소바·고로케 투어</div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">14:30</div>
+        <div class="ev-body">
+          <div class="ev-kind">🚡 이동 · 아리마 → 고베</div>
+          <div class="ev-title">신테츠 전철로 산노미야 <span class="en">약 45분 · ¥730</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">방법</span><span class="val">아리마온천역 → 아리마구치 환승 → 타니가미 → 지하철 산노미야</span></div>
+            <div class="ev-row"><span class="lbl">옵션</span><span class="val tip">롯코 로프웨이+케이블카로 산 넘으며 전망 보는 루트도 있음 (시간 여유 시)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">15:30</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🏘️ 고베 · 키타노</div>
+          <div class="ev-title">키타노이진칸 거리 + 고베 디저트 <span class="en">Kitano</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">코스</span><span class="val">이진칸 골목 산책(풍향계의 집) → 산노미야센터가이 쇼핑</span></div>
+            <div class="ev-row"><span class="lbl">디저트</span><span class="val tip">고베 푸딩 · 모로조프 · 파티스리 몽플류 (고베는 디저트 도시)</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Kitano+Ijinkan+Kobe" target="_blank" rel="noopener">📍 키타노 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">18:00</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🥩 디너 · 고베규</div>
+          <div class="ev-title">고베규 철판 스테이크 <span class="en">Kobe Beef</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">후보</span><span class="val"><b>스테이크랜드 고베관</b>(가성비, 런치보다 디너 비쌈) · <b>미소노 본점</b>(철판스테이크 원조, 고급)</span></div>
+            <div class="ev-row"><span class="lbl">예약</span><span class="val"><span class="needcheck">오본 연휴 저녁이라 예약 강력 권장</span></span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Steakland+Kobe" target="_blank" rel="noopener">📍 스테이크랜드 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">20:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🌃 야경 → 복귀</div>
+          <div class="ev-title">메리켄파크·하버랜드 야경 잠깐 → JR로 오사카 복귀</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">복귀</span><span class="val">산노미야 → 오사카역 JR 신쾌속 21분 (¥420)</span></div>
+            <div class="ev-row"><span class="lbl">참고</span><span class="val tip">이날 밤 교토에선 고잔 오쿠리비(五山送り火) — 온천 대신 그걸 보고 싶어지면 D2·D3을 맞바꾸면 됨</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- D4 -->
+  <article class="day nar" id="d4">
+    <div class="day-head">
+      <span class="day-n">4</span>
+      <span class="day-date">8월 17일</span><span class="day-dow">월요일</span>
+      <span class="day-city">Nara → 귀국</span>
+    </div>
+    <p class="day-sum">신혼 때 결국 못 간 <b style="color:var(--ink)">나라 사슴공원</b>, 이번엔 진짜로 🦌 → 저녁 비행기로 귀국 ✈️</p>
+    <div class="tl">
+      <div class="ev">
+        <div class="ev-time">08:30</div>
+        <div class="ev-body">
+          <div class="ev-kind">🏨 체크아웃 · 짐보관</div>
+          <div class="ev-title">칸데오 체크아웃 → 짐은 프런트에 맡기기</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">나라는 가볍게 다녀오고, 짐은 오후에 찾아서 공항으로</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">09:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🚆 이동</div>
+          <div class="ev-title">오사카역 → 나라 <span class="en">야마토지쾌속 50분 · ¥820</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">팁</span><span class="val tip">환승 없이 한 번에 — 사슴은 오전이 활발하고 덜 덥다</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">10:00</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🦌 나라공원</div>
+          <div class="ev-title">사슴공원 → 도다이지 대불전 <span class="en">Nara Park</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">사슴</span><span class="val">사슴전병(시카센베) ¥200 — 인사하는 사슴에게 냠냠. 종이·지도는 가방에!</span></div>
+            <div class="ev-row"><span class="lbl">도다이지</span><span class="val">세계 최대 목조건물 + 15m 대불 (¥800)</span></div>
+            <div class="ev-row"><span class="lbl">간식</span><span class="val tip">나카타니도 — 고속 떡메치기로 유명한 요모기모찌 ¥200</span></div>
+          </div>
+          <a class="maplink" href="https://www.google.com/maps/search/Nara+Park" target="_blank" rel="noopener">📍 나라공원 →</a>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">12:30</div>
+        <div class="ev-body">
+          <div class="ev-kind">🍚 점심 · 나라마치</div>
+          <div class="ev-title">나라마치 옛거리 산책 + 점심</div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">추천</span><span class="val">카마메시(솥밥) · 미와소면 — 나라마치 골목 카페들도 예쁨</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">14:00</div>
+        <div class="ev-body">
+          <div class="ev-kind">🚆 복귀 · 짐 픽업</div>
+          <div class="ev-title">나라 → 오사카역 (50분) → 호텔 짐 찾기</div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">15:30</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">🚄 공항 이동</div>
+          <div class="ev-title">오사카역 → 간사이공항 <span class="en">하루카 약 50분</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">목표</span><span class="val">16:40 공항 도착 → 체크인·면세 여유롭게</span></div>
+            <div class="ev-row"><span class="lbl">대안</span><span class="val">우메다발 공항 리무진버스 (한큐 3번가, 약 60분)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-time">19:45</div>
+        <div class="ev-body hi">
+          <div class="ev-kind">✈️ 귀국 · 아시아나항공</div>
+          <div class="ev-title">간사이(KIX) → 인천(ICN) <span class="en needcheck">편명 확인 필요</span></div>
+          <div class="ev-meta">
+            <div class="ev-row"><span class="lbl">출발</span><span class="val">간사이공항 제1터미널 19:45</span></div>
+            <div class="ev-row"><span class="lbl">예약</span><span class="val"><span class="needcheck">편명·예약번호 기입 필요</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="note">
+    <b>⏳ 확정 대기 항목</b> — ① 항공 예약번호/귀국 편명 ② 아리마 직행버스 예약(양방향 또는 편도) ③ 고베규 디너 예약 ④ 하루카 티켓 사전구매. 확정되는 대로 이 페이지에 반영!
+  </div>
+</section>
+
+<!-- FOOD & SPOTS -->
+<section class="sec" id="food">
+  <div class="sec-eyebrow">Eat &amp; See</div>
+  <h2>맛집 &amp; 명소<span class="ko">도시별 추천</span></h2>
+
+  <div class="grid two">
+    <div class="ic">
+      <h3><span class="ico">🛍️</span> 오사카 · 우메다 <span class="citytag u">Umeda</span></h3>
+      <ul>
+        <li><b>오코노미야키</b> — 키지(우메다 스카이빌딩), 후쿠타로</li>
+        <li><b>디저트</b> — 한큐 백화점 지하, <span class="tip">하브스 밀크레이프</span>, 리쿠로 오지상 치즈케이크</li>
+        <li><b>이자카야</b> — 오하츠텐진 뒷골목, 기타신치(고급)</li>
+        <li><b>쇼핑</b> — 그란프론트·루쿠아·한큐·요도바시 (전부 실내 연결)</li>
+        <li><b>야경</b> — 우메다 스카이빌딩 공중정원</li>
+      </ul>
+    </div>
+
+    <div class="ic">
+      <h3><span class="ico">🍵</span> 교토 · 우지 <span class="citytag k">Kyoto</span></h3>
+      <ul>
+        <li><b>아라시야마</b> — 치쿠린(9시 전!)·도게츠교·텐류지, % Arabica</li>
+        <li><b>유도후</b> — 사가토후 이네 / <b>장어</b> — 히로카와(예약)</li>
+        <li><b>우지 말차</b> — <span class="tip">나카무라토키치 본점 파르페</span>, 이토큐에몬(선물)</li>
+        <li><b>뵤도인</b> — 10엔 동전의 절, 봉황당</li>
+        <li><b>교토역</b> — 라멘코지(라멘 골목), 역 자체가 볼거리</li>
+      </ul>
+    </div>
+
+    <div class="ic">
+      <h3><span class="ico">♨️</span> 아리마 · 고베 <span class="citytag a">Arima · Kobe</span></h3>
+      <ul>
+        <li><b>온천</b> — 금탕(¥650)·은탕(¥550), 타이코노유, 료칸 당일플랜</li>
+        <li><b>온천가 간식</b> — <span class="tip">탄산센베 미츠모리(갓 구운 것!)</span>, 타케나카니쿠텐 고로케, 아리마 사이다</li>
+        <li><b>고베규</b> — 스테이크랜드(가성비) vs 미소노 본점(원조·고급)</li>
+        <li><b>디저트</b> — 고베 푸딩, 모로조프, 파티스리 몽플류</li>
+        <li><b>명소</b> — 키타노이진칸, 메리켄파크·하버랜드 야경</li>
+      </ul>
+    </div>
+
+    <div class="ic">
+      <h3><span class="ico">🦌</span> 나라 <span class="citytag n">Nara</span></h3>
+      <ul>
+        <li><b>사슴공원</b> — 시카센베 ¥200, 인사하는 사슴 🙇</li>
+        <li><b>도다이지</b> — 대불전 ¥800, 기둥구멍 통과(행운)</li>
+        <li><b>간식</b> — <span class="tip">나카타니도 요모기모찌(떡메치기 쇼)</span></li>
+        <li><b>나라마치</b> — 옛 상가거리, 카마메시·미와소면, 골목 카페</li>
+        <li><b>팁</b> — 사슴에게 종이·지도 뺏기지 않게 주의!</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSPORT -->
+<section class="sec" id="transport">
+  <div class="sec-eyebrow">Getting Around</div>
+  <h2>교통 &amp; 요금<span class="ko">이동 팁</span></h2>
+
+  <div class="ic" style="border-color:rgba(200,162,255,.4); background:rgba(200,162,255,.05)">
+    <h3><span class="ico">🛬</span> 간사이공항 도착하자마자 (8/14) <span class="citytag u">순서대로</span></h3>
+    <ul>
+      <li><b>① 입국</b> — <b>Visit Japan Web</b> 미리 등록(입국+세관 QR, 부부 각자) → QR 스캔</li>
+      <li><b>② 데이터</b> — eSIM 켜기 (신혼여행 때 쓰던 방식 그대로)</li>
+      <li><b>③ 교통카드</b> — 신혼여행 때 쓴 <b>실물 IC카드(ICOCA 등) 충전</b>해서 재사용, 또는 <b>트래블월렛 태그</b>(간사이 사철·메트로는 오픈루프 잘 됨, JR은 IC카드가 확실)</li>
+      <li><b>④ 하루카 승차</b> — 사전예매 QR/티켓으로 오사카역까지 (~50분)</li>
+      <li class="tip">간사이는 JR(교토·고베·나라 전부 JR로 감)이 메인이라 IC카드에 ¥5,000쯤 충전해두면 편함</li>
+    </ul>
+  </div>
+
+  <div class="ic" style="margin-top:13px">
+    <h3><span class="ico">🚆</span> 이번 여행 구간별 요금표 <span class="citytag u">1인 기준</span></h3>
+    <table class="fare">
+      <tr><th>구간</th><th>수단</th><th>시간</th><th>요금</th></tr>
+      <tr><td>KIX → 오사카역</td><td>하루카 특급 (사전예매)</td><td>50분</td><td><span class="y">~¥1,800</span></td></tr>
+      <tr><td>오사카 → 교토</td><td>JR 신쾌속</td><td>30분</td><td><span class="y">¥580</span></td></tr>
+      <tr><td>교토 → 사가아라시야마</td><td>JR 사가노선</td><td>16분</td><td><span class="y">¥240</span></td></tr>
+      <tr><td>교토 → 우지</td><td>JR 나라선 쾌속</td><td>17분</td><td><span class="y">¥240</span></td></tr>
+      <tr><td>우메다 → 아리마온천</td><td>한큐 고속버스 직행 <b>(예약제)</b></td><td>60분</td><td><span class="y">¥1,400</span></td></tr>
+      <tr><td>아리마 → 산노미야</td><td>신테츠+지하철</td><td>45분</td><td><span class="y">¥730</span></td></tr>
+      <tr><td>산노미야 → 오사카</td><td>JR 신쾌속</td><td>21분</td><td><span class="y">¥420</span></td></tr>
+      <tr><td>오사카 → 나라</td><td>JR 야마토지쾌속</td><td>50분</td><td><span class="y">¥820</span></td></tr>
+      <tr><td>오사카역 → KIX</td><td>하루카 특급</td><td>50분</td><td><span class="y">~¥1,800</span></td></tr>
+    </table>
+    <p class="note" style="margin-top:12px">전 구간 IC카드로 탈 수 있어요(하루카 특급권·아리마 버스만 별도). 패스 없이 IC카드가 제일 단순하고, 2인 총 교통비 약 ¥17,000(약 16만 원) 예상.</p>
+  </div>
+
+  <div class="grid two" style="margin-top:13px">
+    <div class="ic">
+      <h3><span class="ico">🎫</span> 미리 사두면 좋은 것</h3>
+      <ul>
+        <li><b>하루카 왕복/편도 할인티켓</b> — 클룩·KKday (현장가 ¥3,640 → 사전 ~¥1,800)</li>
+        <li><b>아리마온천 직행버스</b> — <a href="https://japanbusonline.com/ko/CourseSearch/12700130011" target="_blank" rel="noopener">재팬버스온라인</a> 예약 (오본 매진 주의)</li>
+        <li><b>고베규 디너</b> — 공식 사이트나 타베로그·구글맵 예약</li>
+      </ul>
+    </div>
+    <div class="ic">
+      <h3><span class="ico">📲</span> 결제 방식</h3>
+      <ul>
+        <li><b>트래블월렛 태그</b> — 오사카 메트로·한큐·한신·긴테츠·난카이 ✅ (신혼여행 검증완료)</li>
+        <li><b>JR 구간</b>은 실물 IC카드가 확실 — 이번 일정은 JR 비중 높음</li>
+        <li>편의점·자판기 대비 <b>현금 소액</b>도 (사슴전병은 현금!)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PACKING & WEATHER -->
+<section class="sec" id="pack">
+  <div class="sec-eyebrow">Weather &amp; Packing</div>
+  <h2>날씨 &amp; 준비물<span class="ko">체크리스트</span></h2>
+  <div class="grid two">
+    <div class="ic">
+      <h3><span class="ico">🥵</span> 8월 간사이 날씨</h3>
+      <ul>
+        <li><b>33~36°C 폭염 + 높은 습도</b> — 한국 한여름보다 한 수 위</li>
+        <li>전략: <span class="tip">아침 일찍 야외 → 한낮은 실내(쇼핑·카페·전철) → 저녁 야외</span> (일정이 이렇게 짜여 있음)</li>
+        <li><b>태풍 시즌</b> — 출발 전주에 예보 확인, 태풍 오면 실내 위주로 유연하게</li>
+        <li>물 자주 사기(자판기 ¥160) · 소나기 대비 접이식 우산</li>
+      </ul>
+    </div>
+    <div class="ic">
+      <h3><span class="ico">🧳</span> 필수 준비물</h3>
+      <ul>
+        <li><b>여권</b> · 항공/호텔 예약확인 · Visit Japan Web QR</li>
+        <li><b>엔화 현금</b> + 트래블월렛 + IC카드(신혼여행 때 그 카드!)</li>
+        <li><b>더위템</b> — 양산 겸 우산, 모자, 선크림, 쿨링시트, 휴대 선풍기</li>
+        <li>보조배터리 · 돼지코(110V)</li>
+        <li><b>온천용</b> — 속옷 여유분, 작은 수건(공중탕은 수건 별도)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ic" style="margin-top:13px">
+    <h3><span class="ico">✅</span> 출발 전 체크리스트 (탭하면 체크 · 저장됨)</h3>
+    <div id="checklist">
+      <div class="chk-cat">🎫 예약 (지금 하기!)</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>아리마온천 직행버스</b> 8/16 오전 편 예약 (재팬버스온라인)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>고베규 디너</b> 8/16 18:00 예약 (스테이크랜드 or 미소노)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>하루카 할인티켓</b> 왕복 2인 사전구매 (클룩/KKday)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>료칸 당일입욕+점심 플랜 알아보기 (선택)</span></div>
+
+      <div class="chk-cat">📄 서류·앱</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>여권 2개</b> 유효기간 확인 + 사본 별도 보관</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Visit Japan Web</b> 재등록 (부부 각자, 이번 여행 일정으로)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>항공 e티켓·칸데오 예약확인서 캡처 + 양쪽 폰 공유</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>여행자보험 가입</span></div>
+
+      <div class="chk-cat">💳 금융</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>엔화 현금</b> 1인 ¥20,000~30,000</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>트래블월렛 충전 + IC카드 찾아두기 (신혼여행 때 카드)</span></div>
+
+      <div class="chk-cat">🔌 전자·🧴 기타</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>eSIM 구매·세팅 · 보조배터리 · 돼지코</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>선크림·모자·양산·쿨링시트·휴대 선풍기 (8월 폭염!)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>상비약(소화제·진통제·밴드) · 접이식 우산</span></div>
+
+      <div class="chk-cat">✈️ 출발 직전</div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>아시아나 웹체크인 (출발 48시간 전 오픈) · 좌석 지정</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>새벽 공항 이동편</b> 확보 — 06:55 출발 = 4:40 공항 도착 (공항버스 첫차/택시 확인)</span></div>
+      <div class="check"><span class="box"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3" stroke="#0a0e1a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>태풍 예보 확인 · 집 정리 · 위탁짐에 보조배터리 X</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGE & EMERGENCY -->
+<section class="sec" id="lang">
+  <div class="sec-eyebrow">Language &amp; Safety</div>
+  <h2>회화 &amp; 비상정보<span class="ko">일본어·연락처</span></h2>
+  <div class="grid two">
+    <div class="ic">
+      <h3><span class="ico">🗣️</span> 기본 회화</h3>
+      <div class="ph">
+        <div class="ph-row"><div class="ph-ko">안녕하세요</div><div class="ph-jp">こんにちは<span class="rom">콘니치와</span></div></div>
+        <div class="ph-row"><div class="ph-ko">감사합니다</div><div class="ph-jp">ありがとうございます<span class="rom">아리가또-고자이마스</span></div></div>
+        <div class="ph-row"><div class="ph-ko">실례합니다 / 죄송</div><div class="ph-jp">すみません<span class="rom">스미마셍</span></div></div>
+        <div class="ph-row"><div class="ph-ko">계산해 주세요</div><div class="ph-jp">お会計お願いします<span class="rom">오카이케- 오네가이시마스</span></div></div>
+        <div class="ph-row"><div class="ph-ko">이거 주세요</div><div class="ph-jp">これください<span class="rom">코레 쿠다사이</span></div></div>
+        <div class="ph-row"><div class="ph-ko">당일 입욕 되나요?</div><div class="ph-jp">日帰り入浴できますか<span class="rom">히가에리 뉴-요쿠 데키마스카</span></div></div>
+        <div class="ph-row"><div class="ph-ko">2명입니다</div><div class="ph-jp">二人です<span class="rom">후타리데스</span></div></div>
+        <div class="ph-row"><div class="ph-ko">예약했어요</div><div class="ph-jp">予約してます<span class="rom">요야쿠시테마스</span></div></div>
+        <div class="ph-row"><div class="ph-ko">포장 되나요?</div><div class="ph-jp">持ち帰りできますか<span class="rom">모치카에리 데키마스카</span></div></div>
+        <div class="ph-row"><div class="ph-ko">도와주세요!</div><div class="ph-jp">助けて！<span class="rom">타스케테!</span></div></div>
+      </div>
+    </div>
+
+    <div class="ic">
+      <h3><span class="ico">🚨</span> 비상 연락처</h3>
+      <div class="emerg">
+        <a href="tel:119"><span class="eico">🚑</span><span class="etxt"><b>화재·구급차</b><span>일본 응급</span></span><span class="enum">119</span></a>
+        <a href="tel:110"><span class="eico">👮</span><span class="etxt"><b>경찰</b><span>범죄·사고</span></span><span class="enum">110</span></a>
+        <div class="erow"><span class="eico">📞</span><span class="etxt"><b>영사콜센터(24h)</b><span>외교부 · 해외 무료</span></span><span class="enum">+82-2-3210-0404</span></div>
+        <a href="tel:+81662131401"><span class="eico">🏛️</span><span class="etxt"><b>주오사카 총영사관</b><span>간사이 일대 (교토·나라·고베 포함)</span></span><span class="enum">06-6213-1401</span></a>
+      </div>
+      <p class="note">폭염 주의: 현기증·두통이 오면 바로 편의점/카페로 — 이온음료(포카리)와 소금사탕이 특효. 온천은 식후 1시간 이후, 한 번에 10분 이내가 안전.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="fmark">jisoar<span class="dot">.</span></div>
+  <p class="fline">Kansai, again — slowly this time.</p>
+  <p style="margin-top:8px">박기백 ♥ 박지은 · 2026 여름</p>
+  <p class="fsmall">made with ♥ by Jett Pak</p>
+</footer>
+
+<script>
+  // stars
+  (function(){
+    var c=document.getElementById('stars'), n=64, h='';
+    for(var i=0;i<n;i++){
+      var seed=(i*97)%100, x=(seed)+(i%7), y=((i*53)%70), d=((i*0.137)%4).toFixed(2), s=(1+((i*0.31)%1.4)).toFixed(1);
+      h+='<span class="star" style="left:'+(x%100)+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;animation-delay:'+d+'s"></span>';
+    }
+    c.innerHTML=h;
+  })();
+  // nav show on scroll
+  (function(){
+    var nav=document.getElementById('nav');
+    function on(){ if(window.scrollY>window.innerHeight*0.7) nav.classList.add('show'); else nav.classList.remove('show'); }
+    window.addEventListener('scroll',on,{passive:true}); on();
+  })();
+  // checklist (persists in localStorage)
+  (function(){
+    var KEY='osaka_check_v1';
+    var saved={}; try{ saved=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){}
+    var items=document.querySelectorAll('#checklist .check');
+    items.forEach(function(el,i){
+      if(saved[i]) el.classList.add('on');
+      el.addEventListener('click',function(){
+        el.classList.toggle('on');
+        saved[i]=el.classList.contains('on');
+        try{ localStorage.setItem(KEY,JSON.stringify(saved)); }catch(e){}
+      });
+    });
+  })();
+</script>
+</body>
+</html>
