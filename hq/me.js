@@ -3217,6 +3217,13 @@ function bindSnippets() {
   if (newBtn) newBtn.addEventListener("click", () => openSnippetModal(null));
   const form = document.getElementById("snippetForm");
   if (form) form.addEventListener("submit", saveSnippet);
+  // ⌘/Ctrl+Enter = 저장 (textarea 안에서도 동작)
+  if (form) form.addEventListener("keydown", e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  });
   const delBtn = document.getElementById("deleteSnippetBtn");
   if (delBtn) delBtn.addEventListener("click", deleteSnippet);
   const clearBtn = document.getElementById("clearSnippetsBtn");

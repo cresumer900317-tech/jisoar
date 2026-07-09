@@ -8,11 +8,11 @@
 
   <link rel="preconnect" href="https://guild-backend-production-75a6.up.railway.app" crossorigin />
   <link rel="dns-prefetch" href="https://guild-backend-production-75a6.up.railway.app" />
-  <link rel="preload" href="./me.css?v=22" as="style" />
+  <link rel="preload" href="./me.css?v=23" as="style" />
   <link rel="preload" href="../assets/js/common.js?v=28" as="script" />
-  <link rel="preload" href="./me.js?v=22" as="script" />
+  <link rel="preload" href="./me.js?v=23" as="script" />
 
-  <link rel="stylesheet" href="./me.css?v=22" />
+  <link rel="stylesheet" href="./me.css?v=23" />
 </head>
 <body>
   <!-- 로그인 안 됐을 때 -->
@@ -685,7 +685,8 @@
           <h2 id="snippetModalTitle">새 코드</h2>
           <button class="modal-close" data-close="snippet">✕</button>
         </header>
-        <form id="snippetForm" class="modal-body">
+        <form id="snippetForm" class="modal-body snip-form">
+          <div class="snip-form-scroll">
           <input type="hidden" id="snippetId" />
           <label class="field">
             <span>제목</span>
@@ -720,6 +721,7 @@
               <span>Settings schema (JSON)</span>
               <textarea id="snipSettings" class="snip-code-input" rows="6" spellcheck="false"></textarea>
             </label>
+          </div>
           </div>
 
           <footer class="modal-foot">
@@ -803,6 +805,6 @@
   </div>
 
   <script src="../assets/js/common.js?v=28"></script>
-  <script src="./me.js?v=22"></script>
+  <script src="./me.js?v=23"></script>
 </body>
 </html>

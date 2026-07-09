@@ -2002,6 +2002,28 @@ input, button, select, textarea { font: inherit; color: inherit; }
   font-size: 0.82rem; line-height: 1.5; white-space: pre;
 }
 
+/* 코드 모달: 입력 영역만 스크롤, 저장/취소 푸터는 항상 보이게 고정 */
+#snippetModal .modal {
+  display: flex; flex-direction: column;
+  overflow: hidden; /* 모달 전체 스크롤 대신 내부 스크롤 */
+}
+#snippetModal .snip-form {
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  padding: 0;
+}
+#snippetModal .snip-form-scroll {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  padding: 20px 20px 8px;
+}
+#snippetModal .modal-foot {
+  flex: none;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+}
+
 /* ── Privacy mode (어깨너머 방어) ──────────────────────── */
 /* 화면 블러 — 마우스 올리면 그 부분만 보임. 네트워크 로그는 못 막음(IT 레벨) */
 body.privacy-on .app-main { filter: blur(9px); transition: filter 0.12s var(--ease); }
