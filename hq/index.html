@@ -8,11 +8,11 @@
 
   <link rel="preconnect" href="https://guild-backend-production-75a6.up.railway.app" crossorigin />
   <link rel="dns-prefetch" href="https://guild-backend-production-75a6.up.railway.app" />
-  <link rel="preload" href="./me.css?v=21" as="style" />
+  <link rel="preload" href="./me.css?v=22" as="style" />
   <link rel="preload" href="../assets/js/common.js?v=28" as="script" />
-  <link rel="preload" href="./me.js?v=21" as="script" />
+  <link rel="preload" href="./me.js?v=22" as="script" />
 
-  <link rel="stylesheet" href="./me.css?v=21" />
+  <link rel="stylesheet" href="./me.css?v=22" />
 </head>
 <body>
   <!-- 로그인 안 됐을 때 -->
@@ -422,7 +422,10 @@
       <section class="page" id="pageSnippets" hidden>
         <div class="page-header">
           <h2>전달함 <span class="snip-sub">맥 → 회사 노트북 코드 브릿지</span></h2>
-          <button class="btn btn-primary" id="newSnippetBtn">＋ 코드 추가</button>
+          <div class="page-header-btns">
+            <button class="btn btn-outline" id="clearSnippetsBtn">🗑 전체 비우기</button>
+            <button class="btn btn-primary" id="newSnippetBtn">＋ 코드 추가</button>
+          </div>
         </div>
         <p class="snip-note">
           🔒 <strong>업무 코드만</strong> 올리세요 (개인정보 X). 회사 노트북에서 열면 IT 네트워크 로그에는 남습니다 — 코드 전달 자체는 안전하지만 민감한 건 넣지 마세요.
@@ -800,6 +803,6 @@
   </div>
 
   <script src="../assets/js/common.js?v=28"></script>
-  <script src="./me.js?v=21"></script>
+  <script src="./me.js?v=22"></script>
 </body>
 </html>

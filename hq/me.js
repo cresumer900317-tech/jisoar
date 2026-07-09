@@ -18,6 +18,8 @@ const STATE = {
   snippetsLoaded: false,
   editingSnippetId: null,
   snippetKind: "single",     // 모달 내 종류 토글: single | tb4
+  snipExpanded: {},          // 펼친 카드 { id: true } — 기본 접힘
+  snipShown: 15,             // 목록 표시 개수 (더 보기로 증가)
 
   // Phase 6d: AI 분류 제안 { inbox_id: {suggested_title, suggested_category, suggested_priority, suggested_tags, cached} }
   inboxSuggestions: {},
@@ -2994,37 +2996,44 @@ function snipPreview(text) {
 function snippetCardHtml(s) {
   const title = escapeHtml(s.title || "(제목 없음)");
   const when = s.updated_at ? relativeTime(s.updated_at) : "";
-  let body;
-  if (s.kind === "tb4") {
-    body = TB4_PARTS.map(p => {
-      const val = s[p.key] || "";
-      if (!String(val).trim()) return "";
-      return `<div class="snip-part">
-        <div class="snip-part-head">
-          <span class="snip-part-label">${p.label}</span>
-          <button class="btn btn-outline btn-sm snip-copy" data-id="${s.id}" data-part="${p.key}">📋 복사</button>
-        </div>
-        <pre class="snip-pre">${snipPreview(val)}</pre>
+  const expanded = !!STATE.snipExpanded[s.id];
+  let body = "";
+  if (expanded) {
+    if (s.kind === "tb4") {
+      body = TB4_PARTS.map(p => {
+        const val = s[p.key] || "";
+        if (!String(val).trim()) return "";
+        return `<div class="snip-part">
+          <div class="snip-part-head">
+            <span class="snip-part-label">${p.label}</span>
+            <button class="btn btn-outline btn-sm snip-copy" data-id="${s.id}" data-part="${p.key}">📋 복사</button>
+          </div>
+          <pre class="snip-pre">${snipPreview(val)}</pre>
+        </div>`;
+      }).join("") || `<div class="snip-empty-body">내용 없음</div>`;
+    } else {
+      body = `<div class="snip-part">
+        <pre class="snip-pre">${snipPreview(s.content)}</pre>
       </div>`;
-    }).join("") || `<div class="snip-empty-body">내용 없음</div>`;
-  } else {
-    body = `<div class="snip-part">
-      <div class="snip-part-head">
-        <span class="snip-part-label">코드</span>
-        <button class="btn btn-primary btn-sm snip-copy" data-id="${s.id}" data-part="content">📋 복사</button>
-      </div>
-      <pre class="snip-pre">${snipPreview(s.content)}</pre>
-    </div>`;
+    }
+    body = `<div class="snip-body">${body}</div>`;
   }
-  return `<div class="snip-card" data-id="${s.id}">
-    <div class="snip-card-head">
+  // 접힌 한 줄이 기본 — 단일 코드는 펼치지 않고도 헤더의 📋복사 한 번이면 끝
+  const copyBtn = s.kind === "tb4"
+    ? ""
+    : `<button class="btn btn-primary btn-sm snip-copy" data-id="${s.id}" data-part="content">📋 복사</button>`;
+  return `<div class="snip-card ${expanded ? "is-open" : ""}" data-id="${s.id}">
+    <div class="snip-card-head snip-toggle" data-id="${s.id}" title="${expanded ? "접기" : "펼쳐서 내용 보기"}">
       <div class="snip-card-title">
+        <span class="snip-caret">${expanded ? "▾" : "▸"}</span>
         <span class="snip-kind-badge ${s.kind === "tb4" ? "is-tb4" : ""}">${snipKindLabel(s.kind)}</span>
         <span class="snip-title-text">${title}</span>
       </div>
       <div class="snip-card-actions">
         ${when ? `<span class="snip-when">${escapeHtml(when)}</span>` : ""}
+        ${copyBtn}
         <button class="icon-btn snip-edit" data-id="${s.id}" title="편집">✎</button>
+        <button class="icon-btn snip-del" data-id="${s.id}" title="삭제">🗑</button>
       </div>
     </div>
     ${body}
@@ -3042,7 +3051,15 @@ function renderSnippets() {
     list.innerHTML = `<div class="empty-state">아직 담아둔 코드가 없어요.<br><small>맥에서 ＋코드 추가로 붙여넣고, 회사 노트북에서 열어 📋복사하세요.</small></div>`;
     return;
   }
-  list.innerHTML = STATE.snippets.map(snippetCardHtml).join("");
+  const total = STATE.snippets.length;
+  const shown = STATE.snippets.slice(0, STATE.snipShown);
+  const moreLeft = total - shown.length;
+  list.innerHTML =
+    `<div class="snip-count">${total}개</div>` +
+    shown.map(snippetCardHtml).join("") +
+    (moreLeft > 0
+      ? `<button class="btn btn-outline snip-more" id="snipMoreBtn">더 보기 (${moreLeft}개 남음)</button>`
+      : "");
   list.querySelectorAll(".snip-copy").forEach(btn => {
     btn.addEventListener("click", e => {
       e.stopPropagation();
@@ -3059,6 +3076,58 @@ function renderSnippets() {
       openSnippetModal(Number(btn.dataset.id));
     });
   });
+  list.querySelectorAll(".snip-del").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      deleteSnippetById(Number(btn.dataset.id));
+    });
+  });
+  list.querySelectorAll(".snip-toggle").forEach(head => {
+    head.addEventListener("click", () => {
+      const id = Number(head.dataset.id);
+      if (STATE.snipExpanded[id]) delete STATE.snipExpanded[id];
+      else STATE.snipExpanded[id] = true;
+      renderSnippets();
+    });
+  });
+  const moreBtn = document.getElementById("snipMoreBtn");
+  if (moreBtn) moreBtn.addEventListener("click", () => {
+    STATE.snipShown += 15;
+    renderSnippets();
+  });
+}
+
+/** 카드에서 바로 삭제 — 편집 모달 안 거침 */
+async function deleteSnippetById(id) {
+  const s = STATE.snippets.find(x => x.id === id);
+  if (!s) return;
+  if (!confirm(`"${s.title || "(제목 없음)"}" 삭제할까요?`)) return;
+  try {
+    await api("DELETE", `/api/me/snippets/${id}`);
+    STATE.snippets = STATE.snippets.filter(x => x.id !== id);
+    delete STATE.snipExpanded[id];
+    renderSnippets();
+    showToast("삭제됐어요");
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+/** 전달함 전체 비우기 */
+async function clearAllSnippets() {
+  const n = STATE.snippets.length;
+  if (!n) { showToast("이미 비어 있어요"); return; }
+  if (!confirm(`전달함을 전부 비울까요? ${n}개가 삭제되고 되돌릴 수 없어요.`)) return;
+  try {
+    const res = await api("DELETE", "/api/me/snippets");
+    STATE.snippets = [];
+    STATE.snipExpanded = {};
+    STATE.snipShown = 15;
+    renderSnippets();
+    showToast(`${res.deleted ?? n}개 삭제됐어요 🧹`);
+  } catch (e) {
+    showToast(e.message, true);
+  }
 }
 
 function setSnippetKind(kind) {
@@ -3150,6 +3219,8 @@ function bindSnippets() {
   if (form) form.addEventListener("submit", saveSnippet);
   const delBtn = document.getElementById("deleteSnippetBtn");
   if (delBtn) delBtn.addEventListener("click", deleteSnippet);
+  const clearBtn = document.getElementById("clearSnippetsBtn");
+  if (clearBtn) clearBtn.addEventListener("click", clearAllSnippets);
   document.querySelectorAll(".snip-kind-btn").forEach(b => {
     b.addEventListener("click", () => setSnippetKind(b.dataset.snipkind));
   });

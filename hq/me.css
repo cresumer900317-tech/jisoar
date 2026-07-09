@@ -1937,16 +1937,22 @@ input, button, select, textarea { font: inherit; color: inherit; }
   border-radius: var(--radius-sm);
   font-size: 0.8rem; color: var(--text-meta); line-height: 1.5;
 }
-.snip-list { display: flex; flex-direction: column; gap: 14px; }
+.snip-list { display: flex; flex-direction: column; gap: 10px; }
 .snip-loading { color: var(--text-meta); padding: 24px; text-align: center; }
 .snip-card {
   background: var(--surface-2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 14px 16px;
+  border-radius: var(--radius); padding: 10px 14px;
 }
 .snip-card-head {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; margin-bottom: 10px;
+  gap: 10px;
 }
+.snip-toggle { cursor: pointer; user-select: none; }
+.snip-caret { flex: none; width: 14px; color: var(--text-meta); font-size: 0.8rem; }
+.snip-body { margin-top: 10px; }
+.snip-count { font-size: 0.76rem; color: var(--text-meta); margin-bottom: -4px; }
+.snip-more { width: 100%; padding: 10px; font-size: 0.84rem; }
+.page-header-btns { display: flex; align-items: center; gap: 8px; flex: none; }
 .snip-card-title { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .snip-title-text {
   font-weight: var(--fw-semibold); color: var(--text-strong);
