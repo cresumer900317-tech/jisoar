@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>ICP 코드 브릿지</title>
+  <link rel="stylesheet" href="icp.css" />
+</head>
+<body>
+  <!-- ── 로그인 화면 ─────────────────────────── -->
+  <div id="loginView" class="login-wrap" hidden>
+    <div class="login-box">
+      <div class="login-logo">🔧</div>
+      <h1>ICP 코드 브릿지</h1>
+      <p class="login-sub">ThingsBoard · Node-RED 코드 전달함</p>
+      <form id="loginForm">
+        <label class="field">
+          <span>이름</span>
+          <input type="text" id="loginName" maxlength="30" placeholder="예: 지수" autocomplete="username" />
+        </label>
+        <label class="field">
+          <span>접속코드</span>
+          <input type="password" id="loginCode" placeholder="공유받은 접속코드" autocomplete="current-password" />
+        </label>
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">들어가기</button>
+      </form>
+      <p class="login-note">팀 내부용 페이지입니다. 접속코드는 담당자에게 문의하세요.</p>
+    </div>
+  </div>
+
+  <!-- ── 메인 화면 ─────────────────────────── -->
+  <div id="appView" hidden>
+    <header class="topbar">
+      <div class="topbar-title">
+        <span class="topbar-logo">🔧</span>
+        <strong>ICP 코드 브릿지</strong>
+        <span class="topbar-sub">ThingsBoard · Node-RED</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="topbar-user" id="userName"></span>
+        <button class="btn btn-outline btn-sm" id="logoutBtn">로그아웃</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="list-head">
+        <span class="snip-count" id="snipCount"></span>
+        <button class="btn btn-primary" id="addBtn">＋ 코드 추가</button>
+      </div>
+      <div id="snipList"></div>
+    </main>
+  </div>
+
+  <!-- ── 코드 추가/편집 모달 ─────────────────── -->
+  <div class="modal-backdrop" id="snippetModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <header class="modal-head">
+        <h2 id="snippetModalTitle">새 코드</h2>
+        <button class="modal-close" id="modalCloseBtn" type="button">✕</button>
+      </header>
+      <form id="snippetForm" class="modal-body">
+        <div class="modal-scroll">
+          <input type="hidden" id="snippetId" />
+          <label class="field">
+            <span>제목</span>
+            <input type="text" id="snipTitle" maxlength="200" placeholder="예: INC4 스파이럴 게이지 위젯 / GOY1 수집 플로우" />
+          </label>
+          <div class="kind-toggle" role="tablist">
+            <button type="button" class="kind-btn is-active" data-kind="single">단일 코드 (Node-RED 등)</button>
+            <button type="button" class="kind-btn" data-kind="tb4">ThingsBoard 4파트</button>
+          </div>
+          <div id="fieldsSingle">
+            <label class="field">
+              <span>코드</span>
+              <textarea id="snipContent" class="code-input" rows="16" spellcheck="false" placeholder="여기에 코드를 붙여넣으세요 (Node-RED 플로우 JSON, 스크립트 등)"></textarea>
+            </label>
+          </div>
+          <div id="fieldsTb4" hidden>
+            <label class="field"><span>HTML</span><textarea id="snipHtml" class="code-input" rows="6" spellcheck="false"></textarea></label>
+            <label class="field"><span>CSS</span><textarea id="snipCss" class="code-input" rows="6" spellcheck="false"></textarea></label>
+            <label class="field"><span>JavaScript</span><textarea id="snipJs" class="code-input" rows="8" spellcheck="false"></textarea></label>
+            <label class="field"><span>Settings schema (JSON)</span><textarea id="snipSettings" class="code-input" rows="6" spellcheck="false"></textarea></label>
+          </div>
+        </div>
+        <footer class="modal-foot">
+          <span class="modal-hint">⌘Enter 저장</span>
+          <div class="modal-foot-right">
+            <button type="button" class="btn btn-outline" id="modalCancelBtn">취소</button>
+            <button type="submit" class="btn btn-primary">저장</button>
+          </div>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="icp.js"></script>
+</body>
+</html>
