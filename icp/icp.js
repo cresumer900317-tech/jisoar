@@ -9,7 +9,11 @@ const STATE = {
   shown: 15,
   editingId: null,
   kind: "single",
+  filter: "__all__",   // "__all__" | 작성자 이름
 };
+
+const ALL_TAB = "__all__";
+function myName() { return localStorage.getItem("icp_name") || ""; }
 
 const TB4_PARTS = [
   { key: "html", label: "HTML" },
@@ -103,7 +107,8 @@ function showLogin() {
 function showApp() {
   $("loginView").hidden = true;
   $("appView").hidden = false;
-  $("userName").textContent = localStorage.getItem("icp_name") || "";
+  $("userName").textContent = myName();
+  STATE.filter = localStorage.getItem("icp_filter") || myName() || ALL_TAB;
   loadSnippets();
 }
 
@@ -139,10 +144,49 @@ async function loadSnippets() {
   try {
     STATE.snippets = (await api("GET", "/api/icp/snippets")) || [];
     STATE.loaded = true;
-    renderSnippets();
+    renderAll();
   } catch (e) {
     if (e.message !== "다시 로그인해주세요") showToast(e.message, true);
   }
+}
+
+// ── 작성자 탭 ─────────────────────────────────
+function setFilter(key) {
+  STATE.filter = key;
+  localStorage.setItem("icp_filter", key);
+  STATE.shown = 15;
+  renderAll();
+}
+
+function filteredSnippets() {
+  if (STATE.filter === ALL_TAB) return STATE.snippets;
+  return STATE.snippets.filter((s) => (s.author || "") === STATE.filter);
+}
+
+function renderTabs() {
+  const el = $("authorTabs");
+  const authors = [...new Set(STATE.snippets.map((s) => s.author || "").filter(Boolean))];
+  const me = myName();
+  if (me && !authors.includes(me)) authors.push(me);
+  authors.sort((a, b) => (a === me ? -1 : b === me ? 1 : a.localeCompare(b, "ko")));
+  // 현재 필터가 목록에 없으면(이름 변경 등) 전체로 복귀
+  if (STATE.filter !== ALL_TAB && !authors.includes(STATE.filter)) STATE.filter = ALL_TAB;
+  const countOf = (a) => STATE.snippets.filter((s) => (s.author || "") === a).length;
+  const tabs = [
+    { key: ALL_TAB, label: "전체", count: STATE.snippets.length },
+    ...authors.map((a) => ({ key: a, label: a, count: countOf(a) })),
+  ];
+  el.innerHTML = tabs.map((t) =>
+    `<button class="author-tab ${STATE.filter === t.key ? "is-active" : ""}" data-key="${escapeHtml(t.key)}">
+      ${escapeHtml(t.label)}<span class="tab-count">${t.count}</span>
+    </button>`).join("");
+  el.querySelectorAll(".author-tab").forEach((btn) =>
+    btn.addEventListener("click", () => setFilter(btn.dataset.key)));
+}
+
+function renderAll() {
+  renderTabs();
+  renderSnippets();
 }
 
 function kindLabel(kind) {
@@ -203,17 +247,19 @@ function cardHtml(s) {
 
 function renderSnippets() {
   const list = $("snipList");
-  $("snipCount").textContent = STATE.loaded ? `${STATE.snippets.length}개` : "";
+  const items = filteredSnippets();
+  $("snipCount").textContent = STATE.loaded ? `${items.length}개` : "";
   if (!STATE.loaded) {
     list.innerHTML = `<div class="snip-loading">불러오는 중…</div>`;
     return;
   }
-  if (!STATE.snippets.length) {
-    list.innerHTML = `<div class="empty-state">아직 담아둔 코드가 없어요.<br><small>집에서 ＋코드 추가로 붙여넣고, 회사 노트북에서 열어 📋복사하세요.</small></div>`;
+  if (!items.length) {
+    const who = STATE.filter === ALL_TAB ? "" : `${escapeHtml(STATE.filter)}님의 `;
+    list.innerHTML = `<div class="empty-state">${who}코드가 아직 없어요.<br><small>집에서 ＋코드 추가로 붙여넣고, 회사 노트북에서 열어 📋복사하세요.</small></div>`;
     return;
   }
-  const shown = STATE.snippets.slice(0, STATE.shown);
-  const moreLeft = STATE.snippets.length - shown.length;
+  const shown = items.slice(0, STATE.shown);
+  const moreLeft = items.length - shown.length;
   list.innerHTML =
     shown.map(cardHtml).join("") +
     (moreLeft > 0 ? `<button class="btn btn-outline snip-more" id="snipMoreBtn">더 보기 (${moreLeft}개 남음)</button>` : "");
@@ -263,7 +309,7 @@ async function deleteSnippet(id) {
     await api("DELETE", `/api/icp/snippets/${id}`);
     STATE.snippets = STATE.snippets.filter((x) => x.id !== id);
     delete STATE.expanded[id];
-    renderSnippets();
+    renderAll();
     showToast("삭제됐어요");
   } catch (e) {
     showToast(e.message, true);
@@ -322,10 +368,12 @@ async function saveSnippet(e) {
     } else {
       const created = await api("POST", "/api/icp/snippets", body);
       STATE.snippets.unshift(created);
+      // 다른 사람 탭을 보던 중이었으면 내 탭으로 이동해서 방금 저장한 게 보이게
+      if (STATE.filter !== ALL_TAB && STATE.filter !== myName()) setFilter(myName() || ALL_TAB);
       showToast("저장됐어요 ✅");
     }
     closeModal();
-    renderSnippets();
+    renderAll();
   } catch (err) {
     showToast(err.message, true);
   }

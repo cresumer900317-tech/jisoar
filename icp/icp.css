@@ -65,6 +65,17 @@ body {
 .topbar-actions { display: flex; align-items: center; gap: 10px; }
 .topbar-user { font-size: 0.82rem; font-weight: 700; color: var(--accent); }
 
+/* ── 작성자 탭 ── */
+.author-tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.author-tab {
+  border: 1px solid var(--line); background: #fff; border-radius: 20px;
+  padding: 6px 14px; font-size: 0.82rem; font-weight: 700; color: var(--muted); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.author-tab:hover { background: #f3f4f6; }
+.author-tab.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.author-tab .tab-count { font-size: 0.7rem; opacity: 0.75; margin-left: 3px; }
+
 /* ── 목록 ── */
 .container { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
 .list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
