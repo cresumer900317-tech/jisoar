@@ -13,6 +13,7 @@ const STATE = {
 };
 
 const ALL_TAB = "__all__";
+const MEMBERS = ["Jett", "Minhyun"];   // 고정 사용자 — 탭과 로그인 선택지
 function myName() { return localStorage.getItem("icp_name") || ""; }
 
 const TB4_PARTS = [
@@ -96,12 +97,19 @@ async function api(method, path, body) {
   return data;
 }
 
+let pickedMember = "";
+function pickMember(name) {
+  pickedMember = name;
+  document.querySelectorAll(".member-btn").forEach((b) =>
+    b.classList.toggle("is-active", b.dataset.name === name));
+}
+
 function showLogin() {
   $("loginView").hidden = false;
   $("appView").hidden = true;
   const saved = localStorage.getItem("icp_name") || "";
-  $("loginName").value = saved;
-  (saved ? $("loginCode") : $("loginName")).focus();
+  if (MEMBERS.includes(saved)) pickMember(saved);
+  if (pickedMember) $("loginCode").focus();
 }
 
 function showApp() {
@@ -114,9 +122,9 @@ function showApp() {
 
 async function login(e) {
   e.preventDefault();
-  const name = $("loginName").value.trim();
+  const name = pickedMember;
   const code = $("loginCode").value;
-  if (!name) { showToast("이름을 입력해주세요", true); return; }
+  if (!name) { showToast("사용자를 선택해주세요 (Jett / Minhyun)", true); return; }
   if (!code) { showToast("접속코드를 입력해주세요", true); return; }
   $("loginBtn").disabled = true;
   try {
@@ -165,11 +173,10 @@ function filteredSnippets() {
 
 function renderTabs() {
   const el = $("authorTabs");
-  const authors = [...new Set(STATE.snippets.map((s) => s.author || "").filter(Boolean))];
-  const me = myName();
-  if (me && !authors.includes(me)) authors.push(me);
-  authors.sort((a, b) => (a === me ? -1 : b === me ? 1 : a.localeCompare(b, "ko")));
-  // 현재 필터가 목록에 없으면(이름 변경 등) 전체로 복귀
+  // 고정 멤버 탭 + (혹시 남아있는) 그 외 작성자 탭은 데이터가 있을 때만 표시
+  const extras = [...new Set(STATE.snippets.map((s) => s.author || "").filter(Boolean))]
+    .filter((a) => !MEMBERS.includes(a));
+  const authors = [...MEMBERS, ...extras];
   if (STATE.filter !== ALL_TAB && !authors.includes(STATE.filter)) STATE.filter = ALL_TAB;
   const countOf = (a) => STATE.snippets.filter((s) => (s.author || "") === a).length;
   const tabs = [
@@ -382,6 +389,8 @@ async function saveSnippet(e) {
 // ── 초기화 ────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   $("loginForm").addEventListener("submit", login);
+  document.querySelectorAll(".member-btn").forEach((b) =>
+    b.addEventListener("click", () => { pickMember(b.dataset.name); $("loginCode").focus(); }));
   $("logoutBtn").addEventListener("click", logout);
   $("addBtn").addEventListener("click", () => openModal(null));
   $("snippetForm").addEventListener("submit", saveSnippet);

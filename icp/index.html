@@ -15,10 +15,13 @@
       <h1>ICP 코드 브릿지</h1>
       <p class="login-sub">ThingsBoard · Node-RED 코드 전달함</p>
       <form id="loginForm">
-        <label class="field">
-          <span>이름</span>
-          <input type="text" id="loginName" maxlength="30" placeholder="예: 지수" autocomplete="username" />
-        </label>
+        <div class="field">
+          <span class="field-label">사용자</span>
+          <div class="member-pick" id="memberPick">
+            <button type="button" class="member-btn" data-name="Jett">Jett</button>
+            <button type="button" class="member-btn" data-name="Minhyun">Minhyun</button>
+          </div>
+        </div>
         <label class="field">
           <span>접속코드</span>
           <input type="password" id="loginCode" placeholder="공유받은 접속코드" autocomplete="current-password" />
