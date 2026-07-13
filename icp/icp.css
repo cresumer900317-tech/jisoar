@@ -1,5 +1,6 @@
 /* ICP 코드 브릿지 — 회사용이라 hq(앰버)와 구분되는 블루 톤 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+[hidden] { display: none !important; }
 :root {
   --accent: #2563eb;
   --accent-dark: #1d4ed8;
