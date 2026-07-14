@@ -10,6 +10,7 @@ const STATE = {
   editingId: null,
   kind: "single",
   filter: "__all__",   // "__all__" | 작성자 이름
+  search: "",          // 제목 검색어
 };
 
 const ALL_TAB = "__all__";
@@ -167,8 +168,23 @@ function setFilter(key) {
 }
 
 function filteredSnippets() {
-  if (STATE.filter === ALL_TAB) return STATE.snippets;
-  return STATE.snippets.filter((s) => (s.author || "") === STATE.filter);
+  let items = STATE.snippets;
+  if (STATE.filter !== ALL_TAB) items = items.filter((s) => (s.author || "") === STATE.filter);
+  const q = STATE.search.trim().toLowerCase();
+  if (q) items = items.filter((s) => String(s.title || "").toLowerCase().includes(q));
+  return items;
+}
+
+function setSearch(value) {
+  STATE.search = value;
+  STATE.shown = 15;
+  $("searchClearBtn").hidden = !value;
+  renderSnippets();
+}
+
+function clearSearch() {
+  $("searchInput").value = "";
+  setSearch("");
 }
 
 function renderTabs() {
@@ -261,6 +277,10 @@ function renderSnippets() {
     return;
   }
   if (!items.length) {
+    if (STATE.search.trim()) {
+      list.innerHTML = `<div class="empty-state">"${escapeHtml(STATE.search.trim())}" 제목 검색 결과가 없어요.<br><small>다른 검색어를 입력하거나 ✕로 지워보세요.</small></div>`;
+      return;
+    }
     const who = STATE.filter === ALL_TAB ? "" : `${escapeHtml(STATE.filter)}님의 `;
     list.innerHTML = `<div class="empty-state">${who}코드가 아직 없어요.<br><small>집에서 ＋코드 추가로 붙여넣고, 회사 노트북에서 열어 📋복사하세요.</small></div>`;
     return;
@@ -377,6 +397,8 @@ async function saveSnippet(e) {
       STATE.snippets.unshift(created);
       // 다른 사람 탭을 보던 중이었으면 내 탭으로 이동해서 방금 저장한 게 보이게
       if (STATE.filter !== ALL_TAB && STATE.filter !== myName()) setFilter(myName() || ALL_TAB);
+      // 검색 중이었으면 지워서 방금 저장한 게 가려지지 않게
+      if (STATE.search) clearSearch();
       showToast("저장됐어요 ✅");
     }
     closeModal();
@@ -393,6 +415,11 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => { pickMember(b.dataset.name); $("loginCode").focus(); }));
   $("logoutBtn").addEventListener("click", logout);
   $("addBtn").addEventListener("click", () => openModal(null));
+  $("searchInput").addEventListener("input", (e) => setSearch(e.target.value));
+  $("searchInput").addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { clearSearch(); e.target.blur(); }
+  });
+  $("searchClearBtn").addEventListener("click", () => { clearSearch(); $("searchInput").focus(); });
   $("snippetForm").addEventListener("submit", saveSnippet);
   $("modalCloseBtn").addEventListener("click", closeModal);
   $("modalCancelBtn").addEventListener("click", closeModal);
@@ -404,6 +431,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !$("snippetModal").hidden) closeModal();
     if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && !$("snippetModal").hidden) saveSnippet();
+    // "/" 로 검색창 포커스 (입력 중이거나 모달 열려 있으면 무시)
+    const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName || "");
+    if (e.key === "/" && !typing && $("snippetModal").hidden && !$("appView").hidden) {
+      e.preventDefault();
+      $("searchInput").focus();
+    }
   });
 
   if (token()) showApp();
