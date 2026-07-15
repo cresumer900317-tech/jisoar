@@ -158,6 +158,7 @@ body {
   max-height: 480px; overflow-y: auto;
 }
 .memo-input { line-height: 1.6; resize: vertical; }
+.snip-note-notice { margin-top: 6px; font-size: 0.72rem; color: #b45309; }
 .snip-more { width: 100%; margin-top: 6px; }
 
 /* ── 모달 ── */

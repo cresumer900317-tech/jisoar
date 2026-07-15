@@ -244,8 +244,15 @@ function cardHtml(s) {
         </div>`;
       }).join("") || `<div class="snip-empty-body">내용 없음</div>`;
     } else if (s.kind === "note") {
-      // 메모는 코드가 아니라 읽는 용도 — 자르지 않고 전부, 줄바꿈 살려서
-      body = `<div class="snip-part"><div class="snip-note">${escapeHtml(s.content || "")}</div></div>`;
+      // 메모는 읽는 용도 — 줄바꿈 살려 표시. 아주 길면 화면만 자르고(렌더 부담) 복사는 항상 전문
+      const full = String(s.content || "");
+      const NOTE_SHOW_MAX = 20000;
+      const clipped = full.length > NOTE_SHOW_MAX;
+      const shownText = clipped ? full.slice(0, NOTE_SHOW_MAX) : full;
+      const notice = clipped
+        ? `<div class="snip-note-notice">내용이 길어 앞부분만 표시했어요 (전체 ${Math.round(full.length / 1000)}KB) — 📋 복사 버튼은 전체를 복사합니다</div>`
+        : "";
+      body = `<div class="snip-part"><div class="snip-note">${escapeHtml(shownText)}${clipped ? "\n…" : ""}</div>${notice}</div>`;
     } else {
       body = `<div class="snip-part"><pre class="snip-pre">${preview(s.content)}</pre></div>`;
     }
