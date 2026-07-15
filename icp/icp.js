@@ -213,7 +213,9 @@ function renderAll() {
 }
 
 function kindLabel(kind) {
-  return kind === "tb4" ? "TB 4파트" : "단일";
+  if (kind === "tb4") return "TB 4파트";
+  if (kind === "note") return "메모";
+  return "단일";
 }
 
 function preview(text) {
@@ -241,6 +243,9 @@ function cardHtml(s) {
           <pre class="snip-pre">${preview(val)}</pre>
         </div>`;
       }).join("") || `<div class="snip-empty-body">내용 없음</div>`;
+    } else if (s.kind === "note") {
+      // 메모는 코드가 아니라 읽는 용도 — 자르지 않고 전부, 줄바꿈 살려서
+      body = `<div class="snip-part"><div class="snip-note">${escapeHtml(s.content || "")}</div></div>`;
     } else {
       body = `<div class="snip-part"><pre class="snip-pre">${preview(s.content)}</pre></div>`;
     }
@@ -248,12 +253,13 @@ function cardHtml(s) {
   }
   const copyBtn = s.kind === "tb4"
     ? ""
-    : `<button class="btn btn-primary btn-sm snip-copy" data-id="${s.id}" data-part="content">📋 복사</button>`;
+    : `<button class="btn ${s.kind === "note" ? "btn-outline" : "btn-primary"} btn-sm snip-copy" data-id="${s.id}" data-part="content">📋 복사</button>`;
+  const badgeCls = s.kind === "tb4" ? "is-tb4" : s.kind === "note" ? "is-note" : "";
   return `<div class="snip-card ${expanded ? "is-open" : ""}" data-id="${s.id}">
     <div class="snip-card-head snip-toggle" data-id="${s.id}" title="${expanded ? "접기" : "펼쳐서 내용 보기"}">
       <div class="snip-card-title">
         <span class="snip-caret">${expanded ? "▾" : "▸"}</span>
-        <span class="kind-badge ${s.kind === "tb4" ? "is-tb4" : ""}">${kindLabel(s.kind)}</span>
+        <span class="kind-badge ${badgeCls}">${kindLabel(s.kind)}</span>
         <span class="snip-title-text">${title}</span>
         ${author ? `<span class="snip-author">${author}</span>` : ""}
       </div>
@@ -346,24 +352,32 @@ async function deleteSnippet(id) {
 // ── 모달 ──────────────────────────────────────
 function setKind(kind) {
   STATE.kind = kind;
+  // 메모는 종류 토글에 없음 — 별도 버튼(＋메모 추가)으로만 진입, 토글 자체를 숨김
+  $("kindToggle").hidden = kind === "note";
   document.querySelectorAll(".kind-btn").forEach((b) =>
     b.classList.toggle("is-active", b.dataset.kind === kind));
   $("fieldsSingle").hidden = kind !== "single";
   $("fieldsTb4").hidden = kind !== "tb4";
+  $("fieldsNote").hidden = kind !== "note";
 }
 
-function openModal(id) {
+function openModal(id, newKind) {
   STATE.editingId = id || null;
   const s = id ? STATE.snippets.find((x) => x.id === id) : null;
-  $("snippetModalTitle").textContent = s ? "코드 편집" : "새 코드";
+  const kind = s ? s.kind || "single" : newKind || "single";
+  const isNote = kind === "note";
+  $("snippetModalTitle").textContent = s
+    ? (isNote ? "메모 편집" : "코드 편집")
+    : (isNote ? "새 메모" : "새 코드");
   $("snippetId").value = s ? s.id : "";
   $("snipTitle").value = s ? s.title || "" : "";
-  $("snipContent").value = s ? s.content || "" : "";
+  $("snipContent").value = s && !isNote ? s.content || "" : "";
+  $("snipNote").value = s && isNote ? s.content || "" : "";
   $("snipHtml").value = s ? s.html || "" : "";
   $("snipCss").value = s ? s.css || "" : "";
   $("snipJs").value = s ? s.js || "" : "";
   $("snipSettings").value = s ? s.settings || "" : "";
-  setKind(s ? s.kind || "single" : "single");
+  setKind(kind);
   $("snippetModal").hidden = false;
   $("snipTitle").focus();
 }
@@ -378,14 +392,15 @@ async function saveSnippet(e) {
   const body = {
     title: $("snipTitle").value.trim(),
     kind: STATE.kind,
-    content: STATE.kind === "single" ? $("snipContent").value : "",
+    content: STATE.kind === "single" ? $("snipContent").value
+      : STATE.kind === "note" ? $("snipNote").value : "",
     html: STATE.kind === "tb4" ? $("snipHtml").value : "",
     css: STATE.kind === "tb4" ? $("snipCss").value : "",
     js: STATE.kind === "tb4" ? $("snipJs").value : "",
     settings: STATE.kind === "tb4" ? $("snipSettings").value : "",
   };
   const hasContent = body.content.trim() || body.html.trim() || body.css.trim() || body.js.trim() || body.settings.trim();
-  if (!hasContent) { showToast("코드를 입력해주세요", true); return; }
+  if (!hasContent) { showToast(STATE.kind === "note" ? "내용을 입력해주세요" : "코드를 입력해주세요", true); return; }
   try {
     if (STATE.editingId) {
       const updated = await api("PATCH", `/api/icp/snippets/${STATE.editingId}`, body);
@@ -415,6 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => { pickMember(b.dataset.name); $("loginCode").focus(); }));
   $("logoutBtn").addEventListener("click", logout);
   $("addBtn").addEventListener("click", () => openModal(null));
+  $("addMemoBtn").addEventListener("click", () => openModal(null, "note"));
   $("searchInput").addEventListener("input", (e) => setSearch(e.target.value));
   $("searchInput").addEventListener("keydown", (e) => {
     if (e.key === "Escape") { clearSearch(); e.target.blur(); }

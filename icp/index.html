@@ -55,7 +55,10 @@
       </div>
       <div class="list-head">
         <span class="snip-count" id="snipCount"></span>
-        <button class="btn btn-primary" id="addBtn">＋ 코드 추가</button>
+        <div class="list-head-btns">
+          <button class="btn btn-outline" id="addMemoBtn">＋ 메모 추가</button>
+          <button class="btn btn-primary" id="addBtn">＋ 코드 추가</button>
+        </div>
       </div>
       <div id="snipList"></div>
     </main>
@@ -75,7 +78,7 @@
             <span>제목</span>
             <input type="text" id="snipTitle" maxlength="200" placeholder="예: INC4 스파이럴 게이지 위젯 / GOY1 수집 플로우" />
           </label>
-          <div class="kind-toggle" role="tablist">
+          <div class="kind-toggle" role="tablist" id="kindToggle">
             <button type="button" class="kind-btn is-active" data-kind="single">단일 코드 (Node-RED 등)</button>
             <button type="button" class="kind-btn" data-kind="tb4">ThingsBoard 4파트</button>
           </div>
@@ -83,6 +86,12 @@
             <label class="field">
               <span>코드</span>
               <textarea id="snipContent" class="code-input" rows="16" spellcheck="false" placeholder="여기에 코드를 붙여넣으세요 (Node-RED 플로우 JSON, 스크립트 등)"></textarea>
+            </label>
+          </div>
+          <div id="fieldsNote" hidden>
+            <label class="field">
+              <span>내용</span>
+              <textarea id="snipNote" class="memo-input" rows="14" placeholder="태그매핑, 설비 정보, 작업 메모 등 자유롭게 적으세요"></textarea>
             </label>
           </div>
           <div id="fieldsTb4" hidden>
