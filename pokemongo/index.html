@@ -103,7 +103,7 @@
   .ic ul{list-style:none; display:flex; flex-direction:column; gap:8px}
   .ic li{font-size:13.5px; color:var(--muted); padding-left:15px; position:relative; line-height:1.55}
   .ic li::before{content:"·"; position:absolute; left:3px; color:var(--dawn); font-weight:700}
-  .ic li .tip{color:var(--dawn-2)}
+  .ic li .tip{color:var(--dawn-2); word-break:break-all}
   .ic a{color:var(--dawn); text-decoration:none} .ic a:hover{text-decoration:underline}
 
   .note{margin-top:14px; font-size:12px; color:var(--muted-2); line-height:1.6; padding:11px 13px; border:1px dashed var(--line-2); border-radius:11px; background:rgba(255,209,102,.03)}
@@ -162,6 +162,25 @@
   .step-body p b{color:var(--ink); font-weight:600}
   .step-body p .tip{color:var(--dawn-2)}
 
+  /* decision tree */
+  .dt-q{font-size:15px; font-weight:600; color:var(--ink); line-height:1.5; margin:6px 0 4px; min-height:44px}
+  .dt-q .sub{display:block; font-size:12.5px; color:var(--muted); font-weight:400; margin-top:4px}
+  .dt-btns{display:flex; gap:9px; margin-top:10px; flex-wrap:wrap}
+  .dt-btn{flex:1; min-width:110px; padding:11px 14px; border-radius:11px; border:1px solid var(--line-2); background:rgba(255,255,255,.03); color:var(--ink); font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; transition:.15s}
+  .dt-btn:hover{border-color:var(--dawn); background:var(--card-hi)}
+  .dt-verdict{margin-top:10px; padding:14px 15px; border-radius:12px; font-size:14px; line-height:1.6}
+  .dt-verdict.keep{border:1px solid rgba(127,214,166,.45); background:rgba(127,214,166,.07); color:var(--ink)}
+  .dt-verdict.send{border:1px solid rgba(255,157,108,.45); background:rgba(255,157,108,.07); color:var(--ink)}
+  .dt-verdict.cond{border:1px solid rgba(255,209,102,.45); background:rgba(255,209,102,.06); color:var(--ink)}
+  .dt-verdict .vtag{display:inline-block; font-size:11px; letter-spacing:.14em; font-weight:700; padding:2px 10px; border-radius:999px; margin-bottom:7px}
+  .dt-verdict.keep .vtag{color:var(--ok); border:1px solid rgba(127,214,166,.5)}
+  .dt-verdict.send .vtag{color:var(--dawn); border:1px solid rgba(255,157,108,.5)}
+  .dt-verdict.cond .vtag{color:var(--warn); border:1px solid rgba(255,209,102,.5)}
+  .dt-verdict b{font-weight:600}
+  .dt-crumbs{margin-top:9px; font-size:11.5px; color:var(--muted-2)}
+  .dt-restart{margin-top:12px; padding:9px 16px; border-radius:999px; border:1px solid var(--line-2); background:none; color:var(--muted); font-size:13px; cursor:pointer; font-family:inherit; transition:.2s}
+  .dt-restart:hover{border-color:var(--dawn); color:var(--ink)}
+
   footer{margin-top:48px; padding:40px 0 56px; border-top:1px solid var(--line); text-align:center; color:var(--muted); font-size:13px; font-weight:300}
   footer .fmark{font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink)}
   footer .fmark .dot{color:var(--dawn)}
@@ -199,6 +218,7 @@
     <a class="pill" href="#raids"><b>⚔️ 현재 레이드</b></a>
     <a class="pill" href="#basics"><b>🧭 시스템 기초</b></a>
     <a class="pill" href="#invest"><b>💪 육성</b></a>
+    <a class="pill" href="#transfer"><b>📦 보낼까 말까</b></a>
     <a class="pill" href="#battle"><b>🥊 배틀</b></a>
     <a class="pill" href="#plan"><b>🗓 첫 달 로드맵</b></a>
     <a class="pill" href="#tools"><b>🛠 도구</b></a>
@@ -388,6 +408,58 @@
       </table>
     </div>
     <div class="note"><b>표 읽는 법</b> — 오른쪽 열부터 만드세요. 노란색이 그 타입의 "가성비 1순위". 왼쪽 열은 레이드 복각·로켓단·메가 레이드로 재료가 모였을 때 업그레이드하는 최종 목표입니다. 메타 기준 2026년 7월(GoSilph/GO Hub 랭킹).</div>
+  </section>
+
+  <!-- ============ 보낼까 말까 ============ -->
+  <section class="sec" id="transfer">
+    <div class="sec-eyebrow">Keep or Transfer</div>
+    <h2>Keep?<span class="ko">보낼까, 남길까 — 후회 없는 박스 정리</span></h2>
+    <p class="sec-desc">전송(박사에게 보내기)은 <b style="color:var(--warn)">되돌릴 수 없어요</b>. 그래서 기준이 필요합니다. 헷갈리는 포켓몬을 하나 떠올리고 아래 진단을 눌러보세요.</p>
+
+    <div class="ic hi" style="margin-top:18px" id="dtCard">
+      <h3><span class="ico">🔍</span>보내도 될까? — 10초 진단</h3>
+      <div class="dt-q" id="dtQ"></div>
+      <div class="dt-btns" id="dtBtns"></div>
+      <div class="dt-verdict" id="dtV" hidden></div>
+      <button class="dt-restart" id="dtRestart" hidden>↺ 다른 포켓몬 진단하기</button>
+    </div>
+
+    <div class="grid two" style="margin-top:16px">
+      <div class="ic">
+        <h3><span class="ico">🔒</span>절대 보내면 안 되는 것</h3>
+        <ul>
+          <li><b>이로치(✨)·코스튬·특별 폼</b> — 성능과 무관하게 다시 못 구해요. 컬렉션 가치는 시간이 지날수록 커집니다.</li>
+          <li><b>커뮤니티데이 특별 기술 보유 개체</b> — 그 기술은 엘리트 기술머신(초희귀) 없이는 재습득 불가. 게임 화면만으론 구분이 어려우니 Poke Genie로 확인.</li>
+          <li><b>행운(Lucky)</b> — 강화 모래 50% 할인이 영구. 메타 종 행운은 최우선 육성 후보.</li>
+          <li><b>메타 종의 그림자</b> — 로켓단에서만 나와 재획득이 제한적. 육성 표에 있는 종의 그림자는 IV가 낮아도 일단 보관.</li>
+          <li><b>육성 표에 있는 종의 별3 이상</b> — 지금 안 키워도 미래의 주력.</li>
+          <li><b>도감 마지막 1마리·지역 한정</b> — 전송하면 도감에서만 남아요.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">✅</span>안심하고 보내도 되는 것</h3>
+        <ul>
+          <li>흔한 야생종의 <b>별2 이하 중복</b> 전부 — 캐터피 30마리는 자산이 아니라 짐이에요.</li>
+          <li><b>중복 전설의 낮은 IV 개체</b> — 전설 사탕은 귀해서 오히려 보내는 게 이득. 최고 IV 1마리 + PvP형(공격 낮고 방·체 높은) 1마리만 남기면 충분.</li>
+          <li>육성 표에 <b>같은 종 상위 개체가 이미 있는</b> 하위 개체.</li>
+          <li>잡몹 그림자(육성 표에 없는 종) — 사탕화 OK.</li>
+          <li>참고: <b>환상 포켓몬(뮤·세레비·지라치 등)은 애초에 전송·교환이 안 돼요</b> — 실수할 수 없으니 걱정 제로.</li>
+        </ul>
+      </div>
+      <div class="ic hi">
+        <h3><span class="ico">🛡</span>후회 방지 3습관</h3>
+        <ul>
+          <li><b>남길 것은 즐겨찾기(★)</b> — 즐겨찾기한 포켓몬은 <b>전송 자체가 잠겨요</b>. 위 "절대 보관" 목록부터 ★를 눌러두면 실수가 불가능해집니다.</li>
+          <li><b>대량 정리는 검색 필터로</b>: <span class="tip">!3*&amp;!4*&amp;!shiny&amp;!shadow&amp;!lucky&amp;!legendary&amp;!mythical&amp;!costume&amp;!favorite</span> 를 검색창에 넣으면 "보내도 되는 것"만 남아요 → 길게 눌러 다중 선택 → 일괄 전송.</li>
+          <li><b>애매하면 태그 "보류"</b> — 판단이 안 서는 건 태그로 묶어두고, 육성 표를 다시 볼 때 재검토. 보관함이 차서 급할 때도 보류 태그는 건드리지 않기.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">💡</span>이렇게 생각하면 편해요</h3>
+        <p>전송의 대가는 <b>사탕 1개</b>. 즉 "이 포켓몬이 사탕 1개보다 가치 있나?"가 본질이에요.</p>
+        <p><b>성능(육성 표) · 희소성(이로치·행운·그림자·한정) · 추억(첫 파트너 등)</b> — 셋 중 하나라도 걸리면 보관, 셋 다 아니면 사탕이 이깁니다. 보관함 확장에 쓰는 코인보다 과감한 정리가 언제나 쌉니다.</p>
+      </div>
+    </div>
   </section>
 
   <!-- ============ 배틀 ============ -->
@@ -712,6 +784,46 @@ function dLeft(ms){
     status.innerHTML='<span>⚠️</span><span>자동 갱신 실패</span>';
     body.innerHTML='<div class="cal-err">이벤트 데이터를 불러오지 못했어요. <a href="https://leekduck.com/events/" target="_blank" rel="noopener">LeekDuck 이벤트 페이지</a>에서 직접 확인하세요.</div>';
   }
+})();
+
+/* ---------- keep-or-transfer decision tree ---------- */
+(function(){
+  const NODES={
+    q1:{q:'이로치(✨)·코스튬·특별한 모습이야?', yes:{v:'keep', t:'<b>무조건 보관.</b> 성능과 무관하게 다시 못 구하는 자산이에요. 즐겨찾기(★)로 잠가두세요.'}, no:'q2'},
+    q2:{q:'전설이나 환상 포켓몬이야?', yes:{v:'cond', t:'<b>환상</b>(뮤·세레비·지라치 등)은 애초에 전송이 안 되니 그대로 두면 됩니다.<br/><b>전설</b>은 종별로 <b>IV 최고 1마리</b> + <b>PvP형(공격 낮고 방어·체력 높음) 1마리</b>만 남기고, 나머지 중복은 보내서 사탕으로 — 전설 사탕은 귀해서 전송이 오히려 이득이에요.'}, no:'q3'},
+    q3:{q:'행운(Lucky) 포켓몬이야?', yes:{v:'keep', t:'<b>보관.</b> 강화 별의모래 50% 할인이 영구예요. 육성 표에 있는 종이면 최우선 육성 후보, 아니어도 교환 없인 다시 만들기 어려우니 보류.'}, no:'q4'},
+    q4:{q:'그림자 포켓몬이야?', yes:{v:'cond', t:'<b>육성 표에 있는 종이면 절대 보관</b> — 공격 +20%라 레이드 최상위인데 로켓단에서만 나와요. 표에 없는 잡몹 그림자는 보내도 됩니다.'}, no:'q5'},
+    q5:{q:'커뮤니티데이 특별 기술(레거시 기술)을 갖고 있어?', sub:'게임 화면만으론 알기 어려워요 — Poke Genie가 표시해줍니다. 모르겠으면 "아니오"보다 "예" 쪽으로.', yes:{v:'keep', t:'<b>보관.</b> 그 기술은 엘리트 기술머신(초희귀 아이템) 없이는 다시 못 배워요. 특히 하이드로캐논·블러스트번·하드플랜트급이면 미래의 주력입니다.'}, no:'q6'},
+    q6:{q:'육성 표에 있는 종이야? (진화 전 단계 포함)', sub:'위 육성 섹션의 타입별 표 기준', yes:'q7', no:'q8'},
+    q7:{q:'별3 이상(평가하기 주황)이거나, 공격만 낮고 방어·체력이 높아?', yes:{v:'keep', t:'<b>보관.</b> 별3 이상은 레이드용, 공격 낮고 방·체 높은 개체는 PvP용 후보예요. 즐겨찾기 해두고 육성 순서가 오면 강화.'}, no:{v:'cond', t:'같은 종의 <b>더 좋은 개체가 이미 있으면 전송 OK.</b> 없다면 이 개체가 현재 1군이니, 상위 개체를 잡을 때까지 보류하세요.'}},
+    q8:{q:'도감에 이 종이 딱 1마리뿐이거나, 친구와 교환할 계획이 있어?', yes:{v:'keep', t:'<b>보류.</b> 도감 마지막 개체는 전송하면 도감 기록만 남아요. 교환은 사탕도 받고 행운 기회도 생기니 전송보다 항상 이득입니다.'}, no:{v:'send', t:'<b>보내세요!</b> 성능·희소성·추억 어디에도 안 걸렸어요. 지금 이 포켓몬의 가장 큰 가치는 사탕 1개입니다. 박스 자리가 곧 자원이에요.'}}
+  };
+  const VTAG={keep:'🔒 보관',send:'📦 전송 OK',cond:'⚖️ 조건부'};
+  const qEl=document.getElementById('dtQ'),bEl=document.getElementById('dtBtns'),vEl=document.getElementById('dtV'),rEl=document.getElementById('dtRestart');
+  if(!qEl) return;
+  let path=[];
+  function show(id){
+    const n=NODES[id];
+    qEl.innerHTML='Q'+(path.length+1)+'. '+n.q+(n.sub?'<span class="sub">'+n.sub+'</span>':'');
+    qEl.hidden=false; bEl.hidden=false; vEl.hidden=true; rEl.hidden=true;
+    bEl.innerHTML='';
+    [['예',n.yes],['아니오',n.no]].forEach(([label,next])=>{
+      const b=document.createElement('button'); b.className='dt-btn'; b.textContent=label;
+      b.addEventListener('click',()=>{
+        path.push(n.q.replace(/\(.*?\)/g,'').trim()+' → '+label);
+        if(typeof next==='string') show(next); else verdict(next);
+      });
+      bEl.appendChild(b);
+    });
+  }
+  function verdict(v){
+    qEl.hidden=true; bEl.hidden=true;
+    vEl.className='dt-verdict '+v.v;
+    vEl.innerHTML='<span class="vtag">'+VTAG[v.v]+'</span><br/>'+v.t+'<div class="dt-crumbs">'+path.join(' · ')+'</div>';
+    vEl.hidden=false; rEl.hidden=false;
+  }
+  rEl.addEventListener('click',()=>{path=[];show('q1')});
+  show('q1');
 })();
 
 /* ---------- raid render ---------- */
