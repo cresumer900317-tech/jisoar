@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Pokémon GO 핸드북 — jisoar</title>
+<meta name="description" content="복귀 트레이너를 위한 포켓몬GO 핸드북. 시스템 기초 · 육성 · 배틀 · 자동 갱신 이벤트 캘린더." />
+<meta name="theme-color" content="#0a0e1a" />
+<meta name="robots" content="noindex" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jisoar.com/pokemongo/" />
+<meta property="og:title" content="Pokémon GO 핸드북" />
+<meta property="og:description" content="시스템 기초 · 육성 · 배틀 · 이벤트 캘린더 (자동 갱신)" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23ff9d6c' stroke-width='2'/%3E%3Cpath d='M7 16h6M19 16h6' stroke='%23ff9d6c' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ffd9a8'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-dynamic-subset.css" />
+<style>
+  :root{
+    --bg-top:#0a0e1a; --bg-mid:#141b33; --bg-glow:#2a3a6b;
+    --dawn:#ff9d6c; --dawn-2:#ffd9a8; --rose:#ffb4a2;
+    --ink:#f4f6fb; --muted:#9aa6c4; --muted-2:#6f7ba0;
+    --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+    --card:rgba(255,255,255,.025); --card-hi:rgba(255,157,108,.06);
+    --ok:#7fd6a6; --warn:#ffd166; --sky:#8fc6ff; --viol:#c8a2ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',Roboto,sans-serif;
+    color:var(--ink); background:var(--bg-top); overflow-x:hidden;
+    -webkit-font-smoothing:antialiased; line-height:1.6;
+  }
+  .sky{position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(120% 80% at 50% 110%, rgba(255,157,108,.18), transparent 55%),
+      radial-gradient(100% 70% at 50% 120%, rgba(255,180,162,.10), transparent 50%),
+      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 60%, #1d2547 100%);}
+  .stars{position:fixed; inset:0; z-index:-1; opacity:.7}
+  .star{position:absolute; width:2px; height:2px; background:#fff; border-radius:50%; animation:tw 4s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
+
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  /* nav */
+  .nav{position:fixed; top:0; left:0; right:0; z-index:60; backdrop-filter:blur(10px);
+    background:linear-gradient(180deg, rgba(10,14,26,.92), rgba(10,14,26,.6) 70%, transparent);
+    transform:translateY(-100%); transition:transform .4s ease;}
+  .nav.show{transform:translateY(0)}
+  .nav-inner{max-width:760px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:10px}
+  .nav-home{display:flex; align-items:center; gap:7px; text-decoration:none; color:var(--ink)}
+  .nav-home .navwm{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:18px}
+  .nav-home .dot{color:var(--dawn)}
+  .nav-sep{color:var(--muted-2); font-size:13px}
+  .nav-title{font-size:13px; color:var(--muted); letter-spacing:.04em}
+
+  /* hero */
+  .hero{min-height:88svh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; padding:64px 22px 40px}
+  .hero>*{max-width:100%}
+  .hero-eyebrow{font-size:clamp(10px,2.6vw,12px); letter-spacing:.22em; text-transform:uppercase; color:var(--dawn); line-height:1.6; opacity:0; animation:rise 1s ease .1s forwards}
+  .hero-title{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(38px,11vw,74px); line-height:1.02; letter-spacing:-.01em; margin:14px 0 4px;
+    background:linear-gradient(180deg,#fff 0%,#e7ddf3 55%,#ffb4a2 120%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .25s forwards}
+  .hero-sub{margin-top:16px; color:var(--muted); font-weight:300; font-size:clamp(14px,3.6vw,16px); letter-spacing:.02em; opacity:0; animation:rise 1.1s ease .5s forwards}
+  .hero-sub b{color:var(--dawn-2); font-weight:500}
+  @keyframes rise{to{opacity:1; transform:translateY(0)}}
+  .hero-eyebrow,.hero-title,.hero-sub{transform:translateY(20px)}
+  .scroll-hint{position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:var(--muted-2); font-size:11px; letter-spacing:.2em; opacity:0; animation:rise 1s ease 1.1s forwards, bob 2.4s ease-in-out 1.1s infinite}
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+  /* section pills */
+  .daybar{position:sticky; top:44px; z-index:55; padding:9px 0 11px; margin-top:-1px;
+    background:linear-gradient(180deg, rgba(10,14,26,.98), rgba(10,14,26,.9)); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .daybar::after{content:""; position:absolute; top:0; bottom:0; right:0; width:40px; pointer-events:none;
+    background:linear-gradient(90deg, transparent, rgba(10,14,26,.92))}
+  .daybar-scroll{display:flex; gap:8px; overflow-x:auto; padding:0 22px 4px; max-width:760px; margin:0 auto;
+    -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:rgba(255,157,108,.6) rgba(255,255,255,.06)}
+  .daybar-scroll::-webkit-scrollbar{height:4px}
+  .daybar-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.06); border-radius:4px}
+  .daybar-scroll::-webkit-scrollbar-thumb{background:rgba(255,157,108,.6); border-radius:4px}
+  .pill{flex:0 0 auto; text-decoration:none; font-size:12px; padding:7px 12px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted); white-space:nowrap; transition:.2s}
+  .pill b{color:var(--ink); font-weight:600}
+  .pill:hover,.pill:focus{border-color:var(--dawn); color:var(--ink)}
+
+  /* sections */
+  .sec{padding:46px 0 8px; scroll-margin-top:104px}
+  .sec-eyebrow{font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--dawn); margin-bottom:10px}
+  .sec h2{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(26px,7vw,40px); letter-spacing:-.01em; margin-bottom:6px}
+  .sec h2 .ko{font-family:'Pretendard Variable',sans-serif; font-size:.42em; color:var(--muted); letter-spacing:.04em; margin-left:8px; font-weight:400}
+  .sec-desc{color:var(--muted); font-size:13.5px; max-width:620px}
+
+  /* info cards */
+  .grid{display:grid; gap:13px; margin-top:18px}
+  @media(min-width:620px){.grid.two{grid-template-columns:1fr 1fr}}
+  .ic{border:1px solid var(--line); border-radius:15px; background:var(--card); padding:16px 17px}
+  .ic.hi{border-color:rgba(255,157,108,.35); background:var(--card-hi)}
+  .ic h3{font-size:15.5px; font-weight:600; margin-bottom:9px; display:flex; align-items:center; gap:8px}
+  .ic h3 .ico{font-size:17px}
+  .ic p{font-size:13.5px; color:var(--muted); line-height:1.6; margin-bottom:8px}
+  .ic p:last-child{margin-bottom:0}
+  .ic p b, .ic li b{color:var(--ink); font-weight:600}
+  .ic ul{list-style:none; display:flex; flex-direction:column; gap:8px}
+  .ic li{font-size:13.5px; color:var(--muted); padding-left:15px; position:relative; line-height:1.55}
+  .ic li::before{content:"·"; position:absolute; left:3px; color:var(--dawn); font-weight:700}
+  .ic li .tip{color:var(--dawn-2)}
+  .ic a{color:var(--dawn); text-decoration:none} .ic a:hover{text-decoration:underline}
+
+  .note{margin-top:14px; font-size:12px; color:var(--muted-2); line-height:1.6; padding:11px 13px; border:1px dashed var(--line-2); border-radius:11px; background:rgba(255,209,102,.03)}
+  .note b{color:var(--warn)}
+
+  /* ============ event calendar ============ */
+  .cal-status{margin-top:14px; font-size:12px; color:var(--muted-2); display:flex; align-items:center; gap:8px}
+  .cal-status .dot-live{width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px rgba(127,214,166,.8)}
+  .cal-group{margin-top:22px}
+  .cal-group-title{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--dawn-2); margin-bottom:10px; display:flex; align-items:center; gap:8px}
+  .cal-group-title .cnt{color:var(--muted-2); letter-spacing:0}
+  .ev-list{display:flex; flex-direction:column; gap:9px}
+  .evt{display:grid; grid-template-columns:44px 1fr; gap:12px; align-items:center; text-decoration:none;
+    border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.018); padding:11px 13px; transition:.2s}
+  .evt:hover{border-color:rgba(255,157,108,.4)}
+  .evt.live{border-color:rgba(127,214,166,.3); background:rgba(127,214,166,.03)}
+  .evt-img{width:44px; height:44px; border-radius:10px; object-fit:cover; background:rgba(255,255,255,.05)}
+  .evt-kind{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+  .evt-kind .badge{padding:1px 8px; border-radius:999px; border:1px solid; font-weight:600}
+  .evt-kind .left{color:var(--muted-2); letter-spacing:.02em; text-transform:none}
+  .evt-title{display:block; font-size:14px; font-weight:600; color:var(--ink); line-height:1.35}
+  .evt-when{display:block; margin-top:3px; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .cal-more{margin-top:12px; width:100%; padding:10px; border-radius:11px; border:1px solid var(--line-2); background:none; color:var(--muted); font-size:13px; cursor:pointer; font-family:inherit; transition:.2s}
+  .cal-more:hover{border-color:var(--dawn); color:var(--ink)}
+  .cal-err{margin-top:16px; font-size:13px; color:var(--warn); padding:12px 14px; border:1px dashed rgba(255,209,102,.4); border-radius:11px}
+  .cal-err a{color:var(--dawn)}
+
+  /* raid strip */
+  .raid-tiers{display:flex; flex-direction:column; gap:16px; margin-top:18px}
+  .raid-tier-title{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--dawn-2); margin-bottom:8px}
+  .raid-row{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:9px}
+  .raid-card{border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.018); padding:11px 12px; display:flex; flex-direction:column; gap:6px}
+  .raid-top{display:flex; align-items:center; gap:9px}
+  .raid-img{width:40px; height:40px; object-fit:contain}
+  .raid-name{font-size:13px; font-weight:600; color:var(--ink); line-height:1.25}
+  .raid-meta{display:flex; align-items:center; gap:5px; flex-wrap:wrap}
+  .type-chip{font-size:10px; letter-spacing:.04em; padding:2px 7px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted); text-transform:capitalize}
+  .shiny-chip{font-size:10px; padding:2px 7px; border-radius:999px; color:var(--warn); border:1px solid rgba(255,209,102,.35)}
+  .raid-cp{font-size:11px; color:var(--muted-2); font-variant-numeric:tabular-nums}
+
+  /* type effectiveness / attacker table */
+  .fare{width:100%; border-collapse:collapse; margin-top:6px; font-size:12.5px}
+  .fare th{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2); text-align:left; padding:6px 8px; border-bottom:1px solid var(--line-2)}
+  .fare td{padding:7px 8px; border-bottom:1px solid var(--line); color:var(--muted); vertical-align:top}
+  .fare td:first-child{color:var(--ink); font-weight:500; white-space:nowrap}
+  .fare td .y{color:var(--dawn-2)}
+  .tblwrap{overflow-x:auto}
+
+  /* flow steps */
+  .steps{display:flex; flex-direction:column; gap:0; margin-top:18px}
+  .step{display:grid; grid-template-columns:34px 1fr; gap:14px; padding:14px 0; border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:none}
+  .step-n{font-family:'Cormorant Garamond',serif; font-size:26px; line-height:1.1; color:var(--dawn); text-align:center}
+  .step-body > b{display:block; font-size:14.5px; color:var(--ink); margin-bottom:3px}
+  .step-body p{font-size:13px; color:var(--muted); line-height:1.6}
+  .step-body p b{color:var(--ink); font-weight:600}
+  .step-body p .tip{color:var(--dawn-2)}
+
+  footer{margin-top:48px; padding:40px 0 56px; border-top:1px solid var(--line); text-align:center; color:var(--muted); font-size:13px; font-weight:300}
+  footer .fmark{font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink)}
+  footer .fmark .dot{color:var(--dawn)}
+  footer .fsmall{margin-top:16px; font-size:12px; color:var(--muted-2); line-height:1.7}
+  footer a{color:var(--muted); text-decoration:none} footer a:hover{color:var(--dawn)}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+    .hero-eyebrow,.hero-title,.hero-sub,.scroll-hint{opacity:1 !important; transform:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-home" href="/"><span class="navwm">jisoar<span class="dot">.</span></span></a>
+    <span class="nav-sep">/</span>
+    <span class="nav-title">Pokémon GO 핸드북</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">Trainer's Handbook · Lv.38 →</div>
+  <h1 class="hero-title">Pokémon GO</h1>
+  <p class="hero-sub">잡기만 하던 트레이너를 위한 <b>시스템 기초 · 육성 · 배틀</b> 핸드북.<br/>이벤트 일정은 열 때마다 <b>자동 갱신</b>됩니다.</p>
+  <div class="scroll-hint">SCROLL</div>
+</header>
+
+<div class="daybar" id="daybar">
+  <div class="daybar-scroll">
+    <a class="pill" href="#calendar"><b>📅 이벤트</b></a>
+    <a class="pill" href="#raids"><b>⚔️ 현재 레이드</b></a>
+    <a class="pill" href="#basics"><b>🧭 시스템 기초</b></a>
+    <a class="pill" href="#invest"><b>💪 육성</b></a>
+    <a class="pill" href="#battle"><b>🥊 배틀</b></a>
+    <a class="pill" href="#plan"><b>🗓 첫 달 로드맵</b></a>
+    <a class="pill" href="#tools"><b>🛠 도구</b></a>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- ============ 이벤트 캘린더 ============ -->
+  <section class="sec" id="calendar">
+    <div class="sec-eyebrow">Auto-updating</div>
+    <h2>Events<span class="ko">이벤트 캘린더</span></h2>
+    <p class="sec-desc">LeekDuck 데이터를 실시간으로 불러옵니다. 시간은 별도 표기가 없으면 <b style="color:var(--ink)">한국 현지 시간</b> 기준.</p>
+    <div class="cal-status" id="calStatus"><span class="dot-live"></span><span>불러오는 중…</span></div>
+    <div id="calBody"></div>
+  </section>
+
+  <!-- ============ 현재 레이드 ============ -->
+  <section class="sec" id="raids">
+    <div class="sec-eyebrow">Auto-updating</div>
+    <h2>Raid Bosses<span class="ko">현재 레이드 보스</span></h2>
+    <p class="sec-desc">지금 체육관에 나오는 보스들. ✨는 이로치(색이 다른 포켓몬) 가능. CP는 잡을 때 기준 — 날씨 부스트 시 더 높아요.</p>
+    <div id="raidBody" class="raid-tiers"></div>
+  </section>
+
+  <!-- ============ 시스템 기초 ============ -->
+  <section class="sec" id="basics">
+    <div class="sec-eyebrow">Fundamentals</div>
+    <h2>Basics<span class="ko">시스템 기초 — 잡기만 하다 온 사람용</span></h2>
+    <p class="sec-desc">2026년 기준으로 게임이 꽤 바뀌었어요. 복귀하면서 꼭 알아야 할 것부터.</p>
+
+    <div class="grid two">
+      <div class="ic hi">
+        <h3><span class="ico">🆕</span>복귀하면 제일 먼저 알 것</h3>
+        <ul>
+          <li><b>레벨 캡이 50 → 80으로</b> 확장됐어요(2025.10). 초중반 필요 XP는 오히려 줄어서 38 → 40대는 금방.</li>
+          <li>매일 <b>데일리 어드벤처 에그</b>가 생겨요 — <b>1km만 걸으면 부화 + 10,000 XP</b>. 매일 까는 것만으로 레벨이 오릅니다.</li>
+          <li>지금 시즌은 10주년 <b>Forever Forward</b>(~9/8). 이벤트가 유난히 많은 시기라 복귀 타이밍 좋음.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">📊</span>CP · IV(개체값) — 뭘 보고 잡나</h3>
+        <p><b>CP</b> = 종족(포켓몬 종류) × 레벨 × IV. <b>IV</b>는 공격·방어·체력 각 0~15의 숨은 스탯이에요.</p>
+        <ul>
+          <li>포켓몬 상세 → <b>「포켓몬을 평가받는다」</b>로 확인. 별3(주황)이면 상급.</li>
+          <li>중요한 건 <b>IV보다 종 자체</b>. IV 100% 구구보다 IV 평범한 한카리아스가 백배 나아요.</li>
+          <li>스크린샷만 찍으면 <a href="https://apps.apple.com/app/poke-genie-remote-raid-ivs/id1143920524" target="_blank" rel="noopener">Poke Genie</a> 앱이 IV를 자동 판독해줍니다.</li>
+        </ul>
+      </div>
+      <div class="ic hi">
+        <h3><span class="ico">💎</span>별의모래 — 최고 희소 자원</h3>
+        <p>강화에 드는 <b>별의모래(모래)가 이 게임의 진짜 화폐</b>예요. 사탕은 흔하지만 모래는 늘 부족합니다.</p>
+        <ul>
+          <li><b>아무 포켓몬이나 강화 금지.</b> 육성 섹션의 메타 포켓몬에만 쓰세요.</li>
+          <li>버는 법: 잡기(기본 100) · <b>커뮤니티데이 + 별의조각(30분 +50%)</b> 조합 · <b>GO배틀리그 목요일(승리 모래 최대 4배)</b> · 12km 알(개당 3,200~6,400) · 체육관 열매 주기.</li>
+          <li>레벨 38이면 쌓인 모래가 있을 텐데, <span class="tip">뭘 키울지 정하기 전까진 아껴두세요.</span></li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">⬆️</span>강화 · 진화 우선순위</h3>
+        <ul>
+          <li><b>진화 먼저, 강화는 나중.</b> 진화는 사탕만 들어서 부담이 적어요.</li>
+          <li>강화는 <b>레이드/배틀에 실제로 쓸 것만</b>. 레이드용은 레벨 40 근처까지, 그 위는 가성비 급락.</li>
+          <li><b>커뮤니티데이</b>에 진화시키면 그날만 배울 수 있는 <b>특별 기술</b>을 얻어요 — 메타 포켓몬의 핵심인 경우가 많아 커뮤데이는 챙길 가치 큼. 이로치 확률도 평소 약 1/512 → <b>약 1/25</b>로 급등.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🎁</span>친구 · 선물 · 교환</h3>
+        <ul>
+          <li>친구와 선물을 주고받으면 <b>친구 등급</b>이 올라요. <b>베스트프렌드(90일) = 100,000 XP</b>, 신설된 <b>포에버 프렌드(180일) = 150,000 XP</b> — 행운의알 켜면 전부 <b>2배</b>. 최고의 XP 소스.</li>
+          <li>포켓몬 <b>교환</b>은 사탕 + 낮은 확률로 <b>행운 포켓몬</b>(강화 모래 50% 할인, IV 최저 12 보장)이 됩니다. 오래전에 잡은 포켓몬일수록 행운 확률↑.</li>
+          <li>등급업 직전 친구를 여러 명 모아 행운의알 하나로 한꺼번에 터뜨리는 게 정석.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🐾</span>버디(파트너)</h3>
+        <ul>
+          <li>버디와 걷고·먹이 주고·놀아주면 <b>하트</b>가 쌓여 등급 상승. <b>베스트 버디</b>가 되면 배틀 시 <b>CP 부스트(+1레벨)</b>.</li>
+          <li>버디 거리마다 <b>사탕</b>을 줘요 — 전설처럼 사탕 얻기 힘든 포켓몬을 버디로 두는 게 기본.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🧬</span>메가진화</h3>
+        <ul>
+          <li>메가 레이드에서 모은 <b>메가에너지</b>로 진화. <b>첫 진화 후엔 쿨다운만 지나면 무료</b> 재진화.</li>
+          <li>메가 상태로 레이드하면 <b>모두의 사탕 보상 증가</b> + 같은 타입 아군 공격 버프. <span class="tip">레이드 전에 하나 켜는 습관.</span></li>
+          <li>2026년엔 <b>메가뮤츠 X/Y</b>까지 나오고 상위 등급 <b>슈퍼 메가 레이드</b>도 생겼어요.</li>
+        </ul>
+      </div>
+      <div class="ic hi">
+        <h3><span class="ico">⚡</span>다이맥스 · 맥스 배틀 <span style="font-size:11px;color:var(--muted-2)">2024~</span></h3>
+        <ul>
+          <li>체육관이 아닌 <b>파워스팟</b>이라는 새 장소에서 하는 신형 레이드(최대 4인). 지도에 보라색 기둥.</li>
+          <li>노말어택으로 게이지를 채워 <b>다이맥스</b> 발동. 공격/방어/힐러 역할 분담이 있어요.</li>
+          <li><b>여기서 잡은 포켓몬만 다이맥스 가능</b> — 기존 포켓몬은 못 씁니다. 매주 월요일 <b>맥스 먼데이</b>에 시작해보세요(일정은 위 캘린더에 자동 표시).</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🗺</span>루트 · 파티 플레이</h3>
+        <ul>
+          <li><b>루트</b>: 유저가 만든 산책 경로. 따라 걸으면 보상 + <b>지가르데 셀</b>(지가르데 폼업용).</li>
+          <li><b>파티 플레이</b>: 근처 친구 최대 4인 파티 — 레이드 데미지 보너스(파티 파워)와 챌린지 보상.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🕶</span>GO로켓단 · 그림자 포켓몬</h3>
+        <ul>
+          <li>검은 포켓스탑/기구의 로켓단을 이기면 <b>그림자 포켓몬</b>을 잡아요.</li>
+          <li>그림자는 <b>공격력 +20%</b> — 현재 레이드 메타 최상위가 대부분 그림자예요. <span class="tip">정화(퓨리파이)는 웬만하면 하지 마세요.</span> 도감용 빼고는 그림자 그대로가 강합니다.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">📋</span>리서치 · GO 패스</h3>
+        <ul>
+          <li><b>필드 리서치</b>(포켓스탑 과제) 하루 1개 스탬프 ×7 = <b>대발견</b>(희귀 포켓몬 조우 + 모래 2,000 + XP 3,000).</li>
+          <li><b>스페셜 리서치</b>는 스토리 과제 — 밀린 게 많을 테니 하나씩. 환상 포켓몬이 걸린 것부터.</li>
+          <li><b>GO 패스</b>: 매달 갱신되는 무료 배틀패스식 보상 트랙. 그냥 플레이만 해도 차니 잊지 말고 수령.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🔁</span>매일 5분 루틴 (습관용)</h3>
+        <ul>
+          <li>데일리 어드벤처 에그 받기 → 1km 걷기(10,000 XP)</li>
+          <li>선물 보내기/열기 · 필드 리서치 1개(스탬프)</li>
+          <li>첫 포획·첫 스탑 보너스 챙기기, 버디 간식</li>
+          <li>이번 주 이벤트는 <a href="#calendar">위 캘린더</a>에서 확인</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 육성 ============ -->
+  <section class="sec" id="invest">
+    <div class="sec-eyebrow">Investment Guide</div>
+    <h2>Build<span class="ko">육성 — 모래를 어디에 쓸 것인가</span></h2>
+    <p class="sec-desc">이 게임의 성장은 "뭘 강화하느냐"가 전부예요. 아래 순서로 판단하면 모래를 버릴 일이 없습니다.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body">
+        <b>종이 메타에 드는가?</b>
+        <p>아래 타입별 표에 있는 종(또는 그 진화 전 단계)인지부터. 없으면 CP·IV가 아무리 높아도 <b>강화 금지</b> — 도감·컬렉션용으로만.</p>
+      </div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body">
+        <b>같은 종 중 최고 개체인가?</b>
+        <p>레이드용은 <b>공격 IV</b>가 제일 중요해요(15에 가깝게). 검색창에 <span class="tip">4*</span>(IV 100%) <span class="tip">3*</span> 필터로 후보를 추리고, 같은 종이 여럿이면 Poke Genie로 비교.</p>
+      </div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body">
+        <b>기술이 맞는가?</b>
+        <p>같은 포켓몬도 기술에 따라 티어가 갈려요. <b>커뮤니티데이 특별 기술</b>이나 <b>엘리트 기술머신</b> 전용기가 핵심인 종이 많습니다(예: 하이드로캐논·블러스트번 계열). 기술 확인은 <a href="https://db.pokemongohub.net" target="_blank" rel="noopener">GO Hub DB</a>.</p>
+      </div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body">
+        <b>그림자 &gt; 메가 &gt; 일반 순으로 우선.</b>
+        <p>그림자는 공격 +20%라 같은 종이면 그림자가 항상 위. 단 강화 비용이 <b>1.2배</b> 들어요. 메가는 "한 마리만 있으면 파티 전체 버프"라 종당 1마리면 충분.</p>
+      </div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body">
+        <b>레벨 40까지만, 일단은.</b>
+        <p>레이드용 강화는 <b>레벨 40이 가성비 상한선</b>. 1→40에 모래 <b>270,000 + 사탕 304개</b>인데, 40→50은 모래 <b>250,000 + XL사탕 296개</b>가 또 들어요(XL사탕은 레벨 31부터 해금, 포획 확률 드롭이 주 수급처). 비용은 두 배인데 성능 향상은 작아서, 여러 마리를 40까지 만드는 게 한 마리 50보다 훨씬 강해집니다.</p>
+      </div></div>
+    </div>
+
+    <div class="grid" style="margin-top:26px">
+      <div class="ic hi">
+        <h3><span class="ico">🎯</span>복귀 유저 우선 육성 타입</h3>
+        <p>레이드 로테이션 커버리지 기준으로 <b>격투 → 땅 → 얼음 → 바위 → 악/고스트</b> 순으로 갖추면 대부분의 보스에 대응돼요. 전설 레이드 보스의 약점이 이 타입들에 몰려 있습니다.</p>
+      </div>
+    </div>
+
+    <div class="tblwrap">
+      <table class="fare" style="margin-top:22px">
+        <thead><tr><th>타입</th><th>최상위 (그림자·메가·전설급)</th><th>현실적 추천 (야생·알·커뮤데이로 가능)</th></tr></thead>
+        <tbody>
+          <tr><td>🥊 격투</td><td>메가번치코 · 메가루카리오 · 그림자 번치코</td><td><span class="y">노보청</span> · 루카리오 · 저승갓숭 · 괴력몬(예산)</td></tr>
+          <tr><td>⛰ 땅</td><td>그림자 랜드로스(영물) · 원시그란돈 · 메가한카리아스</td><td><span class="y">한카리아스</span> · 몰드류 · 거대코뿌리 · 맘모꾸리</td></tr>
+          <tr><td>❄️ 얼음</td><td>블랙큐레무 · 화이트큐레무</td><td><span class="y">맘모꾸리</span> · 포푸니라 · 크레베이스(다이맥스)</td></tr>
+          <tr><td>🪨 바위</td><td>메가디안시 · 그림자 램펄드</td><td><span class="y">거대코뿌리</span> · 램펄드 · 마기라스</td></tr>
+          <tr><td>👻 고스트</td><td>메가팬텀 · 그림자 다크라이 · 네크로즈마(새벽)</td><td><span class="y">샹델라</span> · 팬텀 · 기라티나(오리진)</td></tr>
+          <tr><td>🌑 악</td><td>메가앱솔 · 그림자 다크라이</td><td><span class="y">삼삼드래</span> · 마기라스 · 악비아르</td></tr>
+          <tr><td>🔥 불꽃</td><td>메가번치코 · 두파팡 · 메가리자몽Y</td><td><span class="y">샹델라</span> · 번치코 · 리자몽</td></tr>
+          <tr><td>💧 물</td><td>원시가이오가 · 그림자 펄기아(오리진)</td><td><span class="y">대짱이</span>(하이드로캐논) · 갸라도스 · 엠페르트</td></tr>
+          <tr><td>🌿 풀</td><td>메가나무킹 · 그림자 왕큰부리</td><td><span class="y">나무킹</span>(하드플랜트) · 로즈레이드 · 고릴타</td></tr>
+          <tr><td>⚡ 전기</td><td>그림자 볼트로스(영물) · 레지에레키</td><td><span class="y">일렉키블</span> · 라이코 · 자포코일</td></tr>
+          <tr><td>🔮 에스퍼</td><td>그림자 뮤츠 · 메가뮤츠Y</td><td><span class="y">뮤츠</span>(레이드 복각 때 확보) · 후딘 · 에브이</td></tr>
+          <tr><td>🐉 드래곤</td><td>무한다이노 · 메가레쿠쟈</td><td><span class="y">망나뇽</span> · 보만다 · 한카리아스</td></tr>
+          <tr><td>⚙️ 강철</td><td>그림자 메타그로스 · 메가메타그로스</td><td><span class="y">메타그로스</span>(코멧펀치 필수) · 두랄루돈</td></tr>
+          <tr><td>🧚 페어리</td><td>자시안(검왕) · 메가가디안</td><td><span class="y">가디안</span> · 그랑블루 · 님피아</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><b>표 읽는 법</b> — 오른쪽 열부터 만드세요. 노란색이 그 타입의 "가성비 1순위". 왼쪽 열은 레이드 복각·로켓단·메가 레이드로 재료가 모였을 때 업그레이드하는 최종 목표입니다. 메타 기준 2026년 7월(GoSilph/GO Hub 랭킹).</div>
+  </section>
+
+  <!-- ============ 배틀 ============ -->
+  <section class="sec" id="battle">
+    <div class="sec-eyebrow">Combat</div>
+    <h2>Battle<span class="ko">배틀 — 레이드 · 다이맥스 · GO배틀리그</span></h2>
+    <p class="sec-desc">잡기만 하던 사람이 제일 크게 남는 장사가 배틀이에요. 전설 포켓몬·별의모래·XL사탕이 전부 여기서 나옵니다.</p>
+
+    <div class="grid two">
+      <div class="ic hi">
+        <h3><span class="ico">⚔️</span>레이드 — 이것만 지키면 반은 먹고 들어감</h3>
+        <ul>
+          <li><b>자동 편성 금지.</b> 추천 파티는 CP 높은 순일 뿐이에요. 보스 <b>약점 타입</b>으로 직접 짜세요(위 육성 표 참조). 보스별 최적 카운터는 <a href="https://db.pokemongohub.net/raid-boss-list" target="_blank" rel="noopener">GO Hub</a>나 Poke Genie가 알려줍니다.</li>
+          <li>입장 전 <b>메가진화 하나 켜기</b> — 내 딜 + 파티 전체 사탕 보너스.</li>
+          <li><b>날씨 부스트</b>: 해당 날씨면 보스 CP도 높지만 잡히는 개체 레벨도 25로 상승(평소 20). 좋은 개체 노리면 부스트 때.</li>
+          <li>전설(별5)은 보통 <b>4~6인</b>이면 안정. 카운터가 좋으면 3인도 가능. 혼자는 별3까지.</li>
+          <li>사람이 없으면 <b>Poke Genie 원격 매칭</b>(글로벌 큐)이나 <b>Campfire</b>로 모집 — 한국 동네에서 혼자 못 잡는 문제의 표준 해법이에요.</li>
+          <li>매주 수요일 저녁 <b>레이드 아워</b>: 모든 체육관에 전설 보스. 한 주 치 전설 사탕을 모으는 날(시간은 캘린더 참조).</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">⚡</span>다이맥스 배틀 요령</h3>
+        <ul>
+          <li>사전에 <b>맥스입자(MP)</b>를 모아 참전 포켓몬의 <b>맥스 기술을 강화</b>해두는 게 승률의 핵심.</li>
+          <li>MP는 <b>하루 800까지</b>: 파워스팟 회당 100(같은 스팟은 하루 1회, 그날 첫 스팟 +20) + <b>걷기 2km당 300</b>. 입장비는 1성 250 · 3성 400 · 5성 800 MP.</li>
+          <li>노말어택을 계속 눌러 게이지를 채우고, 다이맥스 타이밍은 <b>보스 강공격 직전</b>에 맞추면 탱킹까지 됩니다.</li>
+          <li>역할 분담: 화력 좋은 어태커 + <b>다이월(방어)·다이리커버리(회복)</b>를 배운 서포터 1마리가 있으면 안정적.</li>
+          <li>거다이맥스(별6급)는 <b>여러 파티가 동시 공격</b>하는 고난도 콘텐츠 — 커뮤니티 모집으로 참여하세요.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🥊</span>GO배틀리그(GBL) — 시작하는 법</h3>
+        <p>리그는 CP 제한으로 나뉘어요: <b>슈퍼(1500)</b> · 하이퍼(2500) · 마스터(무제한). 입문은 무조건 <b>슈퍼리그</b> — 전설 없이도 공평하게 싸울 수 있는 리그입니다.</p>
+        <ul>
+          <li><b>PvP는 IV 상식이 반대</b>: CP 상한이 있어서 <b>공격 낮고 방어·체력 높은 개체(이상형 0/15/15)</b>가 같은 CP에 스탯 총량이 더 커요. 풀만찍(15/15/15)은 오히려 손해.</li>
+          <li>팀 3마리는 역할로 짭니다: <b>리드</b>(기선제압) → <b>세이프 스왑</b>(불리하면 교체로 받아줄 만능형) → <b>클로저</b>(실드 다 쓴 후반에 강한 마무리).</li>
+          <li><b>실드 2장</b> 관리가 승부의 반 — 상대 차지 기술을 언제 막을지가 핵심 심리전.</li>
+          <li>입문 추천(시즌 27 메타): <b>따라큐</b>(차지 1회 무효 특성급 성능) · <b>마릴리</b> · <b>저승갓숭</b> · <b>두드리짱</b> · <b>탱탱겔</b> · <b>가라르 코산호</b>. 랭킹·기술 세팅은 <a href="https://pvpoke.com/rankings/" target="_blank" rel="noopener">PvPoke</a>가 표준.</li>
+          <li>이번 시즌부터 <b>하루 10세트 × 5전 = 최대 50전</b>. 랭크는 1~20 + 레이팅제(에이스 2000 → 레전드 3000).</li>
+          <li><b>매주 목요일 = GO Battle Thursday</b>: 승리 별의모래 최대 4배. <span class="tip">지든 이기든 모래가 쏟아지니 목요일만이라도 돌리세요.</span></li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🛡</span>배틀 자원 관리</h3>
+        <ul>
+          <li><b>무료 레이드패스</b>는 매일 체육관 기구를 돌리면 1개(미사용 시 이월 1개까지). 안 쓰면 낭비예요.</li>
+          <li><b>원격 레이드패스</b>는 유료(단품 195코인 · 3개 팩 525코인), 하루 <b>10개</b>까지 — 레이드 아워·복각 전설처럼 가치 있는 보스에만.</li>
+          <li>체육관에 포켓몬을 올려두면 <b>10분당 1코인, 하루 최대 50코인</b>(쫓겨나 돌아올 때 지급) — 무과금 코인은 전부 여기서. 코인은 <b>가방·박스 확장과 원격패스</b>에 우선 사용.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 복귀 로드맵 ============ -->
+  <section class="sec" id="plan">
+    <div class="sec-eyebrow">30-Day Plan</div>
+    <h2>Roadmap<span class="ko">복귀 첫 달 로드맵 — Lv.38 기준</span></h2>
+    <p class="sec-desc">"오늘 뭐 하지"를 없애는 4주 플랜. 순서대로만 하면 한 달 뒤엔 레이드 파티가 갖춰져 있어요.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1주</div><div class="step-body">
+        <b>정리와 파악</b>
+        <p>박스 정리부터: 검색창 <span class="tip">3*,4*</span>로 상급 개체 확인 → 육성 표의 종만 즐겨찾기(★), 나머지 잡몹은 사탕으로 일괄 전송. 밀린 스페셜 리서치 목록 확인, 데일리 어드벤처 에그·선물·필드 리서치 루틴 시작. 친구 몇 명에게 매일 선물 보내기 시작(→ 4주 뒤 XP 폭탄의 씨앗).</p>
+      </div></div>
+      <div class="step"><div class="step-n">2주</div><div class="step-body">
+        <b>가성비 어태커 1차 구축</b>
+        <p>육성 표 오른쪽 열에서 이미 가진 상급 개체 2~3마리를 골라 진화 + 레벨 35~40 강화. 격투·땅부터. 체육관에 포켓몬 올려 코인 적립 시작, 무료 레이드패스로 별3 레이드 솔로 연습.</p>
+      </div></div>
+      <div class="step"><div class="step-n">3주</div><div class="step-body">
+        <b>전설 레이드 진입</b>
+        <p>수요일 레이드 아워에 참전(Poke Genie 원격 매칭 활용). 목표는 현재 로테이션 전설의 사탕 확보 + 좋은 개체(별3, 가능하면 날씨 부스트). 메가 레이드도 하나 잡아 메가에너지 확보 → 첫 메가진화. 월요일 맥스 먼데이로 다이맥스도 입문.</p>
+      </div></div>
+      <div class="step"><div class="step-n">4주</div><div class="step-body">
+        <b>배틀·XP 사이클 완성</b>
+        <p>목요일 GBL(모래 4배)로 슈퍼리그 데뷔 — 지는 것도 모래 수입. 울트라→베스트 직전까지 온 친구들을 행운의알 켜고 한 번에 등급업(XP 수십만). 다음 커뮤니티데이 날짜를 캘린더에서 확인하고 별의조각 준비. 이후는 이 사이클의 반복입니다.</p>
+      </div></div>
+    </div>
+    <div class="note"><b>과금 우선순위</b> (하게 된다면) — ① 가방·박스 확장(삶의 질) ② 커뮤데이·이벤트 티켓(가성비 좋음) ③ 원격 레이드패스. 알 부화기 뭉텅이 구매는 후순위.</div>
+  </section>
+
+  <!-- ============ 도구 ============ -->
+  <section class="sec" id="tools">
+    <div class="sec-eyebrow">Toolbox</div>
+    <h2>Tools<span class="ko">도구 · 링크</span></h2>
+    <div class="grid two">
+      <div class="ic">
+        <h3><span class="ico">📱</span>필수 앱</h3>
+        <ul>
+          <li><b><a href="https://apps.apple.com/app/poke-genie-remote-raid-ivs/id1143920524" target="_blank" rel="noopener">Poke Genie</a></b> — IV 스크린샷 자동 판독 + 원격 레이드 글로벌 매칭. 사실상 필수.</li>
+          <li><b><a href="https://campfire.nianticlabs.com" target="_blank" rel="noopener">Campfire</a></b> — 나이앤틱 공식 커뮤니티 앱. 동네 레이드 모집·이벤트 밋업.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🌐</span>정보 사이트</h3>
+        <ul>
+          <li><b><a href="https://leekduck.com/events/" target="_blank" rel="noopener">LeekDuck</a></b> — 이벤트 일정 (이 페이지 캘린더의 원본 데이터).</li>
+          <li><b><a href="https://pokemongohub.net" target="_blank" rel="noopener">Pokémon GO Hub</a></b> — 공략·레이드 카운터·DB.</li>
+          <li><b><a href="https://pvpoke.com" target="_blank" rel="noopener">PvPoke</a></b> — GBL 랭킹·팀 시뮬레이터 표준.</li>
+          <li><b><a href="https://pokemongo.inven.co.kr" target="_blank" rel="noopener">포켓몬GO 인벤</a></b> — 한국 커뮤니티. 이벤트 번역·프로모코드 소식.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🎟</span>프로모코드</h3>
+        <p>프로모코드는 <b>앱 안에서 입력 불가</b> — <a href="https://store.pokemongo.com" target="_blank" rel="noopener">공식 웹 스토어</a>의 리딤 페이지에서만 입력됩니다. 활성 코드는 인벤·GO Hub에서 수시 확인(만료 빠름).</p>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">🔎</span>박스 정리 검색어 치트시트</h3>
+        <ul>
+          <li><span class="tip">4*</span> IV 100% / <span class="tip">3*,4*</span> 상급 개체</li>
+          <li><span class="tip">shiny</span> 이로치 / <span class="tip">lucky</span> 행운 / <span class="tip">shadow</span> 그림자</li>
+          <li><span class="tip">age0</span> 오늘 잡은 것 / <span class="tip">distance</span> 먼 곳에서 잡은 것(교환용)</li>
+          <li><span class="tip">!3*&amp;!4*&amp;!shiny&amp;!shadow&amp;!lucky&amp;!favorite</span> — 전송(사탕화) 후보 일괄 필터</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="fmark">jisoar<span class="dot">.</span></div>
+  <div class="fsmall">
+    이벤트·레이드 데이터: <a href="https://leekduck.com" target="_blank" rel="noopener">LeekDuck</a> (<a href="https://github.com/bigfoott/ScrapedDuck" target="_blank" rel="noopener">ScrapedDuck</a>) · 비공식 팬 페이지<br/>
+    Pokémon GO는 Niantic/Pokémon의 상표입니다.
+  </div>
+</footer>
+
+<script>
+/* ---------- stars ---------- */
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<70;i++){
+    const s=document.createElement('div'); s.className='star';
+    s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*70+'%';
+    s.style.animationDelay=(Math.random()*4)+'s'; s.style.opacity=.2+Math.random()*.6;
+    c.appendChild(s);
+  }
+})();
+/* ---------- nav on scroll ---------- */
+(function(){
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>{nav.classList.toggle('show',scrollY>innerHeight*.5)},{passive:true});
+})();
+
+/* ---------- shared dictionaries ---------- */
+const KO_TYPE={normal:'노말',fire:'불꽃',water:'물',electric:'전기',grass:'풀',ice:'얼음',fighting:'격투',poison:'독',ground:'땅',flying:'비행',psychic:'에스퍼',bug:'벌레',rock:'바위',ghost:'고스트',dragon:'드래곤',dark:'악',steel:'강철',fairy:'페어리'};
+const TYPE_COLOR={normal:'#a8a29e',fire:'#ff9d6c',water:'#8fc6ff',electric:'#ffd166',grass:'#7fd6a6',ice:'#a5e8e0',fighting:'#f08a7b',poison:'#c8a2ff',ground:'#e0b98a',flying:'#b3c7f0',psychic:'#ffb4d2',bug:'#c3d97f',rock:'#d1bc8a',ghost:'#a894d6',dragon:'#9aa0ff',dark:'#8d93a8',steel:'#b9c3cc',fairy:'#ffc4e0'};
+/* 전설·환상·메가 등 자주 나오는 이름 한글화 (없으면 영문 그대로) */
+const KO_MON={
+  'Mewtwo':'뮤츠','Mew':'뮤','Articuno':'프리져','Zapdos':'썬더','Moltres':'파이어','Lugia':'루기아','Ho-Oh':'칠색조','Celebi':'세레비',
+  'Raikou':'라이코','Entei':'앤테이','Suicune':'스이쿤','Kyogre':'가이오가','Groudon':'그란돈','Rayquaza':'레쿠쟈','Latias':'라티아스','Latios':'라티오스',
+  'Jirachi':'지라치','Deoxys':'테오키스','Regirock':'레지락','Regice':'레지아이스','Registeel':'레지스틸','Regigigas':'레지기가스',
+  'Dialga':'디아루가','Palkia':'펄기아','Giratina':'기라티나','Heatran':'히드런','Cresselia':'크레세리아','Darkrai':'다크라이','Azelf':'아그놈','Uxie':'유크시','Mesprit':'엠라이트',
+  'Reshiram':'레시라무','Zekrom':'제크로무','Kyurem':'큐레무','Cobalion':'코바르온','Terrakion':'테라키온','Virizion':'비리디온','Tornadus':'토네로스','Thundurus':'볼트로스','Landorus':'랜드로스','Genesect':'게노세크트','Keldeo':'케르디오','Meloetta':'메로엣타','Victini':'비크티니',
+  'Xerneas':'제르네아스','Yveltal':'이벨타르','Zygarde':'지가르데','Hoopa':'후파','Volcanion':'볼케니온','Diancie':'디안시',
+  'Solgaleo':'솔가레오','Lunala':'루나아라','Necrozma':'네크로즈마','Cosmog':'코스모그','Nihilego':'텅비드','Buzzwole':'매시붕','Pheromosa':'페로코체','Xurkitree':'전수목','Celesteela':'철화구야','Kartana':'종이신도','Guzzlord':'악식킹','Stakataka':'차곡차곡','Blacephalon':'두파팡','Poipole':'베베놈','Naganadel':'아고용','Zeraora':'제라오라','Marshadow':'마샤도','Magearna':'마기아나','Tapu Koko':'카푸꼬꼬꼭','Tapu Lele':'카푸나비나','Tapu Bulu':'카푸브루루','Tapu Fini':'카푸느지느',
+  'Zacian':'자시안','Zamazenta':'자마젠타','Eternatus':'무한다이노','Kubfu':'치고마','Urshifu':'우라오스','Regieleki':'레지에레키','Regidrago':'레지드래고','Glastrier':'백마버드렉스','Spectrier':'흑마버드렉스','Calyrex':'버드렉스','Enamorus':'러브로스','Zarude':'자루도',
+  'Koraidon':'코라이돈','Miraidon':'미라이돈','Ting-Lu':'딩루','Chien-Pao':'파오젠','Wo-Chien':'총지엔','Chi-Yu':'위유이','Ogerpon':'오거폰','Terapagos':'테라파고스','Pecharunt':'복숭악동',
+  'Scyther':'스라크','Hitmonchan':'홍수몬','Hitmonlee':'시라소몬','Graveler':'데구리','Golem':'딱구리','Chansey':'럭키','Deino':'모노두','Audino':'다부니','Shellder':'셀러','Staryu':'별가사리','Starmie':'아쿠스타','Sableye':'깜까미','Sobble':'울머기','Inteleon':'인텔리레온','Nickit':'훔처우','Thievul':'폭슬라이','Mimikyu':'따라큐','Azumarill':'마릴리','Annihilape':'저승갓숭','Tinkaton':'두드리짱','Jellicent':'탱탱겔','Torkoal':'코터스','Caterpie':'캐터피','Pidgey':'구구','Weedle':'뿔충이','Ralts':'랄토스','Riolu':'리오르','Axew':'터검니','Goomy':'미끄메라','Rockruff':'암멍이','Toucannon':'왕큰부리','Avalugg':'크레베이스','Mamoswine':'맘모꾸리','Weavile':'포푸니라','Electivire':'일렉키블','Magnezone':'자포코일','Hydreigon':'삼삼드래','Empoleon':'엠페르트','Roserade':'로즈레이드','Alakazam':'후딘','Espeon':'에브이','Gallade':'엘레이드','Krookodile':'악비아르',
+  'Pikachu':'피카츄','Raichu':'라이츄','Eevee':'이브이','Zubat':'주뱃','Bidoof':'비버니','Dratini':'미뇽','Larvitar':'애버라스','Beldum':'메탕','Gible':'딥상어동','Bagon':'아공이','Machop':'알통몬','Magikarp':'잉어킹','Snorlax':'잠만보','Gyarados':'갸라도스','Dragonite':'망나뇽','Tyranitar':'마기라스','Metagross':'메타그로스','Garchomp':'한카리아스','Salamence':'보만다','Rhyperior':'거대코뿌리','Rampardos':'램펄드','Excadrill':'몰드류','Conkeldurr':'노보청','Lucario':'루카리오','Machamp':'괴력몬','Gengar':'팬텀','Chandelure':'샹델라','Hydreigon':'삼삼드래','Haxorus':'액스라이즈','Sceptile':'나무킹','Blaziken':'번치코','Swampert':'대짱이','Aggron':'보스로라','Gardevoir':'가디안','Feebas':'빈티나','Trubbish':'깨봉이','Rillaboom':'고릴타','Charizard':'리자몽','Blastoise':'거북왕','Venusaur':'이상해꽃','Alolan Raichu':'알로라 라이츄','Duraludon':'두랄루돈','Hisuian Typhlosion':'히스이 블레이범'
+};
+function koMon(name){
+  if(KO_MON[name]) return KO_MON[name];
+  const m=name.match(/^(Mega|Shadow|Primal|Gigantamax|Dynamax|Alolan|Galarian|Hisuian)\s+(.+?)(\s+[XY])?$/);
+  if(m){
+    const pre={Mega:'메가',Shadow:'그림자',Primal:'원시',Gigantamax:'거다이맥스',Dynamax:'다이맥스',Alolan:'알로라',Galarian:'가라르',Hisuian:'히스이'}[m[1]];
+    const base=KO_MON[m[2]]||m[2];
+    const xy=m[3]?m[3].trim():'';
+    // 메가·원시는 붙여쓰기 관례(메가리자몽), 나머지는 띄어쓰기(그림자 뮤츠)
+    const joined=(m[1]==='Mega'||m[1]==='Primal')?pre+base:pre+' '+base;
+    return joined+(xy?' '+xy:'');
+  }
+  return name;
+}
+/* 이벤트명 안의 자주 나오는 영어 어구 한글화 (포켓몬명 미번역 대비 최후 폴백) */
+function koPhrase(n,isGBL){
+  n=n.replace(/\s*\|\s*[^|]+$/, m=>/Forever Forward/.test(m)?'':m)
+    .replace(/Ultra Unlock/g,'울트라 언락').replace(/Hatch Day/g,'해치 데이').replace(/Research Day/g,'리서치 데이')
+    .replace(/Community Day Classic/g,'커뮤니티데이 클래식').replace(/Community Day/g,'커뮤니티데이');
+  if(isGBL){
+    n=n.replace(/Great League/g,'슈퍼리그').replace(/Ultra League/g,'하이퍼리그').replace(/Master League/g,'마스터리그')
+      .replace(/Master Premier/g,'마스터 프리미어').replace(/Retro Cup/g,'레트로컵').replace(/Weather Cup/g,'웨더컵')
+      .replace(/Sunshine Cup/g,'선샤인컵').replace(/: 슈퍼리그 Edition/g,'(슈퍼리그 에디션)')
+      .replace(/, and /g,' · ').replace(/ and /g,' · ').replace(/, /g,' · ');
+  }
+  return n;
+}
+const EVENT_TYPE_META={
+  'community-day':      {ko:'커뮤니티데이',   color:'#7fd6a6', prio:1},
+  'raid-day':           {ko:'레이드 데이',    color:'#ff9d6c', prio:2},
+  'max-battles':        {ko:'맥스 배틀 데이', color:'#c8a2ff', prio:2},
+  'pokemon-go-fest':    {ko:'GO Fest',       color:'#ffd166', prio:1},
+  'event':              {ko:'이벤트',         color:'#8fc6ff', prio:3},
+  'choose-your-path':   {ko:'선택형 이벤트',  color:'#8fc6ff', prio:3},
+  'raid-battles':       {ko:'레이드 보스',    color:'#ffb4a2', prio:4},
+  'raid-hour':          {ko:'레이드 아워',    color:'#ff9d6c', prio:5},
+  'pokemon-spotlight-hour':{ko:'스포트라이트 아워', color:'#ffd166', prio:5},
+  'max-mondays':        {ko:'맥스 먼데이',    color:'#c8a2ff', prio:5},
+  'go-battle-league':   {ko:'GO배틀리그',     color:'#9aa0ff', prio:6},
+  'go-pass':            {ko:'GO 패스',        color:'#a8a29e', prio:7},
+  'research':           {ko:'리서치',         color:'#a5e8e0', prio:6},
+  'ticketed-event':     {ko:'유료 이벤트',    color:'#ffd166', prio:4},
+  'season':             {ko:'시즌',           color:'#6f7ba0', prio:9},
+  'update':             {ko:'업데이트',       color:'#a8a29e', prio:8},
+  'live-event':         {ko:'라이브 이벤트',  color:'#ffd166', prio:2},
+  'pokemon-go-tour':    {ko:'GO Tour',       color:'#ffd166', prio:1},
+  'location-specific':  {ko:'지역 한정',      color:'#a8a29e', prio:8},
+  'bonus-hour':         {ko:'보너스 아워',    color:'#ffd166', prio:5},
+  'pokestop-showcase':  {ko:'쇼케이스',       color:'#a8a29e', prio:8},
+  'wild-area':          {ko:'와일드 에어리어',color:'#ffd166', prio:2},
+  'city-safari':        {ko:'시티 사파리',    color:'#ffd166', prio:2}
+};
+/* 자주 반복되는 이벤트명 패턴 한글화 */
+function koEventName(e){
+  const n=e.name;
+  let m;
+  if(m=n.match(/^(.+?) Spotlight Hour$/)) return koMon(m[1])+' 스포트라이트 아워';
+  if(m=n.match(/^(.+?) Raid Hour$/)) return koMon(m[1])+' 레이드 아워';
+  if(m=n.match(/^(.+?) in 5-star Raid Battles$/)) return '전설 레이드: '+koMon(m[1]);
+  if(m=n.match(/^(?:Mega )?(.+?) in Mega Raids$/)) return '메가 레이드: '+koMon(m[1].replace(/^Mega /,''));
+  if(m=n.match(/^(?:Shadow )?(.+?) in Shadow Raids$/)) return '그림자 레이드: '+koMon(m[1].replace(/^Shadow /,''));
+  if(m=n.match(/^Dynamax (.+?) during Max Monday$/)) return '맥스 먼데이: '+koMon(m[1]);
+  if(m=n.match(/^Gigantamax (.+?) Max Battle Day$/)) return '거다이맥스 '+koMon(m[1])+' 맥스 배틀 데이';
+  if(m=n.match(/^(.+?) Super Mega Raid Day$/)) return '슈퍼 메가 레이드 데이: '+koMon(m[1]);
+  if(m=n.match(/^(.+?) Raid Day$/)) return '레이드 데이: '+koMon(m[1]);
+  if(m=n.match(/^(.+?) Max Battle Day$/)) return '맥스 배틀 데이: '+koMon(m[1]);
+  if(m=n.match(/^(.+?) Community Day( Classic)?$/)) return koMon(m[1])+' 커뮤니티데이'+(m[2]?' 클래식':'');
+  if(m=n.match(/^GO Pass: (.+)$/)) return 'GO 패스: '+m[1];
+  if(m=n.match(/^Choose Your Path: (.+)$/)) return '선택의 갈림길: '+m[1];
+  return koPhrase(n, e.eventType==='go-battle-league');
+}
+
+/* ---------- fetch helpers (6h localStorage cache) ---------- */
+const DUCK='https://raw.githubusercontent.com/bigfoott/ScrapedDuck/data/';
+async function duck(file){
+  const key='duck_'+file, ttl=6*3600*1000;
+  try{
+    const c=JSON.parse(localStorage.getItem(key)||'null');
+    if(c && Date.now()-c.t<ttl) return c.d;
+  }catch(_){}
+  const r=await fetch(DUCK+file,{cache:'no-cache'});
+  if(!r.ok) throw new Error(file+' '+r.status);
+  const d=await r.json();
+  try{localStorage.setItem(key,JSON.stringify({t:Date.now(),d}))}catch(_){}
+  return d;
+}
+/* LeekDuck: Z 없는 시각 = 현지시간 그대로, Z 있는 시각(GBL 등) = UTC → KST 변환 */
+function parseWhen(s){
+  if(!s) return null;
+  if(s.endsWith('Z')) return {d:new Date(s), utc:true};
+  const d=new Date(s+'+09:00'); // 표시용: 로컬시각을 KST로 고정 해석
+  return {d, utc:false};
+}
+const DOW=['일','월','화','수','목','금','토'];
+function fmt(w,withTime=true){
+  const d=w.d;
+  const opt={timeZone:'Asia/Seoul'};
+  const p=new Intl.DateTimeFormat('ko-KR',{...opt,month:'numeric',day:'numeric',weekday:'short',...(withTime?{hour:'numeric',minute:'2-digit',hour12:false}:{})}).format(d);
+  return p;
+}
+function sameDay(a,b){
+  const f=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+  return f(a)===f(b);
+}
+function dLeft(ms){
+  const day=Math.floor(ms/86400000);
+  if(day>=1) return day+'일 남음';
+  const h=Math.floor(ms/3600000);
+  if(h>=1) return h+'시간 남음';
+  return Math.max(1,Math.floor(ms/60000))+'분 남음';
+}
+
+/* ---------- calendar render ---------- */
+(async function(){
+  const status=document.getElementById('calStatus'), body=document.getElementById('calBody');
+  try{
+    const raw=await duck('events.min.json');
+    const now=new Date();
+    const evs=raw.map(e=>{
+      const s=parseWhen(e.start), en=parseWhen(e.end);
+      return {...e, s, en};
+    }).filter(e=>e.en && e.en.d>now && e.eventType!=='season');
+    const live=evs.filter(e=>e.s.d<=now).sort((a,b)=>a.en.d-b.en.d);
+    const up=evs.filter(e=>e.s.d>now).sort((a,b)=>a.s.d-b.s.d);
+    const season=raw.find(e=>e.eventType==='season');
+
+    status.innerHTML='<span class="dot-live"></span><span>방금 갱신됨'+(season?' · 현재 시즌: <b style="color:var(--dawn-2)">'+season.name+'</b>':'')+'</span>';
+
+    function card(e,isLive){
+      const meta=EVENT_TYPE_META[e.eventType]||{ko:e.heading||e.eventType,color:'#9aa6c4'};
+      const oneDay=sameDay(e.s.d,e.en.d);
+      let when;
+      if(oneDay){
+        when=fmt(e.s)+' ~ '+new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'numeric',minute:'2-digit',hour12:false}).format(e.en.d);
+      }else{
+        when=fmt(e.s,false)+' ~ '+fmt(e.en,false);
+      }
+      const left=isLive?'<span class="left">· '+dLeft(e.en.d-now)+'</span>':'';
+      const spot=e.extraData&&e.extraData.spotlight&&e.extraData.spotlight.bonus?' · '+e.extraData.spotlight.bonus:'';
+      return '<a class="evt'+(isLive?' live':'')+'" href="'+e.link+'" target="_blank" rel="noopener">'+
+        '<img class="evt-img" loading="lazy" src="'+e.image+'" alt="" onerror="this.style.visibility=\'hidden\'"/>'+
+        '<span><span class="evt-kind"><span class="badge" style="color:'+meta.color+';border-color:'+meta.color+'55">'+meta.ko+'</span>'+left+'</span>'+
+        '<span class="evt-title">'+koEventName(e)+spot+'</span>'+
+        '<span class="evt-when">'+when+'</span></span></a>';
+    }
+    let html='';
+    if(live.length){
+      html+='<div class="cal-group"><div class="cal-group-title">🟢 지금 진행 중 <span class="cnt">'+live.length+'</span></div><div class="ev-list">'+live.map(e=>card(e,true)).join('')+'</div></div>';
+    }
+    const LIMIT=12;
+    if(up.length){
+      const first=up.slice(0,LIMIT), rest=up.slice(LIMIT);
+      html+='<div class="cal-group"><div class="cal-group-title">📅 예정 <span class="cnt">'+up.length+'</span></div><div class="ev-list" id="upList">'+first.map(e=>card(e,false)).join('')+'</div>'+
+        (rest.length?'<button class="cal-more" id="calMore">예정 이벤트 '+rest.length+'개 더 보기</button>':'')+'</div>';
+    }
+    body.innerHTML=html;
+    const more=document.getElementById('calMore');
+    if(more){more.addEventListener('click',()=>{
+      document.getElementById('upList').insertAdjacentHTML('beforeend',up.slice(LIMIT).map(e=>card(e,false)).join(''));
+      more.remove();
+    });}
+  }catch(err){
+    status.innerHTML='<span>⚠️</span><span>자동 갱신 실패</span>';
+    body.innerHTML='<div class="cal-err">이벤트 데이터를 불러오지 못했어요. <a href="https://leekduck.com/events/" target="_blank" rel="noopener">LeekDuck 이벤트 페이지</a>에서 직접 확인하세요.</div>';
+  }
+})();
+
+/* ---------- raid render ---------- */
+(async function(){
+  const body=document.getElementById('raidBody');
+  try{
+    const raw=await duck('raids.min.json');
+    const ORDER=['Super Mega Raids','5-Star Raids','Mega Raids','Shadow Raids','4-Star Raids','3-Star Raids','1-Star Raids'];
+    const KO_TIER={'Super Mega Raids':'슈퍼 메가 레이드','5-Star Raids':'전설 (별5)','Mega Raids':'메가 레이드','Shadow Raids':'그림자 레이드','4-Star Raids':'별4','3-Star Raids':'별3','1-Star Raids':'별1'};
+    const groups={};
+    raw.forEach(r=>{(groups[r.tier]=groups[r.tier]||[]).push(r)});
+    let html='';
+    const tiers=ORDER.filter(t=>groups[t]).concat(Object.keys(groups).filter(t=>!ORDER.includes(t)));
+    tiers.forEach(t=>{
+      const HARD_CAP=(t==='1-Star Raids'||t==='3-Star Raids')?6:99;
+      const list=groups[t].slice(0,HARD_CAP);
+      html+='<div><div class="raid-tier-title">'+(KO_TIER[t]||t)+'</div><div class="raid-row">'+
+        list.map(r=>{
+          const types=(r.types||[]).map(x=>'<span class="type-chip" style="color:'+(TYPE_COLOR[x.name]||'#9aa6c4')+';border-color:'+(TYPE_COLOR[x.name]||'#9aa6c4')+'44">'+(KO_TYPE[x.name]||x.name)+'</span>').join('');
+          const cp=r.combatPower&&r.combatPower.normal?'CP '+r.combatPower.normal.min+'–'+r.combatPower.normal.max:'';
+          return '<div class="raid-card"><div class="raid-top"><img class="raid-img" loading="lazy" src="'+r.image+'" alt="" onerror="this.style.display=\'none\'"/><div><div class="raid-name">'+koMon(r.name)+(r.canBeShiny?' <span class="shiny-chip">✨</span>':'')+'</div><div class="raid-cp">'+cp+'</div></div></div><div class="raid-meta">'+types+'</div></div>';
+        }).join('')+'</div></div>';
+      if(groups[t].length>HARD_CAP) html+='';
+    });
+    body.innerHTML=html||'<p class="sec-desc">데이터 없음</p>';
+  }catch(err){
+    body.innerHTML='<div class="cal-err">레이드 데이터를 불러오지 못했어요. <a href="https://leekduck.com/boss/" target="_blank" rel="noopener">LeekDuck 보스 목록</a>에서 확인하세요.</div>';
+  }
+})();
+</script>
+</body>
+</html>
