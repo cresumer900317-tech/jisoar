@@ -106,6 +106,10 @@
   .mon dd{color:var(--muted)}
   .mon dd b{color:var(--ink); font-weight:600}
   .mon .warn{color:var(--warn)}
+  .mon .verdict{position:absolute; top:13px; right:14px; font-size:9.5px; letter-spacing:.1em; padding:3px 9px; border-radius:999px; font-weight:700}
+  .v-keep{color:var(--ok); border:1px solid rgba(127,214,166,.5); background:rgba(127,214,166,.08)}
+  .v-care{color:var(--warn); border:1px solid rgba(255,209,102,.5); background:rgba(255,209,102,.07)}
+  .v-add{color:var(--dawn); border:1px solid rgba(255,157,108,.55); background:var(--card-hi)}
 
   .tchip{font-size:10.5px; letter-spacing:.02em; padding:3px 9px; border-radius:999px; color:#0a0e1a; font-weight:700}
 
@@ -199,6 +203,9 @@
   .step-body p b{color:var(--ink); font-weight:600}
   .step-body p .hot{color:var(--dawn-2)}
 
+  .spoiler-btn{width:100%; margin-top:8px; padding:13px; border-radius:12px; border:1px dashed var(--line-2); background:rgba(255,209,102,.04); color:var(--warn); font-size:13px; font-family:inherit; cursor:pointer; transition:.2s; letter-spacing:.02em}
+  .spoiler-btn:hover{border-color:var(--warn)}
+
   footer{padding:52px 0 60px; text-align:center; border-top:1px solid var(--line); margin-top:52px}
   footer .fwm{font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600}
   footer .fwm .dot{color:var(--dawn)}
@@ -236,11 +243,40 @@
 
   <!-- ============ 추천 6 ============ -->
   <section class="sec" id="team">
-    <div class="sec-eyebrow">Recommended Six</div>
-    <h2>추천 코어 6<span class="ko">지금 상황 맞춤</span></h2>
-    <p class="sec-desc">설원(크레베이스)부터 엔드게임 <b style="color:var(--dawn-2)">볼로 6연전 · 기라티나</b>까지 하드카운터하고, 포획할 때 아무 상대나 약화시킬 타입 폭까지 갖춘 조합. 박스에 있는 걸로 자유롭게 교체하되 <b style="color:var(--dawn-2)">역할</b>만 채우면 됩니다.</p>
+    <div class="sec-eyebrow">My Core Team</div>
+    <h2>내 주력 점검<span class="ko">유지 · 보강</span></h2>
+    <p class="sec-desc">지금 데리고 다니는 주력 기준으로 <b style="color:var(--ok)">유지</b> / <b style="color:var(--warn)">주의</b> / <b style="color:var(--dawn)">보강</b>을 표시했어요. 다섯은 그대로 좋고, 딱 하나 <b style="color:var(--dawn-2)">물 타입 구멍</b>만 메우면 완성형입니다.</p>
     <div class="team" id="teamGrid"></div>
-    <div class="note">💡 이건 정답이 아니라 <b>기준선</b>이에요. 이미 키운 에이스가 있으면 같은 역할(어태커/물/페어리/격투 등)로 바꿔 끼우면 됩니다. 박스에 있는 주력 알려주면 딱 맞게 다시 짜드릴게요.</div>
+
+    <div class="grid two" style="margin-top:16px">
+      <div class="ic">
+        <h3><span class="ico">🩺</span> 팀 진단</h3>
+        <ul>
+          <li><b>강점</b> — 불꽃·고스트·격투·노말·비행 딜을 다 갖춘 <span class="hot">공격형 밸런스</span>. 괴력몬이 크레베이스(얼음/바위)에 격투 4배라 설원도 든든.</li>
+          <li><b>구멍</b> — <span class="hot">물·땅·전기·페어리</span>가 없음. 불/바위/땅 계열 강적(예: 물4배 먹일 상대)에 딜 넣을 카드가 부족.</li>
+          <li><b>겹침</b> — 블레이범·팬텀이 둘 다 고스트라 <b>악·고스트 기술에 이중으로</b> 약함. 상대 악/고스트엔 하나만 내보내기.</li>
+        </ul>
+      </div>
+      <div class="ic hi">
+        <h3><span class="ico">➕</span> 보강 우선순위</h3>
+        <ul>
+          <li><b>1순위 · 물</b> — <span class="hot">갸라도스</span>(위협+물딜, 잉어킹 아무 물가) 또는 <span class="hot">엠페르트</span>(물/강철, 팀킹 → 광석 진화, 내구·강철저항). 물 구멍 즉시 해결.</li>
+          <li><b>2순위 · 땅/드래곤</b> — <span class="hot">한카리아스</span>(딥상어동). 화력 최상급이지만 <b class="warn">얼음 4배</b>라 설원선 주의.</li>
+          <li><b>3순위 · 페어리</b> — <span class="hot">님피아/토게키스</span>. 드래곤 무효라 후반 용 타입 안전판.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ic" style="margin-top:13px">
+      <h3><span class="ico">👑</span> 우두머리(알파) 추천</h3>
+      <ul>
+        <li><b>한카리아스 α</b> — 천관산 일대. 잡아두면 팀 최고 딜러 + 땅/드래곤 구멍까지 해결.</li>
+        <li><b>갸라도스 α</b> — 큰 물가(설원 호수·해안). 물 보강을 알파로 한 방에.</li>
+        <li><b>매머드 α · 눈설왕 α</b> — 눈덮인 설원. 얼음/땅 딜 + 설원 적응. 매머드는 기라티나(용)에도 유효.</li>
+        <li><b>괴력몬 α · 잠만보 α</b> — 이미 쓰는 라인 상위호환. 능력치 높은 알파로 교체하면 그대로 강화.</li>
+      </ul>
+    </div>
+    <div class="note">💡 알파 위치는 대략치예요(패치/개체마다 다름). 알파는 레벨이 높아 <b>말 안 들을 수 있으니</b> 도감 리서치 랭크를 먼저 올려두면 편합니다. 갯차핸송이 뭔지 알려주면 6번째 칸도 딱 맞게 채워드릴게요.</div>
   </section>
 
   <!-- ============ 내 파티 ============ -->
@@ -340,7 +376,7 @@
   <section class="sec" id="road">
     <div class="sec-eyebrow">Road to the End</div>
     <h2>설원 → 엔드게임<span class="ko">붐볼 이후</span></h2>
-    <p class="sec-desc">천관산(붐볼)까지 끝난 지금부터 엔딩까지의 큰 흐름. <b style="color:var(--warn)">스토리 스포일러 포함</b>.</p>
+    <p class="sec-desc">지금 눈앞은 <b style="color:var(--dawn-2)">설원 → 크레베이스</b>까지. 그 뒤 엔드게임 흐름은 <b style="color:var(--warn)">스포일러라 접어뒀어요</b> — 궁금할 때만 펼치기.</p>
     <div class="steps">
       <div class="step"><div class="step-n">1</div><div class="step-body">
         <b>눈덮인 설원 입성 <span class="tag">Alabaster Icelands</span></b>
@@ -350,6 +386,9 @@
         <b>크레베이스 — 눈산의 왕 <span class="tag">얼음/바위 노블</span></b>
         <p>진정향을 계속 던지며 회피가 핵심. 배틀 페이즈엔 <b class="hot">격투·강철이 4배</b>(음번/각기 계열), 물·풀·땅·바위도 2배. 회피 굴리기(대시) 타이밍만 잡으면 무난.</p>
       </div></div>
+    </div>
+    <button class="spoiler-btn" id="spoilerBtn" type="button">⚠️ 엔드게임 스토리 스포일러 펼치기 &#9662;</button>
+    <div class="steps" id="spoiler" hidden>
       <div class="step"><div class="step-n">3</div><div class="step-body">
         <b>천관산 정상 · 신단 <span class="tag">클라이맥스</span></b>
         <p>총대장 <b>카미츠오로기</b>와 배틀 후 하늘이 붉어지고 <b>시공의 균열</b>이 열림. 여기부터 스토리가 급전개.</p>
@@ -390,6 +429,16 @@
   addEventListener('scroll',()=>{ nav.classList.toggle('show', scrollY>420); },{passive:true});
 })();
 
+/* ---------- spoiler toggle ---------- */
+(function(){
+  const btn=document.getElementById('spoilerBtn'), sp=document.getElementById('spoiler');
+  if(!btn) return;
+  btn.addEventListener('click',()=>{
+    const open=sp.hidden; sp.hidden=!open;
+    btn.innerHTML= open ? '엔드게임 스포일러 접기 ▴' : '⚠️ 엔드게임 스토리 스포일러 펼치기 ▾';
+  });
+})();
+
 /* ---------- type data ---------- */
 const T=['노말','불꽃','물','전기','풀','얼음','격투','독','땅','비행','에스퍼','벌레','바위','고스트','드래곤','악','강철','페어리'];
 const EN={노말:'Normal',불꽃:'Fire',물:'Water',전기:'Electric',풀:'Grass',얼음:'Ice',격투:'Fighting',독:'Poison',땅:'Ground',비행:'Flying',에스퍼:'Psychic',벌레:'Bug',바위:'Rock',고스트:'Ghost',드래곤:'Dragon',악:'Dark',강철:'Steel',페어리:'Fairy'};
@@ -418,29 +467,30 @@ const CHART={
 function mult(atk,def){ const r=CHART[atk]; return (r && def in r)? r[def] : 1; }
 
 /* ---------- recommended team ---------- */
+const VMETA={keep:['유지','v-keep'],care:['주의','v-care'],add:['보강','v-add']};
 const TEAM=[
- {name:'한카리아스',en:'Garchomp',t:['드래곤','땅'],role:'에이스 어태커',why:'압도적 물리공격. 땅기술로 겐가·히스이 윈디 저격, 드래곤으로 기라티나까지. 팀의 딜 기둥.',move:'용의숨결/스톤샤워 + 지진 + 스크래치계',get:'딥상어동(홍련의 습지·천관산 동굴) → 한바이트 → 한카리아스',warn:'얼음 4배! 설원·매머드·기라티나 얼음기술 조심'},
- {name:'매머드',en:'Mamoswine',t:['얼음','땅'],role:'설원 & 얼음딜',why:'설원 적응 + 기라티나·용 타입에 얼음. 땅으로 전기·독·강철도. 물리 화력 든든.',move:'고드름떨구기 + 지진/땅고르기',get:'코리갑(설원·천관산) → 맘모꾸리, 광석으로 진화',warn:'격투·불·물·풀·강철 약점 — 상대 가려서'},
- {name:'갸라도스',en:'Gyarados',t:['물','비행'],role:'물 딜러 · 위협',why:'물기술이 히스이 윈디(불/바위)에 4배. 특성 위협으로 상대 공격 깎음. 어디서나 잡기 쉬움.',move:'물의파동/폭포오르기 + 얼음엄니',get:'잉어킹(아무 물가) → 레벨업 진화',warn:'전기 4배 — 전기 상대엔 빼기'},
- {name:'토게키스',en:'Togekiss',t:['페어리','비행'],role:'페어리 카운터',why:'드래곤 완전 무효 → 기라티나 안정 카운터. 스피통(악)에도 페어리. 비행으로 격투·풀·벌레까지.',move:'매지컬샤인 + 에어슬래시',get:'토게피 → 토게틱 → 광석으로 토게키스',warn:'강철·전기·얼음·바위·독 약점'},
- {name:'음번',en:'Sneasler',t:['격투','독'],role:'격투 어태커 · 등반',why:'크레베이스 노블에 격투 4배. 독으로 페어리(볼로 토게키스). 벽 타고 이동까지 되는 만능.',move:'집중침 계열 + 인파이트/독찌르기',get:'히스이 포푸니(천관산 밤) → 낮에 진화',warn:'에스퍼·비행·땅 약점'},
- {name:'포푸니라',en:'Weavile',t:['얼음','악'],role:'고스트·악 저격',why:'악기술이 겐가·기라티나·스피통(고스트) 급소. 얼음으로 기라티나 추가딜. 빠른 선공.',move:'기습 + 트리플악셀/얼음뭉치',get:'포푸니(설원 등) → 예리한손톱 밤 진화',warn:'격투 4배 · 몸이 약함 → 상태이상 담당'}
+ {name:'히스이 블레이범',en:'H. Typhlosion',t:['불꽃','고스트'],role:'에이스 특수딜',v:'keep',why:'불꽃으로 설원·풀·강철 녹이고, 고스트로 팬텀·에스퍼 저격. 특수 화력의 축.',move:'분화/화염방사 + 섀도볼',warn:'물·땅·바위·악·고스트 약점 · 몸 약하니 선턴에'},
+ {name:'잠만보',en:'Snorlax',t:['노말'],role:'탱커 · 안정딜',v:'keep',why:'HP·내구 최상급. 어디서나 버티며 딜 넣는 팀의 기둥.',move:'기가임팩트/몸통박치기 + 지진',warn:'격투 약점 — 상대 격투기엔 교체'},
+ {name:'팬텀',en:'Gengar',t:['고스트','독'],role:'고속 스위퍼',v:'keep',why:'빠른 특수 폭딜. 독으로 페어리·풀도 저격.',move:'섀도볼 + 오물폭탄',warn:'땅·에스퍼·고스트·악 약점 · 종이내구 · 블레이범과 고스트 겹침'},
+ {name:'괴력몬',en:'Machamp',t:['격투'],role:'격투 어태커',v:'keep',why:'크레베이스(얼음/바위)에 격투 4배! 노말·악·강철·바위 다 때림. 설원 주력.',move:'인파이트/기합구슬 + 바위깨기',warn:'비행·에스퍼·페어리 약점'},
+ {name:'찌르호크',en:'Staraptor',t:['노말','비행'],role:'물리 어태커',v:'care',why:'브레이브버드 고화력. 격투·풀·벌레 상대에 강함.',move:'브레이브버드 + 제비반환',warn:'얼음·바위·전기 약점 → 설원 얼음/바위 상대엔 빼기'},
+ {name:'갸라도스',en:'Gyarados',t:['물','비행'],role:'보강 · 물 구멍',v:'add',why:'팀에 없는 물 딜을 채움. 위협으로 상대 공격↓, 불/바위/땅 강적에 해결사. 잉어킹 아무 물가.',move:'물의파동/폭포오르기 + 얼음엄니',warn:'전기 4배 — 전기 상대엔 빼기 (대안: 엠페르트=물/강철, 더 단단)'}
 ];
 function tchip(t){ return `<span class="tchip" style="background:${COL[t]}">${t}</span>`; }
 (function(){
  const g=document.getElementById('teamGrid');
- g.innerHTML=TEAM.map(m=>`
+ g.innerHTML=TEAM.map(m=>{ const vm=VMETA[m.v||'keep']; return `
   <div class="mon" style="--c1:${COL[m.t[0]]};--c2:${COL[m.t[1]||m.t[0]]}">
+    <span class="verdict ${vm[1]}">${vm[0]}</span>
     <div class="role">${m.role}</div>
     <h3>${m.name} <span class="en">${m.en}</span></h3>
     <div class="types">${m.t.map(tchip).join('')}</div>
     <dl>
       <dt>왜</dt><dd>${m.why}</dd>
       <dt>기술</dt><dd><b>${m.move}</b></dd>
-      <dt>입수</dt><dd>${m.get}</dd>
       <dt>주의</dt><dd class="warn">${m.warn}</dd>
     </dl>
-  </div>`).join('');
+  </div>`; }).join('');
 })();
 
 /* ---------- my party (localStorage) ---------- */
