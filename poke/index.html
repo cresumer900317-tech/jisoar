@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>레전드 아르세우스 공략 대시보드 — jisoar</title>
+<meta name="description" content="포켓몬 레전드 아르세우스(Switch 2) 개인 공략 대시보드. 추천 6마리 · 내 파티 기록 · 타입 상성표 · 약점 계산기 · 포획 치트시트 · 설원~엔드게임 로드맵." />
+<meta name="theme-color" content="#0a0e1a" />
+<meta name="robots" content="noindex" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jisoar.com/poke/" />
+<meta property="og:title" content="레전드 아르세우스 공략 대시보드" />
+<meta property="og:description" content="추천 6마리 · 내 파티 · 타입 상성표 · 약점 계산기 · 포획 팁 · 엔드게임 로드맵" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23ff9d6c' stroke-width='2'/%3E%3Cpath d='M7 16h6M19 16h6' stroke='%23ff9d6c' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ffd9a8'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-dynamic-subset.css" />
+<style>
+  :root{
+    --bg-top:#0a0e1a; --bg-mid:#141b33; --bg-glow:#2a3a6b;
+    --dawn:#ff9d6c; --dawn-2:#ffd9a8; --rose:#ffb4a2;
+    --ink:#f4f6fb; --muted:#9aa6c4; --muted-2:#6f7ba0;
+    --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+    --card:rgba(255,255,255,.025); --card-hi:rgba(255,157,108,.06);
+    --ok:#7fd6a6; --warn:#ffd166; --sky:#8fc6ff; --viol:#c8a2ff; --bad:#ff8f8f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',Roboto,sans-serif;
+    color:var(--ink); background:var(--bg-top); overflow-x:hidden;
+    -webkit-font-smoothing:antialiased; line-height:1.6;
+  }
+  .sky{position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(120% 80% at 50% 110%, rgba(255,157,108,.18), transparent 55%),
+      radial-gradient(100% 70% at 50% 120%, rgba(255,180,162,.10), transparent 50%),
+      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 60%, #1d2547 100%);}
+  .stars{position:fixed; inset:0; z-index:-1; opacity:.7}
+  .star{position:absolute; width:2px; height:2px; background:#fff; border-radius:50%; animation:tw 4s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
+
+  .wrap{max-width:780px; margin:0 auto; padding:0 22px}
+
+  /* nav */
+  .nav{position:fixed; top:0; left:0; right:0; z-index:60; backdrop-filter:blur(10px);
+    background:linear-gradient(180deg, rgba(10,14,26,.92), rgba(10,14,26,.6) 70%, transparent);
+    transform:translateY(-100%); transition:transform .4s ease;}
+  .nav.show{transform:translateY(0)}
+  .nav-inner{max-width:780px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:10px}
+  .nav-home{display:flex; align-items:center; gap:7px; text-decoration:none; color:var(--ink)}
+  .nav-home .navwm{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:18px}
+  .nav-home .dot{color:var(--dawn)}
+  .nav-sep{color:var(--muted-2); font-size:13px}
+  .nav-title{font-size:13px; color:var(--muted); letter-spacing:.04em}
+
+  /* hero */
+  .hero{min-height:78svh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; padding:64px 22px 34px}
+  .hero>*{max-width:100%}
+  .hero-eyebrow{font-size:clamp(10px,2.6vw,12px); letter-spacing:.22em; text-transform:uppercase; color:var(--dawn); line-height:1.6; opacity:0; animation:rise 1s ease .1s forwards}
+  .hero-title{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(36px,10vw,68px); line-height:1.04; letter-spacing:-.01em; margin:14px 0 4px;
+    background:linear-gradient(180deg,#fff 0%,#e7ddf3 55%,#ffb4a2 120%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .25s forwards}
+  .hero-sub{margin-top:16px; color:var(--muted); font-weight:300; font-size:clamp(14px,3.6vw,16px); letter-spacing:.02em; opacity:0; animation:rise 1.1s ease .5s forwards}
+  .hero-sub b{color:var(--dawn-2); font-weight:500}
+  .hero-prog{margin-top:20px; display:inline-flex; gap:7px; align-items:center; font-size:12px; color:var(--muted-2); padding:7px 14px; border:1px solid var(--line-2); border-radius:999px; opacity:0; animation:rise 1.1s ease .7s forwards}
+  .hero-prog .dot-live{width:7px;height:7px;border-radius:50%;background:var(--dawn);box-shadow:0 0 8px rgba(255,157,108,.8)}
+  @keyframes rise{to{opacity:1; transform:translateY(0)}}
+  .hero-eyebrow,.hero-title,.hero-sub,.hero-prog{transform:translateY(20px)}
+  .scroll-hint{position:absolute; bottom:22px; left:50%; transform:translateX(-50%); color:var(--muted-2); font-size:11px; letter-spacing:.2em; opacity:0; animation:rise 1s ease 1.1s forwards, bob 2.4s ease-in-out 1.1s infinite}
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+  /* section pills */
+  .daybar{position:sticky; top:0; z-index:55; padding:9px 0 11px;
+    background:linear-gradient(180deg, rgba(10,14,26,.98), rgba(10,14,26,.9)); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .daybar::after{content:""; position:absolute; top:0; bottom:0; right:0; width:40px; pointer-events:none;
+    background:linear-gradient(90deg, transparent, rgba(10,14,26,.92))}
+  .daybar-scroll{display:flex; gap:8px; overflow-x:auto; padding:0 22px 4px; max-width:780px; margin:0 auto;
+    -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:rgba(255,157,108,.6) rgba(255,255,255,.06)}
+  .daybar-scroll::-webkit-scrollbar{height:4px}
+  .daybar-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.06); border-radius:4px}
+  .daybar-scroll::-webkit-scrollbar-thumb{background:rgba(255,157,108,.6); border-radius:4px}
+  .pill{flex:0 0 auto; text-decoration:none; font-size:12px; padding:7px 12px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted); white-space:nowrap; transition:.2s; cursor:pointer}
+  .pill b{color:var(--ink); font-weight:600}
+  .pill:hover,.pill:focus{border-color:var(--dawn); color:var(--ink)}
+
+  /* sections */
+  .sec{padding:44px 0 8px; scroll-margin-top:60px}
+  .sec-eyebrow{font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--dawn); margin-bottom:10px}
+  .sec h2{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(26px,7vw,40px); letter-spacing:-.01em; margin-bottom:6px}
+  .sec h2 .ko{font-family:'Pretendard Variable',sans-serif; font-size:.42em; color:var(--muted); letter-spacing:.04em; margin-left:8px; font-weight:400}
+  .sec-desc{color:var(--muted); font-size:13.5px; max-width:640px}
+
+  /* team cards */
+  .team{display:grid; gap:13px; margin-top:20px}
+  @media(min-width:640px){.team{grid-template-columns:1fr 1fr}}
+  .mon{border:1px solid var(--line); border-radius:16px; background:var(--card); padding:16px 17px; position:relative; overflow:hidden}
+  .mon::before{content:""; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--c1,var(--dawn)),var(--c2,var(--c1,var(--dawn))))}
+  .mon .role{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dawn-2); margin-bottom:6px}
+  .mon h3{font-size:17px; font-weight:700; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
+  .mon h3 .en{font-size:12px; color:var(--muted-2); font-weight:400; font-family:'Cormorant Garamond',serif; letter-spacing:.02em}
+  .mon .types{display:flex; gap:5px; margin:9px 0 11px; flex-wrap:wrap}
+  .mon dl{display:grid; grid-template-columns:auto 1fr; gap:5px 10px; font-size:13px}
+  .mon dt{color:var(--muted-2); white-space:nowrap}
+  .mon dd{color:var(--muted)}
+  .mon dd b{color:var(--ink); font-weight:600}
+  .mon .warn{color:var(--warn)}
+
+  .tchip{font-size:10.5px; letter-spacing:.02em; padding:3px 9px; border-radius:999px; color:#0a0e1a; font-weight:700}
+
+  /* my party editable */
+  .party{display:grid; gap:11px; margin-top:20px}
+  @media(min-width:560px){.party{grid-template-columns:1fr 1fr}}
+  .slot{border:1px solid var(--line); border-radius:14px; background:var(--card); padding:13px 14px}
+  .slot-head{display:flex; align-items:center; gap:9px; margin-bottom:9px}
+  .slot-n{font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--dawn); width:22px; text-align:center; flex:0 0 auto}
+  .slot input,.slot textarea,.slot select{width:100%; background:rgba(255,255,255,.03); border:1px solid var(--line-2); border-radius:9px; color:var(--ink); font-family:inherit; font-size:13.5px; padding:8px 10px; transition:.15s}
+  .slot input:focus,.slot textarea:focus,.slot select:focus{outline:none; border-color:var(--dawn)}
+  .slot input::placeholder,.slot textarea::placeholder{color:var(--muted-2)}
+  .slot .name-in{font-weight:600; font-size:14.5px}
+  .slot .row2{display:flex; gap:8px; margin-top:8px}
+  .slot select{flex:1; min-width:0; -webkit-appearance:none; appearance:none; cursor:pointer}
+  .slot textarea{margin-top:8px; resize:vertical; min-height:38px; line-height:1.5}
+  .party-tools{display:flex; align-items:center; gap:12px; margin-top:14px; font-size:12px; color:var(--muted-2); flex-wrap:wrap}
+  .savepill{display:inline-flex; align-items:center; gap:6px; color:var(--ok)}
+  .savepill .d{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+  .btn-ghost{padding:7px 14px; border-radius:999px; border:1px solid var(--line-2); background:none; color:var(--muted); font-size:12px; cursor:pointer; font-family:inherit; transition:.2s}
+  .btn-ghost:hover{border-color:var(--bad); color:var(--bad)}
+  .btn-fill{padding:7px 14px; border-radius:999px; border:1px solid rgba(255,157,108,.4); background:var(--card-hi); color:var(--dawn-2); font-size:12px; cursor:pointer; font-family:inherit; transition:.2s}
+  .btn-fill:hover{border-color:var(--dawn)}
+
+  /* type chart */
+  .chart-tools{display:flex; gap:8px; margin:16px 0 4px; flex-wrap:wrap; align-items:center}
+  .seg{display:inline-flex; border:1px solid var(--line-2); border-radius:10px; overflow:hidden}
+  .seg button{padding:7px 14px; background:none; border:none; color:var(--muted); font-size:12.5px; font-family:inherit; cursor:pointer; transition:.15s}
+  .seg button.on{background:var(--card-hi); color:var(--dawn-2)}
+  .chart-hint{font-size:11.5px; color:var(--muted-2)}
+  .tblwrap{overflow-x:auto; margin-top:12px; border:1px solid var(--line); border-radius:12px; -webkit-overflow-scrolling:touch}
+  table.tc{border-collapse:collapse; font-size:11px; font-variant-numeric:tabular-nums}
+  table.tc th,table.tc td{border:1px solid rgba(255,255,255,.05); text-align:center; min-width:26px; height:26px; padding:0}
+  table.tc thead th{position:sticky; top:0; z-index:3; background:#0e1424; color:var(--muted); font-weight:600; writing-mode:vertical-rl; text-orientation:mixed; height:64px; letter-spacing:.02em}
+  table.tc tbody th{position:sticky; left:0; z-index:2; background:#0e1424; color:var(--ink); font-weight:600; text-align:right; padding:0 8px 0 6px; white-space:nowrap; min-width:52px}
+  table.tc td.x2{background:rgba(127,214,166,.22); color:#d4f5e3; font-weight:700}
+  table.tc td.x1{color:var(--muted-2)}
+  table.tc td.xh{background:rgba(255,143,143,.16); color:#ffc9c9}
+  table.tc td.x0{background:rgba(255,255,255,.05); color:var(--muted-2)}
+  table.tc td.hl{outline:2px solid var(--dawn); outline-offset:-2px; z-index:1}
+  .legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:11px; font-size:11.5px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .legend i{width:13px;height:13px;border-radius:3px;display:inline-block}
+
+  /* weakness calc */
+  .calc{margin-top:20px; border:1px solid var(--line); border-radius:16px; background:var(--card); padding:18px}
+  .calc-row{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end}
+  .calc-field{flex:1; min-width:130px}
+  .calc-field label{display:block; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); margin-bottom:6px}
+  .calc-field select{width:100%; background:rgba(255,255,255,.03); border:1px solid var(--line-2); border-radius:10px; color:var(--ink); font-family:inherit; font-size:14px; padding:10px 11px; -webkit-appearance:none; appearance:none; cursor:pointer}
+  .calc-field select:focus{outline:none; border-color:var(--dawn)}
+  .presets{display:flex; gap:7px; flex-wrap:wrap; margin-top:13px}
+  .preset{font-size:11.5px; padding:6px 11px; border-radius:999px; border:1px solid var(--line-2); background:none; color:var(--muted); cursor:pointer; font-family:inherit; transition:.2s}
+  .preset:hover{border-color:var(--dawn); color:var(--ink)}
+  .calc-out{margin-top:16px; display:grid; gap:11px}
+  .co-group{}
+  .co-label{font-size:11px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:7px; display:flex; align-items:center; gap:7px}
+  .co-chips{display:flex; gap:6px; flex-wrap:wrap; min-height:26px}
+  .co-chips .empty{font-size:12px; color:var(--muted-2)}
+  .mchip{font-size:11px; padding:3px 9px 3px 8px; border-radius:999px; display:inline-flex; align-items:center; gap:5px; border:1px solid}
+  .mchip .m{font-weight:700; font-variant-numeric:tabular-nums}
+  .co-4 .co-label{color:var(--bad)} .co-4 .mchip{border-color:rgba(255,143,143,.5); color:#ffc9c9; background:rgba(255,143,143,.1)}
+  .co-2 .co-label{color:var(--warn)} .co-2 .mchip{border-color:rgba(255,209,102,.45); color:#ffe4a3; background:rgba(255,209,102,.08)}
+  .co-r .co-label{color:var(--ok)} .co-r .mchip{border-color:rgba(127,214,166,.4); color:#c3f0d6; background:rgba(127,214,166,.07)}
+  .co-0 .co-label{color:var(--sky)} .co-0 .mchip{border-color:rgba(143,198,255,.4); color:#c3e2ff; background:rgba(143,198,255,.07)}
+
+  /* info cards / steps (reused) */
+  .grid{display:grid; gap:13px; margin-top:18px}
+  @media(min-width:620px){.grid.two{grid-template-columns:1fr 1fr}}
+  .ic{border:1px solid var(--line); border-radius:15px; background:var(--card); padding:16px 17px}
+  .ic.hi{border-color:rgba(255,157,108,.35); background:var(--card-hi)}
+  .ic h3{font-size:15px; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px}
+  .ic h3 .ico{font-size:17px}
+  .ic ul{list-style:none; display:flex; flex-direction:column; gap:8px}
+  .ic li{font-size:13.5px; color:var(--muted); padding-left:15px; position:relative; line-height:1.55}
+  .ic li::before{content:"·"; position:absolute; left:3px; color:var(--dawn); font-weight:700}
+  .ic li b{color:var(--ink); font-weight:600}
+  .ic li .hot{color:var(--dawn-2)}
+
+  .note{margin-top:16px; font-size:12px; color:var(--muted-2); line-height:1.6; padding:11px 13px; border:1px dashed var(--line-2); border-radius:11px; background:rgba(255,209,102,.03)}
+  .note b{color:var(--warn)}
+
+  /* roadmap steps */
+  .steps{display:flex; flex-direction:column; gap:0; margin-top:20px}
+  .step{display:grid; grid-template-columns:34px 1fr; gap:14px; padding:15px 0; border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:none}
+  .step-n{font-family:'Cormorant Garamond',serif; font-size:26px; line-height:1.1; color:var(--dawn); text-align:center}
+  .step-body > b{display:block; font-size:14.5px; color:var(--ink); margin-bottom:4px}
+  .step-body > b .tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--dawn-2); border:1px solid var(--line-2); padding:2px 8px; border-radius:999px; margin-left:8px; vertical-align:middle; font-weight:500}
+  .step-body p{font-size:13px; color:var(--muted); line-height:1.65}
+  .step-body p b{color:var(--ink); font-weight:600}
+  .step-body p .hot{color:var(--dawn-2)}
+
+  footer{padding:52px 0 60px; text-align:center; border-top:1px solid var(--line); margin-top:52px}
+  footer .fwm{font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600}
+  footer .fwm .dot{color:var(--dawn)}
+  footer p{font-size:12px; color:var(--muted-2); margin-top:10px; line-height:1.7}
+  footer a{color:var(--dawn); text-decoration:none}
+</style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+
+<nav class="nav" id="nav"><div class="nav-inner">
+  <a class="nav-home" href="/"><span class="navwm">jisoar<span class="dot">.</span></span></a>
+  <span class="nav-sep">/</span><span class="nav-title">아르세우스 공략</span>
+</div></nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">Pokémon Legends · Arceus · Switch 2</div>
+  <h1 class="hero-title">아르세우스 공략</h1>
+  <p class="hero-sub">데리고 다닐 <b>6마리</b>부터 타입 상성 · 포획 · 엔드게임까지 — 궁금할 때 여는 내 대시보드</p>
+  <div class="hero-prog"><span class="dot-live"></span> 진행도 : <b style="color:var(--ink);margin:0 4px">붐볼(텅빈굴의 왕) 클리어</b> · 다음 → 눈덮인 설원</div>
+  <div class="scroll-hint">SCROLL ↓</div>
+</header>
+
+<div class="daybar"><div class="daybar-scroll">
+  <a class="pill" href="#team"><b>추천 6</b></a>
+  <a class="pill" href="#party"><b>내 파티</b></a>
+  <a class="pill" href="#chart"><b>상성표</b></a>
+  <a class="pill" href="#calc"><b>약점 찾기</b></a>
+  <a class="pill" href="#catch"><b>포획 팁</b></a>
+  <a class="pill" href="#road"><b>로드맵</b></a>
+</div></div>
+
+<main class="wrap">
+
+  <!-- ============ 추천 6 ============ -->
+  <section class="sec" id="team">
+    <div class="sec-eyebrow">Recommended Six</div>
+    <h2>추천 코어 6<span class="ko">지금 상황 맞춤</span></h2>
+    <p class="sec-desc">설원(크레베이스)부터 엔드게임 <b style="color:var(--dawn-2)">볼로 6연전 · 기라티나</b>까지 하드카운터하고, 포획할 때 아무 상대나 약화시킬 타입 폭까지 갖춘 조합. 박스에 있는 걸로 자유롭게 교체하되 <b style="color:var(--dawn-2)">역할</b>만 채우면 됩니다.</p>
+    <div class="team" id="teamGrid"></div>
+    <div class="note">💡 이건 정답이 아니라 <b>기준선</b>이에요. 이미 키운 에이스가 있으면 같은 역할(어태커/물/페어리/격투 등)로 바꿔 끼우면 됩니다. 박스에 있는 주력 알려주면 딱 맞게 다시 짜드릴게요.</div>
+  </section>
+
+  <!-- ============ 내 파티 ============ -->
+  <section class="sec" id="party">
+    <div class="sec-eyebrow">My Party</div>
+    <h2>내 파티<span class="ko">직접 기록 · 자동 저장</span></h2>
+    <p class="sec-desc">실제로 데리고 다니는 6마리를 적어두면 이 브라우저에 저장돼요. 이름·타입·메모(기술/성격 등)를 채워보세요.</p>
+    <div class="party" id="partyGrid"></div>
+    <div class="party-tools">
+      <span class="savepill"><span class="d"></span> <span id="saveMsg">자동 저장됨</span></span>
+      <button class="btn-fill" id="loadRec">추천 6으로 채우기</button>
+      <button class="btn-ghost" id="clearParty">모두 비우기</button>
+    </div>
+  </section>
+
+  <!-- ============ 상성표 ============ -->
+  <section class="sec" id="chart">
+    <div class="sec-eyebrow">Type Chart</div>
+    <h2>타입 상성표<span class="ko">18타입</span></h2>
+    <p class="sec-desc">행(왼쪽) = 공격 타입, 열(위) = 방어 타입. 셀을 누르면 해당 조합이 강조됩니다.</p>
+    <div class="chart-tools">
+      <div class="seg" id="chartSeg">
+        <button data-v="atk" class="on">공격 기준</button>
+        <button data-v="def">방어 기준</button>
+      </div>
+      <span class="chart-hint" id="chartHint">가로로 스크롤 →</span>
+    </div>
+    <div class="tblwrap"><table class="tc" id="tcTable"></table></div>
+    <div class="legend">
+      <span><i style="background:rgba(127,214,166,.5)"></i> 2× 효과적</span>
+      <span><i style="background:rgba(255,255,255,.12)"></i> 1× 보통</span>
+      <span><i style="background:rgba(255,143,143,.4)"></i> ½× 반감</span>
+      <span><i style="background:rgba(255,255,255,.05);border:1px solid var(--line-2)"></i> 0× 무효</span>
+    </div>
+  </section>
+
+  <!-- ============ 약점 찾기 ============ -->
+  <section class="sec" id="calc">
+    <div class="sec-eyebrow">Weakness Finder</div>
+    <h2>약점 찾기<span class="ko">타입 조합 계산</span></h2>
+    <p class="sec-desc">상대 포켓몬의 타입을 넣으면 <b style="color:var(--bad)">뭘로 때려야 하는지</b>(4배·2배) / 반감 / 무효를 계산해줘요. 포획 전 약화용 기술 고를 때 유용.</p>
+    <div class="calc">
+      <div class="calc-row">
+        <div class="calc-field"><label>타입 1</label><select id="cType1"></select></div>
+        <div class="calc-field"><label>타입 2 <span style="text-transform:none;letter-spacing:0">(없으면 —)</span></label><select id="cType2"></select></div>
+      </div>
+      <div class="presets" id="presets"></div>
+      <div class="calc-out" id="calcOut"></div>
+    </div>
+  </section>
+
+  <!-- ============ 포획 팁 ============ -->
+  <section class="sec" id="catch">
+    <div class="sec-eyebrow">Catching</div>
+    <h2>포획 치트시트<span class="ko">놓치지 말 것</span></h2>
+    <div class="grid two">
+      <div class="ic hi">
+        <h3><span class="ico">🎯</span> 잡기 기본기</h3>
+        <ul>
+          <li><b>등 뒤에서 던지기 = 백스트라이크.</b> 눈치 못 챈 등짝에 맞히면 포획률·경험치 대폭↑. <span class="hot">웅크리기(은신)</span>로 접근.</li>
+          <li>풀숲·눈밭에 <b>숨어서</b> 들키지 않게. 시야에 들어오면 붉은 느낌표(경계) 뜸.</li>
+          <li><b>미끼단지·나무열매·꿀</b>을 앞에 던져 시선을 끌고 옆/뒤로 돌아 던지기.</li>
+          <li>도망·경계형은 <b>가만히 기다렸다</b> 등 돌릴 때 한 방.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">💤</span> 약화 · 상태이상</h3>
+        <ul>
+          <li>강한 놈은 <b>배틀로 HP를 깎고</b> 던지면 확률↑. 기절만 시키지 않게 주의.</li>
+          <li><b>잠듦·마비</b> 상태면 포획률이 크게 오름. 재우고 던지기.</li>
+          <li><b>진흙탄</b>을 맞히면 잠깐 굼떠져 접근/포획이 쉬워짐.</li>
+          <li>기술 스타일: <span class="hot">고속(어질)</span>로 턴 벌어 상태이상, <span class="hot">강타(스트롱)</span>로 마무리 데미지.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">⚪</span> 볼 골라 쓰기</h3>
+        <ul>
+          <li><b>페더볼</b> — 가볍고 멀리·빠르게. 겁 많은/도망 포켓몬 원거리 기습에.</li>
+          <li><b>헤비볼</b> — 근접에서 확률↑. 가까이 붙은 큰 놈에.</li>
+          <li><b>다크볼</b> — <span class="hot">밤·기색이상(공격형)</span>에 성능↑.</li>
+          <li><b>리프볼</b> — 낮·자연 속에서 성능↑. 상위볼(하이퍼/기간톤)은 마무리용.</li>
+        </ul>
+      </div>
+      <div class="ic">
+        <h3><span class="ico">⚠️</span> 알파 · 기색이상</h3>
+        <ul>
+          <li><b>알파</b>(거대·붉은 눈)는 레벨이 훌쩍 높음. 무리하면 사망(로그아웃) → <b>먼저 배틀로 약화</b> 후 포획.</li>
+          <li><b>기색이상</b>(붉게 흥분)은 먼저 덤빔 — 미끼로 진정시키거나 재빨리 처리.</li>
+          <li><b>도감 리서치</b>: 잡기·특정 기술·크기·먹이주기 등 과제를 채우면 랭크↑ → 포획·명령 성공률과 별작업 진행에 이득.</li>
+          <li>희귀/알파는 <b>세이브(자동)</b> 믿고 무리 말고, 위험하면 물러났다 재도전.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 로드맵 ============ -->
+  <section class="sec" id="road">
+    <div class="sec-eyebrow">Road to the End</div>
+    <h2>설원 → 엔드게임<span class="ko">붐볼 이후</span></h2>
+    <p class="sec-desc">천관산(붐볼)까지 끝난 지금부터 엔딩까지의 큰 흐름. <b style="color:var(--warn)">스토리 스포일러 포함</b>.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body">
+        <b>눈덮인 설원 입성 <span class="tag">Alabaster Icelands</span></b>
+        <p>야생 레벨이 확 올라감(맘모꾸리·눈여아·구스타브 등). 탈것 <b>브리무음</b>(비행)·<b>워글</b>(활공)로 이동이 편해짐. <span class="hot">얼음 타입 상대가 많으니 격투·불·바위·강철</span>이 편함.</p>
+      </div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body">
+        <b>크레베이스 — 눈산의 왕 <span class="tag">얼음/바위 노블</span></b>
+        <p>진정향을 계속 던지며 회피가 핵심. 배틀 페이즈엔 <b class="hot">격투·강철이 4배</b>(음번/각기 계열), 물·풀·땅·바위도 2배. 회피 굴리기(대시) 타이밍만 잡으면 무난.</p>
+      </div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body">
+        <b>천관산 정상 · 신단 <span class="tag">클라이맥스</span></b>
+        <p>총대장 <b>카미츠오로기</b>와 배틀 후 하늘이 붉어지고 <b>시공의 균열</b>이 열림. 여기부터 스토리가 급전개.</p>
+      </div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body">
+        <b>오리진 디아루가 / 펄기아 <span class="tag">전설</span></b>
+        <p>균열의 지배자 오리진폼과 대결·포획. <b>오리진볼</b>(전용)을 지급받음. 놓쳐도 재도전 가능하니 침착하게.</p>
+      </div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body">
+        <b>볼로 6연전 → 기라티나 <span class="tag">진 최종전</span></b>
+        <p>동료였던 <b>볼로</b>가 배신, 6마리 연전: <b>스피통</b>(악/고스트)·<b>로즈레이드</b>(풀/독)·<b>겐가</b>(고스트/독)·<b>토게키스</b>(페어리/비행)·<b>히스이 윈디</b>(불/바위) → 마지막 <b class="hot">기라티나(어나더폼 → 오리진폼)</b>. 회복약 넉넉히. 추천 6이 이 전원을 카운터해요(겐가·윈디=땅/물, 스피통·기라티나=페어리/악·얼음, 토게키스=얼음/바위).</p>
+      </div></div>
+      <div class="step"><div class="step-n">6</div><div class="step-body">
+        <b>포스트게임 <span class="tag">엔딩 후</span></b>
+        <p>기라티나 재포획, 호수 삼신(유크시·엠라이트·아그놈), 러브카스, 히듐, 레지기가스 등 별작업 개방. <b>도감 완성</b>이 종착지 → 마지막에 <b class="hot">아르세우스</b>.</p>
+      </div></div>
+    </div>
+    <div class="note">📌 노블 회피전은 팀보다 <b>회피 실력</b>이 더 중요해요. 배틀 페이즈에만 위 상성으로 딜 넣고, 나머진 진정향 던지고 굴러다니면 됩니다.</div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="fwm">jisoar<span class="dot">.</span></div>
+  <p>기백의 아르세우스 공략 대시보드 · <a href="/">jisoar.com</a><br>표준 타입 상성 기준 · 진행은 브라우저에만 저장돼요</p>
+</footer>
+
+<script>
+/* ---------- stars ---------- */
+(function(){
+  const c=document.getElementById('stars'); let h='';
+  for(let i=0;i<70;i++){h+=`<div class="star" style="left:${(Math.random()*100).toFixed(2)}%;top:${(Math.random()*100).toFixed(2)}%;animation-delay:${(Math.random()*4).toFixed(2)}s"></div>`;}
+  c.innerHTML=h;
+})();
+/* ---------- nav show on scroll ---------- */
+(function(){
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>{ nav.classList.toggle('show', scrollY>420); },{passive:true});
+})();
+
+/* ---------- type data ---------- */
+const T=['노말','불꽃','물','전기','풀','얼음','격투','독','땅','비행','에스퍼','벌레','바위','고스트','드래곤','악','강철','페어리'];
+const EN={노말:'Normal',불꽃:'Fire',물:'Water',전기:'Electric',풀:'Grass',얼음:'Ice',격투:'Fighting',독:'Poison',땅:'Ground',비행:'Flying',에스퍼:'Psychic',벌레:'Bug',바위:'Rock',고스트:'Ghost',드래곤:'Dragon',악:'Dark',강철:'Steel',페어리:'Fairy'};
+const COL={노말:'#9099a1',불꽃:'#ff9d55',물:'#5090d6',전기:'#f4d23c',풀:'#63bc5a',얼음:'#73cec0',격투:'#ce4069',독:'#ab6ac8',땅:'#d97845',비행:'#8fa8dd',에스퍼:'#f97176',벌레:'#90c12c',바위:'#c7b78b',고스트:'#5269ac',드래곤:'#0b6dc3',악:'#5a5366',강철:'#5a8ea1',페어리:'#ec8fe6'};
+/* attacker -> {defender: mult} for non-1x */
+const CHART={
+ 노말:{바위:.5,강철:.5,고스트:0},
+ 불꽃:{불꽃:.5,물:.5,풀:2,얼음:2,벌레:2,바위:.5,드래곤:.5,강철:2},
+ 물:{불꽃:2,물:.5,풀:.5,땅:2,바위:2,드래곤:.5},
+ 전기:{물:2,전기:.5,풀:.5,땅:0,비행:2,드래곤:.5},
+ 풀:{불꽃:.5,물:2,풀:.5,독:.5,땅:2,비행:.5,벌레:.5,바위:2,드래곤:.5,강철:.5},
+ 얼음:{불꽃:.5,물:.5,풀:2,얼음:.5,땅:2,비행:2,드래곤:2,강철:.5},
+ 격투:{노말:2,얼음:2,독:.5,비행:.5,에스퍼:.5,벌레:.5,바위:2,고스트:0,악:2,강철:2,페어리:.5},
+ 독:{풀:2,독:.5,땅:.5,바위:.5,고스트:.5,강철:0,페어리:2},
+ 땅:{불꽃:2,전기:2,풀:.5,독:2,비행:0,벌레:.5,바위:2,강철:2},
+ 비행:{전기:.5,풀:2,격투:2,벌레:2,바위:.5,강철:.5},
+ 에스퍼:{격투:2,독:2,에스퍼:.5,악:0,강철:.5},
+ 벌레:{불꽃:.5,풀:2,격투:.5,독:.5,비행:.5,에스퍼:2,고스트:.5,악:2,강철:.5,페어리:.5},
+ 바위:{불꽃:2,얼음:2,격투:.5,땅:.5,비행:2,벌레:2,강철:.5},
+ 고스트:{노말:0,에스퍼:2,고스트:2,악:.5},
+ 드래곤:{드래곤:2,강철:.5,페어리:0},
+ 악:{격투:.5,에스퍼:2,고스트:2,악:.5,페어리:.5},
+ 강철:{불꽃:.5,물:.5,전기:.5,얼음:2,바위:2,강철:.5,페어리:2},
+ 페어리:{불꽃:.5,격투:2,독:.5,드래곤:2,악:2,강철:.5}
+};
+function mult(atk,def){ const r=CHART[atk]; return (r && def in r)? r[def] : 1; }
+
+/* ---------- recommended team ---------- */
+const TEAM=[
+ {name:'한카리아스',en:'Garchomp',t:['드래곤','땅'],role:'에이스 어태커',why:'압도적 물리공격. 땅기술로 겐가·히스이 윈디 저격, 드래곤으로 기라티나까지. 팀의 딜 기둥.',move:'용의숨결/스톤샤워 + 지진 + 스크래치계',get:'딥상어동(홍련의 습지·천관산 동굴) → 한바이트 → 한카리아스',warn:'얼음 4배! 설원·매머드·기라티나 얼음기술 조심'},
+ {name:'매머드',en:'Mamoswine',t:['얼음','땅'],role:'설원 & 얼음딜',why:'설원 적응 + 기라티나·용 타입에 얼음. 땅으로 전기·독·강철도. 물리 화력 든든.',move:'고드름떨구기 + 지진/땅고르기',get:'코리갑(설원·천관산) → 맘모꾸리, 광석으로 진화',warn:'격투·불·물·풀·강철 약점 — 상대 가려서'},
+ {name:'갸라도스',en:'Gyarados',t:['물','비행'],role:'물 딜러 · 위협',why:'물기술이 히스이 윈디(불/바위)에 4배. 특성 위협으로 상대 공격 깎음. 어디서나 잡기 쉬움.',move:'물의파동/폭포오르기 + 얼음엄니',get:'잉어킹(아무 물가) → 레벨업 진화',warn:'전기 4배 — 전기 상대엔 빼기'},
+ {name:'토게키스',en:'Togekiss',t:['페어리','비행'],role:'페어리 카운터',why:'드래곤 완전 무효 → 기라티나 안정 카운터. 스피통(악)에도 페어리. 비행으로 격투·풀·벌레까지.',move:'매지컬샤인 + 에어슬래시',get:'토게피 → 토게틱 → 광석으로 토게키스',warn:'강철·전기·얼음·바위·독 약점'},
+ {name:'음번',en:'Sneasler',t:['격투','독'],role:'격투 어태커 · 등반',why:'크레베이스 노블에 격투 4배. 독으로 페어리(볼로 토게키스). 벽 타고 이동까지 되는 만능.',move:'집중침 계열 + 인파이트/독찌르기',get:'히스이 포푸니(천관산 밤) → 낮에 진화',warn:'에스퍼·비행·땅 약점'},
+ {name:'포푸니라',en:'Weavile',t:['얼음','악'],role:'고스트·악 저격',why:'악기술이 겐가·기라티나·스피통(고스트) 급소. 얼음으로 기라티나 추가딜. 빠른 선공.',move:'기습 + 트리플악셀/얼음뭉치',get:'포푸니(설원 등) → 예리한손톱 밤 진화',warn:'격투 4배 · 몸이 약함 → 상태이상 담당'}
+];
+function tchip(t){ return `<span class="tchip" style="background:${COL[t]}">${t}</span>`; }
+(function(){
+ const g=document.getElementById('teamGrid');
+ g.innerHTML=TEAM.map(m=>`
+  <div class="mon" style="--c1:${COL[m.t[0]]};--c2:${COL[m.t[1]||m.t[0]]}">
+    <div class="role">${m.role}</div>
+    <h3>${m.name} <span class="en">${m.en}</span></h3>
+    <div class="types">${m.t.map(tchip).join('')}</div>
+    <dl>
+      <dt>왜</dt><dd>${m.why}</dd>
+      <dt>기술</dt><dd><b>${m.move}</b></dd>
+      <dt>입수</dt><dd>${m.get}</dd>
+      <dt>주의</dt><dd class="warn">${m.warn}</dd>
+    </dl>
+  </div>`).join('');
+})();
+
+/* ---------- my party (localStorage) ---------- */
+(function(){
+ const KEY='jisoar_poke_party_v1';
+ const grid=document.getElementById('partyGrid');
+ const msg=document.getElementById('saveMsg');
+ let data=[];
+ try{ data=JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ data=[]; }
+ if(!Array.isArray(data)) data=[];
+ while(data.length<6) data.push({name:'',type:'',memo:''});
+
+ const opts=['<option value="">타입 —</option>'].concat(T.map(t=>`<option value="${t}">${t}</option>`)).join('');
+ function render(){
+   grid.innerHTML=data.map((s,i)=>`
+    <div class="slot">
+      <div class="slot-head"><span class="slot-n">${i+1}</span>
+        <input class="name-in" data-i="${i}" data-k="name" placeholder="포켓몬 이름" value="${esc(s.name)}"></div>
+      <div class="row2">
+        <select data-i="${i}" data-k="type">${opts}</select>
+      </div>
+      <textarea data-i="${i}" data-k="memo" placeholder="기술 · 성격 · 메모">${esc(s.memo)}</textarea>
+    </div>`).join('');
+   grid.querySelectorAll('select[data-k="type"]').forEach(sel=>{ sel.value=data[+sel.dataset.i].type||''; sel.style.color=sel.value?COL[sel.value]:'var(--muted-2)'; });
+ }
+ function esc(v){ return (v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+ let tmr;
+ function save(){ localStorage.setItem(KEY,JSON.stringify(data)); msg.textContent='저장됨 ✓'; clearTimeout(tmr); tmr=setTimeout(()=>msg.textContent='자동 저장됨',1200); }
+ grid.addEventListener('input',e=>{ const t=e.target; if(t.dataset.i==null)return; data[+t.dataset.i][t.dataset.k]=t.value; if(t.dataset.k==='type') t.style.color=t.value?COL[t.value]:'var(--muted-2)'; save(); });
+ document.getElementById('loadRec').addEventListener('click',()=>{
+   data=TEAM.map(m=>({name:m.name,type:m.t[0],memo:`${m.role} · ${m.move}`})); save(); render();
+ });
+ document.getElementById('clearParty').addEventListener('click',()=>{
+   if(!confirm('내 파티 6칸을 모두 비울까요?'))return;
+   data=Array.from({length:6},()=>({name:'',type:'',memo:''})); save(); render();
+ });
+ render();
+})();
+
+/* ---------- type chart table ---------- */
+(function(){
+ const tbl=document.getElementById('tcTable');
+ const seg=document.getElementById('chartSeg');
+ const hint=document.getElementById('chartHint');
+ let view='atk';
+ function cls(m){ return m===2?'x2':m===0?'x0':m<1?'xh':'x1'; }
+ function txt(m){ return m===2?'2':m===0?'0':m===.5?'½':'·'; }
+ function build(){
+   // rows = attacker (atk view) ; in def view we transpose meaning but keep same matrix, label swaps
+   let head='<thead><tr><th style="writing-mode:horizontal-tb;height:auto">'+(view==='atk'?'공▶ / 방▼':'방▶ / 공▼')+'</th>';
+   head+=T.map(t=>`<th style="color:${COL[t]}">${t}</th>`).join('')+'</tr></thead>';
+   let body='<tbody>';
+   T.forEach(r=>{
+     body+=`<tr><th style="color:${COL[r]}">${r}</th>`;
+     T.forEach(c=>{
+       const m = view==='atk'? mult(r,c) : mult(c,r);
+       body+=`<td class="${cls(m)}" data-r="${r}" data-c="${c}">${txt(m)}</td>`;
+     });
+     body+='</tr>';
+   });
+   body+='</tbody>';
+   tbl.innerHTML=head+body;
+ }
+ tbl.addEventListener('click',e=>{ if(e.target.tagName!=='TD')return;
+   const on=e.target.classList.contains('hl');
+   tbl.querySelectorAll('td.hl').forEach(x=>x.classList.remove('hl'));
+   if(!on) e.target.classList.add('hl');
+ });
+ seg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+   view=b.dataset.v; seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+   hint.textContent = view==='atk'?'행=공격 · 열=방어 · 가로 스크롤 →':'행=방어 · 열=공격 · 가로 스크롤 →';
+   build();
+ });
+ build();
+})();
+
+/* ---------- weakness finder ---------- */
+(function(){
+ const s1=document.getElementById('cType1'), s2=document.getElementById('cType2'), out=document.getElementById('calcOut');
+ s1.innerHTML=T.map(t=>`<option value="${t}">${t}</option>`).join('');
+ s2.innerHTML='<option value="">— 없음</option>'+T.map(t=>`<option value="${t}">${t}</option>`).join('');
+ const presets=[['크레베이스(노블)','얼음','바위'],['기라티나','고스트','드래곤'],['겐가','고스트','독'],['히스이 윈디','불꽃','바위'],['스피통','악','고스트'],['로즈레이드','풀','독'],['토게키스','페어리','비행'],['한카리아스','드래곤','땅']];
+ document.getElementById('presets').innerHTML=presets.map((p,i)=>`<button class="preset" data-i="${i}">${p[0]}</button>`).join('');
+ document.getElementById('presets').addEventListener('click',e=>{ const b=e.target.closest('.preset'); if(!b)return;
+   const p=presets[+b.dataset.i]; s1.value=p[1]; s2.value=p[2]||''; render(); });
+ function combined(def1,def2){ // multiplier of each ATTACK type vs this defender
+   const res={};
+   T.forEach(atk=>{ let m=mult(atk,def1); if(def2) m*=mult(atk,def2); res[atk]=m; });
+   return res;
+ }
+ function tt(t){ return `<span class="mchip" style="border-color:${COL[t]}55"><span style="width:8px;height:8px;border-radius:50%;background:${COL[t]};display:inline-block"></span>${t}<span class="m">MULT</span></span>`; }
+ function chip(t,m){ const label=m===4?'4×':m===2?'2×':m===.5?'½':m===.25?'¼':m===0?'0':m+'×';
+   return `<span class="mchip"><span style="width:8px;height:8px;border-radius:50%;background:${COL[t]};display:inline-block"></span>${t}<span class="m">${label}</span></span>`; }
+ function group(cls,label,arr){
+   return `<div class="co-group ${cls}"><div class="co-label">${label} <span style="color:var(--muted-2);font-weight:400;letter-spacing:0;text-transform:none">${arr.length}</span></div><div class="co-chips">${arr.length?arr.map(([t,m])=>chip(t,m)).join(''):'<span class="empty">없음</span>'}</div></div>`;
+ }
+ function render(){
+   const d1=s1.value, d2=s2.value===d1?'':s2.value;
+   const res=combined(d1,d2);
+   const e=[],w=[],r=[],z=[];
+   T.forEach(t=>{ const m=res[t]; if(m===0)z.push([t,m]); else if(m>=4)e.unshift([t,m]); else if(m>=2)e.push([t,m]); else if(m<1)r.push([t,m]); });
+   // sort weaknesses 4x first
+   e.sort((a,b)=>b[1]-a[1]); r.sort((a,b)=>a[1]-b[1]);
+   const e4=e.filter(x=>x[1]>=4), e2=e.filter(x=>x[1]<4);
+   out.innerHTML =
+     group('co-4','치명적 약점 (4×)',e4)+
+     group('co-2','약점 (2×)',e2)+
+     group('co-r','반감 (½·¼)',r)+
+     group('co-0','무효 (0×)',z);
+ }
+ s1.addEventListener('change',render); s2.addEventListener('change',render);
+ s1.value='얼음'; s2.value='바위'; render();
+})();
+</script>
+</body>
+</html>
