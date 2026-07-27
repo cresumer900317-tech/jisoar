@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>만수로그 — 박만수 성장기록</title>
+<meta name="description" content="렉돌 박만수 몸무게 기록장" />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle'%3E🐱%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-dynamic-subset.css" />
+<style>
+:root{
+  color-scheme: light;
+  --plane:#f9f9f7; --surface:#fcfcfb;
+  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --series:#2a78d6; --series-soft:rgba(42,120,214,.10);
+  --good:#006300; --warn:#8a5a00; --bad:#d03b3b;
+  --good-dot:#0ca30c; --warn-dot:#fab219; --bad-dot:#d03b3b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+    --plane:#0d0d0d; --surface:#1a1a19;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --series:#3987e5; --series-soft:rgba(57,135,229,.14);
+    --good:#0ca30c; --warn:#fab219; --bad:#e66767;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Pretendard Variable",Pretendard,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--plane); color:var(--ink);
+  padding:20px 16px calc(40px + env(safe-area-inset-bottom));
+  max-width:560px; margin:0 auto;
+  -webkit-font-smoothing:antialiased;
+}
+header{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+header h1{font-size:22px;font-weight:800;letter-spacing:-.3px}
+header .sub{font-size:13px;color:var(--muted)}
+.age{font-size:13px;color:var(--ink-2);margin-bottom:16px}
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  padding:16px; margin-bottom:14px;
+}
+/* ── 입력 ── */
+.entry-row{display:flex;gap:8px;margin-bottom:8px}
+input,button{font-family:inherit;font-size:16px;border-radius:10px}
+input{
+  border:1px solid var(--border); background:var(--plane); color:var(--ink);
+  padding:11px 12px; width:100%;
+}
+input:focus{outline:2px solid var(--series);outline-offset:-1px}
+#grams{font-size:22px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+#date{max-width:150px;color:var(--ink-2);font-size:14px}
+#save{
+  border:none; background:var(--series); color:#fff; font-weight:700;
+  padding:12px; width:100%; cursor:pointer;
+}
+#save:active{opacity:.85}
+#msg{font-size:13px;margin-top:8px;color:var(--ink-2);min-height:1em}
+/* ── 스탯 타일 ── */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px}
+.tile .k{font-size:12px;color:var(--muted);margin-bottom:4px}
+.tile .v{font-size:24px;font-weight:800;letter-spacing:-.5px}
+.tile .v small{font-size:13px;font-weight:600;color:var(--ink-2)}
+.tile .note{font-size:12px;margin-top:3px;color:var(--ink-2);display:flex;align-items:center;gap:5px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--ink-2)}
+/* ── 차트 ── */
+.chart-card h2, .hist-card h2{font-size:14px;font-weight:700;color:var(--ink-2);margin-bottom:10px}
+#chart-wrap{position:relative}
+#chart{display:block;width:100%;height:auto;touch-action:pan-y}
+#tip{
+  position:absolute; pointer-events:none; display:none;
+  background:var(--surface); border:1px solid var(--border); border-radius:8px;
+  padding:6px 9px; font-size:12px; line-height:1.5; color:var(--ink);
+  box-shadow:0 2px 10px rgba(0,0,0,.12); white-space:nowrap; z-index:2;
+}
+#tip b{font-variant-numeric:tabular-nums}
+/* ── 기록 테이블 ── */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:12px;color:var(--muted);font-weight:600;text-align:left;padding:4px 6px;border-bottom:1px solid var(--grid)}
+td{padding:8px 6px;border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
+td.memo{font-size:12px;color:var(--ink-2);font-variant-numeric:normal;word-break:break-all}
+td .del{border:none;background:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px}
+tr:last-child td{border-bottom:none}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:24px 0}
+footer{text-align:center;font-size:12px;color:var(--muted);margin-top:20px}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header><h1>🐱 만수로그</h1><span class="sub">박만수 성장기록</span></header>
+<div class="age" id="age"></div>
+
+<div class="card">
+  <div class="entry-row">
+    <input type="date" id="date" />
+    <input type="number" id="grams" inputmode="numeric" placeholder="몸무게 (g)" min="1" max="20000" />
+  </div>
+  <div class="entry-row">
+    <input type="text" id="memo" placeholder="메모 — 먹은 양, 컨디션 등 (선택)" maxlength="200" />
+  </div>
+  <button id="save">오늘 몸무게 저장</button>
+  <div id="msg"></div>
+</div>
+
+<div class="tiles" id="tiles" hidden>
+  <div class="tile">
+    <div class="k">최근 몸무게</div>
+    <div class="v" id="t-now">—</div>
+    <div class="note" id="t-now-date"></div>
+  </div>
+  <div class="tile">
+    <div class="k">전일 대비</div>
+    <div class="v" id="t-delta">—</div>
+    <div class="note" id="t-delta-note"></div>
+  </div>
+  <div class="tile">
+    <div class="k">최근 7일 평균</div>
+    <div class="v" id="t-avg">—</div>
+    <div class="note" id="t-avg-note"></div>
+  </div>
+  <div class="tile">
+    <div class="k">기록</div>
+    <div class="v" id="t-days">—</div>
+    <div class="note">목표: 하루 +10~20g</div>
+  </div>
+</div>
+
+<div class="card chart-card" id="chart-card" hidden>
+  <h2>몸무게 추이 (g)</h2>
+  <div id="chart-wrap">
+    <svg id="chart" role="img" aria-label="만수 몸무게 추이 선 그래프"></svg>
+    <div id="tip"></div>
+  </div>
+</div>
+
+<div class="card hist-card">
+  <h2>기록</h2>
+  <div id="hist"><div class="empty">아직 기록이 없어요. 첫 몸무게를 저장해보세요!</div></div>
+</div>
+
+<footer><a href="https://jisoar.com">jisoar.com</a> · 만수는 2026-07-26에 왔어요</footer>
+
+<script>
+const API = "https://guild-backend-production-75a6.up.railway.app/api/mansu";
+const BIRTH = "2026-04-10"; // 분양 시 고지된 출생일 (실제는 더 어릴 수 있음)
+const $ = id => document.getElementById(id);
+let entries = []; // [{date, grams, memo}] asc
+
+// ── 유틸 ──
+const KST_OFFSET = 9 * 60;
+function todayKST(){
+  const d = new Date(Date.now() + (KST_OFFSET + new Date().getTimezoneOffset()) * 60000);
+  return d.toISOString().slice(0,10);
+}
+const fmtG = g => g.toLocaleString("ko-KR") + "g";
+const fmtD = s => s.slice(5).replace("-","/");
+function daysBetween(a, b){ return Math.round((new Date(b) - new Date(a)) / 86400000); }
+function getKey(promptIfMissing){
+  let k = localStorage.getItem("mansu_key") || "";
+  if(!k && promptIfMissing){
+    k = (prompt("기록 열쇠를 입력하세요 (최초 1회)") || "").trim();
+    if(k) localStorage.setItem("mansu_key", k);
+  }
+  return k;
+}
+
+// ── 나이 표시 ──
+(function(){
+  const d = daysBetween(BIRTH, todayKST());
+  $("age").textContent = `생후 ${d}일차 (고지 기준 ${BIRTH}생 · 실제는 더 어릴 수 있음)`;
+})();
+
+// ── 로드 ──
+async function load(){
+  try{
+    const r = await fetch(API + "/entries");
+    if(!r.ok) throw new Error(r.status);
+    entries = (await r.json()).entries || [];
+  }catch(e){
+    $("msg").textContent = "서버에서 기록을 못 불러왔어요. 새로고침 해보세요.";
+    return;
+  }
+  render();
+}
+
+function render(){
+  renderStats();
+  renderChart();
+  renderHist();
+  const today = entries.find(e => e.date === todayKST());
+  if(today){
+    $("grams").value = today.grams;
+    $("memo").value = today.memo || "";
+    $("save").textContent = "오늘 기록 수정";
+  }
+}
+
+// ── 스탯 ──
+function renderStats(){
+  if(!entries.length){ $("tiles").hidden = true; return; }
+  $("tiles").hidden = false;
+  const last = entries[entries.length-1];
+  $("t-now").textContent = fmtG(last.grams);
+  $("t-now-date").textContent = last.date + " 기준";
+
+  const prev = entries[entries.length-2];
+  if(prev){
+    const gap = daysBetween(prev.date, last.date);
+    const diff = last.grams - prev.grams;
+    const perDay = Math.round(diff / gap);
+    const el = $("t-delta");
+    el.textContent = (diff>0?"+":"") + diff + "g";
+    el.className = "v " + (diff>0?"up":diff<0?"down":"flat");
+    $("t-delta-note").textContent = gap>1 ? `${gap}일 전 대비 (일 ${perDay>0?"+":""}${perDay}g)` : "어제 대비";
+  } else {
+    $("t-delta").textContent = "—";
+    $("t-delta-note").textContent = "기록 2개부터 계산";
+  }
+
+  // 최근 7일 평균: 7일 내 첫 기록과 마지막 기록의 기울기
+  const cutoff = new Date(new Date(last.date) - 6*86400000).toISOString().slice(0,10);
+  const win = entries.filter(e => e.date >= cutoff);
+  if(win.length >= 2){
+    const span = daysBetween(win[0].date, last.date);
+    const avg = Math.round((last.grams - win[0].grams) / Math.max(span,1));
+    $("t-avg").innerHTML = (avg>0?"+":"") + avg + "<small>g/일</small>";
+    const note = $("t-avg-note");
+    let dot, label, cls;
+    if(avg >= 10){ dot="var(--good-dot)"; label="잘 크는 중 ✓"; cls="up"; }
+    else if(avg >= 0){ dot="var(--warn-dot)"; label="증가가 느려요"; cls="flat"; }
+    else { dot="var(--bad-dot)"; label="감소 — 병원 상담"; cls="down"; }
+    note.innerHTML = `<span class="dot" style="background:${dot}"></span><span class="${cls}">${label}</span>`;
+  } else {
+    $("t-avg").textContent = "—";
+    $("t-avg-note").textContent = "기록이 더 쌓이면 계산";
+  }
+
+  $("t-days").innerHTML = entries.length + "<small>일</small>";
+}
+
+// ── 차트 (단일 시리즈 라인, 크로스헤어 툴팁) ──
+let pts = []; // {x, y, e, delta}
+function renderChart(){
+  const card = $("chart-card");
+  if(entries.length < 2){ card.hidden = true; return; }
+  card.hidden = false;
+
+  const svg = $("chart");
+  const W = svg.clientWidth || 500, H = Math.min(260, Math.max(180, W*0.5));
+  const P = {t:14, r:14, b:26, l:44};
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.style.height = H + "px";
+
+  const t0 = new Date(entries[0].date).getTime();
+  const t1 = new Date(entries[entries.length-1].date).getTime();
+  const gMin = Math.min(...entries.map(e=>e.grams));
+  const gMax = Math.max(...entries.map(e=>e.grams));
+  const pad = Math.max(20, (gMax-gMin)*0.15);
+  const y0 = Math.max(0, gMin - pad), y1 = gMax + pad;
+  const X = t => P.l + (t - t0) / Math.max(t1 - t0, 1) * (W - P.l - P.r);
+  const Y = g => P.t + (1 - (g - y0) / (y1 - y0)) * (H - P.t - P.b);
+
+  pts = entries.map((e,i) => ({
+    x: X(new Date(e.date).getTime()), y: Y(e.grams), e,
+    delta: i>0 ? e.grams - entries[i-1].grams : null,
+  }));
+
+  let s = "";
+  // y 그리드 4단 + 라벨
+  const ticks = 4;
+  for(let i=0;i<=ticks;i++){
+    const g = y0 + (y1-y0)*i/ticks, y = Y(g);
+    s += `<line x1="${P.l}" x2="${W-P.r}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/>`;
+    s += `<text x="${P.l-6}" y="${y+4}" text-anchor="end" font-size="10" fill="var(--muted)" font-variant-numeric="tabular-nums">${Math.round(g)}</text>`;
+  }
+  // x 라벨 (최대 5개)
+  const step = Math.max(1, Math.ceil(pts.length/5));
+  pts.forEach((p,i) => {
+    if(i % step === 0 || i === pts.length-1)
+      s += `<text x="${p.x}" y="${H-8}" text-anchor="middle" font-size="10" fill="var(--muted)">${fmtD(p.e.date)}</text>`;
+  });
+  // 면 + 선
+  const line = pts.map((p,i)=>`${i?"L":"M"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join("");
+  s += `<path d="${line}L${pts[pts.length-1].x},${H-P.b}L${pts[0].x},${H-P.b}Z" fill="var(--series-soft)"/>`;
+  s += `<path d="${line}" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  // 점 (기록이 많아지면 생략) + 마지막 값 직접 라벨
+  if(pts.length <= 45)
+    pts.forEach(p => { s += `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--series)" stroke="var(--surface)" stroke-width="2"/>`; });
+  const lp = pts[pts.length-1];
+  s += `<text x="${lp.x}" y="${lp.y-10}" text-anchor="end" font-size="11" font-weight="700" fill="var(--ink)" font-variant-numeric="tabular-nums">${fmtG(lp.e.grams)}</text>`;
+  // 크로스헤어 (JS로 위치 갱신)
+  s += `<line id="xhair" y1="${P.t}" y2="${H-P.b}" stroke="var(--axis)" stroke-width="1" visibility="hidden"/>`;
+  s += `<circle id="xdot" r="5" fill="var(--series)" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>`;
+  svg.innerHTML = s;
+}
+
+// 툴팁: 포인터에 가장 가까운 점
+function chartHover(clientX, clientY, active){
+  const svg = $("chart"), tip = $("tip");
+  const xh = $("xhair"), xd = $("xdot");
+  if(!active || !pts.length){ tip.style.display="none"; if(xh){xh.setAttribute("visibility","hidden");xd.setAttribute("visibility","hidden");} return; }
+  const r = svg.getBoundingClientRect();
+  const mx = clientX - r.left;
+  let best = pts[0];
+  for(const p of pts) if(Math.abs(p.x-mx) < Math.abs(best.x-mx)) best = p;
+  xh.setAttribute("x1", best.x); xh.setAttribute("x2", best.x); xh.setAttribute("visibility","visible");
+  xd.setAttribute("cx", best.x); xd.setAttribute("cy", best.y); xd.setAttribute("visibility","visible");
+  const d = best.delta;
+  tip.innerHTML = `${best.e.date}<br><b>${fmtG(best.e.grams)}</b>` +
+    (d===null ? "" : ` <span class="${d>0?"up":d<0?"down":"flat"}">(${d>0?"+":""}${d}g)</span>`);
+  tip.style.display = "block";
+  const wrap = $("chart-wrap").getBoundingClientRect();
+  let tx = best.x + 12;
+  if(tx + tip.offsetWidth > wrap.width) tx = best.x - tip.offsetWidth - 12;
+  tip.style.left = Math.max(0, tx) + "px";
+  tip.style.top = Math.max(0, best.y - 20) + "px";
+}
+{
+  const svg = $("chart");
+  svg.addEventListener("pointermove", e => chartHover(e.clientX, e.clientY, true));
+  svg.addEventListener("pointerdown", e => chartHover(e.clientX, e.clientY, true));
+  svg.addEventListener("pointerleave", () => chartHover(0, 0, false));
+}
+
+// ── 기록 테이블 ──
+function renderHist(){
+  const el = $("hist");
+  if(!entries.length){ el.innerHTML = '<div class="empty">아직 기록이 없어요. 첫 몸무게를 저장해보세요!</div>'; return; }
+  const rows = [...entries].reverse().map((e,ri) => {
+    const i = entries.length - 1 - ri;
+    const d = i>0 ? e.grams - entries[i-1].grams : null;
+    const dTxt = d===null ? "" : `<span class="${d>0?"up":d<0?"down":"flat"}">${d>0?"+":""}${d}</span>`;
+    return `<tr><td>${e.date.slice(2)}</td><td><b>${e.grams.toLocaleString()}</b></td><td>${dTxt}</td>` +
+      `<td class="memo">${(e.memo||"").replace(/</g,"&lt;")}</td>` +
+      `<td><button class="del" data-date="${e.date}" aria-label="삭제">✕</button></td></tr>`;
+  }).join("");
+  el.innerHTML = `<table><thead><tr><th>날짜</th><th>g</th><th>증감</th><th>메모</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  el.querySelectorAll(".del").forEach(b => b.addEventListener("click", () => delEntry(b.dataset.date)));
+}
+
+// ── 저장/삭제 ──
+async function save(){
+  const grams = parseInt($("grams").value, 10);
+  if(!grams || grams < 1){ $("msg").textContent = "몸무게(g)를 입력해주세요"; return; }
+  const key = getKey(true);
+  if(!key){ $("msg").textContent = "열쇠가 있어야 기록할 수 있어요"; return; }
+  $("save").disabled = true; $("msg").textContent = "저장 중…";
+  try{
+    const r = await fetch(API + "/entries", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "X-Mansu-Key": key },
+      body: JSON.stringify({ date: $("date").value, grams, memo: $("memo").value }),
+    });
+    if(r.status === 403){ localStorage.removeItem("mansu_key"); throw new Error("열쇠가 틀렸어요. 다시 저장하면 재입력할 수 있어요."); }
+    if(!r.ok) throw new Error("저장 실패 (" + r.status + ")");
+    $("msg").textContent = "저장 완료! 만수 오늘도 수고했어 🐾";
+    await load();
+  }catch(e){
+    $("msg").textContent = e.message;
+  }finally{
+    $("save").disabled = false;
+  }
+}
+async function delEntry(date){
+  if(!confirm(date + " 기록을 지울까요?")) return;
+  const key = getKey(true);
+  if(!key) return;
+  try{
+    const r = await fetch(`${API}/entries/${date}`, { method:"DELETE", headers:{ "X-Mansu-Key": key } });
+    if(r.status === 403){ localStorage.removeItem("mansu_key"); alert("열쇠가 틀렸어요."); return; }
+    await load();
+  }catch(e){ alert("삭제 실패: " + e.message); }
+}
+
+$("save").addEventListener("click", save);
+$("grams").addEventListener("keydown", e => { if(e.key === "Enter") save(); });
+$("date").value = todayKST();
+window.addEventListener("resize", () => { renderChart(); });
+load();
+</script>
+</body>
+</html>
