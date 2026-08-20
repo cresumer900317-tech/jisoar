@@ -11,7 +11,12 @@ const STATE = {
   kind: "single",
   filter: "__all__",   // "__all__" | 작성자 이름
   search: "",          // 제목 검색어
+  pendingFile: null,   // 메모에 첨부한 파일 {name, text} — textarea 를 거치지 않는다 (수 MB 붙여넣기는 화면이 멈춘다)
+  bigContent: null,    // 편집 중인 메모의 원래 큰 본문 — textarea 에 풀지 않고 그대로 유지
 };
+
+const NOTE_LIMIT = 8000000;          // 백엔드 NOTE_MAX 와 같게
+const NOTE_EDIT_MAX = 200000;        // 이보다 큰 메모는 편집칸에 풀지 않는다 (렌더 멈춤 방지)
 
 const ALL_TAB = "__all__";
 const MEMBERS = ["Jett", "Minhyun"];   // 고정 사용자 — 탭과 로그인 선택지
@@ -273,6 +278,7 @@ function cardHtml(s) {
       <div class="snip-card-actions">
         ${when ? `<span class="snip-when">${escapeHtml(when)}</span>` : ""}
         ${copyBtn}
+        ${s.kind !== "tb4" ? `<button class="icon-btn snip-dl" data-id="${s.id}" title="파일로 저장">⬇</button>` : ""}
         <button class="icon-btn snip-edit" data-id="${s.id}" title="편집">✎</button>
         <button class="icon-btn snip-del" data-id="${s.id}" title="삭제">🗑</button>
       </div>
@@ -318,6 +324,22 @@ function renderSnippets() {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       openModal(Number(btn.dataset.id));
+    });
+  });
+  // ⬇ 파일로 저장 — 복사→메모장 저장을 거치지 않고 바로 파일이 된다 (큰 HTML 도구 전달용)
+  list.querySelectorAll(".snip-dl").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const s = STATE.snippets.find((x) => x.id === Number(btn.dataset.id));
+      if (!s || !s.content) { showToast("내용이 없어요", true); return; }
+      let name = (s.title || "snippet-" + s.id).replace(/[\\/:*?"<>|]/g, "_").trim();
+      if (!/\.[A-Za-z0-9]{1,8}$/.test(name)) name += ".txt";
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([s.content], { type: "text/plain;charset=utf-8" }));
+      a.download = name;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      showToast(`${name} 저장됨 ⬇`);
     });
   });
   list.querySelectorAll(".snip-del").forEach((btn) => {
@@ -379,7 +401,19 @@ function openModal(id, newKind) {
   $("snippetId").value = s ? s.id : "";
   $("snipTitle").value = s ? s.title || "" : "";
   $("snipContent").value = s && !isNote ? s.content || "" : "";
-  $("snipNote").value = s && isNote ? s.content || "" : "";
+  // 큰 메모는 편집칸에 풀지 않는다 — 수 MB 를 textarea 에 넣으면 브라우저가 멈춘다.
+  // 본문은 bigContent 에 그대로 들고 있다가 저장 때 되돌려 싣는다.
+  setPendingFile(null);
+  STATE.bigContent = null;
+  if (s && isNote && (s.content || "").length > NOTE_EDIT_MAX) {
+    STATE.bigContent = s.content;
+    $("snipNote").value = "";
+    $("snipNote").disabled = true;
+    $("snipNote").placeholder = "큰 본문 " + Math.round(s.content.length / 1024) + "KB — 그대로 유지됩니다. 바꾸려면 파일을 다시 첨부하세요.";
+    $("snipFileInfo").textContent = "본문 " + Math.round(s.content.length / 1024) + "KB 유지 중";
+  } else {
+    $("snipNote").value = s && isNote ? s.content || "" : "";
+  }
   $("snipHtml").value = s ? s.html || "" : "";
   $("snipCss").value = s ? s.css || "" : "";
   $("snipJs").value = s ? s.js || "" : "";
@@ -392,20 +426,47 @@ function openModal(id, newKind) {
 function closeModal() {
   $("snippetModal").hidden = true;
   STATE.editingId = null;
+  setPendingFile(null);
+  STATE.bigContent = null;
+}
+
+/* 첨부 상태를 한 곳에서 관리 — 첨부 중엔 textarea 를 잠가 어느 쪽이 저장될지 헷갈리지 않게 */
+function setPendingFile(f) {
+  STATE.pendingFile = f;
+  const info = $("snipFileInfo"), clr = $("snipFileClear"), ta = $("snipNote");
+  if (!info) return;
+  if (f) {
+    info.textContent = `${f.name} (${Math.round(f.text.length / 1024).toLocaleString()}KB) 첨부됨 — 저장하면 이 파일 내용이 통째로 올라갑니다`;
+    clr.hidden = false;
+    ta.disabled = true;
+  } else {
+    info.textContent = "";
+    clr.hidden = true;
+    ta.disabled = false;
+    ta.placeholder = "태그매핑, 설비 정보, 작업 메모 등 자유롭게 적으세요";
+  }
 }
 
 async function saveSnippet(e) {
   if (e) e.preventDefault();
+  const noteContent = STATE.pendingFile ? STATE.pendingFile.text
+    : STATE.bigContent != null ? STATE.bigContent
+    : $("snipNote").value;
   const body = {
     title: $("snipTitle").value.trim(),
     kind: STATE.kind,
     content: STATE.kind === "single" ? $("snipContent").value
-      : STATE.kind === "note" ? $("snipNote").value : "",
+      : STATE.kind === "note" ? noteContent : "",
     html: STATE.kind === "tb4" ? $("snipHtml").value : "",
     css: STATE.kind === "tb4" ? $("snipCss").value : "",
     js: STATE.kind === "tb4" ? $("snipJs").value : "",
     settings: STATE.kind === "tb4" ? $("snipSettings").value : "",
   };
+  // 첨부 파일명으로 제목을 채워준다 — 받는 쪽 ⬇ 저장 파일명이 된다
+  if (!body.title && STATE.pendingFile) { body.title = STATE.pendingFile.name; $("snipTitle").value = body.title; }
+  if (body.content.length > NOTE_LIMIT) {
+    showToast(`내용이 너무 큽니다 (${Math.round(body.content.length / 1048576 * 10) / 10}MB / 한도 8MB)`, true); return;
+  }
   const hasContent = body.content.trim() || body.html.trim() || body.css.trim() || body.js.trim() || body.settings.trim();
   if (!hasContent) { showToast(STATE.kind === "note" ? "내용을 입력해주세요" : "코드를 입력해주세요", true); return; }
   try {
@@ -451,6 +512,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.querySelectorAll(".kind-btn").forEach((b) =>
     b.addEventListener("click", () => setKind(b.dataset.kind)));
+  $("snipFileBtn").addEventListener("click", () => $("snipFileInput").click());
+  $("snipFileClear").addEventListener("click", () => { STATE.bigContent = null; setPendingFile(null); });
+  $("snipFileInput").addEventListener("change", function () {
+    const f = this.files[0]; this.value = "";
+    if (!f) return;
+    if (f.size > NOTE_LIMIT) { showToast(`파일이 너무 큽니다 (${Math.round(f.size / 1048576 * 10) / 10}MB / 한도 8MB)`, true); return; }
+    const rd = new FileReader();
+    rd.onload = () => { STATE.bigContent = null; setPendingFile({ name: f.name, text: String(rd.result) }); };
+    rd.onerror = () => showToast("파일을 읽지 못했어요", true);
+    rd.readAsText(f, "utf-8");
+  });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !$("snippetModal").hidden) closeModal();
     if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && !$("snippetModal").hidden) saveSnippet();
