@@ -14,8 +14,8 @@
   --ink-1:#111318;
   --ink-2:#4b5058;
   --ink-3:#878d96;
-  --hairline:#e6e8ec;
-  --grid:#eceef1;
+  --hairline:#d9dde3;
+  --grid:#e8eaee;
   --series-1:#2a78d6;
   --series-1-soft:#e8f1fb;
   --good:#0ca30c;
@@ -26,8 +26,8 @@
   --nav-ink:#9aa3b5;
   --nav-ink-active:#ffffff;
   --nav-active-bg:rgba(255,255,255,.08);
-  --shadow:0 1px 2px rgba(17,19,24,.04),0 4px 16px rgba(17,19,24,.05);
-  --radius:14px;
+  --shadow:none;
+  --radius:0;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{font-size:15px}
@@ -47,30 +47,31 @@ input,select{font:inherit}
 }
 .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 22px}
 .brand-mark{
-  width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#3987e5,#2a5fd6);
+  width:32px;height:32px;background:#2a78d6;
   display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;letter-spacing:-.5px;
 }
-.brand-name{color:#fff;font-weight:800;font-size:16px;letter-spacing:.4px}
+.brand-name{color:#fff;font-weight:800;font-size:16px;letter-spacing:2px}
 .brand-badge{
   font-size:10px;font-weight:700;color:#ffd782;border:1px solid rgba(255,215,130,.45);
-  border-radius:99px;padding:1px 7px;margin-left:auto;letter-spacing:.5px;
+  padding:1px 7px;margin-left:auto;letter-spacing:1px;
 }
 .nav-label{font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:#5c6478;padding:14px 12px 6px}
 .nav a{
-  display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;
-  color:var(--nav-ink);text-decoration:none;font-size:13.5px;font-weight:500;margin-bottom:2px;
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
+  color:var(--nav-ink);text-decoration:none;font-size:13.5px;font-weight:500;margin-bottom:1px;
+  border-left:2px solid transparent;
 }
 .nav a svg{width:17px;height:17px;flex-shrink:0}
 .nav a:hover{background:rgba(255,255,255,.05);color:#dfe4ee}
-.nav a.active{background:var(--nav-active-bg);color:var(--nav-ink-active);font-weight:700}
-.nav a .soon{margin-left:auto;font-size:10px;color:#5c6478;border:1px solid #333c50;border-radius:99px;padding:0 6px}
+.nav a.active{background:var(--nav-active-bg);color:var(--nav-ink-active);font-weight:700;border-left-color:#3987e5}
+.nav a .soon{margin-left:auto;font-size:10px;color:#5c6478;border:1px solid #333c50;padding:0 6px}
 .sidebar-foot{margin-top:auto;padding:12px;font-size:11.5px;color:#5c6478;line-height:1.6}
 .sidebar-foot b{color:#9aa3b5}
 
 .main{flex:1;min-width:0;padding:26px 32px 60px}
 .demo-banner{
   display:flex;align-items:center;gap:8px;background:#fff8e8;border:1px solid #f3dfad;
-  color:#8a6a1d;font-size:12.5px;font-weight:600;border-radius:10px;padding:8px 14px;margin-bottom:20px;
+  color:#8a6a1d;font-size:12.5px;font-weight:600;padding:8px 14px;margin-bottom:20px;
 }
 .topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
 .topbar h1{font-size:21px;font-weight:800;letter-spacing:-.3px}
@@ -78,24 +79,21 @@ input,select{font:inherit}
 .topbar-meta{font-size:12.5px;color:var(--ink-3);text-align:right;line-height:1.7}
 .topbar-meta b{color:var(--ink-2);font-weight:700}
 
-/* ---------- stat tiles ---------- */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:22px}
-.tile{
-  background:var(--surface-1);border:1px solid var(--hairline);border-radius:var(--radius);
-  padding:16px 18px;box-shadow:var(--shadow);
-}
-.tile .t-label{font-size:12px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:6px}
-.tile .t-dot{width:8px;height:8px;border-radius:99px;flex-shrink:0}
-.tile .t-value{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-top:6px}
-.tile .t-value small{font-size:14px;font-weight:600;color:var(--ink-3);margin-left:2px}
-.tile .t-foot{font-size:11.5px;color:var(--ink-3);margin-top:2px}
-.t-up{color:var(--good-text);font-weight:700}
-.t-down{color:var(--bad);font-weight:700}
+/* ---------- KPI strip ---------- */
+.kpi-card{background:var(--surface-1);border:1px solid var(--hairline);margin-bottom:22px}
+.kpi-head{font-size:15px;font-weight:800;letter-spacing:-.2px;padding:18px 22px 0}
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);padding:18px 0 22px}
+.kpi{text-align:center;border-left:1px solid var(--grid);padding:4px 8px}
+.kpi:first-child{border-left:none}
+.k-v{font-size:29px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.k-v.accent{color:var(--series-1)}
+.k-v.up{color:var(--good-text)}
+.k-v.down{color:var(--bad)}
+.k-l{font-size:12.5px;font-weight:600;color:var(--ink-3);margin-top:4px}
 
 /* ---------- register card ---------- */
 .card{
-  background:var(--surface-1);border:1px solid var(--hairline);border-radius:var(--radius);
-  box-shadow:var(--shadow);margin-bottom:22px;
+  background:var(--surface-1);border:1px solid var(--hairline);margin-bottom:22px;
 }
 .card-head{padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .card-head h2{font-size:15.5px;font-weight:800;letter-spacing:-.2px}
@@ -104,17 +102,17 @@ input,select{font:inherit}
 .reg-form .field{flex:1;min-width:200px;position:relative}
 .reg-form .field.kw{flex:0 0 220px}
 .reg-form input{
-  width:100%;border:1.5px solid var(--hairline);border-radius:10px;padding:11px 14px;
-  font-size:13.5px;background:#fafbfc;outline:none;transition:border-color .15s,background .15s;
+  width:100%;border:1px solid var(--hairline);padding:11px 14px;
+  font-size:13.5px;background:#fff;outline:none;transition:border-color .15s;
 }
-.reg-form input:focus{border-color:var(--series-1);background:#fff}
+.reg-form input:focus{border-color:#171d2b}
 .reg-form input::placeholder{color:#9aa1ab}
 .btn-primary{
-  background:var(--series-1);color:#fff;border:none;border-radius:10px;padding:11px 22px;
+  background:#171d2b;color:#fff;border:none;padding:11px 26px;
   font-size:13.5px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;
   transition:background .15s;white-space:nowrap;
 }
-.btn-primary:hover{background:#1f66bd}
+.btn-primary:hover{background:#242e45}
 .btn-primary:disabled{opacity:.65;cursor:default}
 .spinner{
   width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
@@ -130,23 +128,28 @@ input,select{font:inherit}
 .search-box{position:relative;flex:1;min-width:200px;max-width:320px}
 .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--ink-3)}
 .search-box input{
-  width:100%;border:1.5px solid var(--hairline);border-radius:10px;padding:9px 12px 9px 36px;
-  font-size:13px;background:#fafbfc;outline:none;
+  width:100%;border:1px solid var(--hairline);padding:9px 12px 9px 36px;
+  font-size:13px;background:#fff;outline:none;
 }
-.search-box input:focus{border-color:var(--series-1);background:#fff}
-.seg{display:flex;border:1.5px solid var(--hairline);border-radius:10px;overflow:hidden;background:#fafbfc}
+.search-box input:focus{border-color:#171d2b}
+.seg{display:flex;border:1px solid var(--hairline);overflow:hidden;background:#fff}
 .seg button{
-  border:none;background:transparent;padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2);
+  border:none;border-left:1px solid var(--hairline);background:transparent;
+  padding:8px 16px;font-size:12.5px;font-weight:600;color:var(--ink-2);
 }
-.seg button.on{background:var(--series-1-soft);color:#1f66bd;font-weight:700}
+.seg button:first-child{border-left:none}
+.seg button.on{background:#171d2b;color:#fff;font-weight:700}
 .table-tools .count{margin-left:auto;font-size:12.5px;color:var(--ink-3)}
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:880px}
 thead th{
-  text-align:left;font-size:11.5px;font-weight:700;color:var(--ink-3);letter-spacing:.3px;
-  padding:10px 14px;border-bottom:1px solid var(--hairline);background:#fafbfc;white-space:nowrap;
+  text-align:center;font-size:12px;font-weight:700;color:var(--ink-2);letter-spacing:.3px;
+  padding:11px 14px;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);
+  background:#f7f8fa;white-space:nowrap;
 }
-tbody td{padding:12px 14px;border-bottom:1px solid var(--grid);font-size:13px;vertical-align:middle;white-space:nowrap}
+thead th.left{text-align:left}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--grid);font-size:13px;vertical-align:middle;white-space:nowrap;text-align:center}
+tbody td.left{text-align:left}
 tbody tr{cursor:pointer;transition:background .1s}
 tbody tr:hover{background:#f7f9fc}
 tbody tr:last-child td{border-bottom:none}
@@ -154,16 +157,18 @@ tbody tr.flash{animation:flash 1.6s ease-out}
 @keyframes flash{0%{background:#e8f1fb}100%{background:transparent}}
 .p-cell{display:flex;align-items:center;gap:11px;min-width:260px;white-space:normal}
 .p-thumb{
-  width:38px;height:38px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;
+  width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;
   color:#fff;font-weight:800;font-size:15px;
 }
 .p-name{font-weight:600;font-size:13px;line-height:1.35;letter-spacing:-.2px;max-width:340px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .p-mall{font-size:11.5px;color:var(--ink-3);margin-top:1px}
 .kw-chip{
-  display:inline-block;background:#f1f3f6;border-radius:7px;padding:3px 9px;
+  display:inline-block;background:#fff;border:1px solid var(--hairline);padding:3px 10px;
   font-size:12px;font-weight:600;color:var(--ink-2);
 }
+.status-pill{justify-content:center}
+.spark{display:inline-block;vertical-align:middle}
 .rank-now{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
 .rank-now small{font-size:11px;font-weight:600;color:var(--ink-3);margin-left:1px}
 .delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
@@ -196,12 +201,12 @@ td.dates{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .drawer-head h3{font-size:15px;font-weight:700;line-height:1.4;letter-spacing:-.2px}
 .drawer-head .meta{font-size:12px;color:var(--ink-3);margin-top:3px}
 .drawer-close{
-  margin-left:auto;border:none;background:#f1f3f6;border-radius:9px;width:30px;height:30px;
+  margin-left:auto;border:1px solid var(--hairline);background:#fff;width:30px;height:30px;
   display:grid;place-items:center;color:var(--ink-2);flex-shrink:0;
 }
 .drawer-body{padding:18px 22px;overflow-y:auto}
 .d-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
-.d-stat{background:#f8f9fb;border-radius:11px;padding:12px 14px}
+.d-stat{background:#f7f8fa;border:1px solid var(--grid);padding:12px 14px;text-align:center}
 .d-stat .l{font-size:11px;font-weight:600;color:var(--ink-3)}
 .d-stat .v{font-size:19px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
 .d-stat .v.up{color:var(--good-text)}
@@ -209,7 +214,7 @@ td.dates{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .chart-sub{font-size:11.5px;color:var(--ink-3);margin-bottom:10px}
 .chart-box{position:relative}
 .chart-tip{
-  position:absolute;background:#171d2b;color:#fff;font-size:11.5px;border-radius:8px;
+  position:absolute;background:#171d2b;color:#fff;font-size:11.5px;
   padding:6px 10px;pointer-events:none;opacity:0;transform:translate(-50%,-115%);
   white-space:nowrap;transition:opacity .1s;font-variant-numeric:tabular-nums;z-index:5;
 }
@@ -263,8 +268,8 @@ td.dates{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
       </a>
     </nav>
     <div class="sidebar-foot">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,.05);border-radius:9px">
-        <div style="width:26px;height:26px;border-radius:99px;background:#3987e5;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px">관</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,.05)">
+        <div style="width:26px;height:26px;background:#3987e5;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px">관</div>
         <div style="line-height:1.3"><b style="color:#dfe4ee;font-size:12px">최고관리자</b><br><span style="font-size:10.5px">총판·대행사·광고주 권한 지원</span></div>
       </div>
       <b>RANKLAB 데모</b><br>
@@ -289,7 +294,10 @@ td.dates{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
       </div>
     </div>
 
-    <section class="tiles" id="tiles"></section>
+    <section class="kpi-card">
+      <div class="kpi-head">전체 현황</div>
+      <div class="kpi-strip" id="tiles"></div>
+    </section>
 
     <section class="card">
       <div class="card-head">
@@ -329,7 +337,7 @@ td.dates{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
           <thead>
             <tr>
               <th>상태</th>
-              <th>상품</th>
+              <th class="left">상품</th>
               <th>키워드</th>
               <th>현재 순위</th>
               <th>지난주 대비</th>
@@ -408,11 +416,11 @@ function renderTiles(){
   const downs=PRODUCTS.filter(p=>delta(p)<0).length;
   const top10=PRODUCTS.filter(p=>cur(p)!=null&&cur(p)<=10).length;
   $('#tiles').innerHTML=`
-    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--series-1)"></span>전체 등록 상품</div><div class="t-value">${total}<small>개</small></div><div class="t-foot">추적 키워드 ${new Set(PRODUCTS.map(p=>p.kw)).size}개</div></div>
-    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--good)"></span>정상 수집</div><div class="t-value">${ok}<small>개</small></div><div class="t-foot">최근 수집 8/24 11:00</div></div>
-    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--good)"></span>순위 상승</div><div class="t-value t-up">${ups}<small>개</small></div><div class="t-foot">지난주 대비</div></div>
-    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--bad)"></span>순위 하락</div><div class="t-value t-down">${downs}<small>개</small></div><div class="t-foot">지난주 대비</div></div>
-    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--series-1)"></span>TOP 10 진입</div><div class="t-value">${top10}<small>개</small></div><div class="t-foot">가격비교 10위 이내</div></div>`;
+    <div class="kpi"><div class="k-v accent">${total}</div><div class="k-l">전체</div></div>
+    <div class="kpi"><div class="k-v">${ok}</div><div class="k-l">정상 수집</div></div>
+    <div class="kpi"><div class="k-v up">${ups}</div><div class="k-l">순위 상승</div></div>
+    <div class="kpi"><div class="k-v down">${downs}</div><div class="k-l">순위 하락</div></div>
+    <div class="kpi"><div class="k-v">${top10}</div><div class="k-l">TOP 10</div></div>`;
 }
 
 /* ================= sparkline ================= */
@@ -453,7 +461,7 @@ function rowHTML(p,idx){
     :`<span class="rank-now">${c}<small>위</small></span>`;
   return `<tr data-i="${idx}">
     <td>${statusHTML}</td>
-    <td><div class="p-cell">
+    <td class="left"><div class="p-cell">
       <div class="p-thumb" style="background:${p.color}">${esc(p.name[0])}</div>
       <div><div class="p-name">${esc(p.name)}</div><div class="p-mall">${esc(p.mall)} · ${p.id}</div></div>
     </div></td>
