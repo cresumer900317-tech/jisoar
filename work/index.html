@@ -4,29 +4,30 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>포트폴리오 — JISOAR</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffae82' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23aa5638' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23191f28'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ff7e54' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23f65c9a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="jisoar 포트폴리오 — 앱스토어 출시 앱, 운영 중인 커뮤니티 플랫폼, 실전 검증된 서비스 케이스스터디." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/work/" />
 <meta property="og:title" content="포트폴리오 — JISOAR" />
 <meta property="og:description" content="목업이 아니라 운영 중인 서비스. jisoar의 케이스스터디." />
 <meta property="og:image" content="https://jisoar.com/og.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-<link rel="stylesheet" href="/assets/site.css?v=2" />
+<link rel="stylesheet" href="/assets/site.css?v=3" />
+<style>
+  .work-card .badge{display:inline-block; font-size:12.5px; font-weight:800; letter-spacing:.01em;
+    padding:6px 12px; border-radius:999px; margin-bottom:18px;
+    background:var(--grad-soft); color:var(--coral-deep)}
+  .work-card .badge.gray{background:var(--bg3); color:var(--mut)}
+</style>
 </head>
 <body>
-<div class="sky"></div>
-<div class="stars" id="stars"></div>
-<div class="grain"></div>
 
 <nav class="nav" id="nav">
   <a class="brand" href="/" aria-label="jisoar home">
-    <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M6 18 L16 8 L26 18" stroke="#ffae82" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M12 24 L16 19.5 L20 24" stroke="#aa5638" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect width="32" height="32" rx="8" fill="#191f28"/>
+      <path d="M8 18.5 L16 10.5 L24 18.5" stroke="#ff7e54" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12.5 23.5 L16 20 L19.5 23.5" stroke="#f65c9a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <span class="wm">jisoar<span class="dot">.</span></span>
   </a>
@@ -42,52 +43,49 @@
 </nav>
 
 <header class="page-hero">
-  <div class="ghost-word" aria-hidden="true">Work</div>
   <div class="wrap">
-    <div class="kicker">Work</div>
-    <h1>만들고, 출시하고,<br/>운영 중입니다</h1>
-    <p>포트폴리오용 목업이 아닙니다. 아래 모든 프로젝트는 <b style="color:var(--ink);font-weight:500">실제 사용자가 쓰고 있거나 실전에서 검증된</b> 서비스입니다.</p>
+    <div class="eyebrow">Work</div>
+    <h1>만들고, 출시하고,<br/><span class="grad">운영 중입니다</span></h1>
+    <p>포트폴리오용 목업이 아닙니다. 아래 모든 프로젝트는 <b>실제 사용자가 쓰고 있거나 실전에서 검증된</b> 서비스입니다.</p>
   </div>
 </header>
 
-<section class="block">
+<section class="block" style="padding-top:20px">
   <div class="wrap">
     <div class="grid two">
-      <a class="card reveal" href="/products/guild-lounge/">
-        <div class="k">Mobile App · iOS · Android</div>
+      <a class="card work-card reveal" href="/products/guild-lounge/">
+        <span class="badge">App Store · Google Play 출시</span>
         <div class="t">Guild Lounge</div>
-        <div class="d">길드 일정 · 랭킹 · 커뮤니티를 담은 네이티브 앱. App Store와 Google Play에 정식 출시 — 스토어 심사부터 업데이트 운영까지 전 과정 직접 수행.</div>
-        <div class="go">Case study →</div>
+        <div class="d">길드 일정 · 랭킹 · 커뮤니티를 담은 네이티브 앱. 스토어 심사부터 업데이트 운영까지 전 과정 직접 수행.</div>
+        <div class="go">케이스 스터디 →</div>
       </a>
-      <a class="card reveal d1" href="/products/friends/">
-        <div class="k">Community Platform</div>
+      <a class="card work-card reveal d1" href="/products/friends/">
+        <span class="badge">운영 중</span>
         <div class="t">Friends</div>
         <div class="d">게임 길드 커뮤니티 플랫폼. 서버 전체 랭킹 · 성장 리포트 · 가입 퍼널 · 프로필 시스템까지 설계하고 현재도 운영 중.</div>
-        <div class="go">Case study →</div>
+        <div class="go">케이스 스터디 →</div>
       </a>
-      <a class="card reveal d1" href="/products/wedding/">
-        <div class="k">Photo Cloud</div>
+      <a class="card work-card reveal d1" href="/products/wedding/">
+        <span class="badge">실전 검증 완료</span>
         <div class="t">Wedding Memory Cloud</div>
-        <div class="d">하객이 QR 코드로 사진 · 영상을 올리는 결혼식 갤러리. 실제 결혼식 현장에서 수백 장의 업로드를 처리하며 실전 검증 완료.</div>
-        <div class="go">Case study →</div>
+        <div class="d">하객이 QR 코드로 사진 · 영상을 올리는 결혼식 갤러리. 실제 결혼식 현장에서 수백 장의 업로드를 처리하며 검증.</div>
+        <div class="go">케이스 스터디 →</div>
       </a>
-      <a class="card reveal d2" href="/products/hq/">
-        <div class="k">Dashboard</div>
+      <a class="card work-card reveal d2" href="/products/hq/">
+        <span class="badge">매일 실사용</span>
         <div class="t">HQ</div>
         <div class="d">흩어진 일 · 프로젝트 · 일정을 한 화면에 모은 통합 대시보드. 매일 실사용하며 다듬어 온 업무 시스템의 원형.</div>
-        <div class="go">Case study →</div>
+        <div class="go">케이스 스터디 →</div>
       </a>
-      <div class="card reveal d2">
-        <div class="k">Enterprise · In Progress</div>
+      <div class="card work-card reveal d2">
+        <span class="badge gray">진행 중 · 비공개</span>
         <div class="t">랭킹 관리 시스템 리뉴얼</div>
-        <div class="d">기업 클라이언트의 순위 조회 · 관리 대시보드 리뉴얼 프로젝트. 다단계 권한 설계 · 3개 채널 데이터 관리 시스템 구축 진행 중.</div>
-        <div class="go" style="color:var(--faint)">진행 중 · 비공개</div>
+        <div class="d">기업 클라이언트의 순위 조회 · 관리 대시보드 리뉴얼. 다단계 권한 설계 · 3개 채널 데이터 관리 시스템 구축 진행 중.</div>
       </div>
-      <div class="card reveal d3">
-        <div class="k">Industrial IoT</div>
+      <div class="card work-card reveal d3">
+        <span class="badge gray">현장 프로젝트 · 비공개</span>
         <div class="t">설비 모니터링 대시보드</div>
         <div class="d">물류 현장 자동화 설비의 PLC 데이터를 수집해 실시간 모니터링. Mitsubishi PLC → Node-RED → 대시보드 파이프라인 구축.</div>
-        <div class="go" style="color:var(--faint)">현장 프로젝트 · 비공개</div>
       </div>
     </div>
   </div>
@@ -97,8 +95,7 @@
   <div class="wrap">
     <div class="big reveal">다음 프로젝트는,<br/>당신의 것</div>
     <div class="row reveal d1">
-      <a class="btn primary" href="/contact/">프로젝트 문의하기 <span class="arr">→</span></a>
-      <a class="btn ghost" href="/services/">서비스 보기</a>
+      <a class="btn white" href="/contact/">프로젝트 문의하기 <span class="arr">→</span></a>
     </div>
   </div>
 </section>
@@ -108,7 +105,7 @@
     <div class="foot">
       <div>
         <div class="fname">jisoar<span class="dot">.</span></div>
-        <p class="fdesc">아이디어를 실재하는 서비스로 만드는 웹 · 앱 · 시스템 개발 스튜디오.</p>
+        <p class="fdesc">아이디어를 현실로 만드는 웹 · 앱 · 시스템 개발 스튜디오.</p>
       </div>
       <div>
         <h4>Menu</h4>
@@ -129,11 +126,11 @@
     </div>
     <div class="copyright">
       <span>© 2026 jisoar. All rights reserved.</span>
-      <span class="em">Ideas into reality.</span>
+      <span>Ideas into reality.</span>
     </div>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=2"></script>
+<script src="/assets/site.js?v=3"></script>
 </body>
 </html>

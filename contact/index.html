@@ -4,44 +4,33 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>문의 — JISOAR</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffae82' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23aa5638' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23191f28'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ff7e54' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23f65c9a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="jisoar 프로젝트 문의 — 상담은 무료입니다. 이메일 또는 카카오톡으로 편하게 연락 주세요." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/contact/" />
 <meta property="og:title" content="문의 — JISOAR" />
 <meta property="og:description" content="프로젝트를 시작해 볼까요? 상담은 무료입니다." />
 <meta property="og:image" content="https://jisoar.com/og.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-<link rel="stylesheet" href="/assets/site.css?v=2" />
+<link rel="stylesheet" href="/assets/site.css?v=3" />
 <style>
-  .channel{display:flex; align-items:center; gap:18px; text-decoration:none}
-  .channel .ico{font-size:26px; width:58px; height:58px; display:flex; align-items:center; justify-content:center;
-    border-radius:16px; background:rgba(255,157,108,.1); border:1px solid rgba(255,157,108,.25); flex-shrink:0}
-  .channel .t{font-size:17px; margin-bottom:3px}
-  .channel .d{font-size:13.5px}
-  .faq{margin-top:14px}
-  .faq details{border-top:1px solid var(--line); padding:4px 0}
-  .faq details:last-child{border-bottom:1px solid var(--line)}
-  .faq summary{cursor:pointer; padding:20px 0; font-size:16px; font-weight:500; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:16px}
-  .faq summary::-webkit-details-marker{display:none}
-  .faq summary::after{content:"+"; font-family:var(--serif); font-size:24px; color:var(--dawn); transition:transform .3s var(--ease)}
-  .faq details[open] summary::after{transform:rotate(45deg)}
-  .faq .a{padding:0 0 22px; color:var(--muted); font-weight:300; font-size:14.5px; line-height:1.85; max-width:600px}
+  .channel{display:flex; align-items:center; gap:20px}
+  .channel .ico{width:56px; height:56px; border-radius:16px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; background:var(--grad-soft)}
+  .channel .t{font-size:19px; font-weight:800; letter-spacing:-.02em; margin-bottom:3px}
+  .channel .d{font-size:14.5px; color:var(--sub)}
+  .guide{display:grid; gap:18px; margin-top:44px}
+  @media(min-width:860px){.guide{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
-<div class="sky"></div>
-<div class="stars" id="stars"></div>
-<div class="grain"></div>
 
 <nav class="nav" id="nav">
   <a class="brand" href="/" aria-label="jisoar home">
-    <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M6 18 L16 8 L26 18" stroke="#ffae82" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M12 24 L16 19.5 L20 24" stroke="#aa5638" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect width="32" height="32" rx="8" fill="#191f28"/>
+      <path d="M8 18.5 L16 10.5 L24 18.5" stroke="#ff7e54" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12.5 23.5 L16 20 L19.5 23.5" stroke="#f65c9a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <span class="wm">jisoar<span class="dot">.</span></span>
   </a>
@@ -57,51 +46,50 @@
 </nav>
 
 <header class="page-hero">
-  <div class="ghost-word" aria-hidden="true">Hello</div>
   <div class="wrap">
-    <div class="kicker">Contact</div>
-    <h1>프로젝트를<br/>시작해 볼까요?</h1>
+    <div class="eyebrow">Contact</div>
+    <h1>프로젝트를<br/><span class="grad">시작해 볼까요?</span></h1>
     <p>막연한 아이디어 단계여도 좋습니다. 어떤 문제를 풀고 싶은지 들려주시면,
-      가능한 방법과 대략의 규모부터 같이 잡아 드립니다. <b style="color:var(--ink);font-weight:500">상담은 무료입니다.</b></p>
+      가능한 방법과 대략의 규모부터 같이 잡아 드립니다. <b>상담은 무료입니다.</b></p>
   </div>
 </header>
 
-<section class="block">
+<section class="block" style="padding-top:20px">
   <div class="wrap">
     <div class="grid two">
       <a class="card channel reveal" href="mailto:qkqhrnfl@icloud.com?subject=%5Bjisoar%5D%20프로젝트%20문의">
-        <div class="ico">✉</div>
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f4512c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3 6.5l9 7 9-7"/></svg></div>
         <div>
-          <div class="t" style="font-weight:600">이메일로 문의</div>
-          <div class="d" style="color:var(--muted)">qkqhrnfl@icloud.com · 하루 안에 답장 드립니다</div>
+          <div class="t">이메일로 문의</div>
+          <div class="d">qkqhrnfl@icloud.com · 하루 안에 답장 드립니다</div>
         </div>
       </a>
       <a class="card channel reveal d1" href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">
-        <div class="ico">💬</div>
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f65c9a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3C6.8 3 2.5 6.3 2.5 10.4c0 2.6 1.7 4.9 4.3 6.2L6 21l4.6-2.7c.5.1.9.1 1.4.1 5.2 0 9.5-3.3 9.5-7.4S17.2 3 12 3z"/></svg></div>
         <div>
-          <div class="t" style="font-weight:600">카카오톡으로 문의</div>
-          <div class="d" style="color:var(--muted)">오픈채팅 · 가볍게 물어보기 좋아요</div>
+          <div class="t">카카오톡으로 문의</div>
+          <div class="d">오픈채팅 · 가볍게 물어보기 좋아요</div>
         </div>
       </a>
     </div>
   </div>
 </section>
 
-<section class="block">
-  <div class="wrap narrow">
-    <div class="eyebrow reveal"><span class="num">01</span> 문의 전에</div>
+<section class="block band">
+  <div class="wrap">
+    <div class="eyebrow reveal">Before you ask</div>
     <h2 class="title reveal d1">이것만 알려주시면<br/>이야기가 빨라집니다</h2>
-    <div class="steps" style="margin-top:34px">
-      <div class="step reveal"><div><h3>무엇을 만들고 싶은지</h3><p>한두 문장이면 충분합니다. "회사 소개 홈페이지가 필요해요", "엑셀로 하던 걸 시스템으로 바꾸고 싶어요" 정도면 됩니다.</p></div></div>
-      <div class="step reveal"><div><h3>참고하는 서비스가 있다면</h3><p>"이 사이트 느낌이면 좋겠다" 하는 링크가 있으면 방향을 훨씬 빨리 잡을 수 있습니다.</p></div></div>
-      <div class="step reveal"><div><h3>일정과 예산의 감</h3><p>정해진 게 없어도 괜찮습니다. 있다면 그 안에서 가능한 단계별 구성을 제안드립니다.</p></div></div>
+    <div class="guide">
+      <div class="step reveal"><h3>무엇을 만들고 싶은지</h3><p>한두 문장이면 충분합니다. "회사 홈페이지가 필요해요", "엑셀로 하던 걸 시스템으로 바꾸고 싶어요" 정도면 됩니다.</p></div>
+      <div class="step reveal d1"><h3>참고하는 서비스</h3><p>"이 사이트 느낌이면 좋겠다" 하는 링크가 있으면 방향을 훨씬 빨리 잡을 수 있습니다.</p></div>
+      <div class="step reveal d2"><h3>일정과 예산의 감</h3><p>정해진 게 없어도 괜찮습니다. 있다면 그 안에서 가능한 단계별 구성을 제안드립니다.</p></div>
     </div>
   </div>
 </section>
 
 <section class="block">
   <div class="wrap narrow">
-    <div class="eyebrow reveal"><span class="num">02</span> FAQ</div>
+    <div class="eyebrow reveal">FAQ</div>
     <h2 class="title reveal d1">자주 묻는 질문</h2>
     <div class="faq reveal d2">
       <details>
@@ -130,9 +118,9 @@
 
 <section class="cta-band">
   <div class="wrap">
-    <div class="big reveal">Make it real.</div>
+    <div class="big reveal">아이디어를 들려주세요</div>
     <div class="row reveal d1">
-      <a class="btn primary" href="mailto:qkqhrnfl@icloud.com?subject=%5Bjisoar%5D%20프로젝트%20문의">✉ 지금 문의하기</a>
+      <a class="btn white" href="mailto:qkqhrnfl@icloud.com?subject=%5Bjisoar%5D%20프로젝트%20문의">지금 문의하기 <span class="arr">→</span></a>
     </div>
   </div>
 </section>
@@ -142,7 +130,7 @@
     <div class="foot">
       <div>
         <div class="fname">jisoar<span class="dot">.</span></div>
-        <p class="fdesc">아이디어를 실재하는 서비스로 만드는 웹 · 앱 · 시스템 개발 스튜디오.</p>
+        <p class="fdesc">아이디어를 현실로 만드는 웹 · 앱 · 시스템 개발 스튜디오.</p>
       </div>
       <div>
         <h4>Menu</h4>
@@ -163,11 +151,11 @@
     </div>
     <div class="copyright">
       <span>© 2026 jisoar. All rights reserved.</span>
-      <span class="em">Ideas into reality.</span>
+      <span>Ideas into reality.</span>
     </div>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=2"></script>
+<script src="/assets/site.js?v=3"></script>
 </body>
 </html>
