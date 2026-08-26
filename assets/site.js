@@ -33,7 +33,10 @@
   // reveal on scroll
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      // 교차 중이거나 이미 뷰포트 위로 지나간 요소는 즉시 표시 (빠른 스크롤 대응)
+      if (e.isIntersecting || e.boundingClientRect.top < 0) {
+        e.target.classList.add('in'); io.unobserve(e.target);
+      }
     });
   }, {threshold: .12, rootMargin: '0px 0px -6% 0px'});
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
@@ -55,4 +58,50 @@
     });
   }, {threshold: .5});
   document.querySelectorAll('[data-count]').forEach(function(el){ cio.observe(el); });
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // card spotlight follows pointer
+  if (!reduced && window.matchMedia('(hover: hover)').matches) {
+    document.addEventListener('pointermove', function(e){
+      var card = e.target.closest && e.target.closest('.card');
+      if (!card) return;
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }, {passive:true});
+  }
+
+  // occasional shooting star
+  if (c && !reduced) {
+    (function shootLoop(){
+      setTimeout(function(){
+        var s = document.createElement('span');
+        s.className = 'shoot';
+        s.style.left = (15 + Math.random()*70) + '%';
+        s.style.top = (5 + Math.random()*35) + '%';
+        c.appendChild(s);
+        setTimeout(function(){ s.remove(); }, 1400);
+        shootLoop();
+      }, 3500 + Math.random()*5000);
+    })();
+  }
+
+  // hero parallax + fade
+  var hw = document.querySelector('.hero .wrap');
+  if (hw && !reduced) {
+    var ticking = false;
+    window.addEventListener('scroll', function(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function(){
+        var y = window.scrollY, vh = window.innerHeight;
+        if (y < vh) {
+          hw.style.transform = 'translateY(' + (y * 0.22) + 'px)';
+          hw.style.opacity = Math.max(0, 1 - y / (vh * 0.85));
+        }
+        ticking = false;
+      });
+    }, {passive:true});
+  }
 })();
