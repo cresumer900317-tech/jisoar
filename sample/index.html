@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>RANKLAB — 순위 관리 대시보드 (데모)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --surface-1:#ffffff;
+  --page:#f6f7f9;
+  --ink-1:#111318;
+  --ink-2:#4b5058;
+  --ink-3:#878d96;
+  --hairline:#e6e8ec;
+  --grid:#eceef1;
+  --series-1:#2a78d6;
+  --series-1-soft:#e8f1fb;
+  --good:#0ca30c;
+  --good-text:#006300;
+  --bad:#d03b3b;
+  --warn:#fab219;
+  --nav-bg:#171d2b;
+  --nav-ink:#9aa3b5;
+  --nav-ink-active:#ffffff;
+  --nav-active-bg:rgba(255,255,255,.08);
+  --shadow:0 1px 2px rgba(17,19,24,.04),0 4px 16px rgba(17,19,24,.05);
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px}
+body{
+  font-family:"Pretendard Variable",Pretendard,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--page);color:var(--ink-1);
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+}
+button{font:inherit;cursor:pointer}
+input,select{font:inherit}
+
+/* ---------- layout ---------- */
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:228px;flex-shrink:0;background:var(--nav-bg);color:var(--nav-ink);
+  display:flex;flex-direction:column;padding:22px 14px;position:sticky;top:0;height:100vh;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 10px 22px}
+.brand-mark{
+  width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#3987e5,#2a5fd6);
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;letter-spacing:-.5px;
+}
+.brand-name{color:#fff;font-weight:800;font-size:16px;letter-spacing:.4px}
+.brand-badge{
+  font-size:10px;font-weight:700;color:#ffd782;border:1px solid rgba(255,215,130,.45);
+  border-radius:99px;padding:1px 7px;margin-left:auto;letter-spacing:.5px;
+}
+.nav-label{font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:#5c6478;padding:14px 12px 6px}
+.nav a{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;
+  color:var(--nav-ink);text-decoration:none;font-size:13.5px;font-weight:500;margin-bottom:2px;
+}
+.nav a svg{width:17px;height:17px;flex-shrink:0}
+.nav a:hover{background:rgba(255,255,255,.05);color:#dfe4ee}
+.nav a.active{background:var(--nav-active-bg);color:var(--nav-ink-active);font-weight:700}
+.nav a .soon{margin-left:auto;font-size:10px;color:#5c6478;border:1px solid #333c50;border-radius:99px;padding:0 6px}
+.sidebar-foot{margin-top:auto;padding:12px;font-size:11.5px;color:#5c6478;line-height:1.6}
+.sidebar-foot b{color:#9aa3b5}
+
+.main{flex:1;min-width:0;padding:26px 32px 60px}
+.demo-banner{
+  display:flex;align-items:center;gap:8px;background:#fff8e8;border:1px solid #f3dfad;
+  color:#8a6a1d;font-size:12.5px;font-weight:600;border-radius:10px;padding:8px 14px;margin-bottom:20px;
+}
+.topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.topbar h1{font-size:21px;font-weight:800;letter-spacing:-.3px}
+.topbar .sub{font-size:13px;color:var(--ink-2);margin-top:3px}
+.topbar-meta{font-size:12.5px;color:var(--ink-3);text-align:right;line-height:1.7}
+.topbar-meta b{color:var(--ink-2);font-weight:700}
+
+/* ---------- stat tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:22px}
+.tile{
+  background:var(--surface-1);border:1px solid var(--hairline);border-radius:var(--radius);
+  padding:16px 18px;box-shadow:var(--shadow);
+}
+.tile .t-label{font-size:12px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.tile .t-dot{width:8px;height:8px;border-radius:99px;flex-shrink:0}
+.tile .t-value{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-top:6px}
+.tile .t-value small{font-size:14px;font-weight:600;color:var(--ink-3);margin-left:2px}
+.tile .t-foot{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.t-up{color:var(--good-text);font-weight:700}
+.t-down{color:var(--bad);font-weight:700}
+
+/* ---------- register card ---------- */
+.card{
+  background:var(--surface-1);border:1px solid var(--hairline);border-radius:var(--radius);
+  box-shadow:var(--shadow);margin-bottom:22px;
+}
+.card-head{padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-head h2{font-size:15.5px;font-weight:800;letter-spacing:-.2px}
+.card-head .hint{font-size:12px;color:var(--ink-3)}
+.reg-form{display:flex;gap:10px;padding:14px 20px 20px;flex-wrap:wrap}
+.reg-form .field{flex:1;min-width:200px;position:relative}
+.reg-form .field.kw{flex:0 0 220px}
+.reg-form input{
+  width:100%;border:1.5px solid var(--hairline);border-radius:10px;padding:11px 14px;
+  font-size:13.5px;background:#fafbfc;outline:none;transition:border-color .15s,background .15s;
+}
+.reg-form input:focus{border-color:var(--series-1);background:#fff}
+.reg-form input::placeholder{color:#9aa1ab}
+.btn-primary{
+  background:var(--series-1);color:#fff;border:none;border-radius:10px;padding:11px 22px;
+  font-size:13.5px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;
+  transition:background .15s;white-space:nowrap;
+}
+.btn-primary:hover{background:#1f66bd}
+.btn-primary:disabled{opacity:.65;cursor:default}
+.spinner{
+  width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
+  border-radius:99px;animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.reg-status{padding:0 20px 16px;font-size:12.5px;color:var(--ink-2);display:none;align-items:center;gap:8px}
+.reg-status.show{display:flex}
+.reg-status .ok{color:var(--good-text);font-weight:700}
+
+/* ---------- table ---------- */
+.table-tools{display:flex;gap:10px;padding:16px 20px;border-bottom:1px solid var(--hairline);flex-wrap:wrap;align-items:center}
+.search-box{position:relative;flex:1;min-width:200px;max-width:320px}
+.search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--ink-3)}
+.search-box input{
+  width:100%;border:1.5px solid var(--hairline);border-radius:10px;padding:9px 12px 9px 36px;
+  font-size:13px;background:#fafbfc;outline:none;
+}
+.search-box input:focus{border-color:var(--series-1);background:#fff}
+.seg{display:flex;border:1.5px solid var(--hairline);border-radius:10px;overflow:hidden;background:#fafbfc}
+.seg button{
+  border:none;background:transparent;padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--ink-2);
+}
+.seg button.on{background:var(--series-1-soft);color:#1f66bd;font-weight:700}
+.table-tools .count{margin-left:auto;font-size:12.5px;color:var(--ink-3)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:880px}
+thead th{
+  text-align:left;font-size:11.5px;font-weight:700;color:var(--ink-3);letter-spacing:.3px;
+  padding:10px 14px;border-bottom:1px solid var(--hairline);background:#fafbfc;white-space:nowrap;
+}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--grid);font-size:13px;vertical-align:middle;white-space:nowrap}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:#f7f9fc}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%{background:#e8f1fb}100%{background:transparent}}
+.p-cell{display:flex;align-items:center;gap:11px;min-width:260px;white-space:normal}
+.p-thumb{
+  width:38px;height:38px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;
+  color:#fff;font-weight:800;font-size:15px;
+}
+.p-name{font-weight:600;font-size:13px;line-height:1.35;letter-spacing:-.2px;max-width:340px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.p-mall{font-size:11.5px;color:var(--ink-3);margin-top:1px}
+.kw-chip{
+  display:inline-block;background:#f1f3f6;border-radius:7px;padding:3px 9px;
+  font-size:12px;font-weight:600;color:var(--ink-2);
+}
+.rank-now{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.rank-now small{font-size:11px;font-weight:600;color:var(--ink-3);margin-left:1px}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.delta.up{color:var(--good-text)}
+.delta.down{color:var(--bad)}
+.delta.flat{color:var(--ink-3);font-weight:600}
+.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600}
+.status-pill .dot{width:7px;height:7px;border-radius:99px}
+.status-pill.ok .dot{background:var(--good)}
+.status-pill.wait .dot{background:var(--warn)}
+.status-pill.wait{color:#8a6a1d}
+td.dates{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.spark{display:block}
+.more-note{padding:13px 20px;font-size:12px;color:var(--ink-3);border-top:1px solid var(--hairline)}
+
+/* ---------- drawer ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(17,19,24,.35);opacity:0;pointer-events:none;
+  transition:opacity .2s;z-index:40;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(480px,94vw);background:var(--surface-1);
+  z-index:50;transform:translateX(105%);transition:transform .25s cubic-bezier(.2,.8,.2,1);
+  box-shadow:-8px 0 32px rgba(17,19,24,.12);display:flex;flex-direction:column;
+}
+.drawer.show{transform:translateX(0)}
+.drawer-head{padding:20px 22px 14px;border-bottom:1px solid var(--hairline);display:flex;gap:14px;align-items:flex-start}
+.drawer-head .p-thumb{width:46px;height:46px;font-size:18px}
+.drawer-head h3{font-size:15px;font-weight:700;line-height:1.4;letter-spacing:-.2px}
+.drawer-head .meta{font-size:12px;color:var(--ink-3);margin-top:3px}
+.drawer-close{
+  margin-left:auto;border:none;background:#f1f3f6;border-radius:9px;width:30px;height:30px;
+  display:grid;place-items:center;color:var(--ink-2);flex-shrink:0;
+}
+.drawer-body{padding:18px 22px;overflow-y:auto}
+.d-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.d-stat{background:#f8f9fb;border-radius:11px;padding:12px 14px}
+.d-stat .l{font-size:11px;font-weight:600;color:var(--ink-3)}
+.d-stat .v{font-size:19px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+.d-stat .v.up{color:var(--good-text)}
+.chart-title{font-size:13px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.chart-sub{font-size:11.5px;color:var(--ink-3);margin-bottom:10px}
+.chart-box{position:relative}
+.chart-tip{
+  position:absolute;background:#171d2b;color:#fff;font-size:11.5px;border-radius:8px;
+  padding:6px 10px;pointer-events:none;opacity:0;transform:translate(-50%,-115%);
+  white-space:nowrap;transition:opacity .1s;font-variant-numeric:tabular-nums;z-index:5;
+}
+.chart-tip b{font-size:12.5px}
+.d-info{margin-top:20px;border-top:1px solid var(--hairline);padding-top:16px}
+.d-info dl{display:grid;grid-template-columns:88px 1fr;row-gap:9px;font-size:12.5px}
+.d-info dt{color:var(--ink-3);font-weight:600}
+.d-info dd{color:var(--ink-1);font-variant-numeric:tabular-nums;word-break:break-all}
+
+@media (max-width:860px){
+  .sidebar{display:none}
+  .main{padding:18px 16px 48px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">R</div>
+      <div class="brand-name">RANKLAB</div>
+      <span class="brand-badge">DEMO</span>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">MAIN</div>
+      <a href="#" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        대시보드
+      </a>
+      <a href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8"/><path d="M1 4h22v4H1z"/><path d="M10 12h4"/></svg>
+        상품 관리
+      </a>
+      <a href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>
+        순위 조회
+      </a>
+      <div class="nav-label">MANAGE</div>
+      <a href="#" onclick="return false" title="최고관리자 · 총판 · 대행사 · 광고주 4단계 권한">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>
+        회원·권한 관리 <span class="soon">준비중</span>
+      </a>
+      <a href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 15h4"/></svg>
+        정산 내역 <span class="soon">준비중</span>
+      </a>
+      <a href="#" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        설정 <span class="soon">준비중</span>
+      </a>
+    </nav>
+    <div class="sidebar-foot">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,.05);border-radius:9px">
+        <div style="width:26px;height:26px;border-radius:99px;background:#3987e5;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px">관</div>
+        <div style="line-height:1.3"><b style="color:#dfe4ee;font-size:12px">최고관리자</b><br><span style="font-size:10.5px">총판·대행사·광고주 권한 지원</span></div>
+      </div>
+      <b>RANKLAB 데모</b><br>
+      화면 구성 확인용 샘플입니다.<br>모든 데이터는 가상 예시입니다.
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="demo-banner">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".5" fill="currentColor"/></svg>
+      데모 화면입니다 — 표시된 상품·순위 데이터는 모두 가상의 예시이며, 실제 서비스에서는 네이버 데이터와 연동됩니다.
+    </div>
+
+    <div class="topbar">
+      <div>
+        <h1>순위 대시보드</h1>
+        <div class="sub">등록된 상품의 네이버 가격비교 키워드 순위를 한눈에 확인합니다. (광고 제외 순위 기준)</div>
+      </div>
+      <div class="topbar-meta">
+        최근 수집 <b>2026-08-24 (월) 11:00</b><br>
+        다음 수집 <b>2026-08-31 (월) 11:00</b> · 주 1회 자동 갱신
+      </div>
+    </div>
+
+    <section class="tiles" id="tiles"></section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>상품 등록</h2>
+        <span class="hint">네이버 상품 링크를 붙여넣으면 상품 정보를 자동으로 가져옵니다</span>
+      </div>
+      <form class="reg-form" id="regForm">
+        <div class="field">
+          <input type="url" id="regUrl" placeholder="https://smartstore.naver.com/… 상품 링크 붙여넣기" required>
+        </div>
+        <div class="field kw">
+          <input type="text" id="regKw" placeholder="추적 키워드 (예: 캠핑의자)" required>
+        </div>
+        <button class="btn-primary" id="regBtn" type="submit">
+          <span id="regBtnLabel">등록하기</span>
+        </button>
+      </form>
+      <div class="reg-status" id="regStatus"></div>
+    </section>
+
+    <section class="card">
+      <div class="table-tools">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="q" placeholder="상품명 · 키워드 검색">
+        </div>
+        <div class="seg" id="filterSeg">
+          <button data-f="all" class="on">전체</button>
+          <button data-f="up">상승</button>
+          <button data-f="down">하락</button>
+          <button data-f="top10">TOP 10</button>
+        </div>
+        <span class="count" id="countLabel"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>상태</th>
+              <th>상품</th>
+              <th>키워드</th>
+              <th>현재 순위</th>
+              <th>지난주 대비</th>
+              <th>8주 추이</th>
+              <th>시작일</th>
+              <th>종료일</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="more-note">행을 클릭하면 상세 순위 추이를 확인할 수 있습니다. · 데모에서는 12개 상품만 표시됩니다.</div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="p-thumb" id="dThumb">A</div>
+    <div>
+      <h3 id="dName">상품명</h3>
+      <div class="meta" id="dMeta"></div>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="닫기">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div class="d-stats" id="dStats"></div>
+    <div class="chart-title">주간 순위 추이</div>
+    <div class="chart-sub">매주 월요일 11:00 수집 · 광고 제외 가격비교 순위 · 아래로 갈수록 순위 하락</div>
+    <div class="chart-box" id="chartBox">
+      <div class="chart-tip" id="chartTip"></div>
+    </div>
+    <div class="d-info">
+      <dl id="dInfo"></dl>
+    </div>
+  </div>
+</aside>
+
+<script>
+/* ================= mock data ================= */
+const WEEKS = ['7/06','7/13','7/20','7/27','8/03','8/10','8/17','8/24'];
+const THUMB_COLORS = ['#5b8def','#e8a13c','#4cb782','#9a7be0','#e0708a','#4fb6c9','#8a97a8','#d98e5f'];
+
+const PRODUCTS = [
+  {id:'8471029384', name:'프리미엄 접이식 캠핑의자 경량 릴렉스 체어 대형', mall:'그린아웃도어', kw:'캠핑의자', ranks:[42,38,31,24,19,14,9,6], start:'2026-07-06', end:'2026-09-30'},
+  {id:'7382910475', name:'국산 무쇠 주물 압력밥솥 6인용 IH 인덕션 겸용', mall:'키친마스터', kw:'압력밥솥', ranks:[18,15,16,12,10,11,8,8], start:'2026-07-06', end:'2026-10-15'},
+  {id:'9182736450', name:'초경량 3단 자동 양우산 UV차단 암막 대형 우산', mall:'데일리굿즈', kw:'자동우산', ranks:[65,58,44,39,28,25,21,17], start:'2026-07-06', end:'2026-09-15'},
+  {id:'6273849102', name:'스테인리스 진공 텀블러 900ml 대용량 보온보냉', mall:'리빙포인트', kw:'대용량 텀블러', ranks:[8,7,9,6,5,4,3,2], start:'2026-07-13', end:'2026-10-31'},
+  {id:'5162738495', name:'논슬립 요가매트 10mm TPE 친환경 홈트 매트', mall:'핏앤라이프', kw:'요가매트', ranks:[33,35,29,31,26,22,24,19], start:'2026-07-13', end:'2026-09-30'},
+  {id:'4051627384', name:'무선 미니 핸디 선풍기 휴대용 접이식 탁상 겸용', mall:'쿨브리즈', kw:'핸디선풍기', ranks:[12,10,8,9,11,15,18,23], start:'2026-07-20', end:'2026-09-10'},
+  {id:'3940516273', name:'저소음 가습기 4L 대용량 초음파 무드등 가습기', mall:'홈앤에어', kw:'대용량 가습기', ranks:[88,74,61,52,44,38,31,26], start:'2026-07-20', end:'2026-11-30'},
+  {id:'2839405162', name:'양면 실리콘 도마 항균 대형 주방 도마 세트', mall:'키친마스터', kw:'실리콘도마', ranks:[27,24,26,21,18,16,13,11], start:'2026-07-27', end:'2026-10-20'},
+  {id:'1728394051', name:'메모리폼 경추 베개 목편한 기능성 낮은 베개', mall:'슬립랩', kw:'경추베개', ranks:[55,49,47,41,36,33,35,30], start:'2026-08-03', end:'2026-11-15'},
+  {id:'0617283940', name:'캠핑 감성 LED 랜턴 충전식 무드등 조명', mall:'그린아웃도어', kw:'캠핑랜턴', ranks:[null,null,72,64,51,43,36,28], start:'2026-08-10', end:'2026-10-31'},
+  {id:'9506172839', name:'유아 식판 흡착 실리콘 식판 뒤집기 방지', mall:'베이비온', kw:'유아식판', ranks:[null,null,null,45,39,34,29,25], start:'2026-08-17', end:'2026-11-30'},
+  {id:'8495061728', name:'차량용 핸드폰 거치대 무선충전 대시보드 송풍구', mall:'카라이프', kw:'차량용 거치대', ranks:[null,null,null,null,null,58,49,41], start:'2026-08-24', end:'2026-11-24'},
+];
+PRODUCTS.forEach((p,i)=>{p.color=THUMB_COLORS[i%THUMB_COLORS.length]; p.pending=false;});
+
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+function cur(p){const r=p.ranks.filter(v=>v!=null);return r.length?r[r.length-1]:null}
+function prev(p){const r=p.ranks.filter(v=>v!=null);return r.length>1?r[r.length-2]:null}
+function delta(p){const c=cur(p),v=prev(p);return(c==null||v==null)?null:v-c} /* +N = 순위 상승 */
+function best(p){const r=p.ranks.filter(v=>v!=null);return r.length?Math.min(...r):null}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+/* ================= stat tiles ================= */
+function renderTiles(){
+  const total=PRODUCTS.length;
+  const ok=PRODUCTS.filter(p=>!p.pending&&cur(p)!=null).length;
+  const ups=PRODUCTS.filter(p=>delta(p)>0).length;
+  const downs=PRODUCTS.filter(p=>delta(p)<0).length;
+  const top10=PRODUCTS.filter(p=>cur(p)!=null&&cur(p)<=10).length;
+  $('#tiles').innerHTML=`
+    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--series-1)"></span>전체 등록 상품</div><div class="t-value">${total}<small>개</small></div><div class="t-foot">추적 키워드 ${new Set(PRODUCTS.map(p=>p.kw)).size}개</div></div>
+    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--good)"></span>정상 수집</div><div class="t-value">${ok}<small>개</small></div><div class="t-foot">최근 수집 8/24 11:00</div></div>
+    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--good)"></span>순위 상승</div><div class="t-value t-up">${ups}<small>개</small></div><div class="t-foot">지난주 대비</div></div>
+    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--bad)"></span>순위 하락</div><div class="t-value t-down">${downs}<small>개</small></div><div class="t-foot">지난주 대비</div></div>
+    <div class="tile"><div class="t-label"><span class="t-dot" style="background:var(--series-1)"></span>TOP 10 진입</div><div class="t-value">${top10}<small>개</small></div><div class="t-foot">가격비교 10위 이내</div></div>`;
+}
+
+/* ================= sparkline ================= */
+function sparkline(p,w=110,h=30){
+  const vals=p.ranks;
+  const nums=vals.filter(v=>v!=null);
+  if(nums.length<2)return `<span style="font-size:11.5px;color:var(--ink-3)">수집 대기</span>`;
+  const min=Math.min(...nums),max=Math.max(...nums),span=Math.max(max-min,1);
+  const pts=[];
+  vals.forEach((v,i)=>{
+    if(v==null)return;
+    const x=(i/(vals.length-1))*(w-6)+3;
+    const y=((v-min)/span)*(h-8)+4; /* 순위 낮을수록(좋을수록) 위 */
+    pts.push([x,y]);
+  });
+  const d=pts.map((pt,i)=>(i?'L':'M')+pt[0].toFixed(1)+' '+pt[1].toFixed(1)).join(' ');
+  const last=pts[pts.length-1];
+  const improving=delta(p)>0;
+  const col=improving?'var(--good)':(delta(p)<0?'var(--bad)':'var(--series-1)');
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+    <path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="3" fill="${col}"/></svg>`;
+}
+
+/* ================= table ================= */
+let filter='all',query='';
+function rowHTML(p,idx){
+  const c=cur(p),d=delta(p);
+  const statusHTML=p.pending
+    ?`<span class="status-pill wait"><span class="dot"></span>수집 대기</span>`
+    :`<span class="status-pill ok"><span class="dot"></span>정상</span>`;
+  let deltaHTML;
+  if(p.pending||d==null)deltaHTML=`<span class="delta flat">—</span>`;
+  else if(d>0)deltaHTML=`<span class="delta up">▲ ${d}</span>`;
+  else if(d<0)deltaHTML=`<span class="delta down">▼ ${Math.abs(d)}</span>`;
+  else deltaHTML=`<span class="delta flat">— 0</span>`;
+  const rankHTML=p.pending?`<span style="color:var(--ink-3);font-size:12px">—</span>`
+    :`<span class="rank-now">${c}<small>위</small></span>`;
+  return `<tr data-i="${idx}">
+    <td>${statusHTML}</td>
+    <td><div class="p-cell">
+      <div class="p-thumb" style="background:${p.color}">${esc(p.name[0])}</div>
+      <div><div class="p-name">${esc(p.name)}</div><div class="p-mall">${esc(p.mall)} · ${p.id}</div></div>
+    </div></td>
+    <td><span class="kw-chip">${esc(p.kw)}</span></td>
+    <td>${rankHTML}</td>
+    <td>${deltaHTML}</td>
+    <td>${p.pending?'<span style="font-size:11.5px;color:var(--ink-3)">수집 대기</span>':sparkline(p)}</td>
+    <td class="dates">${p.start}</td>
+    <td class="dates">${p.end}</td>
+  </tr>`;
+}
+function renderTable(flashFirst){
+  const rows=PRODUCTS.map((p,i)=>({p,i})).filter(({p})=>{
+    if(query&&!(p.name+p.kw+p.mall).toLowerCase().includes(query))return false;
+    if(filter==='up')return delta(p)>0;
+    if(filter==='down')return delta(p)<0;
+    if(filter==='top10')return cur(p)!=null&&cur(p)<=10;
+    return true;
+  });
+  $('#tbody').innerHTML=rows.map(({p,i})=>rowHTML(p,i)).join('');
+  $('#countLabel').textContent=`${rows.length}개 표시 중`;
+  if(flashFirst){const tr=$('#tbody tr');if(tr)tr.classList.add('flash');}
+}
+$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();renderTable();});
+$('#filterSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  filter=b.dataset.f;
+  document.querySelectorAll('#filterSeg button').forEach(x=>x.classList.toggle('on',x===b));
+  renderTable();
+});
+
+/* ================= register (simulated) ================= */
+const MOCK_FETCH=[
+  {name:'스마트 무선 전동 드라이버 세트 가정용 공구', mall:'툴박스코리아'},
+  {name:'천연 라텍스 바디필로우 임산부 바디 베개', mall:'슬립랩'},
+  {name:'프리미엄 콜드브루 원두 더치커피 1L 2병', mall:'모닝빈로스터리'},
+];
+let mockIdx=0;
+$('#regForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const url=$('#regUrl').value.trim(),kw=$('#regKw').value.trim();
+  if(!url||!kw)return;
+  const btn=$('#regBtn'),label=$('#regBtnLabel'),st=$('#regStatus');
+  btn.disabled=true;
+  label.innerHTML=`<span class="spinner"></span>`;
+  st.className='reg-status show';
+  st.innerHTML=`네이버에서 상품 정보를 가져오는 중…`;
+  await new Promise(r=>setTimeout(r,1400));
+  const m=MOCK_FETCH[mockIdx%MOCK_FETCH.length];mockIdx++;
+  const newP={
+    id:String(Math.floor(1e9+((Date.now()*7919)%9e9))),
+    name:m.name,mall:m.mall,kw,
+    ranks:[null,null,null,null,null,null,null,null],
+    start:'2026-08-26',end:'2026-11-26',
+    color:THUMB_COLORS[(PRODUCTS.length)%THUMB_COLORS.length],
+    pending:true,
+  };
+  PRODUCTS.unshift(newP);
+  st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; "${esc(m.name)}" — 다음 수집(8/31 월 11:00)부터 순위가 표시됩니다. <span style="color:var(--ink-3)">(데모: 실제 서비스에서는 입력한 링크의 상품 정보를 가져옵니다)</span>`;
+  $('#regUrl').value='';$('#regKw').value='';
+  btn.disabled=false;label.textContent='등록하기';
+  filter='all';query='';$('#q').value='';
+  document.querySelectorAll('#filterSeg button').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));
+  renderTiles();renderTable(true);
+});
+
+/* ================= drawer + detail chart ================= */
+const drawer=$('#drawer'),overlay=$('#overlay');
+function openDrawer(p){
+  $('#dThumb').textContent=p.name[0];
+  $('#dThumb').style.background=p.color;
+  $('#dName').textContent=p.name;
+  $('#dMeta').textContent=`${p.mall} · 키워드 "${p.kw}"`;
+  const c=cur(p),d=delta(p),b=best(p);
+  $('#dStats').innerHTML=`
+    <div class="d-stat"><div class="l">현재 순위</div><div class="v">${c!=null?c+'위':'—'}</div></div>
+    <div class="d-stat"><div class="l">지난주 대비</div><div class="v ${d>0?'up':''}" ${d<0?'style="color:var(--bad)"':''}>${d==null?'—':(d>0?'▲ '+d:(d<0?'▼ '+Math.abs(d):'0'))}</div></div>
+    <div class="d-stat"><div class="l">기간 최고</div><div class="v">${b!=null?b+'위':'—'}</div></div>`;
+  $('#dInfo').innerHTML=`
+    <dt>상품 ID</dt><dd>${p.id}</dd>
+    <dt>추적 키워드</dt><dd>${esc(p.kw)}</dd>
+    <dt>수집 주기</dt><dd>매주 월요일 11:00 (주 1회)</dd>
+    <dt>기간</dt><dd>${p.start} ~ ${p.end}</dd>`;
+  drawChart(p);
+  drawer.classList.add('show');overlay.classList.add('show');
+  drawer.setAttribute('aria-hidden','false');
+}
+function closeDrawer(){
+  drawer.classList.remove('show');overlay.classList.remove('show');
+  drawer.setAttribute('aria-hidden','true');
+}
+$('#drawerClose').addEventListener('click',closeDrawer);
+overlay.addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+$('#tbody').addEventListener('click',e=>{
+  const tr=e.target.closest('tr');if(!tr)return;
+  openDrawer(PRODUCTS[+tr.dataset.i]);
+});
+
+function drawChart(p){
+  const box=$('#chartBox');
+  box.querySelectorAll('svg').forEach(s=>s.remove());
+  const W=420,H=190,PL=34,PR=12,PT=12,PB=26;
+  const vals=p.ranks;
+  const nums=vals.filter(v=>v!=null);
+  const svgNS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(svgNS,'svg');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.setAttribute('width','100%');
+  svg.style.display='block';
+  if(nums.length<2){
+    const t=document.createElementNS(svgNS,'text');
+    t.setAttribute('x',W/2);t.setAttribute('y',H/2);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('fill','#878d96');t.setAttribute('font-size','13');
+    t.textContent='수집된 순위 데이터가 아직 없습니다';
+    svg.appendChild(t);box.appendChild(svg);return;
+  }
+  const min=Math.max(1,Math.min(...nums)-2);
+  const max=Math.max(...nums)+3;
+  const x=i=>PL+(i/(vals.length-1))*(W-PL-PR);
+  const y=v=>PT+((v-min)/(max-min))*(H-PT-PB); /* 위 = 좋은 순위 */
+  /* gridlines: 4 steps */
+  for(let g=0;g<=3;g++){
+    const gv=min+((max-min)/3)*g;
+    const gy=y(gv);
+    const line=document.createElementNS(svgNS,'line');
+    line.setAttribute('x1',PL);line.setAttribute('x2',W-PR);
+    line.setAttribute('y1',gy);line.setAttribute('y2',gy);
+    line.setAttribute('stroke','#eceef1');line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+    const lbl=document.createElementNS(svgNS,'text');
+    lbl.setAttribute('x',PL-7);lbl.setAttribute('y',gy+4);
+    lbl.setAttribute('text-anchor','end');lbl.setAttribute('fill','#878d96');lbl.setAttribute('font-size','10.5');
+    lbl.textContent=Math.round(gv)+'위';
+    svg.appendChild(lbl);
+  }
+  /* x labels */
+  vals.forEach((v,i)=>{
+    if(i%2)return;
+    const t=document.createElementNS(svgNS,'text');
+    t.setAttribute('x',x(i));t.setAttribute('y',H-8);
+    t.setAttribute('text-anchor','middle');t.setAttribute('fill','#878d96');t.setAttribute('font-size','10.5');
+    t.textContent=WEEKS[i];
+    svg.appendChild(t);
+  });
+  /* line + area */
+  const pts=[];
+  vals.forEach((v,i)=>{if(v!=null)pts.push({i,x:x(i),y:y(v),v});});
+  const d=pts.map((pt,k)=>(k?'L':'M')+pt.x.toFixed(1)+' '+pt.y.toFixed(1)).join(' ');
+  const area=document.createElementNS(svgNS,'path');
+  area.setAttribute('d',d+` L ${pts[pts.length-1].x} ${H-PB} L ${pts[0].x} ${H-PB} Z`);
+  area.setAttribute('fill','rgba(42,120,214,0.08)');
+  svg.appendChild(area);
+  const path=document.createElementNS(svgNS,'path');
+  path.setAttribute('d',d);
+  path.setAttribute('fill','none');path.setAttribute('stroke','#2a78d6');
+  path.setAttribute('stroke-width','2');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+  svg.appendChild(path);
+  pts.forEach(pt=>{
+    const c=document.createElementNS(svgNS,'circle');
+    c.setAttribute('cx',pt.x);c.setAttribute('cy',pt.y);c.setAttribute('r','3.5');
+    c.setAttribute('fill','#fff');c.setAttribute('stroke','#2a78d6');c.setAttribute('stroke-width','2');
+    svg.appendChild(c);
+  });
+  /* crosshair + tooltip */
+  const cross=document.createElementNS(svgNS,'line');
+  cross.setAttribute('stroke','#c3c2b7');cross.setAttribute('stroke-width','1');
+  cross.setAttribute('stroke-dasharray','3 3');cross.setAttribute('y1',PT);cross.setAttribute('y2',H-PB);
+  cross.style.opacity='0';
+  svg.appendChild(cross);
+  const tip=$('#chartTip');
+  svg.addEventListener('mousemove',e=>{
+    const rect=svg.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(W/rect.width);
+    let nearest=pts[0];
+    pts.forEach(pt=>{if(Math.abs(pt.x-mx)<Math.abs(nearest.x-mx))nearest=pt;});
+    cross.setAttribute('x1',nearest.x);cross.setAttribute('x2',nearest.x);
+    cross.style.opacity='1';
+    tip.style.opacity='1';
+    tip.style.left=(nearest.x/W*100)+'%';
+    tip.style.top=(nearest.y/H*100)+'%';
+    tip.innerHTML=`${WEEKS[nearest.i]} · <b>${nearest.v}위</b>`;
+  });
+  svg.addEventListener('mouseleave',()=>{cross.style.opacity='0';tip.style.opacity='0';});
+  box.appendChild(svg);
+}
+
+/* ================= init ================= */
+renderTiles();
+renderTable();
+</script>
+</body>
+</html>
