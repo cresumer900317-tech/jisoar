@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>JISOAR — 웹·앱·시스템 개발 스튜디오</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffae82' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23aa5638' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<meta name="description" content="JISOAR — 아이디어를 현실로 만드는 개발 스튜디오. 웹사이트·모바일 앱·관리자 대시보드·산업 IoT 모니터링까지, 기획부터 배포·운영까지 한 곳에서." />
+<meta name="description" content="JISOAR — 아이디어를 현실로 만드는 개발 스튜디오. 웹사이트·모바일 앱·관리자 대시보드·산업 IoT 모니터링, 기획부터 배포·운영까지." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/" />
 <meta property="og:title" content="JISOAR — 웹·앱·시스템 개발 스튜디오" />
@@ -14,307 +14,199 @@
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="JISOAR — 웹·앱·시스템 개발 스튜디오" />
-<meta name="twitter:description" content="아이디어를 현실로. 웹·앱·대시보드·산업 IoT — 기획부터 배포·운영까지." />
-<meta name="twitter:image" content="https://jisoar.com/og.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="/assets/site.css?v=1" />
 <style>
-  :root{
-    --bg-top:#0a0e1a; --bg-mid:#141b33; --bg-glow:#2a3a6b;
-    --dawn:#ff9d6c; --dawn-2:#ffd9a8; --ink:#f4f6fb; --muted:#9aa6c4;
-    --line:rgba(255,255,255,.08);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    color:var(--ink); background:var(--bg-top); overflow-x:hidden;
-    -webkit-font-smoothing:antialiased;
-  }
-  /* ── sky backdrop ── */
-  .sky{
-    position:fixed; inset:0; z-index:-2;
-    background:
-      radial-gradient(120% 80% at 50% 110%, rgba(255,157,108,.20), transparent 55%),
-      radial-gradient(100% 70% at 50% 120%, rgba(255,217,168,.12), transparent 50%),
-      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 60%, #1d2547 100%);
-  }
-  .stars{position:fixed; inset:0; z-index:-1; opacity:.7}
-  .star{position:absolute; width:2px; height:2px; background:#fff; border-radius:50%;
-    animation:tw 4s ease-in-out infinite}
-  @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
-
-  /* ── fixed nav (스크롤 시 등장) ── */
-  .nav{position:fixed; top:0; left:0; right:0; z-index:50; display:flex; align-items:center; gap:9px;
-    padding:16px 26px; opacity:0; transform:translateY(-8px); pointer-events:none;
-    background:linear-gradient(180deg, rgba(10,14,26,.85), rgba(10,14,26,0));
-    transition:opacity .45s ease, transform .45s ease}
-  .nav.show{opacity:1; transform:translateY(0); pointer-events:auto}
-  .nav a.home{display:flex; align-items:center; gap:9px; text-decoration:none}
-  .navwm{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:20px; letter-spacing:-.01em; color:var(--ink)}
-  .navwm .dot{color:var(--dawn)}
-  .nav .cta{margin-left:auto; font-size:13px; font-weight:500; color:#1a0f08; text-decoration:none;
-    padding:9px 18px; border-radius:999px; background:linear-gradient(135deg,var(--dawn),#ff7e54)}
-
-  /* ── layout ── */
-  .wrap{max-width:820px; margin:0 auto; padding:0 28px}
-  section{min-height:auto}
-  .hero{min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative}
-
-  .mark{
-    font-family:'Cormorant Garamond',serif; font-weight:600;
-    font-size:clamp(64px,16vw,140px); line-height:1.06; letter-spacing:-.02em;
-    padding-bottom:.06em;
-    background:linear-gradient(180deg,#fff 0%,#d4ddf3 58%,#aebcea 100%);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    opacity:0; transform:translateY(24px); animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .15s forwards;
-  }
-  .mark .dot{color:var(--dawn); -webkit-text-fill-color:var(--dawn); font-size:.85em}
-  .pron{
-    margin-top:14px; font-size:clamp(12px,3vw,14px); color:var(--muted);
-    letter-spacing:.12em; font-weight:300;
-    opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .35s forwards;
-  }
-  .tag{
-    margin-top:14px; font-size:clamp(14px,3.4vw,18px); color:var(--dawn-2);
-    letter-spacing:.18em; text-transform:uppercase; font-weight:400;
-    opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .45s forwards;
-  }
-  .sub{
-    margin-top:18px; font-size:clamp(15px,3.6vw,18px); color:var(--muted);
-    font-weight:300; line-height:1.7; max-width:480px;
-    opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .65s forwards;
-  }
-  .sub b{color:var(--ink); font-weight:500}
-  .hero-cta{margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
-    opacity:0; animation:rise 1.1s cubic-bezier(.2,.7,.2,1) .85s forwards}
-  @keyframes rise{to{opacity:1; transform:translateY(0)}}
-
-  .scroll{position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
-    color:var(--muted); font-size:12px; letter-spacing:.2em; opacity:0;
-    animation:rise 1s ease 1.2s forwards, float 2.4s ease-in-out 1.2s infinite}
-  @keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
-
-  /* ── content blocks ── */
-  .block{padding:90px 0; border-top:1px solid var(--line)}
-  .eyebrow{font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:var(--dawn); margin-bottom:18px}
-  h2{font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(28px,7vw,42px); letter-spacing:-.01em; margin-bottom:18px}
-  p.lead{color:var(--muted); font-weight:300; line-height:1.8; font-size:clamp(15px,3.8vw,17px); max-width:600px}
-  p.lead b{color:var(--ink); font-weight:500}
-
-  .cards{display:grid; gap:14px; margin-top:30px}
-  @media(min-width:600px){.cards{grid-template-columns:1fr 1fr}}
-  .card{
-    display:block; text-decoration:none; color:inherit; padding:24px 26px;
-    border:1px solid var(--line); border-radius:16px; background:rgba(255,255,255,.02);
-    transition:transform .25s ease, border-color .25s ease, background .25s ease;
-  }
-  a.card:hover{transform:translateY(-4px); border-color:rgba(255,157,108,.4); background:rgba(255,157,108,.05)}
-  .card .k{font-size:13px; color:var(--dawn-2); letter-spacing:.04em; margin-bottom:8px}
-  .card .t{font-size:18px; font-weight:500; margin-bottom:6px}
-  .card .d{font-size:14px; color:var(--muted); font-weight:300; line-height:1.6}
-  .card .go{margin-top:14px; font-size:13px; color:var(--muted)}
-
-  /* ── process ── */
-  .steps{display:grid; gap:0; margin-top:34px; counter-reset:step}
-  .step{display:flex; gap:20px; padding:20px 0; border-top:1px solid var(--line); counter-increment:step}
-  .step:first-child{border-top:none; padding-top:0}
-  .step::before{
-    content:"0" counter(step);
-    font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:500;
-    color:var(--dawn); min-width:44px; line-height:1.2;
-  }
-  .step .t{font-size:16px; font-weight:500; margin-bottom:4px}
-  .step .d{font-size:14px; color:var(--muted); font-weight:300; line-height:1.7}
-
-  .role{color:var(--muted); font-weight:300; line-height:2; font-size:clamp(15px,3.8vw,17px); letter-spacing:.01em}
-  .role b{color:var(--ink); font-weight:500}
-  .about-line{margin-top:20px; font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:clamp(19px,5vw,26px); color:var(--dawn-2); letter-spacing:.01em}
-  .realname{margin-top:12px; font-size:12.5px; color:var(--muted); letter-spacing:.08em; opacity:.75}
-
-  .contact{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
-  .btn{display:inline-flex; align-items:center; gap:8px; padding:13px 22px; border-radius:999px;
-    text-decoration:none; font-size:14px; font-weight:500; transition:transform .2s ease, opacity .2s ease}
-  .btn.primary{background:linear-gradient(135deg,var(--dawn),#ff7e54); color:#1a0f08}
-  .btn.ghost{border:1px solid var(--line); color:var(--ink)}
-  .btn:hover{transform:translateY(-2px)}
-
-  footer{padding:50px 0 60px; border-top:1px solid var(--line); text-align:center; color:var(--muted); font-size:13px; font-weight:300}
-  footer .name{font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--ink); letter-spacing:.02em}
-  footer .em{font-style:italic}
-
-  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  @media (prefers-reduced-motion: reduce){
-    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
-    .mark,.pron,.tag,.sub,.hero-cta,.scroll{opacity:1 !important; transform:none !important}
-  }
+  .hero{min-height:100svh; display:flex; flex-direction:column; justify-content:center; position:relative; padding:120px 0 80px}
+  .hero .kicker{font-size:13px; letter-spacing:.3em; text-transform:uppercase; color:var(--dawn); font-weight:600;
+    opacity:0; animation:rise 1s var(--ease) .1s forwards}
+  .hero h1{margin-top:22px; opacity:0; transform:translateY(26px); animation:rise 1.1s var(--ease) .22s forwards}
+  .hero .sub{margin-top:28px; color:var(--muted); font-weight:300; font-size:clamp(16px,3.8vw,19px); line-height:1.85; max-width:560px;
+    opacity:0; transform:translateY(20px); animation:rise 1.1s var(--ease) .42s forwards}
+  .hero .sub b{color:var(--ink); font-weight:500}
+  .hero .row{margin-top:40px; display:flex; gap:14px; flex-wrap:wrap;
+    opacity:0; transform:translateY(16px); animation:rise 1s var(--ease) .6s forwards}
+  .hero .meta{position:absolute; bottom:36px; left:0; right:0}
+  .hero .meta .wrap{display:flex; justify-content:space-between; align-items:center; gap:20px;
+    color:var(--faint); font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    opacity:0; animation:rise 1s ease .9s forwards}
+  @keyframes rise{to{opacity:1; transform:none}}
+  .marquee{border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; padding:18px 0; white-space:nowrap}
+  .marquee .track{display:inline-block; animation:mq 30s linear infinite}
+  .marquee span{font-family:var(--serif); font-style:italic; font-size:17px; color:var(--faint); margin:0 28px; letter-spacing:.04em}
+  .marquee b{color:var(--dawn); font-weight:400}
+  @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){.marquee .track{animation:none}}
 </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="stars" id="stars"></div>
+<div class="grain"></div>
 
 <nav class="nav" id="nav">
-  <a class="home" href="#top" aria-label="jisoar home">
+  <a class="brand" href="/" aria-label="jisoar home">
     <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
       <path d="M6 18 L16 8 L26 18" stroke="#ffae82" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M12 24 L16 19.5 L20 24" stroke="#aa5638" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span class="navwm">jisoar<span class="dot">.</span></span>
+    <span class="wm">jisoar<span class="dot">.</span></span>
   </a>
-  <a class="cta" href="#contact">프로젝트 문의</a>
+  <div class="links">
+    <a href="/" class="active">홈</a>
+    <a href="/about/">회사소개</a>
+    <a href="/services/">서비스</a>
+    <a href="/work/">포트폴리오</a>
+    <a href="/contact/">문의</a>
+  </div>
+  <a class="cta" href="/contact/">프로젝트 문의</a>
+  <button class="burger" aria-label="메뉴" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
 
-<section class="hero" id="top">
+<header class="hero">
   <div class="wrap">
-    <h1 class="mark">jisoar<span class="dot">.</span></h1>
-    <div class="pron">지소어</div>
-    <div class="tag">Ideas into reality</div>
-    <p class="sub"><b>웹 · 앱 · 시스템 개발 스튜디오</b><br/>
-      아이디어를 실재하는 서비스로 만들어 드립니다.<br/>
-      <span style="opacity:.5">기획부터 배포, 운영까지 — 한 곳에서.</span></p>
-    <div class="hero-cta">
-      <a class="btn primary" href="#contact">프로젝트 문의하기</a>
-      <a class="btn ghost" href="#work">작업물 보기</a>
+    <div class="kicker">Development Studio · Seoul</div>
+    <h1 class="display">Ideas<br/>into <em style="font-style:italic;-webkit-text-fill-color:var(--dawn-2)">reality.</em></h1>
+    <p class="sub"><b>jisoar</b>는 웹 · 앱 · 시스템 개발 스튜디오입니다.<br/>
+      아이디어를 실재하는 서비스로 — 기획부터 디자인, 개발, 배포와 운영까지 한 곳에서 완성합니다.</p>
+    <div class="row">
+      <a class="btn primary" href="/contact/">프로젝트 문의하기 <span class="arr">→</span></a>
+      <a class="btn ghost" href="/work/">포트폴리오 보기</a>
     </div>
   </div>
-  <div class="scroll">SCROLL ↓</div>
-</section>
+  <div class="meta">
+    <div class="wrap">
+      <span>지소어 · 志 + Soar</span>
+      <span>Scroll ↓</span>
+      <span>Est. 2025</span>
+    </div>
+  </div>
+</header>
 
-<section class="block" id="services">
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Web <b>·</b> Mobile App <b>·</b> Dashboard <b>·</b> Industrial IoT <b>·</b> Design <b>·</b> Deploy <b>·</b> Operate <b>·</b></span><span>Web <b>·</b> Mobile App <b>·</b> Dashboard <b>·</b> Industrial IoT <b>·</b> Design <b>·</b> Deploy <b>·</b> Operate <b>·</b></span>
+  </div>
+</div>
+
+<section class="block" style="padding-top:110px">
   <div class="wrap">
-    <div class="eyebrow">Services</div>
-    <h2>이런 일을 합니다</h2>
-    <p class="lead">홈페이지 한 장부터 설비 모니터링 시스템까지.<br/>
-      <b>직접 설계하고, 직접 만들고, 직접 운영해 본 것</b>만 서비스로 제공합니다.</p>
-    <div class="cards">
-      <div class="card">
+    <div class="eyebrow reveal"><span class="num">01</span> Services</div>
+    <h2 class="title reveal d1">필요한 것만,<br/><em>끝까지</em> 만듭니다</h2>
+    <p class="lead reveal d2">홈페이지 한 장부터 설비 모니터링 시스템까지 —<br/>
+      <b>직접 만들고 직접 운영해 본 것</b>만 서비스로 제공합니다.</p>
+    <div class="grid two" style="margin-top:44px">
+      <a class="card reveal d1" href="/services/#web">
+        <div class="num">01</div>
         <div class="k">Web</div>
-        <div class="t">웹사이트 · 홈페이지 제작</div>
+        <div class="t">웹사이트 · 홈페이지</div>
         <div class="d">브랜드 홈페이지, 랜딩 페이지, 커뮤니티 플랫폼. 반응형·SEO·도메인 연결까지 완성된 상태로 인도합니다.</div>
-      </div>
-      <div class="card">
+        <div class="go">자세히 →</div>
+      </a>
+      <a class="card reveal d2" href="/services/#app">
+        <div class="num">02</div>
         <div class="k">Mobile App</div>
         <div class="t">모바일 앱 개발</div>
-        <div class="d">iOS · Android 크로스플랫폼 앱 개발. App Store · Google Play 심사 통과와 정식 출시까지 직접 경험한 프로세스로 진행합니다.</div>
-      </div>
-      <div class="card">
+        <div class="d">iOS · Android 크로스플랫폼 앱. 스토어 심사 통과와 정식 출시까지, 직접 겪어 본 프로세스로 진행합니다.</div>
+        <div class="go">자세히 →</div>
+      </a>
+      <a class="card reveal d2" href="/services/#dashboard">
+        <div class="num">03</div>
         <div class="k">Dashboard · System</div>
-        <div class="t">관리자 대시보드 · 업무 시스템</div>
+        <div class="t">대시보드 · 업무 시스템</div>
         <div class="d">데이터 조회·관리 대시보드, 권한 관리, 사내 업무 도구. 엑셀로 돌리던 일을 시스템으로 바꿔 드립니다.</div>
-      </div>
-      <div class="card">
+        <div class="go">자세히 →</div>
+      </a>
+      <a class="card reveal d3" href="/services/#iot">
+        <div class="num">04</div>
         <div class="k">Industrial IoT</div>
         <div class="t">산업 IoT · 설비 모니터링</div>
-        <div class="d">PLC 데이터 수집, Node-RED 파이프라인, 실시간 모니터링 대시보드. 물류·제조 현장 설비를 한 화면에서 봅니다.</div>
-      </div>
+        <div class="d">PLC 데이터 수집부터 실시간 모니터링 대시보드까지. 물류·제조 현장의 설비를 한 화면에서 봅니다.</div>
+        <div class="go">자세히 →</div>
+      </a>
     </div>
   </div>
 </section>
 
-<section class="block" id="work">
+<section class="block">
   <div class="wrap">
-    <div class="eyebrow">Work</div>
-    <h2>만들고, 출시하고, 운영 중입니다</h2>
-    <p class="lead">포트폴리오용 목업이 아니라 <b>실제 사용자가 쓰고 있는 서비스</b>들입니다.</p>
-    <div class="cards">
-      <a class="card" href="/products/friends/">
-        <div class="k">Community Platform</div>
-        <div class="t">Friends</div>
-        <div class="d">게임 길드 커뮤니티 플랫폼. 서버 전체 랭킹·성장 리포트·가입 퍼널까지 설계하고 운영 중.</div>
-        <div class="go">Case study →</div>
-      </a>
-      <a class="card" href="/products/guild-lounge/">
+    <div class="stats reveal">
+      <div class="stat"><div class="v"><span data-count="6">0</span><small>+</small></div><div class="l">출시한 프로덕트</div></div>
+      <div class="stat"><div class="v"><span data-count="4">0</span></div><div class="l">운영 중인 서비스</div></div>
+      <div class="stat"><div class="v">iOS<small> · </small>AOS</div><div class="l">앱스토어 정식 출시</div></div>
+      <div class="stat"><div class="v">E2E</div><div class="l">기획 → 배포 → 운영</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="num">02</span> Selected Work</div>
+    <h2 class="title reveal d1">목업이 아니라<br/><em>운영 중인 서비스</em>입니다</h2>
+    <div class="grid two" style="margin-top:44px">
+      <a class="card reveal d1" href="/products/guild-lounge/">
         <div class="k">Mobile App · iOS · Android</div>
         <div class="t">Guild Lounge</div>
         <div class="d">길드 일정·랭킹·커뮤니티 네이티브 앱. App Store · Google Play 정식 출시.</div>
         <div class="go">Case study →</div>
       </a>
-      <a class="card" href="/products/wedding/">
-        <div class="k">Photo Cloud</div>
-        <div class="t">Wedding Memory Cloud</div>
-        <div class="d">하객이 QR로 사진·영상을 올리는 결혼식 갤러리 — 실제 결혼식에서 검증 완료.</div>
+      <a class="card reveal d2" href="/products/friends/">
+        <div class="k">Community Platform</div>
+        <div class="t">Friends</div>
+        <div class="d">게임 길드 커뮤니티 플랫폼. 서버 전체 랭킹·성장 리포트·가입 퍼널까지 설계하고 운영 중.</div>
         <div class="go">Case study →</div>
       </a>
-      <a class="card" href="/products/hq/">
-        <div class="k">Dashboard</div>
-        <div class="t">HQ</div>
-        <div class="d">흩어진 일·프로젝트를 한 화면에 모은 통합 대시보드. 매일 실사용 중.</div>
-        <div class="go">Case study →</div>
-      </a>
+    </div>
+    <div style="margin-top:26px" class="reveal d2">
+      <a class="btn ghost" href="/work/">전체 포트폴리오 <span class="arr">→</span></a>
     </div>
   </div>
 </section>
 
-<section class="block" id="process">
+<section class="cta-band">
   <div class="wrap">
-    <div class="eyebrow">Process</div>
-    <h2>진행은 이렇게</h2>
-    <div class="steps">
-      <div class="step"><div><div class="t">상담</div><div class="d">필요한 것과 예산을 편하게 이야기합니다. 이 단계는 무료입니다.</div></div></div>
-      <div class="step"><div><div class="t">제안 · 견적</div><div class="d">범위를 문서로 정리하고, 단계별 견적을 드립니다. 한 번에 크게가 아니라 필요한 만큼부터.</div></div></div>
-      <div class="step"><div><div class="t">개발</div><div class="d">중간 결과물을 실제 링크로 공유하며 진행합니다. 완성되기 전에도 계속 눈으로 확인할 수 있습니다.</div></div></div>
-      <div class="step"><div><div class="t">배포 · 운영</div><div class="d">도메인 연결, 스토어 출시, 서버 셋업까지 마무리하고, 이후 유지보수도 함께합니다.</div></div></div>
-    </div>
-  </div>
-</section>
-
-<section class="block" id="about">
-  <div class="wrap">
-    <div class="eyebrow">About</div>
-    <h2>Gibaek Pak</h2>
-    <p class="role">
-      <b>Founder · System Engineer</b><br/>
-      물류 자동화 설비 현장에서 시스템을 다루고,<br/>
-      웹·앱·대시보드를 직접 만들어 출시해 왔습니다.
-    </p>
-    <p class="realname">박기백 · 氣魄</p>
-    <p class="about-line">Designing, building and running it all.</p>
-  </div>
-</section>
-
-<section class="block" id="contact">
-  <div class="wrap">
-    <div class="eyebrow">Contact</div>
-    <h2>프로젝트를 시작해 볼까요?</h2>
-    <p class="lead">막연한 아이디어 단계여도 좋습니다.<br/>어떤 문제를 풀고 싶은지 들려주시면, 가능한 방법과 대략의 규모부터 같이 잡아 드립니다.</p>
-    <div class="contact">
-      <a class="btn primary" href="mailto:qkqhrnfl@icloud.com?subject=%5Bjisoar%5D%20프로젝트%20문의">✉ 이메일로 문의</a>
-      <a class="btn ghost" href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">💬 카카오톡으로 문의</a>
+    <div class="big reveal">Make it real.</div>
+    <p class="reveal d1">막연한 아이디어 단계여도 좋습니다. 이야기부터 시작해 보세요.</p>
+    <div class="row reveal d2">
+      <a class="btn primary" href="/contact/">프로젝트 문의하기 <span class="arr">→</span></a>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="name">jisoar</div>
-  <p style="margin-top:10px" class="em">Ideas into reality.</p>
-  <p style="margin-top:18px">jisoar · Gibaek Pak · © 2026</p>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="fname">jisoar<span class="dot">.</span></div>
+        <p class="fdesc">아이디어를 실재하는 서비스로 만드는 웹 · 앱 · 시스템 개발 스튜디오.</p>
+      </div>
+      <div>
+        <h4>Menu</h4>
+        <ul>
+          <li><a href="/about/">회사소개</a></li>
+          <li><a href="/services/">서비스</a></li>
+          <li><a href="/work/">포트폴리오</a></li>
+          <li><a href="/contact/">문의</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:qkqhrnfl@icloud.com">qkqhrnfl@icloud.com</a></li>
+          <li><a href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">KakaoTalk 오픈채팅</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>© 2026 jisoar. All rights reserved.</span>
+      <span class="em">Ideas into reality.</span>
+    </div>
+  </div>
 </footer>
 
-<script>
-  // sprinkle stars
-  (function(){
-    var c=document.getElementById('stars'), n=70, h='';
-    for(var i=0;i<n;i++){
-      var x=Math.random()*100, y=Math.random()*70, d=(Math.random()*4).toFixed(2), s=(Math.random()*1.5+1).toFixed(1);
-      h+='<span class="star" style="left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;animation-delay:'+d+'s"></span>';
-    }
-    c.innerHTML=h;
-  })();
-
-  // 스크롤하면 상단 네비 등장 (첫 화면에선 숨김)
-  (function(){
-    var nav=document.getElementById('nav');
-    function onScroll(){
-      if(window.scrollY > window.innerHeight*0.6){ nav.classList.add('show'); }
-      else{ nav.classList.remove('show'); }
-    }
-    window.addEventListener('scroll', onScroll, {passive:true});
-    onScroll();
-  })();
-</script>
+<script src="/assets/site.js?v=1"></script>
 </body>
 </html>
