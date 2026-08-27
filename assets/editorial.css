@@ -4,8 +4,8 @@
    dynamics: sticky split + rounded cards + chips  (ref: wepick)
    ═══════════════════════════════════════════════════════ */
 :root{
-  --bg:#faf9f6; --ink:#1b1812; --mut:#6f6a60; --faint:#a8a296;
-  --line:#e6e2d8; --card:#ffffff;
+  --bg:#f4f8fd; --ink:#16222e; --mut:#5d6b7a; --faint:#9aa9b8;
+  --line:#dde7f1; --card:#ffffff; --accent:#3b87f0;
   --sans:'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
   --disp:'Clash Display', 'Pretendard Variable', Pretendard, sans-serif;
   --ease:cubic-bezier(.16,1,.3,1);
@@ -24,7 +24,7 @@ a{color:inherit; text-decoration:none}
   display:flex; align-items:center; justify-content:space-between;
   padding:22px clamp(20px,3.4vw,52px); color:var(--ink);
   transition:background .4s ease, padding .4s ease, box-shadow .4s ease}
-.bar.scrolled{background:rgba(250,249,246,.86); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+.bar.scrolled{background:rgba(244,248,253,.86); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
   padding:14px clamp(20px,3.4vw,52px); box-shadow:0 1px 0 var(--line)}
 .bar .brand{font-family:var(--disp); font-weight:600; font-size:18px; letter-spacing:-.01em}
 .bar .brand sup{font-size:9px; vertical-align:super; margin-left:1px; opacity:.6}
@@ -32,7 +32,7 @@ a{color:inherit; text-decoration:none}
 .bar nav a{font-size:12.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
   opacity:.62; transition:opacity .25s ease; position:relative}
 .bar nav a:hover, .bar nav a.on{opacity:1}
-.bar nav a.on::after{content:""; position:absolute; left:0; right:0; bottom:-7px; height:2px; background:var(--ink)}
+.bar nav a.on::after{content:""; position:absolute; left:0; right:0; bottom:-7px; height:2px; background:var(--accent)}
 @media(max-width:720px){.bar nav a:nth-child(n+4){display:none}}
 
 /* ── page hero ── */
@@ -66,7 +66,7 @@ a{color:inherit; text-decoration:none}
 .chip{display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:.02em;
   padding:6px 13px; border:1px solid var(--line); border-radius:999px; color:var(--mut);
   background:var(--card)}
-.chip.dark{background:var(--ink); color:#fff; border-color:var(--ink)}
+.chip.dark{background:var(--accent); color:#fff; border-color:var(--accent)}
 
 /* ── project cards ── */
 .pcard{display:block; position:relative; background:var(--card); border:1px solid var(--line);
@@ -74,7 +74,7 @@ a{color:inherit; text-decoration:none}
   transition:transform .45s var(--ease), box-shadow .45s ease}
 .pcard .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:clamp(20px,2.6vw,34px)}
 .pcard .chips .chip{background:var(--bg)}
-.pcard .chips .chip.dark{background:var(--ink); border-color:var(--ink); color:#fff}
+.pcard .chips .chip.dark{background:var(--accent); border-color:var(--accent); color:#fff}
 .pcard h3{font-weight:800; font-size:clamp(24px,2.8vw,42px); letter-spacing:-.03em; line-height:1.15}
 .pcard h3.en{font-family:var(--disp); font-weight:600; letter-spacing:-.015em}
 .pcard .desc{margin-top:12px; color:var(--mut); font-size:14.5px; line-height:1.8; max-width:520px}
@@ -83,11 +83,11 @@ a{color:inherit; text-decoration:none}
 .pcard .arr{width:38px; height:38px; border:1px solid var(--line); border-radius:50%;
   display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--ink);
   transition:background .3s ease, color .3s ease, transform .45s var(--ease)}
-a.pcard:hover{transform:translateY(-5px); box-shadow:0 22px 48px rgba(27,24,18,.08)}
-a.pcard:hover .arr{background:var(--ink); color:#fff; transform:rotate(45deg)}
+a.pcard:hover{transform:translateY(-5px); box-shadow:0 22px 48px rgba(23,55,102,.10)}
+a.pcard:hover .arr{background:var(--accent); border-color:var(--accent); color:#fff; transform:rotate(45deg)}
 
 /* ── dark rounded CTA card (wepick hero echo) ── */
-.darkcard{background:#141210; color:#fff; border-radius:28px;
+.darkcard{background:#10233a; color:#fff; border-radius:28px;
   padding:clamp(56px,8vw,110px) clamp(28px,5vw,80px); text-align:center; position:relative; overflow:hidden}
 .darkcard .small{font-size:12px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
   color:rgba(255,255,255,.5); margin-bottom:22px}

@@ -8,7 +8,7 @@
 :root{
   --ink:#191f28; --sub:#4e5968; --mut:#8b95a1; --faint:#b0b8c1;
   --bg:#ffffff; --bg2:#f7f8fa; --bg3:#f2f4f6; --line:#e5e8eb;
-  --coral:#333d4b; --coral-deep:#191f28;
+  --coral:#3b87f0; --coral-deep:#2568d6;
   --grad:linear-gradient(93deg,#8b95a1 0%,#4e5968 32%,#4e5968 68%,#333d4b 100%);
   --grad-soft:linear-gradient(135deg,#fff3ea,#ffe9f1 55%,#f1ecff);
   --sans:'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
