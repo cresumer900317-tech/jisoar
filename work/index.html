@@ -3,134 +3,121 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>포트폴리오 — JISOAR</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23191f28'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%234e5968' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%234e5968' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<title>Work — JISOAR</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="jisoar 포트폴리오 — 앱스토어 출시 앱, 운영 중인 커뮤니티 플랫폼, 실전 검증된 서비스 케이스스터디." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/work/" />
-<meta property="og:title" content="포트폴리오 — JISOAR" />
+<meta property="og:title" content="Work — JISOAR" />
 <meta property="og:description" content="목업이 아니라 운영 중인 서비스. jisoar의 케이스스터디." />
 <meta property="og:image" content="https://jisoar.com/og.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-<link rel="stylesheet" href="/assets/site.css?v=6" />
-<style>
-  .work-card .badge{display:inline-block; font-size:12.5px; font-weight:800; letter-spacing:.01em;
-    padding:6px 12px; border-radius:999px; margin-bottom:18px;
-    background:var(--grad-soft); color:var(--coral-deep)}
-  .work-card .badge.gray{background:var(--bg3); color:var(--mut)}
-</style>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" />
+<link rel="stylesheet" href="/assets/editorial.css?v=1" />
 </head>
 <body>
 
-<nav class="nav" id="nav">
-  <a class="brand" href="/" aria-label="jisoar home">
-    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="#191f28"/>
-      <path d="M8 18.5 L16 10.5 L24 18.5" stroke="#4e5968" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M12.5 23.5 L16 20 L19.5 23.5" stroke="#4e5968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="wm">jisoar<span class="dot">.</span></span>
-  </a>
-  <div class="links">
-    <a href="/">홈</a>
-    <a href="/about/">회사소개</a>
-    <a href="/services/">서비스</a>
-    <a href="/work/" class="active">포트폴리오</a>
-    <a href="/contact/">문의</a>
-  </div>
-  <a class="cta" href="/contact/">프로젝트 문의</a>
-  <button class="burger" aria-label="메뉴" aria-expanded="false"><span></span><span></span><span></span></button>
-</nav>
+<header class="bar" id="bar">
+  <a class="brand" href="/">jisoar<sup>®</sup></a>
+  <nav>
+    <a href="/">Index</a>
+    <a href="/about/">About</a>
+    <a class="on" href="/work/">Work</a>
+    <a href="/services/">Services</a>
+    <a href="/contact/">Contact</a>
+  </nav>
+</header>
 
-<header class="page-hero">
+<header class="phero">
   <div class="wrap">
-    <div class="eyebrow">Work</div>
-    <h1>만들고, 출시하고,<br/><span class="grad">운영 중입니다</span></h1>
-    <p>포트폴리오용 목업이 아닙니다. 아래 모든 프로젝트는 <b>실제 사용자가 쓰고 있거나 실전에서 검증된</b> 서비스입니다.</p>
+    <div class="eyebrow rv"><i>✳</i>Work</div>
+    <h1 class="rv d1">만들고, 출시하고,<br/>운영 중입니다</h1>
+    <p class="rv d2">포트폴리오용 목업이 아닙니다. 아래 모든 프로젝트는
+      <b>실제 사용자가 쓰고 있거나 실전에서 검증된</b> 서비스입니다.</p>
   </div>
 </header>
 
-<section class="block" style="padding-top:20px">
+<section class="sect" style="padding-top:clamp(30px,4vw,60px)">
   <div class="wrap">
-    <div class="grid two">
-      <a class="card work-card reveal" href="/products/guild-lounge/">
-        <span class="badge">App Store 출시</span>
-        <div class="t">Guild Lounge</div>
-        <div class="d">길드 일정 · 랭킹 · 커뮤니티를 담은 네이티브 앱. 스토어 심사부터 업데이트 운영까지 전 과정 직접 수행.</div>
-        <div class="go">케이스 스터디 →</div>
-      </a>
-      <a class="card work-card reveal d1" href="/products/friends/">
-        <span class="badge">운영 중</span>
-        <div class="t">Friends</div>
-        <div class="d">게임 길드 커뮤니티 플랫폼. 서버 전체 랭킹 · 성장 리포트 · 가입 퍼널 · 프로필 시스템까지 설계하고 현재도 운영 중.</div>
-        <div class="go">케이스 스터디 →</div>
-      </a>
-      <a class="card work-card reveal d1" href="/products/wedding/">
-        <span class="badge">실전 검증 완료</span>
-        <div class="t">Wedding Memory Cloud</div>
-        <div class="d">하객이 QR 코드로 사진 · 영상을 올리는 결혼식 갤러리. 실제 결혼식 현장에서 수백 장의 업로드를 처리하며 검증.</div>
-        <div class="go">케이스 스터디 →</div>
-      </a>
-      <a class="card work-card reveal d2" href="/products/hq/">
-        <span class="badge">매일 실사용</span>
-        <div class="t">HQ</div>
-        <div class="d">흩어진 일 · 프로젝트 · 일정을 한 화면에 모은 통합 대시보드. 매일 실사용하며 다듬어 온 업무 시스템의 원형.</div>
-        <div class="go">케이스 스터디 →</div>
-      </a>
-      <div class="card work-card reveal d2">
-        <span class="badge gray">진행 중 · 비공개</span>
-        <div class="t">랭킹 관리 시스템 리뉴얼</div>
-        <div class="d">기업 클라이언트의 순위 조회 · 관리 대시보드 리뉴얼. 다단계 권한 설계 · 3개 채널 데이터 관리 시스템 구축 진행 중.</div>
+    <div class="split">
+      <div class="side rv">
+        <div class="lbl">Selected Projects</div>
+        <h2>여섯 개의 실전,<br/>여섯 개의 증거</h2>
+        <p>기획 · 디자인 · 개발 · 배포 · 운영까지 전 과정을 한 손으로 완성한 프로젝트들입니다.</p>
       </div>
-      <div class="card work-card reveal d3">
-        <span class="badge gray">현장 프로젝트 · 비공개</span>
-        <div class="t">설비 모니터링 대시보드</div>
-        <div class="d">물류 현장 자동화 설비의 PLC 데이터를 수집해 실시간 모니터링. Mitsubishi PLC → Node-RED → 대시보드 파이프라인 구축.</div>
+      <div>
+        <a class="pcard rv" href="/products/guild-lounge/">
+          <div class="chips"><span class="chip dark">App Store 출시</span><span class="chip">iOS App</span><span class="chip">Community</span></div>
+          <h3 class="en">Guild Lounge</h3>
+          <p class="desc">길드 일정 · 랭킹 · 커뮤니티를 담은 네이티브 앱. 스토어 심사부터 업데이트 운영까지 전 과정 직접 수행.</p>
+          <div class="meta"><span class="yr">2026</span><span class="arr">↗</span></div>
+        </a>
+        <a class="pcard rv" href="/products/friends/">
+          <div class="chips"><span class="chip dark">운영 중</span><span class="chip">Web Platform</span><span class="chip">Community</span></div>
+          <h3 class="en">Friends</h3>
+          <p class="desc">게임 길드 커뮤니티 플랫폼. 서버 전체 랭킹 · 성장 리포트 · 가입 퍼널 · 프로필 시스템까지 설계하고 현재도 운영 중.</p>
+          <div class="meta"><span class="yr">2025 —</span><span class="arr">↗</span></div>
+        </a>
+        <a class="pcard rv" href="/products/wedding/">
+          <div class="chips"><span class="chip dark">실전 검증 완료</span><span class="chip">Web Service</span><span class="chip">QR Photo</span></div>
+          <h3 class="en">Wedding Memory Cloud</h3>
+          <p class="desc">하객이 QR 코드로 사진 · 영상을 올리는 결혼식 갤러리. 실제 결혼식 현장에서 수백 장의 업로드를 처리하며 검증.</p>
+          <div class="meta"><span class="yr">2026</span><span class="arr">↗</span></div>
+        </a>
+        <a class="pcard rv" href="/products/hq/">
+          <div class="chips"><span class="chip dark">매일 실사용</span><span class="chip">Dashboard</span><span class="chip">Productivity</span></div>
+          <h3 class="en">HQ</h3>
+          <p class="desc">흩어진 일 · 프로젝트 · 일정을 한 화면에 모은 통합 대시보드. 매일 실사용하며 다듬어 온 업무 시스템의 원형.</p>
+          <div class="meta"><span class="yr">2026</span><span class="arr">↗</span></div>
+        </a>
+        <div class="pcard rv">
+          <div class="chips"><span class="chip">진행 중 · 비공개</span><span class="chip">Dashboard</span><span class="chip">Rank System</span></div>
+          <h3>랭킹 관리 시스템 리뉴얼</h3>
+          <p class="desc">기업 클라이언트의 순위 조회 · 관리 대시보드 리뉴얼. 다단계 권한 설계 · 3개 채널 데이터 관리 시스템 구축 진행 중.</p>
+          <div class="meta"><span class="yr">2026</span></div>
+        </div>
+        <div class="pcard rv">
+          <div class="chips"><span class="chip">현장 프로젝트 · 비공개</span><span class="chip">Industrial IoT</span><span class="chip">PLC</span></div>
+          <h3>설비 모니터링 대시보드</h3>
+          <p class="desc">물류 현장 자동화 설비의 PLC 데이터를 수집해 실시간 모니터링. Mitsubishi PLC → Node-RED → 대시보드 파이프라인 구축.</p>
+          <div class="meta"><span class="yr">2026</span></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="cta-band">
+<section class="sect" style="padding-top:0">
   <div class="wrap">
-    <div class="big reveal">다음 프로젝트는,<br/>당신의 것</div>
-    <div class="row reveal d1">
-      <a class="btn white" href="/contact/">프로젝트 문의하기 <span class="arr">→</span></a>
+    <div class="darkcard rv">
+      <div class="small">Next Project</div>
+      <div class="big">다음 프로젝트는,<br/>당신의 것</div>
+      <a class="btn" href="/contact/">프로젝트 문의하기 <span class="a">→</span></a>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <div class="foot">
-      <div>
-        <div class="fname">jisoar<span class="dot">.</span></div>
-        <p class="fdesc">아이디어를 현실로 만드는 웹 · 앱 · 시스템 개발 스튜디오.</p>
-      </div>
-      <div>
-        <h4>Menu</h4>
-        <ul>
-          <li><a href="/about/">회사소개</a></li>
-          <li><a href="/services/">서비스</a></li>
-          <li><a href="/work/">포트폴리오</a></li>
-          <li><a href="/contact/">문의</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="mailto:qkqhrnfl@icloud.com">qkqhrnfl@icloud.com</a></li>
-          <li><a href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">KakaoTalk 오픈채팅</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="copyright">
-      <span>© 2026 jisoar. All rights reserved.</span>
-      <span>Ideas into reality.</span>
+    <div class="row">
+      <span>© 2026 jisoar®</span>
+      <span><a href="/about/">About</a> &nbsp;/&nbsp; <a href="/work/">Work</a> &nbsp;/&nbsp; <a href="/services/">Services</a> &nbsp;/&nbsp; <a href="/contact/">Contact</a></span>
+      <span>Ideas into Reality™</span>
     </div>
   </div>
 </footer>
 
-<script src="/assets/site.js?v=6"></script>
+<script>
+(function(){
+  var bar=document.getElementById('bar');
+  addEventListener('scroll', function(){ bar.classList.toggle('scrolled', scrollY>16); }, {passive:true});
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting||e.boundingClientRect.top<0){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  },{threshold:.12, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+})();
+</script>
 </body>
 </html>
