@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════
-   jisoar. — design system v3
-   white · bold Korean type · one signature gradient
-   grammar: toss(스토리텔링·그레이스케일) × stripe(그라데이션 포인트)
+   jisoar. — design system v4
+   white · bold Korean type · single coral accent
+   grammar: skcareers(장면·스크롤 내러티브) × toss(그레이스케일 절제)
+   gradient text/glow 전면 제거 — 액센트는 코랄 단색만
    ═══════════════════════════════════════════════ */
 
 :root{
@@ -75,9 +76,9 @@ section{position:relative}
   color:var(--coral); margin-bottom:16px}
 h1.display{font-weight:900; letter-spacing:-.04em; line-height:1.12;
   font-size:clamp(40px,7.2vw,86px); color:var(--ink)}
-h1.display .grad, .grad-text{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+h1.display .grad, .grad-text{color:inherit}
 h2.title{font-weight:800; font-size:clamp(30px,4.6vw,52px); letter-spacing:-.035em; line-height:1.22; margin-bottom:18px}
-h2.title .grad{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+h2.title .grad{color:inherit}
 p.lead{color:var(--sub); font-weight:400; line-height:1.75; font-size:clamp(16px,2.4vw,19px); max-width:640px}
 p.lead b{color:var(--ink); font-weight:700}
 
@@ -85,7 +86,7 @@ p.lead b{color:var(--ink); font-weight:700}
 .page-hero{padding:200px 0 96px}
 .page-hero .eyebrow{font-size:15px}
 .page-hero h1{font-weight:900; font-size:clamp(38px,6.4vw,74px); letter-spacing:-.04em; line-height:1.16; color:var(--ink)}
-.page-hero h1 .grad{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+.page-hero h1 .grad{color:inherit}
 .page-hero p{margin-top:24px; color:var(--sub); font-size:clamp(16px,2.4vw,19px); line-height:1.75; max-width:620px}
 .page-hero p b{color:var(--ink); font-weight:700}
 @media(max-width:640px){.page-hero{padding:150px 0 64px}}
@@ -97,7 +98,7 @@ p.lead b{color:var(--ink); font-weight:700}
   transition:transform .18s ease, box-shadow .18s ease, background .18s ease}
 .btn.primary{background:var(--ink); color:#fff}
 .btn.primary:hover{transform:translateY(-2px); background:#333d4b; box-shadow:var(--shadow-md)}
-.btn.accent{background:linear-gradient(93deg,#ff8a50,#f4512c); color:#fff}
+.btn.accent{background:var(--coral-deep); color:#fff}
 .btn.accent:hover{transform:translateY(-2px); box-shadow:0 14px 32px rgba(244,81,44,.32)}
 .btn.soft{background:var(--bg3); color:var(--ink)}
 .btn.soft:hover{transform:translateY(-2px); background:#e8ebee}
@@ -110,7 +111,7 @@ p.lead b{color:var(--ink); font-weight:700}
 .stats{display:grid; grid-template-columns:1fr 1fr; gap:36px 20px}
 @media(min-width:820px){.stats{grid-template-columns:repeat(4,1fr)}}
 .stat .v{font-weight:900; font-size:clamp(38px,5vw,56px); letter-spacing:-.04em; line-height:1.1; color:var(--ink)}
-.stat .v .grad{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+.stat .v .grad{color:inherit}
 .stat .l{margin-top:8px; font-size:15px; font-weight:500; color:var(--mut)}
 
 /* ── service cards ── */
@@ -123,7 +124,7 @@ p.lead b{color:var(--ink); font-weight:700}
 .band .card{background:#fff; box-shadow:var(--shadow-sm)}
 a.card:hover{transform:translateY(-6px); box-shadow:var(--shadow-lg); background:#fff}
 .card .ico{width:52px; height:52px; border-radius:15px; display:flex; align-items:center; justify-content:center;
-  background:var(--grad-soft); margin-bottom:22px}
+  background:var(--bg3); margin-bottom:22px}
 .card .ico svg{width:26px; height:26px}
 .card .t{font-size:21px; font-weight:800; letter-spacing:-.02em; margin-bottom:9px}
 .card .d{font-size:15.5px; color:var(--sub); line-height:1.7}
@@ -152,7 +153,7 @@ a.card:hover{transform:translateY(-6px); box-shadow:var(--shadow-lg); background
 .phone .scr{padding:52px 16px 16px; height:100%; display:flex; flex-direction:column; gap:10px; background:#fafbfc}
 .phone .appbar{font-weight:800; font-size:15px; letter-spacing:-.02em; padding:2px 4px 8px}
 .phone .appbar .dot{color:var(--coral)}
-.phone .hero-card{border-radius:16px; padding:16px 14px; color:#fff; background:var(--grad)}
+.phone .hero-card{border-radius:16px; padding:16px 14px; color:#fff; background:var(--ink)}
 .phone .hero-card .hc-l{font-size:10.5px; opacity:.85; font-weight:600}
 .phone .hero-card .hc-v{font-size:19px; font-weight:800; letter-spacing:-.02em; margin-top:2px}
 .phone .row{display:flex; align-items:center; gap:10px; background:#fff; border-radius:14px; padding:11px 12px; box-shadow:var(--shadow-sm)}
@@ -188,7 +189,7 @@ a.card:hover{transform:translateY(-6px); box-shadow:var(--shadow-lg); background
 .browser .chart{display:flex; align-items:flex-end; gap:7px; height:110px; padding:12px;
   border:1px solid var(--line); border-radius:12px}
 .browser .chart i{flex:1; border-radius:5px 5px 2px 2px; background:var(--bg3)}
-.browser .chart i.hot{background:linear-gradient(180deg,#ff9d6c,#f4512c)}
+.browser .chart i.hot{background:var(--coral-deep)}
 
 /* ── process steps ── */
 .steps{display:grid; gap:18px; counter-reset:step; margin-top:44px}
@@ -196,15 +197,14 @@ a.card:hover{transform:translateY(-6px); box-shadow:var(--shadow-lg); background
 .step{background:var(--bg2); border-radius:20px; padding:28px 26px; counter-increment:step}
 .band .step{background:#fff; box-shadow:var(--shadow-sm)}
 .step::before{content:"0" counter(step); display:block; font-weight:900; font-size:15px;
-  letter-spacing:-.01em; margin-bottom:14px;
-  background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+  letter-spacing:-.01em; margin-bottom:14px; color:var(--coral)}
 .step h3{font-size:18px; font-weight:800; letter-spacing:-.02em; margin-bottom:8px}
 .step p{font-size:14.5px; color:var(--sub); line-height:1.7}
 
 /* ── timeline ── */
 .timeline{position:relative; margin-top:48px; padding-left:36px}
 .timeline::before{content:""; position:absolute; left:8px; top:8px; bottom:8px; width:2px; border-radius:2px;
-  background:linear-gradient(180deg,#ff7e54,#f65c9a 40%,var(--line) 90%)}
+  background:var(--line)}
 .tl{position:relative; padding:0 0 52px}
 .tl:last-child{padding-bottom:0}
 .tl::before{content:""; position:absolute; left:-34px; top:7px; width:12px; height:12px; border-radius:50%;
@@ -223,10 +223,10 @@ a.card:hover{transform:translateY(-6px); box-shadow:var(--shadow-lg); background
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq .a{padding:0 0 24px; color:var(--sub); font-size:15.5px; line-height:1.8; max-width:640px}
 
-/* ── CTA band (그라데이션 풀블리드) ── */
-.cta-band{background:var(--grad); color:#fff; text-align:center; padding:120px 0; overflow:hidden; position:relative}
+/* ── CTA band (잉크 다크 풀블리드) ── */
+.cta-band{background:#12161d; color:#fff; text-align:center; padding:120px 0; overflow:hidden; position:relative}
 .cta-band::after{content:""; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(70% 100% at 50% 0%, rgba(255,255,255,.14), transparent 60%)}
+  background:radial-gradient(70% 100% at 50% 0%, rgba(255,255,255,.05), transparent 60%)}
 .cta-band .big{font-weight:900; font-size:clamp(32px,5.6vw,60px); letter-spacing:-.035em; line-height:1.22; position:relative; z-index:1}
 .cta-band p{margin-top:16px; font-size:17.5px; opacity:.92; position:relative; z-index:1}
 .cta-band .row{margin-top:38px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1}

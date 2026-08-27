@@ -15,36 +15,53 @@
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-<link rel="stylesheet" href="/assets/site.css?v=3" />
+<link rel="stylesheet" href="/assets/site.css?v=4" />
 <style>
-  .hero{min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:center;
-    text-align:center; position:relative; padding:140px 0 100px; overflow:hidden}
-  .hero .glow{position:absolute; inset:0; z-index:-1; pointer-events:none;
-    background:
-      radial-gradient(46% 38% at 78% 16%, rgba(255,178,107,.16), transparent 70%),
-      radial-gradient(40% 34% at 16% 24%, rgba(246,92,154,.10), transparent 70%),
-      radial-gradient(52% 40% at 50% 108%, rgba(138,99,244,.10), transparent 70%)}
-  .hero .kicker{display:inline-flex; align-items:center; gap:8px; font-size:14.5px; font-weight:700; color:var(--sub);
-    background:#fff; border:1px solid var(--line); box-shadow:var(--shadow-sm);
-    padding:9px 18px; border-radius:999px; margin-bottom:30px;
-    opacity:0; animation:rise .8s var(--ease) .05s forwards}
-  .hero .kicker .pulse{width:7px; height:7px; border-radius:50%; background:var(--coral);
-    box-shadow:0 0 0 3px rgba(255,107,61,.18)}
-  .hero h1{opacity:0; transform:translateY(26px); animation:rise .95s var(--ease) .18s forwards}
-  .hero .sub{margin-top:26px; color:var(--sub); font-size:clamp(16.5px,2.6vw,20px); line-height:1.75;
-    max-width:560px; opacity:0; transform:translateY(20px); animation:rise .95s var(--ease) .36s forwards}
-  .hero .sub b{color:var(--ink); font-weight:700}
-  .hero .row{margin-top:40px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
-    opacity:0; transform:translateY(16px); animation:rise .9s var(--ease) .52s forwards}
-  .hero .proof{margin-top:34px; font-size:14px; font-weight:600; color:var(--mut);
-    opacity:0; animation:rise .9s var(--ease) .68s forwards}
-  .hero .proof b{color:var(--sub); font-weight:700}
-  @keyframes rise{to{opacity:1; transform:none}}
+  /* ═══ skcareers-grammar hero ═══
+     surreal sky scene · brand-color object rising through clouds
+     · scroll-driven copy, one line at a time                     */
+  .skyhero{height:340vh; position:relative}
+  .skyhero .pin{position:sticky; top:0; height:100svh; overflow:hidden;
+    background:linear-gradient(180deg,#2f7ed9 0%,#4a95e4 34%,#7cb5ee 66%,#b9d9f6 100%)}
+  .skyhero canvas{position:absolute; inset:0; width:100%; height:100%}
+  .skyhero .mark3d{position:absolute; left:50%; bottom:-4%;
+    width:min(46vw,560px); transform:translateX(-14%);
+    filter:drop-shadow(0 30px 60px rgba(20,60,120,.25))}
+  .skyhero .copy{position:absolute; z-index:3; left:max(6.5vw,28px); top:42%;
+    color:#fff; text-shadow:0 2px 24px rgba(30,70,130,.35)}
+  .skyhero .copy .ln{font-size:clamp(23px,2.9vw,42px); font-weight:700;
+    letter-spacing:-.025em; line-height:1.5; opacity:0; transform:translateY(14px);
+    transition:opacity .5s ease, transform .7s var(--ease)}
+  .skyhero .copy .ln.dim{opacity:.42; transform:none}
+  .skyhero .copy .ln.on{opacity:1; transform:none}
+  .skyhero .scroll-hint{position:absolute; z-index:3; bottom:34px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:11px;
+    font-size:10.5px; font-weight:700; letter-spacing:.3em; color:rgba(255,255,255,.8)}
+  .skyhero .scroll-hint i{width:1px; height:34px; background:rgba(255,255,255,.7);
+    animation:drop 2.4s ease-in-out infinite}
+  @keyframes drop{
+    0%{transform:scaleY(0); transform-origin:top}
+    45%{transform:scaleY(1); transform-origin:top}
+    55%{transform:scaleY(1); transform-origin:bottom}
+    100%{transform:scaleY(0); transform-origin:bottom}}
+
+  /* nav over sky (before scroll): white type */
+  .nav.dark:not(.scrolled) .wm{color:#fff}
+  .nav.dark:not(.scrolled) .brand svg rect{fill:rgba(255,255,255,.16)}
+  .nav.dark:not(.scrolled) .links a{color:rgba(255,255,255,.85)}
+  .nav.dark:not(.scrolled) .links a:hover{color:#fff; background:rgba(255,255,255,.12)}
+  .nav.dark:not(.scrolled) .links a.active{color:#fff}
+  .nav.dark:not(.scrolled) .cta{background:#fff; color:var(--ink)}
+  .nav.dark:not(.scrolled) .burger span{background:#fff}
+  @media (prefers-reduced-motion: reduce){
+    .skyhero{height:100svh}
+    .skyhero .copy .ln{opacity:1 !important; transform:none !important}
+  }
 </style>
 </head>
 <body>
 
-<nav class="nav" id="nav">
+<nav class="nav dark" id="nav">
   <a class="brand" href="/" aria-label="jisoar home">
     <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
       <rect width="32" height="32" rx="8" fill="#191f28"/>
@@ -64,18 +81,40 @@
   <button class="burger" aria-label="메뉴" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
 
-<header class="hero">
-  <div class="glow" aria-hidden="true"></div>
-  <div class="wrap">
-    <div class="kicker"><span class="pulse"></span> 웹 · 앱 · 시스템 개발 스튜디오</div>
-    <h1 class="display">아이디어를,<br/><span class="grad">현실</span>로 만듭니다</h1>
-    <p class="sub">홈페이지 한 장부터 설비 모니터링 시스템까지.<br/>
-      기획 · 개발 · 배포 · 운영을 <b>한 곳에서</b> 완성합니다.</p>
-    <div class="row">
-      <a class="btn accent" href="/contact/">프로젝트 문의하기 <span class="arr">→</span></a>
-      <a class="btn soft" href="/work/">작업물 보기</a>
+<header class="skyhero" id="skyhero">
+  <div class="pin">
+    <canvas id="cloudsBack" style="z-index:0" aria-hidden="true"></canvas>
+    <svg class="mark3d" id="mark3d" style="z-index:1" viewBox="0 0 640 640" aria-hidden="true">
+      <defs>
+        <linearGradient id="mFront" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff9066"/><stop offset="1" stop-color="#f4512c"/>
+        </linearGradient>
+        <linearGradient id="mFront2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff9ec0"/><stop offset="1" stop-color="#f65c9a"/>
+        </linearGradient>
+      </defs>
+      <!-- small pink chevron, behind & left -->
+      <g transform="translate(18,266) scale(.62)">
+        <polygon points="88,522 308,2 528,522 412,522 308,177 204,522" fill="#c93d76"/>
+        <polygon points="30,560 250,40 308,2 88,522" fill="#ff85b3"/>
+        <polygon points="250,40 470,560 528,522 308,2" fill="#d1417d"/>
+        <polygon points="30,560 250,40 470,560 354,560 250,215 146,560" fill="url(#mFront2)"/>
+      </g>
+      <!-- main coral chevron -->
+      <g transform="translate(120,20)">
+        <polygon points="88,522 308,2 528,522 412,522 308,177 204,522" fill="#c23a17"/>
+        <polygon points="30,560 250,40 308,2 88,522" fill="#ffb08a"/>
+        <polygon points="250,40 470,560 528,522 308,2" fill="#d63d1e"/>
+        <polygon points="30,560 250,40 470,560 354,560 250,215 146,560" fill="url(#mFront)"/>
+      </g>
+    </svg>
+    <canvas id="cloudsFront" style="z-index:2" aria-hidden="true"></canvas>
+    <div class="copy">
+      <p class="ln">머릿속에 잠든 아이디어가 있으신가요?</p>
+      <p class="ln">당신의 아이디어와 jisoar가 만나면</p>
+      <p class="ln">현실이 됩니다.</p>
     </div>
-    <p class="proof"><b>App Store · Google Play 정식 출시</b> 경험 · 실사용 서비스 운영 중</p>
+    <div class="scroll-hint" aria-hidden="true"><i></i>SCROLL</div>
   </div>
 </header>
 
@@ -84,7 +123,7 @@
     <div class="stats">
       <div class="stat reveal"><div class="v"><span data-count="6">0</span><span class="grad">+</span></div><div class="l">출시한 프로덕트</div></div>
       <div class="stat reveal d1"><div class="v"><span data-count="4">0</span></div><div class="l">운영 중인 서비스</div></div>
-      <div class="stat reveal d2"><div class="v">iOS·AOS</div><div class="l">앱스토어 정식 출시</div></div>
+      <div class="stat reveal d2"><div class="v">iOS</div><div class="l">App Store 정식 출시</div></div>
       <div class="stat reveal d3"><div class="v"><span class="grad">100</span>%</div><div class="l">기획부터 운영까지 직접</div></div>
     </div>
   </div>
@@ -133,7 +172,7 @@
       <div class="reveal">
         <div class="tagline">Mobile App · iOS & Android</div>
         <h3>스토어에 직접<br/>올려본 팀은 다릅니다</h3>
-        <p class="desc">길드 커뮤니티 앱 <b style="font-weight:700;color:var(--ink)">Guild Lounge</b>를 App Store와 Google Play에 정식 출시했습니다.
+        <p class="desc">길드 커뮤니티 앱 <b style="font-weight:700;color:var(--ink)">Guild Lounge</b>를 App Store에 정식 출시했습니다.
           심사 리젝 대응부터 업데이트 배포까지 — 앱은 만드는 것보다 올리고 운영하는 게 진짜 일이라는 걸 압니다.</p>
         <a class="go" href="/products/guild-lounge/">케이스 스터디 <span class="arr">→</span></a>
       </div>
@@ -235,6 +274,103 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=3"></script>
+<script src="/assets/site.js?v=4"></script>
+<script>
+/* skyhero: procedural cloud scene + scroll narrative (skcareers grammar) */
+(function(){
+  var hero = document.getElementById('skyhero'); if (!hero) return;
+  var pin = hero.querySelector('.pin');
+  var backC = document.getElementById('cloudsBack'), frontC = document.getElementById('cloudsFront');
+  var mark = document.getElementById('mark3d');
+  var lines = hero.querySelectorAll('.copy .ln');
+  var hint = hero.querySelector('.scroll-hint');
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bx = backC.getContext('2d'), fx = frontC.getContext('2d');
+  var W, H, DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function mulberry(a){ return function(){ a|=0; a=a+0x6D2B79F5|0;
+    var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296; }; }
+
+  /* one cloud sprite = cluster of soft white blobs, shaded underside */
+  function makeCloud(seed){
+    var w=680, h=420, c=document.createElement('canvas'); c.width=w; c.height=h;
+    var x=c.getContext('2d'), rnd=mulberry(seed), n=46;
+    for (var i=0;i<n;i++){
+      var px = w*0.5 + (rnd()-0.5)*w*0.66;
+      var edge = Math.abs(px-w/2)/(w/2);
+      var py = h*0.52 + (rnd()-0.5)*h*0.34 + Math.pow(edge,1.7)*h*0.16;
+      var r = (0.08+rnd()*0.13)*w * (1-edge*0.55);
+      r = Math.min(r, px, w-px, py, h-py);   /* keep blobs inside the sprite */
+      if (r<8) continue;
+      var g = x.createRadialGradient(px,py,r*0.08,px,py,r);
+      g.addColorStop(0,'rgba(255,255,255,.92)');
+      g.addColorStop(0.55,'rgba(255,255,255,.55)');
+      g.addColorStop(1,'rgba(255,255,255,0)');
+      x.fillStyle=g; x.beginPath(); x.arc(px,py,r,0,7); x.fill();
+    }
+    x.globalCompositeOperation='source-atop';
+    var sh = x.createLinearGradient(0,h*0.35,0,h);
+    sh.addColorStop(0,'rgba(255,255,255,0)');
+    sh.addColorStop(1,'rgba(132,168,214,.42)');
+    x.fillStyle=sh; x.fillRect(0,0,w,h);
+    return c;
+  }
+  var sprites = [makeCloud(11), makeCloud(47), makeCloud(83), makeCloud(129)];
+
+  /* layered cloud instances: d=depth(0 far..1 near), x/y in vw/vh units */
+  var BACK = [
+    {s:0,x:.66,y:.16,sc:.52,d:.25},{s:1,x:.10,y:.30,sc:.62,d:.35},
+    {s:2,x:.84,y:.44,sc:.58,d:.30},{s:3,x:.38,y:.24,sc:.44,d:.22},
+    {s:1,x:.55,y:.55,sc:.80,d:.45},{s:0,x:-.05,y:.60,sc:.90,d:.50}
+  ];
+  var FRONT = [
+    {s:2,x:.04,y:.78,sc:1.55,d:.85},{s:0,x:.48,y:.86,sc:1.85,d:1.0},
+    {s:3,x:.80,y:.80,sc:1.45,d:.90},{s:1,x:.30,y:.94,sc:1.60,d:.95}
+  ];
+
+  function resize(){
+    W=innerWidth; H=innerHeight;
+    [backC,frontC].forEach(function(c){ c.width=W*DPR; c.height=H*DPR; });
+  }
+  resize(); addEventListener('resize', function(){ resize(); draw(prog(), t); });
+
+  function drawLayer(ctx, list, p, t){
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.clearRect(0,0,W,H);
+    list.forEach(function(cl){
+      var sp = sprites[cl.s], w = W*cl.sc*0.6, h = w*0.62;
+      var drift = ((t*8*(0.3+cl.d)) % (W+w));
+      var x = ((cl.x*W + drift + w) % (W+w*2)) - w;
+      var y = cl.y*H + p*H*0.6*cl.d;     /* scroll ⇒ camera rises, clouds sink */
+      ctx.drawImage(sp, x, y, w, h);
+    });
+  }
+
+  function prog(){
+    var r = hero.getBoundingClientRect();
+    var total = r.height - H;
+    return total>0 ? Math.min(1, Math.max(0, -r.top/total)) : 1;
+  }
+
+  var t=0, last=null;
+  function draw(p, time){
+    drawLayer(bx, BACK, p, time);
+    drawLayer(fx, FRONT, p, time);
+    mark.style.transform = 'translateX(-14%) translateY(' + (-p*H*0.10) + 'px)';
+    lines.forEach(function(ln,i){ ln.classList.toggle('on', p > 0.06+i*0.30); });
+    if (hint) hint.style.opacity = p>0.85 ? 0 : 1;
+  }
+  if (reduced){ draw(1,0); lines.forEach(function(l){l.classList.add('on');}); }
+  else {
+    (function loop(ts){
+      if (last==null) last=ts;
+      t += Math.min(ts-last,50)/1000; last=ts;
+      draw(prog(), t);
+      requestAnimationFrame(loop);
+    })(0);
+  }
+})();
+</script>
 </body>
 </html>
