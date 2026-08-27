@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>JISOAR — 아이디어를 현실로 만드는 개발 스튜디오</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%232050c8' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23faf9f6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="JISOAR — 아이디어를 현실로 만드는 개발 스튜디오. 웹사이트·모바일 앱·관리자 대시보드·산업 IoT까지, 기획부터 배포·운영을 한 곳에서." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/" />
@@ -16,6 +16,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://images.unsplash.com" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" />
 <style>
 /* ═══════════════════════════════════════════════════════
    jisoar. home v7 — light editorial + real photography
@@ -24,8 +25,9 @@
    ═══════════════════════════════════════════════════════ */
 :root{
   --bg:#faf9f6; --ink:#1b1812; --mut:#6f6a60; --faint:#a8a296;
-  --line:#e6e2d8; --accent:#2050c8;
+  --line:#e6e2d8; --accent:#1b1812;
   --sans:'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
+  --disp:'Clash Display', 'Pretendard Variable', Pretendard, sans-serif;
   --ease:cubic-bezier(.16,1,.3,1);
 }
 *{box-sizing:border-box; margin:0; padding:0}
@@ -44,7 +46,7 @@ a{color:inherit; text-decoration:none}
   transition:background .4s ease, padding .4s ease, color .4s ease, box-shadow .4s ease}
 .bar.scrolled{background:rgba(250,249,246,.86); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
   padding:14px clamp(20px,3.4vw,52px); color:var(--ink); box-shadow:0 1px 0 var(--line)}
-.bar .brand{font-weight:800; font-size:17px; letter-spacing:-.02em}
+.bar .brand{font-family:var(--disp); font-weight:600; font-size:18px; letter-spacing:-.01em}
 .bar .brand sup{font-size:9px; vertical-align:super; margin-left:1px; opacity:.6}
 .bar nav{display:flex; gap:clamp(14px,2.4vw,36px)}
 .bar nav a{font-size:12.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
@@ -57,17 +59,17 @@ a{color:inherit; text-decoration:none}
 .mast{height:100svh; position:relative; overflow:hidden;
   display:flex; flex-direction:column; align-items:center; justify-content:center}
 .mast .photo{position:absolute; inset:0; background:
-  url("https://images.unsplash.com/photo-1542349314-b0ceb4d90f2d?q=80&w=2400&auto=format&fit=crop")
-  center 38% / cover no-repeat #7db8e8}
+  url("https://images.unsplash.com/photo-1745263863420-7a41c0763a2e?q=80&w=2400&auto=format&fit=crop")
+  center 68% / cover no-repeat #35507e}
 .mast .photo::after{content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(30,70,120,.16) 0%, rgba(30,70,120,0) 34%)}
+  background:linear-gradient(180deg, rgba(10,25,55,.22) 0%, rgba(10,25,55,0) 36%)}
 .mast .wordmark{position:relative; z-index:1; color:#fff;
-  font-weight:800; letter-spacing:-.045em; line-height:1.06;
+  font-family:var(--disp); font-weight:600; letter-spacing:-.02em; line-height:1.04;
   font-size:clamp(88px,19vw,360px); white-space:nowrap; user-select:none;
-  margin-top:-9svh; text-shadow:0 4px 40px rgba(20,60,110,.28)}
+  margin-top:-16svh; text-shadow:0 4px 44px rgba(8,20,45,.35)}
 .mast .wordmark .ch{display:inline-block; opacity:0; transform:translateY(.32em);
   animation:chUp 1s var(--ease) forwards}
-.mast .wordmark .dot{color:var(--accent)}
+.mast .wordmark .dot{color:#fff}
 @keyframes chUp{to{opacity:1; transform:none}}
 .mast .sub{position:relative; z-index:1; margin-top:clamp(6px,1.4vh,18px);
   color:#fff; font-size:clamp(14.5px,1.6vw,19px); font-weight:600; letter-spacing:.01em;
@@ -77,7 +79,7 @@ a{color:inherit; text-decoration:none}
   display:flex; justify-content:space-between; align-items:flex-end;
   padding:0 clamp(20px,3.4vw,52px);
   font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
-  color:rgba(27,42,58,.72)}
+  color:rgba(255,255,255,.8); text-shadow:0 1px 14px rgba(8,20,45,.4)}
 .mast .meta span{display:block; line-height:1.7}
 .mast .meta .r{text-align:right}
 @keyframes fadeUp{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
@@ -86,8 +88,8 @@ a{color:inherit; text-decoration:none}
 .marq{border-bottom:1px solid var(--line); overflow:hidden;
   padding:clamp(16px,2.2vw,26px) 0; white-space:nowrap; background:var(--bg)}
 .marq .track{display:inline-block; animation:marq 38s linear infinite}
-.marq span{font-size:clamp(28px,3.6vw,54px); font-weight:800; letter-spacing:-.03em; margin-right:1.6em}
-.marq .ast{color:var(--accent); font-weight:400}
+.marq span{font-family:var(--disp); font-size:clamp(28px,3.6vw,54px); font-weight:600; letter-spacing:-.01em; margin-right:1.6em}
+.marq .ast{color:var(--faint); font-weight:400}
 @keyframes marq{from{transform:translateX(0)} to{transform:translateX(-50%)}}
 
 /* ── shared section chrome ── */
@@ -122,8 +124,8 @@ section{position:relative}
   padding:clamp(26px,3.4vw,44px) 0; border-bottom:1px solid var(--line); position:relative;
   transition:padding-left .45s var(--ease)}
 .wrow .idx{font-size:12.5px; font-weight:700; letter-spacing:.1em; color:var(--faint); min-width:2.4em}
-.wrow .name{font-size:clamp(26px,3.8vw,58px); font-weight:800; letter-spacing:-.035em; line-height:1.14;
-  transition:color .3s ease}
+.wrow .name{font-family:var(--disp); font-size:clamp(26px,3.8vw,58px); font-weight:600; letter-spacing:-.015em; line-height:1.14;
+  transition:opacity .3s ease}
 .wrow .cat{font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   color:var(--mut); text-align:right; line-height:1.8; white-space:nowrap}
 .wrow .cat b{display:block; color:var(--faint); font-weight:700}
@@ -131,7 +133,7 @@ section{position:relative}
   font-size:clamp(20px,2.2vw,32px); color:var(--accent); opacity:0;
   transition:opacity .3s ease, transform .45s var(--ease)}
 .wrow:hover{padding-left:clamp(10px,1.6vw,26px)}
-.wrow:hover .name{color:var(--accent)}
+.wrow:hover .name{opacity:.55}
 .wrow:hover::after{opacity:1; transform:translate(0,-50%)}
 @media(max-width:640px){.wrow{grid-template-columns:auto 1fr}.wrow .cat{display:none}}
 

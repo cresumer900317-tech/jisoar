@@ -8,8 +8,8 @@
 :root{
   --ink:#191f28; --sub:#4e5968; --mut:#8b95a1; --faint:#b0b8c1;
   --bg:#ffffff; --bg2:#f7f8fa; --bg3:#f2f4f6; --line:#e5e8eb;
-  --coral:#2050c8; --coral-deep:#1a44ad;
-  --grad:linear-gradient(93deg,#6f8fe0 0%,#2b5fd9 32%,#2b5fd9 68%,#2050c8 100%);
+  --coral:#333d4b; --coral-deep:#191f28;
+  --grad:linear-gradient(93deg,#8b95a1 0%,#4e5968 32%,#4e5968 68%,#333d4b 100%);
   --grad-soft:linear-gradient(135deg,#fff3ea,#ffe9f1 55%,#f1ecff);
   --sans:'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
   --ease:cubic-bezier(.22,.68,.22,1);
@@ -22,7 +22,7 @@ html{scroll-behavior:smooth}
 body{font-family:var(--sans); color:var(--ink); background:var(--bg);
   overflow-x:hidden; -webkit-font-smoothing:antialiased; line-height:1.62;
   word-break:keep-all; overflow-wrap:break-word}
-::selection{background:rgba(32,80,200,.22)}
+::selection{background:rgba(25,31,40,.16)}
 a{color:inherit}
 img{max-width:100%;display:block}
 
@@ -99,7 +99,7 @@ p.lead b{color:var(--ink); font-weight:700}
 .btn.primary{background:var(--ink); color:#fff}
 .btn.primary:hover{transform:translateY(-2px); background:#333d4b; box-shadow:var(--shadow-md)}
 .btn.accent{background:var(--coral-deep); color:#fff}
-.btn.accent:hover{transform:translateY(-2px); box-shadow:0 14px 32px rgba(26,68,173,.32)}
+.btn.accent:hover{transform:translateY(-2px); box-shadow:0 14px 32px rgba(25,31,40,.28)}
 .btn.soft{background:var(--bg3); color:var(--ink)}
 .btn.soft:hover{transform:translateY(-2px); background:#e8ebee}
 .btn.white{background:#fff; color:var(--ink)}
@@ -159,8 +159,8 @@ a.card:hover{transform:translateY(-6px); box-shadow:var(--shadow-lg); background
 .phone .row{display:flex; align-items:center; gap:10px; background:#fff; border-radius:14px; padding:11px 12px; box-shadow:var(--shadow-sm)}
 .phone .row .avatar{width:32px; height:32px; border-radius:50%; flex-shrink:0;
   background:linear-gradient(135deg,#ffd9a8,#ff9d6c)}
-.phone .row:nth-child(4) .avatar{background:linear-gradient(135deg,#c9b8ff,#2050c8)}
-.phone .row:nth-child(5) .avatar{background:linear-gradient(135deg,#ffc2d4,#2b5fd9)}
+.phone .row:nth-child(4) .avatar{background:linear-gradient(135deg,#c9b8ff,#333d4b)}
+.phone .row:nth-child(5) .avatar{background:linear-gradient(135deg,#ffc2d4,#4e5968)}
 .phone .row .bar{height:8px; border-radius:4px; background:var(--bg3); flex:1}
 .phone .row .bar i{display:block; height:100%; border-radius:4px; background:var(--ink); opacity:.85}
 .phone .row .rank{font-size:12px; font-weight:800; color:var(--mut); width:16px; text-align:center}
