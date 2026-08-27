@@ -59,12 +59,12 @@ a{color:inherit; text-decoration:none}
 .mast{height:100svh; position:relative; overflow:hidden;
   display:flex; flex-direction:column; align-items:center; justify-content:center}
 .mast .photo{position:absolute; inset:0;
-  background-image:url("https://images.unsplash.com/photo-1531147646552-1eec68116469?q=85&w=2560&auto=format&fit=crop");
+  background-image:url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?q=85&w=2560&auto=format&fit=crop");
   background-image:image-set(
-    url("https://images.unsplash.com/photo-1531147646552-1eec68116469?q=85&w=2560&auto=format&fit=crop") 1x,
-    url("https://images.unsplash.com/photo-1531147646552-1eec68116469?q=85&w=5120&auto=format&fit=crop") 2x);
-  background-position:center 62%; background-size:cover; background-repeat:no-repeat;
-  background-color:#1d63c0}
+    url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?q=85&w=2560&auto=format&fit=crop") 1x,
+    url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?q=85&w=5120&auto=format&fit=crop") 2x);
+  background-position:center 55%; background-size:cover; background-repeat:no-repeat;
+  background-color:#6aa7e8}
 .mast .photo::before{content:""; position:absolute; inset:0; opacity:.05; pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
 .mast .photo::after{content:""; position:absolute; inset:0;
@@ -85,7 +85,7 @@ a{color:inherit; text-decoration:none}
   display:flex; justify-content:space-between; align-items:flex-end;
   padding:0 clamp(20px,3.4vw,52px);
   font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
-  color:rgba(21,45,86,.62)}
+  color:rgba(255,255,255,.85); text-shadow:0 1px 12px rgba(20,50,100,.35)}
 .mast .meta span{display:block; line-height:1.7}
 .mast .meta .r{text-align:right}
 @keyframes fadeUp{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
