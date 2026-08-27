@@ -83,32 +83,7 @@
 
 <header class="skyhero" id="skyhero">
   <div class="pin">
-    <canvas id="cloudsBack" style="z-index:0" aria-hidden="true"></canvas>
-    <svg class="mark3d" id="mark3d" style="z-index:1" viewBox="0 0 640 640" aria-hidden="true">
-      <defs>
-        <linearGradient id="mFront" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ff9066"/><stop offset="1" stop-color="#f4512c"/>
-        </linearGradient>
-        <linearGradient id="mFront2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ff9ec0"/><stop offset="1" stop-color="#f65c9a"/>
-        </linearGradient>
-      </defs>
-      <!-- small pink chevron, behind & left -->
-      <g transform="translate(18,266) scale(.62)">
-        <polygon points="88,522 308,2 528,522 412,522 308,177 204,522" fill="#c93d76"/>
-        <polygon points="30,560 250,40 308,2 88,522" fill="#ff85b3"/>
-        <polygon points="250,40 470,560 528,522 308,2" fill="#d1417d"/>
-        <polygon points="30,560 250,40 470,560 354,560 250,215 146,560" fill="url(#mFront2)"/>
-      </g>
-      <!-- main coral chevron -->
-      <g transform="translate(120,20)">
-        <polygon points="88,522 308,2 528,522 412,522 308,177 204,522" fill="#c23a17"/>
-        <polygon points="30,560 250,40 308,2 88,522" fill="#ffb08a"/>
-        <polygon points="250,40 470,560 528,522 308,2" fill="#d63d1e"/>
-        <polygon points="30,560 250,40 470,560 354,560 250,215 146,560" fill="url(#mFront)"/>
-      </g>
-    </svg>
-    <canvas id="cloudsFront" style="z-index:2" aria-hidden="true"></canvas>
+    <canvas id="scene" style="z-index:0" aria-hidden="true"></canvas>
     <div class="copy">
       <p class="ln">머릿속에 잠든 아이디어가 있으신가요?</p>
       <p class="ln">당신의 아이디어와 jisoar가 만나면</p>
@@ -275,98 +250,162 @@
 </footer>
 
 <script src="/assets/site.js?v=4"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
-/* skyhero: procedural cloud scene + scroll narrative (skcareers grammar) */
+/* skyhero: real-time 3D sky scene (three.js) + scroll narrative */
 (function(){
   var hero = document.getElementById('skyhero'); if (!hero) return;
-  var pin = hero.querySelector('.pin');
-  var backC = document.getElementById('cloudsBack'), frontC = document.getElementById('cloudsFront');
-  var mark = document.getElementById('mark3d');
+  var cv = document.getElementById('scene');
   var lines = hero.querySelectorAll('.copy .ln');
   var hint = hero.querySelector('.scroll-hint');
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var bx = backC.getContext('2d'), fx = frontC.getContext('2d');
-  var W, H, DPR = Math.min(window.devicePixelRatio || 1, 2);
 
+  function prog(){
+    var r = hero.getBoundingClientRect(), total = r.height - innerHeight;
+    return total>0 ? Math.min(1, Math.max(0, -r.top/total)) : 1;
+  }
+  function setCopy(p){
+    lines.forEach(function(ln,i){ ln.classList.toggle('on', p > 0.06+i*0.30); });
+    if (hint) hint.style.opacity = p>0.85 ? 0 : 1;
+  }
+
+  if (typeof THREE === 'undefined' || !window.WebGLRenderingContext){
+    setCopy(1); return;                       /* graceful: sky gradient + copy only */
+  }
+
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:false}); }
+  catch(e){ setCopy(1); return; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  var scene = new THREE.Scene();
+
+  /* sky: vertical gradient canvas texture + distance fog */
+  (function(){
+    var c=document.createElement('canvas'); c.width=2; c.height=512;
+    var x=c.getContext('2d'), g=x.createLinearGradient(0,0,0,512);
+    g.addColorStop(0.00,'#1760c2'); g.addColorStop(0.42,'#4694e4');
+    g.addColorStop(0.75,'#9cc8f2'); g.addColorStop(1.00,'#dbeafb');
+    x.fillStyle=g; x.fillRect(0,0,2,512);
+    var t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
+    scene.background=t;
+  })();
+  scene.fog = new THREE.Fog(0xbfd9f4, 26, 60);
+
+  var camera = new THREE.PerspectiveCamera(46, 1, 0.1, 200);
+  camera.position.set(0, 0.6, 14);
+
+  /* lighting: warm key sun + cool sky fill */
+  var hemi = new THREE.HemisphereLight(0xcfe4ff, 0xffffff, 1.15); scene.add(hemi);
+  var sun = new THREE.DirectionalLight(0xfff1e0, 2.2); sun.position.set(6,9,7); scene.add(sun);
+  var fill = new THREE.DirectionalLight(0xa8c8ff, 0.5); fill.position.set(-7,3,-4); scene.add(fill);
+
+  /* ── chevron marks: extruded + beveled, PBR ── */
+  function chevron(color){
+    var s = new THREE.Shape();
+    s.moveTo(-2.1,0); s.lineTo(0,4.6); s.lineTo(2.1,0);
+    s.lineTo(1.02,0); s.lineTo(0,3.02); s.lineTo(-1.02,0); s.closePath();
+    var geo = new THREE.ExtrudeGeometry(s, {depth:1.05, bevelEnabled:true,
+      bevelThickness:0.10, bevelSize:0.09, bevelSegments:4, curveSegments:8});
+    geo.center();
+    return new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+      color:color, roughness:0.34, metalness:0.05}));
+  }
+  var marks = new THREE.Group();
+  var m1 = chevron(0xf4512c);
+  m1.position.set(2.3,-1.2,0); m1.rotation.set(-0.04,-0.42,0.02);
+  var m2 = chevron(0xf65c9a);
+  m2.scale.setScalar(0.58); m2.position.set(-0.4,-2.1,-2.2); m2.rotation.set(0.02,0.55,-0.03);
+  marks.add(m1); marks.add(m2);
+  scene.add(marks);
+
+  /* ── clouds: fbm-noise alpha sprites ── */
   function mulberry(a){ return function(){ a|=0; a=a+0x6D2B79F5|0;
     var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t;
     return ((t^t>>>14)>>>0)/4294967296; }; }
 
-  /* one cloud sprite = cluster of soft white blobs, shaded underside */
-  function makeCloud(seed){
-    var w=680, h=420, c=document.createElement('canvas'); c.width=w; c.height=h;
-    var x=c.getContext('2d'), rnd=mulberry(seed), n=46;
-    for (var i=0;i<n;i++){
-      var px = w*0.5 + (rnd()-0.5)*w*0.66;
-      var edge = Math.abs(px-w/2)/(w/2);
-      var py = h*0.52 + (rnd()-0.5)*h*0.34 + Math.pow(edge,1.7)*h*0.16;
-      var r = (0.08+rnd()*0.13)*w * (1-edge*0.55);
-      r = Math.min(r, px, w-px, py, h-py);   /* keep blobs inside the sprite */
-      if (r<8) continue;
-      var g = x.createRadialGradient(px,py,r*0.08,px,py,r);
-      g.addColorStop(0,'rgba(255,255,255,.92)');
-      g.addColorStop(0.55,'rgba(255,255,255,.55)');
-      g.addColorStop(1,'rgba(255,255,255,0)');
-      x.fillStyle=g; x.beginPath(); x.arc(px,py,r,0,7); x.fill();
+  function cloudTexture(seed){
+    var S=512, T=256, c=document.createElement('canvas'); c.width=S; c.height=T;
+    var x=c.getContext('2d'), img=x.createImageData(S,T);
+    var rnd=mulberry(seed), G=48, lat=new Float32Array((G+1)*(G+1));
+    for (var i=0;i<lat.length;i++) lat[i]=rnd();
+    function sm(t){return t*t*(3-2*t)}
+    function v(ix,iy){return lat[((iy%G)+G)%G*(G+1)+((ix%G)+G)%G]}
+    function noise(px,py){
+      var xi=Math.floor(px), yi=Math.floor(py), xf=px-xi, yf=py-yi;
+      var a=v(xi,yi), b=v(xi+1,yi), cc=v(xi,yi+1), d=v(xi+1,yi+1);
+      return a+(b-a)*sm(xf)+(cc-a)*sm(yf)+(a-b-cc+d)*sm(xf)*sm(yf);
     }
-    x.globalCompositeOperation='source-atop';
-    var sh = x.createLinearGradient(0,h*0.35,0,h);
-    sh.addColorStop(0,'rgba(255,255,255,0)');
-    sh.addColorStop(1,'rgba(132,168,214,.42)');
-    x.fillStyle=sh; x.fillRect(0,0,w,h);
-    return c;
+    for (var y=0;y<T;y++) for (var xx=0;xx<S;xx++){
+      var nx=xx/S, ny=y/T, f=0, amp=0.55, fr=4;
+      for (var o=0;o<6;o++){ f+=amp*noise(nx*fr, ny*fr*0.8); amp*=0.52; fr*=2.15; }
+      var dx=(nx-0.5)/0.44, dy=(ny-0.52)/0.36;
+      var mask=Math.max(0, 1-(dx*dx+dy*dy));
+      /* dense core + noise-ragged edge; mask gates everything (no strays) */
+      var a=Math.min(1, Math.max(0, mask*(0.45+f*1.05)-0.36)*3.2);
+      var shade=1-Math.max(0, ny-0.48)*0.5;         /* darker underside */
+      var i4=(y*S+xx)*4;
+      img.data[i4]=240+15*shade; img.data[i4+1]=246+9*shade; img.data[i4+2]=255;
+      img.data[i4+3]=255*a;
+    }
+    x.putImageData(img,0,0);
+    var t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
+    return t;
   }
-  var sprites = [makeCloud(11), makeCloud(47), makeCloud(83), makeCloud(129)];
+  var ctex=[cloudTexture(7),cloudTexture(31),cloudTexture(77)];
 
-  /* layered cloud instances: d=depth(0 far..1 near), x/y in vw/vh units */
-  var BACK = [
-    {s:0,x:.66,y:.16,sc:.52,d:.25},{s:1,x:.10,y:.30,sc:.62,d:.35},
-    {s:2,x:.84,y:.44,sc:.58,d:.30},{s:3,x:.38,y:.24,sc:.44,d:.22},
-    {s:1,x:.55,y:.55,sc:.80,d:.45},{s:0,x:-.05,y:.60,sc:.90,d:.50}
-  ];
-  var FRONT = [
-    {s:2,x:.04,y:.78,sc:1.55,d:.85},{s:0,x:.48,y:.86,sc:1.85,d:1.0},
-    {s:3,x:.80,y:.80,sc:1.45,d:.90},{s:1,x:.30,y:.94,sc:1.60,d:.95}
-  ];
+  var clouds=[], rnd=mulberry(2026);
+  function addCloud(x,y,z,w,op){
+    var m=new THREE.SpriteMaterial({map:ctex[(rnd()*3)|0], transparent:true,
+      depthWrite:false, opacity:op, fog:true, rotation:(rnd()-0.5)*0.12});
+    var sp=new THREE.Sprite(m);
+    sp.position.set(x,y,z); sp.scale.set(w,w*0.5,1);
+    sp.userData={depth:(14-z)/24, speed:0.12+rnd()*0.2, baseY:y};
+    scene.add(sp); clouds.push(sp);
+  }
+  /* far scatter */
+  addCloud(-14,4.2,-26,16,.95); addCloud(10,5.4,-30,18,.9); addCloud(26,2.6,-34,20,.85);
+  addCloud(-28,1.8,-32,18,.9);  addCloud(2,3.0,-20,10,.95); addCloud(18,0.6,-24,12,.9);
+  addCloud(-8,0.2,-16,8,.95);
+  /* near bank hiding the marks' base */
+  addCloud(-6,-4.6,2,16,1); addCloud(4,-5.2,3,18,1); addCloud(13,-4.4,1,14,1);
+  addCloud(-16,-5.0,0,15,1); addCloud(8,-3.9,-4,12,.98); addCloud(-2,-4.2,-8,14,.95);
 
   function resize(){
-    W=innerWidth; H=innerHeight;
-    [backC,frontC].forEach(function(c){ c.width=W*DPR; c.height=H*DPR; });
+    var w=innerWidth, h=innerHeight;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h; camera.updateProjectionMatrix();
   }
-  resize(); addEventListener('resize', function(){ resize(); draw(prog(), t); });
-
-  function drawLayer(ctx, list, p, t){
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.clearRect(0,0,W,H);
-    list.forEach(function(cl){
-      var sp = sprites[cl.s], w = W*cl.sc*0.6, h = w*0.62;
-      var drift = ((t*8*(0.3+cl.d)) % (W+w));
-      var x = ((cl.x*W + drift + w) % (W+w*2)) - w;
-      var y = cl.y*H + p*H*0.6*cl.d;     /* scroll ⇒ camera rises, clouds sink */
-      ctx.drawImage(sp, x, y, w, h);
-    });
-  }
-
-  function prog(){
-    var r = hero.getBoundingClientRect();
-    var total = r.height - H;
-    return total>0 ? Math.min(1, Math.max(0, -r.top/total)) : 1;
-  }
+  resize(); addEventListener('resize', resize);
 
   var t=0, last=null;
-  function draw(p, time){
-    drawLayer(bx, BACK, p, time);
-    drawLayer(fx, FRONT, p, time);
-    mark.style.transform = 'translateX(-14%) translateY(' + (-p*H*0.10) + 'px)';
-    lines.forEach(function(ln,i){ ln.classList.toggle('on', p > 0.06+i*0.30); });
-    if (hint) hint.style.opacity = p>0.85 ? 0 : 1;
+  function render(p, dt){
+    t+=dt;
+    clouds.forEach(function(sp){
+      var u=sp.userData;
+      sp.position.x += u.speed*dt;
+      if (sp.position.x > 34) sp.position.x = -34;
+      sp.position.y = u.baseY - p*7*u.depth;      /* camera rises through clouds */
+    });
+    marks.position.y = p*1.6;
+    marks.rotation.y = Math.sin(t*0.12)*0.05;
+    m1.rotation.x = -0.04 + Math.sin(t*0.4)*0.015;
+    m1.position.y = -1.2 + Math.sin(t*0.55)*0.07;
+    m2.position.y = -2.1 + Math.sin(t*0.45+1.3)*0.06;
+    camera.position.y = 0.6 + p*0.8;
+    camera.lookAt(0.8, 0.4+p*1.2, 0);
+    setCopy(p);
+    renderer.render(scene, camera);
   }
-  if (reduced){ draw(1,0); lines.forEach(function(l){l.classList.add('on');}); }
+  if (reduced){ render(1,0); }
   else {
     (function loop(ts){
       if (last==null) last=ts;
-      t += Math.min(ts-last,50)/1000; last=ts;
-      draw(prog(), t);
+      var dt=Math.min(ts-last,50)/1000; last=ts;
+      render(prog(), dt);
       requestAnimationFrame(loop);
     })(0);
   }
