@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>JISOAR — 아이디어를 현실로 만드는 개발 스튜디오</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141110'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ff5a36' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23ece7df' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ff5a36' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23faf9f6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="JISOAR — 아이디어를 현실로 만드는 개발 스튜디오. 웹사이트·모바일 앱·관리자 대시보드·산업 IoT까지, 기획부터 배포·운영을 한 곳에서." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/" />
@@ -14,15 +14,17 @@
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://images.unsplash.com" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
 /* ═══════════════════════════════════════════════════════
-   jisoar. home — editorial masthead grammar (ref: DFY®)
-   warm black · ivory type · one coral accent · zero decor
+   jisoar. home v7 — light editorial + real photography
+   ivory · ink type · real sky photo hero · minimal accent
+   photo: Unsplash (free commercial license)
    ═══════════════════════════════════════════════════════ */
 :root{
-  --bg:#161211; --ink:#ece7df; --mut:#938d84; --faint:#5d5851;
-  --line:rgba(236,231,223,.14); --accent:#ff5a36;
+  --bg:#faf9f6; --ink:#1b1812; --mut:#6f6a60; --faint:#a8a296;
+  --line:#e6e2d8; --accent:#ff5a36;
   --sans:'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
   --ease:cubic-bezier(.16,1,.3,1);
 }
@@ -31,66 +33,60 @@ html{scroll-behavior:smooth}
 body{font-family:var(--sans); background:var(--bg); color:var(--ink);
   -webkit-font-smoothing:antialiased; line-height:1.6; overflow-x:hidden;
   word-break:keep-all; overflow-wrap:break-word}
-::selection{background:var(--accent); color:#161211}
+::selection{background:var(--accent); color:#fff}
 a{color:inherit; text-decoration:none}
-
-/* grain */
-body::after{content:""; position:fixed; inset:-50%; z-index:200; pointer-events:none; opacity:.05;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation:grain 9s steps(6) infinite}
-@keyframes grain{
-  0%,100%{transform:translate(0,0)} 17%{transform:translate(-3%,2%)}
-  34%{transform:translate(2%,-3%)} 51%{transform:translate(-2%,-2%)}
-  68%{transform:translate(3%,2%)} 85%{transform:translate(-1%,3%)}}
-
 .wrap{max-width:1520px; margin:0 auto; padding:0 clamp(20px,3.4vw,52px)}
 
 /* ── top bar ── */
 .bar{position:fixed; top:0; left:0; right:0; z-index:100;
   display:flex; align-items:center; justify-content:space-between;
-  padding:22px clamp(20px,3.4vw,52px);
-  transition:background .4s ease, padding .4s ease}
-.bar.scrolled{background:rgba(22,18,17,.82); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
-  padding:15px clamp(20px,3.4vw,52px); box-shadow:0 1px 0 var(--line)}
+  padding:22px clamp(20px,3.4vw,52px); color:#fff;
+  transition:background .4s ease, padding .4s ease, color .4s ease, box-shadow .4s ease}
+.bar.scrolled{background:rgba(250,249,246,.86); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  padding:14px clamp(20px,3.4vw,52px); color:var(--ink); box-shadow:0 1px 0 var(--line)}
 .bar .brand{font-weight:800; font-size:17px; letter-spacing:-.02em}
-.bar .brand sup{font-size:9px; vertical-align:super; margin-left:1px; color:var(--mut)}
+.bar .brand sup{font-size:9px; vertical-align:super; margin-left:1px; opacity:.6}
 .bar nav{display:flex; gap:clamp(14px,2.4vw,36px)}
 .bar nav a{font-size:12.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--mut); transition:color .25s ease; position:relative}
-.bar nav a:hover, .bar nav a.on{color:var(--ink)}
-.bar nav a.on::after{content:""; position:absolute; left:0; right:0; bottom:-7px; height:1px; background:var(--accent)}
+  opacity:.75; transition:opacity .25s ease; position:relative}
+.bar nav a:hover, .bar nav a.on{opacity:1}
+.bar nav a.on::after{content:""; position:absolute; left:0; right:0; bottom:-7px; height:2px; background:var(--accent)}
 @media(max-width:720px){.bar nav a:nth-child(n+4){display:none}}
 
-/* ── hero masthead ── */
-.mast{min-height:100svh; display:flex; flex-direction:column; justify-content:center; position:relative}
-.mast .wordmark{font-weight:800; letter-spacing:-.055em; line-height:.94;
-  font-size:clamp(96px,20.5vw,390px); text-align:center; white-space:nowrap; user-select:none}
-.mast .wordmark .ch{display:inline-block; transform:translateY(110%);
-  animation:chUp 1.1s var(--ease) forwards}
+/* ── hero: real sky photograph + wordmark ── */
+.mast{height:100svh; position:relative; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center}
+.mast .photo{position:absolute; inset:0; background:
+  url("https://images.unsplash.com/photo-1542349314-b0ceb4d90f2d?q=80&w=2400&auto=format&fit=crop")
+  center 38% / cover no-repeat #7db8e8}
+.mast .photo::after{content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(30,70,120,.16) 0%, rgba(30,70,120,0) 34%)}
+.mast .wordmark{position:relative; z-index:1; color:#fff;
+  font-weight:800; letter-spacing:-.045em; line-height:1.06;
+  font-size:clamp(88px,19vw,360px); white-space:nowrap; user-select:none;
+  margin-top:-9svh; text-shadow:0 4px 40px rgba(20,60,110,.28)}
+.mast .wordmark .ch{display:inline-block; opacity:0; transform:translateY(.32em);
+  animation:chUp 1s var(--ease) forwards}
 .mast .wordmark .dot{color:var(--accent)}
-.mast .clip{overflow:hidden; display:block}
-@keyframes chUp{to{transform:none}}
-.mast .meta{position:absolute; left:0; right:0; bottom:clamp(24px,4.5vh,44px);
+@keyframes chUp{to{opacity:1; transform:none}}
+.mast .sub{position:relative; z-index:1; margin-top:clamp(6px,1.4vh,18px);
+  color:#fff; font-size:clamp(14.5px,1.6vw,19px); font-weight:600; letter-spacing:.01em;
+  text-shadow:0 2px 18px rgba(20,60,110,.35);
+  opacity:0; animation:fadeUp 1s var(--ease) .8s forwards}
+.mast .meta{position:absolute; z-index:1; left:0; right:0; bottom:clamp(22px,4vh,42px);
   display:flex; justify-content:space-between; align-items:flex-end;
   padding:0 clamp(20px,3.4vw,52px);
-  font-size:11.5px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--mut)}
+  font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(27,42,58,.72)}
 .mast .meta span{display:block; line-height:1.7}
 .mast .meta .r{text-align:right}
-.mast .sub{position:absolute; left:0; right:0; top:calc(50% + clamp(70px,11vw,210px));
-  text-align:center; font-size:clamp(14px,1.5vw,18px); font-weight:500; color:var(--mut);
-  letter-spacing:.01em; opacity:0; animation:fadeUp 1s var(--ease) .9s forwards}
-.mast .sub b{color:var(--ink); font-weight:700}
-.mast .slash{position:absolute; left:56%; top:26%; width:clamp(60px,8vw,150px); height:1px;
-  background:var(--accent); transform:rotate(-32deg); transform-origin:left top;
-  opacity:0; animation:fadeIn .8s ease 1.3s forwards}
 @keyframes fadeUp{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
-@keyframes fadeIn{to{opacity:1}}
 
 /* ── marquee ── */
-.marq{border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-  overflow:hidden; padding:clamp(16px,2.2vw,26px) 0; white-space:nowrap}
-.marq .track{display:inline-block; animation:marq 36s linear infinite}
-.marq span{font-size:clamp(28px,3.6vw,54px); font-weight:700; letter-spacing:-.03em; margin-right:1.6em}
+.marq{border-bottom:1px solid var(--line); overflow:hidden;
+  padding:clamp(16px,2.2vw,26px) 0; white-space:nowrap; background:var(--bg)}
+.marq .track{display:inline-block; animation:marq 38s linear infinite}
+.marq span{font-size:clamp(28px,3.6vw,54px); font-weight:800; letter-spacing:-.03em; margin-right:1.6em}
 .marq .ast{color:var(--accent); font-weight:400}
 @keyframes marq{from{transform:translateX(0)} to{transform:translateX(-50%)}}
 
@@ -103,15 +99,14 @@ section{position:relative}
 .shead .t i{font-style:normal; color:var(--accent); margin-right:10px}
 .shead .n{font-size:12px; font-weight:600; letter-spacing:.14em; color:var(--faint)}
 
-/* reveal */
 .rv{opacity:0; transform:translateY(34px); transition:opacity .9s var(--ease), transform .9s var(--ease)}
 .rv.in{opacity:1; transform:none}
 .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
 
 /* ── statement ── */
-.statement{font-size:clamp(30px,4.6vw,72px); font-weight:800; letter-spacing:-.04em; line-height:1.22;
+.statement{font-size:clamp(30px,4.6vw,72px); font-weight:800; letter-spacing:-.04em; line-height:1.24;
   max-width:19em}
-.statement em{font-style:normal; color:var(--faint); transition:color .5s ease}
+.statement em{font-style:normal; color:#cfc9bc; transition:color .5s ease}
 .statement em.lit{color:var(--ink)}
 .state-grid{display:grid; gap:clamp(40px,6vw,90px)}
 @media(min-width:960px){.state-grid{grid-template-columns:1.7fr 1fr; align-items:end}}
@@ -119,19 +114,19 @@ section{position:relative}
 .state-side .nums{display:flex; gap:clamp(24px,3vw,48px); margin-top:36px}
 .state-side .num .v{font-size:clamp(30px,3vw,44px); font-weight:800; letter-spacing:-.03em; line-height:1}
 .state-side .num .v i{font-style:normal; color:var(--accent)}
-.state-side .num .l{margin-top:8px; font-size:11.5px; font-weight:600; letter-spacing:.12em;
+.state-side .num .l{margin-top:8px; font-size:11.5px; font-weight:700; letter-spacing:.12em;
   text-transform:uppercase; color:var(--faint)}
 
 /* ── work rows ── */
 .wrow{display:grid; grid-template-columns:auto 1fr auto; align-items:baseline; gap:clamp(16px,3vw,44px);
   padding:clamp(26px,3.4vw,44px) 0; border-bottom:1px solid var(--line); position:relative;
   transition:padding-left .45s var(--ease)}
-.wrow .idx{font-size:12.5px; font-weight:600; letter-spacing:.1em; color:var(--faint); min-width:2.4em}
-.wrow .name{font-size:clamp(26px,3.8vw,58px); font-weight:800; letter-spacing:-.035em; line-height:1.1;
+.wrow .idx{font-size:12.5px; font-weight:700; letter-spacing:.1em; color:var(--faint); min-width:2.4em}
+.wrow .name{font-size:clamp(26px,3.8vw,58px); font-weight:800; letter-spacing:-.035em; line-height:1.14;
   transition:color .3s ease}
-.wrow .cat{font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+.wrow .cat{font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
   color:var(--mut); text-align:right; line-height:1.8; white-space:nowrap}
-.wrow .cat b{display:block; color:var(--faint); font-weight:600}
+.wrow .cat b{display:block; color:var(--faint); font-weight:700}
 .wrow::after{content:"→"; position:absolute; right:0; top:50%; transform:translate(18px,-50%);
   font-size:clamp(20px,2.2vw,32px); color:var(--accent); opacity:0;
   transition:opacity .3s ease, transform .45s var(--ease)}
@@ -143,22 +138,21 @@ section{position:relative}
 /* ── services ── */
 .svc-grid{display:grid; gap:1px; background:var(--line); border:1px solid var(--line)}
 @media(min-width:820px){.svc-grid{grid-template-columns:1fr 1fr}}
-.svc{background:var(--bg); padding:clamp(30px,3.6vw,52px);
-  transition:background .35s ease}
-.svc:hover{background:#1d1815}
-.svc .no{font-size:12px; font-weight:700; letter-spacing:.12em; color:var(--accent)}
+.svc{background:var(--bg); padding:clamp(30px,3.6vw,52px); transition:background .35s ease}
+.svc:hover{background:#fff}
+.svc .no{font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--accent)}
 .svc h3{margin-top:clamp(22px,3vw,44px); font-size:clamp(21px,2.1vw,29px); font-weight:800; letter-spacing:-.025em}
 .svc p{margin-top:12px; color:var(--mut); font-size:14.5px; line-height:1.8; max-width:400px}
 
 /* ── CTA ── */
 .cta{padding:clamp(110px,16vw,230px) 0; text-align:center}
-.cta .small{font-size:12px; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
+.cta .small{font-size:12px; font-weight:800; letter-spacing:.22em; text-transform:uppercase;
   color:var(--mut); margin-bottom:26px}
 .cta .small i{font-style:normal; color:var(--accent); margin-right:10px}
 .cta a.big{display:inline-block; font-size:clamp(52px,9.5vw,170px); font-weight:800;
-  letter-spacing:-.05em; line-height:1.04; position:relative}
+  letter-spacing:-.05em; line-height:1.08; position:relative}
 .cta a.big .arr{display:inline-block; color:var(--accent); transition:transform .5s var(--ease)}
-.cta a.big::after{content:""; position:absolute; left:0; bottom:-6px; height:3px; width:100%;
+.cta a.big::after{content:""; position:absolute; left:0; bottom:-4px; height:4px; width:100%;
   background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .6s var(--ease)}
 .cta a.big:hover .arr{transform:translateX(.18em)}
 .cta a.big:hover::after{transform:scaleX(1)}
@@ -169,12 +163,12 @@ section{position:relative}
 /* ── footer ── */
 footer{border-top:1px solid var(--line); padding:34px 0 40px; font-size:12.5px; color:var(--faint)}
 footer .row{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
-  letter-spacing:.1em; text-transform:uppercase; font-weight:600}
+  letter-spacing:.1em; text-transform:uppercase; font-weight:700}
 footer a:hover{color:var(--ink)}
 
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001ms !important; transition-duration:.001ms !important}
-  .mast .wordmark .ch{transform:none}
+  .mast .wordmark .ch{opacity:1; transform:none}
   .rv{opacity:1 !important; transform:none !important}
   .marq .track{animation:none}
 }
@@ -193,11 +187,11 @@ footer a:hover{color:var(--ink)}
   </nav>
 </header>
 
-<!-- ════ masthead ════ -->
+<!-- ════ masthead: real sky ════ -->
 <section class="mast">
+  <div class="photo" aria-hidden="true"></div>
   <h1 class="wordmark" id="wordmark" aria-label="jisoar">jisoar<span class="dot">.</span></h1>
-  <p class="sub">아이디어를 <b>현실</b>로 만드는 개발 스튜디오</p>
-  <div class="slash" aria-hidden="true"></div>
+  <p class="sub">아이디어를 현실로 만드는 개발 스튜디오</p>
   <div class="meta" aria-hidden="true">
     <span>Ideas into Reality™<br/>Web · App · System</span>
     <span class="r">Seoul, Korea<br/>©2K26</span>
@@ -318,12 +312,11 @@ footer a:hover{color:var(--ink)}
   var bar=document.getElementById('bar');
   addEventListener('scroll', function(){ bar.classList.toggle('scrolled', scrollY>16); }, {passive:true});
 
-  /* masthead: split into letters, staggered rise */
+  /* masthead: split into letters, staggered rise (no clipping wrappers) */
   var wm=document.getElementById('wordmark');
-  var text='jisoar';
-  wm.innerHTML = text.split('').map(function(c,i){
-    return '<span class="clip"style="display:inline-block;overflow:hidden"><span class="ch" style="animation-delay:'+(0.06*i+0.15)+'s">'+c+'</span></span>';
-  }).join('') + '<span class="clip" style="display:inline-block;overflow:hidden"><span class="ch dot" style="animation-delay:'+(0.06*6+0.15)+'s">.</span></span>';
+  wm.innerHTML='jisoar'.split('').map(function(c,i){
+    return '<span class="ch" style="animation-delay:'+(0.055*i+0.15)+'s">'+c+'</span>';
+  }).join('')+'<span class="ch dot" style="animation-delay:'+(0.055*6+0.15)+'s">.</span>';
 
   /* marquee: duplicate until 2x viewport, then loop */
   var tr=document.getElementById('marq'), base=tr.innerHTML;
