@@ -116,7 +116,7 @@ section{position:relative}
 /* ── statement ── */
 .statement{font-size:clamp(30px,4.6vw,72px); font-weight:800; letter-spacing:-.04em; line-height:1.24;
   max-width:19em}
-.statement em{font-style:normal; white-space:nowrap; color:#c3d4e6; transition:color .5s ease}
+.statement em{font-style:normal; white-space:nowrap; color:#93a7bd; transition:color .5s ease}
 .statement em.lit{color:var(--ink)}
 .state-grid{display:grid; gap:clamp(40px,6vw,90px)}
 @media(min-width:960px){.state-grid{grid-template-columns:1.7fr 1fr; align-items:end}}
@@ -128,7 +128,7 @@ section{position:relative}
   text-transform:uppercase; color:var(--faint)}
 
 /* ── work rows ── */
-.wrow{display:grid; grid-template-columns:auto 1fr auto; align-items:baseline; gap:clamp(16px,3vw,44px);
+.wrow{display:grid; grid-template-columns:auto auto 1fr auto; align-items:baseline; gap:clamp(16px,3vw,44px);
   padding:clamp(26px,3.4vw,44px) 0; border-bottom:1px solid var(--line); position:relative;
   transition:padding-left .45s var(--ease)}
 .wrow .idx{font-size:12.5px; font-weight:700; letter-spacing:.1em; color:var(--faint); min-width:2.4em}
@@ -143,9 +143,26 @@ section{position:relative}
 .wrow:hover{padding-left:clamp(10px,1.6vw,26px)}
 .wrow:hover .name{opacity:.55}
 .wrow:hover::after{opacity:1; transform:translate(0,-50%)}
-@media(max-width:640px){.wrow{grid-template-columns:auto 1fr}.wrow .cat{display:none}}
+@media(max-width:640px){.wrow{grid-template-columns:auto 1fr}.wrow .cat,.wrow .idx{display:none}}
+.wrow .th{width:clamp(64px,8vw,116px); aspect-ratio:16/10; border-radius:8px; overflow:hidden; background:#e6edf6;
+  border:1px solid var(--line); align-self:center; display:block; flex:none}
+.wrow .th img{width:100%; height:100%; object-fit:cover; object-position:top; display:block; transition:transform .7s var(--ease)}
+.wrow:hover .th img{transform:scale(1.06)}
+.wrow .th.tile{display:flex; align-items:center; justify-content:center; background:var(--ink); color:#fff;
+  font-family:var(--disp); font-weight:600; font-size:clamp(14px,1.4vw,20px); letter-spacing:-.01em}
 
-/* ── services ── */
+/* ── services (compact strip) ── */
+.svc-strip{display:grid; grid-template-columns:1fr; border-top:1px solid var(--line)}
+@media(min-width:720px){.svc-strip{grid-template-columns:repeat(4,1fr)}}
+.svc-strip a{display:flex; flex-direction:column; gap:12px; padding:clamp(18px,2.4vw,30px) 0 clamp(18px,2.4vw,30px) 0;
+  border-bottom:1px solid var(--line); font-weight:800; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.02em; transition:color .3s ease}
+@media(min-width:720px){.svc-strip a{padding-right:20px}}
+.svc-strip a .no{font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--accent)}
+.svc-strip a:hover{color:var(--accent)}
+.svc-strip a.more{grid-column:1/-1; flex-direction:row; align-items:center; justify-content:flex-end; gap:8px;
+  font-size:13px; font-weight:700; letter-spacing:.06em; color:var(--mut); border-bottom:0; padding-right:0}
+.svc-strip a.more .a{transition:transform .3s var(--ease)} .svc-strip a.more:hover .a{transform:translateX(4px)}
+
 .svc-grid{display:grid; gap:1px; background:var(--line); border:1px solid var(--line)}
 @media(min-width:820px){.svc-grid{grid-template-columns:1fr 1fr}}
 .svc{background:var(--bg); padding:clamp(30px,3.6vw,52px); transition:background .35s ease}
@@ -232,8 +249,8 @@ p,.desc,li{text-wrap:pretty}
           스토어 심사, 서버 셋업, 도메인 연결까지 마친 완성된 상태로 인도합니다.</p>
         <div class="nums">
           <div class="num"><div class="v">6<i>+</i></div><div class="l">Products</div></div>
-          <div class="num"><div class="v">4</div><div class="l">Live Services</div></div>
-          <div class="num"><div class="v">iOS</div><div class="l">App Store</div></div>
+          <div class="num"><div class="v">4,100<i>+</i></div><div class="l">누적 방문 · Friends</div></div>
+          <div class="num"><div class="v">iOS</div><div class="l">App Store 정식 출시</div></div>
         </div>
       </div>
     </div>
@@ -246,26 +263,31 @@ p,.desc,li{text-wrap:pretty}
     <div class="shead rv"><div class="t"><i>✳</i>Selected Work</div><div class="n">©2025–2026</div></div>
     <a class="wrow rv" href="/products/guild-lounge/">
       <span class="idx">01</span>
+      <span class="th tile">GL</span>
       <span class="name">Guild Lounge</span>
       <span class="cat">iOS App · Community<b>2026</b></span>
     </a>
-    <a class="wrow rv" href="/work/">
+    <a class="wrow rv" href="/products/friends/">
       <span class="idx">02</span>
-      <span class="name">스카니아 라운지</span>
+      <span class="th"><img src="/assets/work/friends.jpg" alt="" loading="lazy"/></span>
+      <span class="name">Friends</span>
       <span class="cat">Web Platform · Community<b>2025</b></span>
     </a>
-    <a class="wrow rv" href="/work/">
+    <a class="wrow rv" href="/products/wedding/">
       <span class="idx">03</span>
+      <span class="th"><img src="/assets/work/wedding.jpg" alt="" loading="lazy"/></span>
       <span class="name">Wedding Memory Cloud</span>
       <span class="cat">Web Service · QR Photo<b>2026</b></span>
     </a>
     <a class="wrow rv" href="/work/">
       <span class="idx">04</span>
+      <span class="th"><img src="/assets/work/ranklab.jpg" alt="" loading="lazy"/></span>
       <span class="name">RANKLAB</span>
       <span class="cat">Dashboard · Rank System<b>2026</b></span>
     </a>
     <a class="wrow rv" href="/work/">
       <span class="idx">05</span>
+      <span class="th"><img src="/assets/work/scada.jpg" alt="" loading="lazy"/></span>
       <span class="name">Spiral Monitoring</span>
       <span class="cat">Industrial IoT · PLC<b>2026</b></span>
     </a>
@@ -276,27 +298,12 @@ p,.desc,li{text-wrap:pretty}
 <section class="sect" style="padding-top:0">
   <div class="wrap">
     <div class="shead rv"><div class="t"><i>✳</i>Services</div><div class="n">(02)</div></div>
-    <div class="svc-grid">
-      <a class="svc rv" href="/services/#web">
-        <div class="no">(01)</div>
-        <h3>웹사이트 · 홈페이지</h3>
-        <p>브랜드 홈페이지, 랜딩 페이지, 커뮤니티 플랫폼. <span class="nb">반응형·SEO·도메인</span> 연결까지 완성된 상태로.</p>
-      </a>
-      <a class="svc rv d1" href="/services/#app">
-        <div class="no">(02)</div>
-        <h3>모바일 앱</h3>
-        <p>iOS · Android 크로스플랫폼. 스토어 심사부터 정식 출시, 업데이트 운영까지 직접 겪은 프로세스로.</p>
-      </a>
-      <a class="svc rv d1" href="/services/#dashboard">
-        <div class="no">(03)</div>
-        <h3>대시보드 · 업무 시스템</h3>
-        <p>데이터 <span class="nb">조회·관리,</span> 다단계 권한, 자동 리포트. 엑셀로 돌리던 일을 시스템으로.</p>
-      </a>
-      <a class="svc rv d2" href="/services/#iot">
-        <div class="no">(04)</div>
-        <h3>산업 IoT · 설비 모니터링</h3>
-        <p>PLC 데이터 수집부터 실시간 모니터링 대시보드까지. <span class="nb">물류·제조</span> 현장을 한 화면에서.</p>
-      </a>
+    <div class="svc-strip rv">
+      <a href="/services/#web"><span class="no">(01)</span>웹사이트 · 홈페이지</a>
+      <a href="/services/#app"><span class="no">(02)</span>모바일 앱</a>
+      <a href="/services/#dashboard"><span class="no">(03)</span>대시보드 · 업무 시스템</a>
+      <a href="/services/#iot"><span class="no">(04)</span>산업 IoT · 설비 모니터링</a>
+      <a class="more" href="/services/">서비스 자세히 <span class="a">→</span></a>
     </div>
   </div>
 </section>
