@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>JISOAR | 생각한 그대로 서비스가 됩니다</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<meta name="description" content="JISOAR, 생각한 그대로 서비스가 됩니다. 웹사이트·모바일 앱·관리자 대시보드·산업 IoT까지, 기획부터 배포·운영을 한 곳에서." />
+<meta name="description" content="JISOAR, 생각한 그대로 서비스가 됩니다. 웹사이트·모바일 앱·관리자 대시보드까지, 기획부터 배포·운영을 한 곳에서." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/" />
 <meta property="og:title" content="JISOAR | 생각한 그대로 서비스가 됩니다" />
-<meta property="og:description" content="웹 · 앱 · 대시보드 · 산업 IoT. 기획부터 배포·운영까지 한 곳에서." />
+<meta property="og:description" content="웹 · 앱 · 대시보드. 기획부터 배포·운영까지 한 곳에서." />
 <meta property="og:image" content="https://jisoar.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -153,7 +153,7 @@ section{position:relative}
 
 /* ── services (compact strip) ── */
 .svc-strip{display:grid; grid-template-columns:1fr; border-top:1px solid var(--line)}
-@media(min-width:720px){.svc-strip{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:720px){.svc-strip{grid-template-columns:repeat(3,1fr)}}
 .svc-strip a{display:flex; flex-direction:column; gap:12px; padding:clamp(18px,2.4vw,30px) 0 clamp(18px,2.4vw,30px) 0;
   border-bottom:1px solid var(--line); font-weight:800; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.02em; transition:color .3s ease}
 @media(min-width:720px){.svc-strip a{padding-right:20px}}
@@ -232,7 +232,7 @@ p,.desc,li{text-wrap:pretty}
 
 <!-- ════ marquee ════ -->
 <div class="marq" aria-hidden="true">
-  <div class="track" id="marq"><span>WEB <i class="ast">✳</i> APP <i class="ast">✳</i> DASHBOARD <i class="ast">✳</i> INDUSTRIAL IoT <i class="ast">✳</i> 생각한 그대로 <i class="ast">✳</i> </span></div>
+  <div class="track" id="marq"><span>WEB <i class="ast">✳</i> APP <i class="ast">✳</i> DASHBOARD <i class="ast">✳</i> 생각한 그대로 <i class="ast">✳</i> </span></div>
 </div>
 
 <!-- ════ statement ════ -->
@@ -241,7 +241,7 @@ p,.desc,li{text-wrap:pretty}
     <div class="shead rv"><div class="t"><i>✳</i>Studio</div><div class="n">(01)</div></div>
     <div class="state-grid">
       <h2 class="statement rv" id="statement">홈페이지 한 장부터
-        설비 모니터링 시스템까지.
+        업무 시스템까지.
         기획부터 <span class="nb">배포·운영까지</span>
         직접 만듭니다.</h2>
       <div class="state-side rv d1">
@@ -285,12 +285,6 @@ p,.desc,li{text-wrap:pretty}
       <span class="name">RANKLAB</span>
       <span class="cat">Dashboard · Rank System<b>2026</b></span>
     </a>
-    <a class="wrow rv" href="/work/">
-      <span class="idx">05</span>
-      <span class="th"><img src="/assets/work/scada.jpg" alt="" loading="lazy"/></span>
-      <span class="name">Spiral Monitoring</span>
-      <span class="cat">Industrial IoT · PLC<b>2026</b></span>
-    </a>
   </div>
 </section>
 
@@ -302,7 +296,6 @@ p,.desc,li{text-wrap:pretty}
       <a href="/services/#web"><span class="no">(01)</span>웹사이트 · 홈페이지</a>
       <a href="/services/#app"><span class="no">(02)</span>모바일 앱</a>
       <a href="/services/#dashboard"><span class="no">(03)</span>대시보드 · 업무 시스템</a>
-      <a href="/services/#iot"><span class="no">(04)</span>산업 IoT · 설비 모니터링</a>
       <a class="more" href="/services/">서비스 자세히 <span class="a">→</span></a>
     </div>
   </div>
