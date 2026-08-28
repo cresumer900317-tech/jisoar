@@ -172,9 +172,9 @@ footer .row{display:flex; justify-content:space-between; gap:16px; flex-wrap:wra
   letter-spacing:.1em; text-transform:uppercase; font-weight:700}
 footer a:hover{color:var(--ink)}
 
-/* ── reveal ── */
-.rv{opacity:0; transform:translateY(30px); transition:opacity .9s var(--ease), transform .9s var(--ease)}
-.rv.in{opacity:1; transform:none}
+/* ── reveal (gated on .js so content stays visible without JS) ── */
+.js .rv{opacity:0; transform:translateY(18px); transition:opacity .6s var(--ease), transform .6s var(--ease)}
+.js .rv.in{opacity:1; transform:none}
 .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
 
 @media (prefers-reduced-motion: reduce){
