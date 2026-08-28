@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>RANKLAB — 슬롯 순위 관리 (데모)</title>
+<title>RANKLAB | 슬롯 순위 관리 (데모)</title>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RANKLAB">
-<meta property="og:title" content="RANKLAB — 슬롯 순위 관리 시스템">
+<meta property="og:title" content="RANKLAB | 슬롯 순위 관리 시스템">
 <meta property="og:description" content="네이버·쿠팡·플레이스 통합 키워드 순위 모니터링. 링크 자동 등록 · 주간 순위 추적 · 광고주 관리.">
 <meta property="og:image" content="https://jisoar.com/sample/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://jisoar.com/sample/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RANKLAB — 슬롯 순위 관리 시스템">
+<meta name="twitter:title" content="RANKLAB | 슬롯 순위 관리 시스템">
 <meta name="twitter:description" content="네이버·쿠팡·플레이스 통합 키워드 순위 모니터링 (데모)">
 <meta name="twitter:image" content="https://jisoar.com/sample/og.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -299,7 +299,7 @@ tbody tr.flash{animation:flash 1.8s ease-out}
   <main class="main">
     <div class="demo-banner">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="currentColor"/></svg>
-      데모 화면 — 상품·순위·계정은 모두 가상 예시입니다. 실제 서비스에서는 네이버·쿠팡 데이터와 연동됩니다.
+      데모 화면, 상품·순위·계정은 모두 가상 예시입니다. 실제 서비스에서는 네이버·쿠팡 데이터와 연동됩니다.
     </div>
 
     <div class="topbar">
@@ -629,7 +629,7 @@ $('#regForm').addEventListener('submit',async e=>{
     ranks:[null,null,null,null,null,null,null,null],
     start:'2026-08-26',end:'2026-11-26',pending:true});
   DATA[CH].unshift(np);
-  st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; "${esc(m.name)}" — ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · 다음 수집(8/31 월 11:00)부터 순위가 표시됩니다.`;
+  st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; "${esc(m.name)}" · ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · 다음 수집(8/31 월 11:00)부터 순위가 표시됩니다.`;
   $('#regUrl').value='';$('#regKw').value='';
   btn.disabled=false;lb.textContent='등록';
   filter='all';query='';owner='';$('#q').value='';$('#ownerFilter').value='';

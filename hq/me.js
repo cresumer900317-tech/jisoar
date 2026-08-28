@@ -14,11 +14,11 @@ const STATE = {
   projects: [],
   inbox: [],
   dailyLogs: [],
-  snippets: [],              // 전달함 — 코드 브릿지 (지연 로드)
+  snippets: [],              // 전달함, 코드 브릿지 (지연 로드)
   snippetsLoaded: false,
   editingSnippetId: null,
   snippetKind: "single",     // 모달 내 종류 토글: single | tb4
-  snipExpanded: {},          // 펼친 카드 { id: true } — 기본 접힘
+  snipExpanded: {},          // 펼친 카드 { id: true }, 기본 접힘
   snipShown: 15,             // 목록 표시 개수 (더 보기로 증가)
 
   // Phase 6d: AI 분류 제안 { inbox_id: {suggested_title, suggested_category, suggested_priority, suggested_tags, cached} }
@@ -39,7 +39,7 @@ const STATE = {
   pdView: "list",            // 프로젝트 상세 작업 뷰: list | timeline
 
   // Calendar
-  calCursor: null,           // Date — 표시 중인 달 (1일 기준)
+  calCursor: null,           // Date, 표시 중인 달 (1일 기준)
 
   // Gantt
   ganttCellW: 32,            // 1일 픽셀
@@ -58,7 +58,7 @@ const STATE = {
   inboxTagFilter: null,      // null | "friction" | "unused" | "automate" | "repeat"
 };
 
-// Phase 7e — feedback tags
+// Phase 7e, feedback tags
 const FEEDBACK_TAGS = [
   { tag: "friction",  desc: "어색한 점 / 막히는 부분" },
   { tag: "unused",    desc: "안 쓰는 기능" },
@@ -84,7 +84,7 @@ const PROJECT_STATUS_LABEL = {
 };
 const COLOR_FALLBACK = "#6366f1";
 
-// 이 페이지에서 표시할 이름 — 인증 character_name 과 별개인 업무용 닉네임
+// 이 페이지에서 표시할 이름, 인증 character_name 과 별개인 업무용 닉네임
 const OWNER_NAME = "Jett";
 
 // ── 부팅 ──────────────────────────────────────────────────
@@ -564,7 +564,7 @@ async function addInbox(content) {
   } catch (e) { showToast(e.message, true); }
 }
 
-// 빠른 입력 — 날짜 없는 입력은 바로 '할 일(미분류)'로 (받은 메모 흡수)
+// 빠른 입력, 날짜 없는 입력은 바로 '할 일(미분류)'로 (받은 메모 흡수)
 async function addQuickTask(rawText) {
   const title = (rawText || "").trim();
   if (!title) return;
@@ -795,7 +795,7 @@ async function aiClassifyBulk() {
       added++;
     });
     renderInbox();
-    if (added) showToast(`${added}건 분석 완료 — 각 메모 아래 제안 확인`);
+    if (added) showToast(`${added}건 분석 완료, 각 메모 아래 제안 확인`);
     else showToast("분석 결과가 없어요", true);
   } catch (e) {
     showToast(e.message, true);
@@ -1363,7 +1363,7 @@ function renderProjectDetail() {
   }
 }
 
-// 프로젝트 상세 — AI 회고
+// 프로젝트 상세, AI 회고
 function pdRetroHtml() {
   if (pdRetroLoading) {
     return `<div class="pd-retro"><div class="pd-retro-loading">✨ AI가 회고를 작성 중…</div></div>`;
@@ -1427,7 +1427,7 @@ async function loadProjectRetro(force) {
   renderProjectDetail();
 }
 
-// 프로젝트 상세 — 타임라인(간트) 뷰. 막대는 % 좌표로 컨테이너 폭에 맞춤.
+// 프로젝트 상세, 타임라인(간트) 뷰. 막대는 % 좌표로 컨테이너 폭에 맞춤.
 function pdTimelineHtml(tasks, p) {
   const dayMs = 86400000;
   const toDay = s => Math.round(new Date(s + "T00:00:00").getTime() / dayMs);
@@ -1461,7 +1461,7 @@ function pdTimelineHtml(tasks, p) {
     }
     cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
   }
-  // 주 눈금 (아랫줄 — 월요일 기준 M/D)
+  // 주 눈금 (아랫줄, 월요일 기준 M/D)
   let weeks = "";
   const weekDates = [];
   const firstMon = new Date(winStart * dayMs);
@@ -1935,7 +1935,7 @@ function renderGantt() {
     </div>
   `;
 
-  // 막대 + 오늘 세로선 — DOM 위에 absolute 로 그리기
+  // 막대 + 오늘 세로선, DOM 위에 absolute 로 그리기
   const table = wrap.querySelector(".gantt-table");
   const headerHeight = 22 + 44; // month row + day row
   const rowH = 44;
@@ -2039,7 +2039,7 @@ async function renderDailyEditor() {
       if (ta && !ta.value.trim() && data && data.template) {
         ta.value = data.template;
         STATE.dailyDirty = true;
-        setDailyStatus("dirty", "초안 생성됨 — 검토 후 저장하세요");
+        setDailyStatus("dirty", "초안 생성됨, 검토 후 저장하세요");
       }
     } catch (_) { /* 자동 채우기 실패는 조용히 무시 */ }
   }
@@ -2099,14 +2099,14 @@ async function saveDailyLog(opts = {}) {
     if (!opts.skipAi) loadAiExtracts(STATE.dailyDate);
   } catch (e) {
     showToast(e.message, true);
-    setDailyStatus("dirty", "저장 실패 — 재시도하세요");
+    setDailyStatus("dirty", "저장 실패, 재시도하세요");
   } finally {
     STATE.dailySaving = false;
   }
 }
 
 // ════════════════════════════════════════════════════════
-// AI (Phase 5) — 하루 로그 추출 + 자연어 검색
+// AI (Phase 5), 하루 로그 추출 + 자연어 검색
 // ════════════════════════════════════════════════════════
 
 async function ensureAiStatus() {
@@ -2547,7 +2547,7 @@ function bindEvents() {
     });
   });
 
-  // 프로젝트 상세 — 뒤로가기
+  // 프로젝트 상세, 뒤로가기
   const pdBack = document.getElementById("projectDetailBack");
   if (pdBack) pdBack.addEventListener("click", () => setTab("projects"));
 
@@ -2712,7 +2712,7 @@ function bindEvents() {
   const dailyContent = document.getElementById("dailyContent");
   dailyContent.addEventListener("input", () => {
     STATE.dailyDirty = true;
-    setDailyStatus("dirty", "변경사항 있음 — Ctrl/⌘+S 또는 저장 버튼");
+    setDailyStatus("dirty", "변경사항 있음, Ctrl/⌘+S 또는 저장 버튼");
   });
   // Ctrl/Cmd + S
   dailyContent.addEventListener("keydown", e => {
@@ -2908,7 +2908,7 @@ function showToast(msg, isError) {
 }
 
 // ════════════════════════════════════════════════════════
-// Command Palette (Cmd/Ctrl + K)  — Phase 6b
+// Command Palette (Cmd/Ctrl + K) , Phase 6b
 // ════════════════════════════════════════════════════════
 const CMDK = {
   open: false,
@@ -2940,7 +2940,7 @@ function fuzzyMatch(text, q) {
 }
 
 // ════════════════════════════════════════════════════════
-// 전달함 (Snippets) — 맥↔회사 노트북 코드 브릿지
+// 전달함 (Snippets), 맥↔회사 노트북 코드 브릿지
 // ════════════════════════════════════════════════════════
 const TB4_PARTS = [
   { key: "html", label: "HTML" },
@@ -2978,7 +2978,7 @@ async function copyText(text, okMsg) {
       ta.remove();
       showToast(okMsg || "복사됐어요 📋");
     } catch {
-      showToast("복사 실패 — 직접 선택해 주세요", true);
+      showToast("복사 실패, 직접 선택해 주세요", true);
     }
   }
 }
@@ -3018,7 +3018,7 @@ function snippetCardHtml(s) {
     }
     body = `<div class="snip-body">${body}</div>`;
   }
-  // 접힌 한 줄이 기본 — 단일 코드는 펼치지 않고도 헤더의 📋복사 한 번이면 끝
+  // 접힌 한 줄이 기본, 단일 코드는 펼치지 않고도 헤더의 📋복사 한 번이면 끝
   const copyBtn = s.kind === "tb4"
     ? ""
     : `<button class="btn btn-primary btn-sm snip-copy" data-id="${s.id}" data-part="content">📋 복사</button>`;
@@ -3097,7 +3097,7 @@ function renderSnippets() {
   });
 }
 
-/** 카드에서 바로 삭제 — 편집 모달 안 거침 */
+/** 카드에서 바로 삭제, 편집 모달 안 거침 */
 async function deleteSnippetById(id) {
   const s = STATE.snippets.find(x => x.id === id);
   if (!s) return;
@@ -3234,7 +3234,7 @@ function bindSnippets() {
 }
 
 // ════════════════════════════════════════════════════════
-// 프라이버시 모드 (어깨너머·흔적 방어 — 네트워크 로그는 못 막음)
+// 프라이버시 모드 (어깨너머·흔적 방어, 네트워크 로그는 못 막음)
 // ════════════════════════════════════════════════════════
 const PRIVACY_KEY = "me_privacy_blur";
 
@@ -3250,7 +3250,7 @@ function bindPrivacy() {
     setPrivacyBlur(!document.body.classList.contains("privacy-on"));
   });
 
-  // 패닉 커버 닫기 — 클릭 / Esc
+  // 패닉 커버 닫기, 클릭 / Esc
   if (cover) cover.addEventListener("click", hidePanicCover);
 
   // 단축키: Ctrl/Cmd+Shift+H → 즉시 가리기 토글, Esc → 닫기
@@ -3324,7 +3324,7 @@ function exportJson() {
 
 function exportMarkdown() {
   const lines = [];
-  lines.push(`# 내 업무 내보내기 — ${exportStamp()}`, "");
+  lines.push(`# 내 업무 내보내기, ${exportStamp()}`, "");
 
   const openTasks = (STATE.tasks || []).filter(t => t.status !== "done");
   const doneTasks = (STATE.tasks || []).filter(t => t.status === "done");
@@ -3345,7 +3345,7 @@ function exportMarkdown() {
   (STATE.projects || []).forEach(p => {
     const pct = (p.progress_pct ?? 0) > 0 ? p.progress_pct : (p.computed_progress ?? 0);
     const span = [p.start_date, p.end_date].filter(Boolean).join(" ~ ");
-    lines.push(`- **${p.name}** — ${PROJECT_STATUS_LABEL[p.status] || p.status} · ${pct}%${span ? ` · ${span}` : ""}`);
+    lines.push(`- **${p.name}**, ${PROJECT_STATUS_LABEL[p.status] || p.status} · ${pct}%${span ? ` · ${span}` : ""}`);
     if (p.description) lines.push(`  - ${p.description}`);
   });
 
@@ -3385,7 +3385,7 @@ function buildCmdkResults(query) {
         tag: rest ? "Enter로 실행" : "내용 입력 필요",
       }];
     }
-    // /usage — AI 사용량 모달 열기 (Phase 8)
+    // /usage, AI 사용량 모달 열기 (Phase 8)
     const lower = q.slice(1).toLowerCase();
     if (lower === "usage" || lower.startsWith("usage")
         || lower === "u" || lower.startsWith("u ")) {
@@ -3398,12 +3398,12 @@ function buildCmdkResults(query) {
         tag: "Enter로 열기",
       }];
     }
-    // /export — 백업 / 내보내기
+    // /export, 백업 / 내보내기
     if (lower === "export" || lower.startsWith("export")
         || lower === "backup" || lower.startsWith("backup")) {
       return [
-        { section: "내보내기", kind: "export-md", title: "📄 Markdown으로 내보내기", sub: "할 일·프로젝트·최근 로그 — 읽기 좋은 형식", icon: "📄", tag: "Enter로 저장" },
-        { section: "내보내기", kind: "export-json", title: "🗂 JSON 백업", sub: "전체 데이터 — 복원·이관용", icon: "🗂", tag: "Enter로 저장" },
+        { section: "내보내기", kind: "export-md", title: "📄 Markdown으로 내보내기", sub: "할 일·프로젝트·최근 로그, 읽기 좋은 형식", icon: "📄", tag: "Enter로 저장" },
+        { section: "내보내기", kind: "export-json", title: "🗂 JSON 백업", sub: "전체 데이터, 복원·이관용", icon: "🗂", tag: "Enter로 저장" },
       ];
     }
   }
@@ -3416,7 +3416,7 @@ function buildCmdkResults(query) {
     { kind: "nav", tab: "calendar",  title: "캘린더로 이동",    icon: "📅", sub: "월간 보기" },
     { kind: "nav", tab: "daily",     title: "로그로 이동",      icon: "📓", sub: "하루 기록" },
     { kind: "nav", tab: "snippets",  title: "전달함으로 이동",  icon: "🧩", sub: "맥↔회사 코드 브릿지" },
-    { kind: "nav", tab: "gantt",     title: "간트로 이동",      icon: "📊", sub: "365일 — S3에서 프로젝트 뷰로 통합 예정" },
+    { kind: "nav", tab: "gantt",     title: "간트로 이동",      icon: "📊", sub: "365일, S3에서 프로젝트 뷰로 통합 예정" },
     { kind: "nav", tab: "inbox",     title: "받은 메모 (이전 보관함)", icon: "📥", sub: "예전에 담아둔 메모" },
   ];
 
@@ -3479,7 +3479,7 @@ function buildCmdkResults(query) {
     }));
   }
 
-  // Nav (when query exists) — match tab names
+  // Nav (when query exists), match tab names
   if (q) {
     const matched = navItems.filter(n => fuzzyMatch(n.title, q));
     matched.forEach(n => results.push({ section: "이동", ...n }));
@@ -3504,7 +3504,7 @@ function buildCmdkResults(query) {
         || lower.includes("export") || lower.includes("backup")
         || lower.includes("다운로드")) {
       results.push({ section: "내보내기", kind: "export-md", title: "📄 Markdown으로 내보내기", sub: "할 일·프로젝트·최근 로그", icon: "📄" });
-      results.push({ section: "내보내기", kind: "export-json", title: "🗂 JSON 백업", sub: "전체 데이터 — 복원·이관용", icon: "🗂" });
+      results.push({ section: "내보내기", kind: "export-json", title: "🗂 JSON 백업", sub: "전체 데이터, 복원·이관용", icon: "🗂" });
     }
   }
 
@@ -3714,7 +3714,7 @@ function bindCmdk() {
 }
 
 // ════════════════════════════════════════════════════════
-// Phase 7a — AI Dashboard Briefing
+// Phase 7a, AI Dashboard Briefing
 // ════════════════════════════════════════════════════════
 async function loadBriefing(force) {
   const card = document.getElementById("briefing");
@@ -3766,7 +3766,7 @@ function renderBriefing() {
     text.textContent = data.text;
     text.className = "briefing-text";
   } else if (data.ai_enabled === false) {
-    text.textContent = "AI 비활성 — 서버에 ANTHROPIC_API_KEY 가 설정되면 한 줄 요약이 표시됩니다.";
+    text.textContent = "AI 비활성, 서버에 ANTHROPIC_API_KEY 가 설정되면 한 줄 요약이 표시됩니다.";
     text.className = "briefing-text is-empty";
   } else {
     text.textContent = "오늘 큰 일정은 없어요.";
@@ -3802,7 +3802,7 @@ function renderBriefing() {
 }
 
 // ════════════════════════════════════════════════════════
-// Phase 7c — Daily auto-template
+// Phase 7c, Daily auto-template
 // ════════════════════════════════════════════════════════
 async function dailyAutoFill() {
   const ta = document.getElementById("dailyContent");
@@ -3816,7 +3816,7 @@ async function dailyAutoFill() {
     }
     ta.value = data.template;
     STATE.dailyDirty = true;
-    setDailyStatus("dirty", "변경사항 있음 — 검토 후 저장하세요");
+    setDailyStatus("dirty", "변경사항 있음, 검토 후 저장하세요");
     ta.focus();
     const first = data.template.indexOf("\n");
     ta.setSelectionRange(first > 0 ? first : 0, first > 0 ? first : 0);
@@ -3827,7 +3827,7 @@ async function dailyAutoFill() {
 }
 
 // ════════════════════════════════════════════════════════
-// Phase 7d — Quick Memo (Cmd/Ctrl + N)
+// Phase 7d, Quick Memo (Cmd/Ctrl + N)
 // ════════════════════════════════════════════════════════
 function openQuickMemo() {
   const bd = document.getElementById("qmemoBackdrop");
@@ -3895,7 +3895,7 @@ function bindQuickMemo() {
 }
 
 // ════════════════════════════════════════════════════════
-// Phase 7e — # 태그 자동완성 (Inbox · Daily · Quick · Quick-capture)
+// Phase 7e, # 태그 자동완성 (Inbox · Daily · Quick · Quick-capture)
 // ════════════════════════════════════════════════════════
 const TAG_SUGGEST = {
   open: false,
@@ -4033,12 +4033,12 @@ function applyTagSuggest(idx) {
   const newPos = before.length + inserted.length;
   el.setSelectionRange(newPos, newPos);
   hideTagSuggest();
-  // input 이벤트 트리거 — 다른 핸들러도 갱신되도록
+  // input 이벤트 트리거, 다른 핸들러도 갱신되도록
   el.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 // ════════════════════════════════════════════════════════
-// Phase 7e — 피드백 가이드 배너 + 카운트
+// Phase 7e, 피드백 가이드 배너 + 카운트
 // ════════════════════════════════════════════════════════
 function refreshFeedbackBanner() {
   const banner = document.getElementById("feedbackBanner");
@@ -4133,7 +4133,7 @@ function renderFeedbackCounts() {
 }
 
 // ════════════════════════════════════════════════════════
-// Phase 8 — AI 사용량 위젯 & 상세 모달
+// Phase 8, AI 사용량 위젯 & 상세 모달
 // ════════════════════════════════════════════════════════
 
 const AI_USAGE = {
@@ -4205,7 +4205,7 @@ function renderAiUsageWidget(data, errMsg) {
     costCap.textContent = "$10.00";
     fill.style.width = "0%";
     meta.textContent = errMsg
-      ? `불러오기 실패 — ${errMsg.slice(0, 80)}`
+      ? `불러오기 실패, ${errMsg.slice(0, 80)}`
       : "데이터 없음";
     if (sub) sub.hidden = true;
     return;
@@ -4231,13 +4231,13 @@ function renderAiUsageWidget(data, errMsg) {
   if (sub) {
     if (data.table_missing) {
       sub.hidden = false;
-      sub.textContent = "⚠ DB 테이블 미생성 — sql/ai_usage.sql 실행 필요";
+      sub.textContent = "⚠ DB 테이블 미생성, sql/ai_usage.sql 실행 필요";
     } else if (data.ai_enabled === false) {
       sub.hidden = false;
-      sub.textContent = "ANTHROPIC_API_KEY 미설정 — AI 호출 자체가 비활성화";
+      sub.textContent = "ANTHROPIC_API_KEY 미설정, AI 호출 자체가 비활성화";
     } else if (pct >= 90) {
       sub.hidden = false;
-      sub.textContent = `한도 ${pct.toFixed(0)}% 도달 — Anthropic 콘솔 한도 ${fmtUsd(cap)} 도달 시 API 차단됩니다`;
+      sub.textContent = `한도 ${pct.toFixed(0)}% 도달, Anthropic 콘솔 한도 ${fmtUsd(cap)} 도달 시 API 차단됩니다`;
     } else {
       sub.hidden = true;
     }
@@ -4321,7 +4321,7 @@ function renderAiUsageModalBody(data, placeholder) {
     const zero = cost <= 0 ? "is-zero" : "";
     const todayFlag = d.date === todayStrLocal ? `data-today="1"` : "";
     return `<div class="aiu-daily-bar ${zero}" style="height:${h.toFixed(1)}px"
-                 title="${escapeAttr(d.date)} — ${fmtUsd(cost)} (${d.calls || 0}건)" ${todayFlag}></div>`;
+                 title="${escapeAttr(d.date)}, ${fmtUsd(cost)} (${d.calls || 0}건)" ${todayFlag}></div>`;
   }).join("");
   const firstDate = daily[0]?.date || "";
   const lastDate = daily[daily.length - 1]?.date || "";
@@ -4376,7 +4376,7 @@ function renderAiUsageModalBody(data, placeholder) {
 }
 
 // ════════════════════════════════════════════════════════
-// Life OS — 히어로 (인사말 · D-day · 올해 진행률 · 스탯)
+// Life OS, 히어로 (인사말 · D-day · 올해 진행률 · 스탯)
 // ════════════════════════════════════════════════════════
 const LIFE_EVENTS = [
   { emoji: "💍", label: "결혼식",   date: "2026-06-06" },
@@ -4442,7 +4442,7 @@ function renderHero() {
 }
 
 // ════════════════════════════════════════════════════════
-// 영어 한 입 — 오늘의 표현 + 스트릭 (백엔드 없이 로컬 동작)
+// 영어 한 입, 오늘의 표현 + 스트릭 (백엔드 없이 로컬 동작)
 // ════════════════════════════════════════════════════════
 const EXPRESSIONS = [
   { en: "Let's circle back on this.", ko: "이 건은 나중에 다시 얘기해요.", note: "회의에서 주제를 정중히 미룰 때. circle back = 나중에 다시 다루다." },
@@ -4515,7 +4515,7 @@ function engStreakCount() {
   const set = new Set(engData().done);
   if (!set.size) return 0;
   const cursor = new Date(todayStr() + "T00:00:00");
-  // 오늘 미완료면 어제부터 — 어제도 없으면 스트릭 끊김
+  // 오늘 미완료면 어제부터, 어제도 없으면 스트릭 끊김
   if (!set.has(dateOnly(cursor))) {
     cursor.setDate(cursor.getDate() - 1);
     if (!set.has(dateOnly(cursor))) return 0;

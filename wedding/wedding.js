@@ -1,4 +1,4 @@
-/* 박기백·박지은 결혼식 — 하객 사진·영상 업로드 (v3).
+/* 박기백·박지은 결혼식, 하객 사진·영상 업로드 (v3).
    - 입력 없음(이름/메시지 X) → 업로드 장벽 0
    - 사진: 클라이언트 압축(max 1920px, JPEG q0.85) / 동영상: 원본 업로드
    - 병렬 3개 / 익명 uuid / 꽃잎·라이브 카운터·제작자 모달 */
@@ -177,7 +177,7 @@
     const what = videoUploading ? "영상" : "사진";
     $progressText.textContent = `${what} 올리는 중 · ${pct}%` + (total > 1 ? `  (${doneCount}/${total})` : "");
   }
-  // XHR 업로드 — 진행률(onprogress)을 받기 위해 fetch 대신 사용 (영상도 바가 실시간으로 움직임)
+  // XHR 업로드, 진행률(onprogress)을 받기 위해 fetch 대신 사용 (영상도 바가 실시간으로 움직임)
   function xhrUpload(url, formData, onProgress) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -425,7 +425,7 @@
     $modalClose.addEventListener("click", close);
     $modal.addEventListener("click", e => { if (e.target === $modal) close(); });
     document.addEventListener("keydown", e => { if (!$modal.hidden && e.key === "Escape") close(); });
-    // 포커스 트랩 — 모달 밖으로 탭 안 빠지게
+    // 포커스 트랩, 모달 밖으로 탭 안 빠지게
     $modal.addEventListener("keydown", e => {
       if (e.key !== "Tab") return;
       const f = $modal.querySelectorAll('button, a[href], summary, [tabindex]:not([tabindex="-1"])');
@@ -436,7 +436,7 @@
     });
   }
 
-  // 거래 경로 링크: URL 미설정(#/빈값)이면 줄째로 숨김 — 깨진 링크 노출 방지
+  // 거래 경로 링크: URL 미설정(#/빈값)이면 줄째로 숨김, 깨진 링크 노출 방지
   const $contact = $("contactLink");
   if ($contact) {
     const href = ($contact.getAttribute("href") || "").trim();

@@ -1,4 +1,4 @@
-// ICP 코드 브릿지 — ThingsBoard·Node-RED 코드 전달함 (공용 작업공간)
+// ICP 코드 브릿지, ThingsBoard·Node-RED 코드 전달함 (공용 작업공간)
 // 인증: 접속코드 → /api/icp/login → JWT(sessionStorage). 길드 계정과 무관.
 const API_BASE = "https://guild-backend-production-75a6.up.railway.app";
 
@@ -11,15 +11,15 @@ const STATE = {
   kind: "single",
   filter: "__all__",   // "__all__" | 작성자 이름
   search: "",          // 제목 검색어
-  pendingFile: null,   // 메모에 첨부한 파일 {name, text} — textarea 를 거치지 않는다 (수 MB 붙여넣기는 화면이 멈춘다)
-  bigContent: null,    // 편집 중인 메모의 원래 큰 본문 — textarea 에 풀지 않고 그대로 유지
+  pendingFile: null,   // 메모에 첨부한 파일 {name, text}, textarea 를 거치지 않는다 (수 MB 붙여넣기는 화면이 멈춘다)
+  bigContent: null,    // 편집 중인 메모의 원래 큰 본문, textarea 에 풀지 않고 그대로 유지
 };
 
 const NOTE_LIMIT = 8000000;          // 백엔드 NOTE_MAX 와 같게
 const NOTE_EDIT_MAX = 200000;        // 이보다 큰 메모는 편집칸에 풀지 않는다 (렌더 멈춤 방지)
 
 const ALL_TAB = "__all__";
-const MEMBERS = ["Jett", "Minhyun"];   // 고정 사용자 — 탭과 로그인 선택지
+const MEMBERS = ["Jett", "Minhyun"];   // 고정 사용자, 탭과 로그인 선택지
 function myName() { return localStorage.getItem("icp_name") || ""; }
 
 const TB4_PARTS = [
@@ -79,7 +79,7 @@ async function copyText(text, okMsg) {
       ta.remove();
       showToast(okMsg || "복사됐어요 📋");
     } catch {
-      showToast("복사 실패 — 직접 선택해 주세요", true);
+      showToast("복사 실패, 직접 선택해 주세요", true);
     }
   }
 }
@@ -249,13 +249,13 @@ function cardHtml(s) {
         </div>`;
       }).join("") || `<div class="snip-empty-body">내용 없음</div>`;
     } else if (s.kind === "note") {
-      // 메모는 읽는 용도 — 줄바꿈 살려 표시. 아주 길면 화면만 자르고(렌더 부담) 복사는 항상 전문
+      // 메모는 읽는 용도, 줄바꿈 살려 표시. 아주 길면 화면만 자르고(렌더 부담) 복사는 항상 전문
       const full = String(s.content || "");
       const NOTE_SHOW_MAX = 20000;
       const clipped = full.length > NOTE_SHOW_MAX;
       const shownText = clipped ? full.slice(0, NOTE_SHOW_MAX) : full;
       const notice = clipped
-        ? `<div class="snip-note-notice">내용이 길어 앞부분만 표시했어요 (전체 ${Math.round(full.length / 1000)}KB) — 📋 복사 버튼은 전체를 복사합니다</div>`
+        ? `<div class="snip-note-notice">내용이 길어 앞부분만 표시했어요 (전체 ${Math.round(full.length / 1000)}KB), 📋 복사 버튼은 전체를 복사합니다</div>`
         : "";
       body = `<div class="snip-part"><div class="snip-note">${escapeHtml(shownText)}${clipped ? "\n…" : ""}</div>${notice}</div>`;
     } else {
@@ -326,7 +326,7 @@ function renderSnippets() {
       openModal(Number(btn.dataset.id));
     });
   });
-  // ⬇ 파일로 저장 — 복사→메모장 저장을 거치지 않고 바로 파일이 된다 (큰 HTML 도구 전달용)
+  // ⬇ 파일로 저장, 복사→메모장 저장을 거치지 않고 바로 파일이 된다 (큰 HTML 도구 전달용)
   list.querySelectorAll(".snip-dl").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -381,7 +381,7 @@ async function deleteSnippet(id) {
 // ── 모달 ──────────────────────────────────────
 function setKind(kind) {
   STATE.kind = kind;
-  // 메모는 종류 토글에 없음 — 별도 버튼(＋메모 추가)으로만 진입, 토글 자체를 숨김
+  // 메모는 종류 토글에 없음, 별도 버튼(＋메모 추가)으로만 진입, 토글 자체를 숨김
   $("kindToggle").hidden = kind === "note";
   document.querySelectorAll(".kind-btn").forEach((b) =>
     b.classList.toggle("is-active", b.dataset.kind === kind));
@@ -401,7 +401,7 @@ function openModal(id, newKind) {
   $("snippetId").value = s ? s.id : "";
   $("snipTitle").value = s ? s.title || "" : "";
   $("snipContent").value = s && !isNote ? s.content || "" : "";
-  // 큰 메모는 편집칸에 풀지 않는다 — 수 MB 를 textarea 에 넣으면 브라우저가 멈춘다.
+  // 큰 메모는 편집칸에 풀지 않는다, 수 MB 를 textarea 에 넣으면 브라우저가 멈춘다.
   // 본문은 bigContent 에 그대로 들고 있다가 저장 때 되돌려 싣는다.
   setPendingFile(null);
   STATE.bigContent = null;
@@ -409,7 +409,7 @@ function openModal(id, newKind) {
     STATE.bigContent = s.content;
     $("snipNote").value = "";
     $("snipNote").disabled = true;
-    $("snipNote").placeholder = "큰 본문 " + Math.round(s.content.length / 1024) + "KB — 그대로 유지됩니다. 바꾸려면 파일을 다시 첨부하세요.";
+    $("snipNote").placeholder = "큰 본문 " + Math.round(s.content.length / 1024) + "KB, 그대로 유지됩니다. 바꾸려면 파일을 다시 첨부하세요.";
     $("snipFileInfo").textContent = "본문 " + Math.round(s.content.length / 1024) + "KB 유지 중";
   } else {
     $("snipNote").value = s && isNote ? s.content || "" : "";
@@ -430,13 +430,13 @@ function closeModal() {
   STATE.bigContent = null;
 }
 
-/* 첨부 상태를 한 곳에서 관리 — 첨부 중엔 textarea 를 잠가 어느 쪽이 저장될지 헷갈리지 않게 */
+/* 첨부 상태를 한 곳에서 관리, 첨부 중엔 textarea 를 잠가 어느 쪽이 저장될지 헷갈리지 않게 */
 function setPendingFile(f) {
   STATE.pendingFile = f;
   const info = $("snipFileInfo"), clr = $("snipFileClear"), ta = $("snipNote");
   if (!info) return;
   if (f) {
-    info.textContent = `${f.name} (${Math.round(f.text.length / 1024).toLocaleString()}KB) 첨부됨 — 저장하면 이 파일 내용이 통째로 올라갑니다`;
+    info.textContent = `${f.name} (${Math.round(f.text.length / 1024).toLocaleString()}KB) 첨부됨, 저장하면 이 파일 내용이 통째로 올라갑니다`;
     clr.hidden = false;
     ta.disabled = true;
   } else {
@@ -462,7 +462,7 @@ async function saveSnippet(e) {
     js: STATE.kind === "tb4" ? $("snipJs").value : "",
     settings: STATE.kind === "tb4" ? $("snipSettings").value : "",
   };
-  // 첨부 파일명으로 제목을 채워준다 — 받는 쪽 ⬇ 저장 파일명이 된다
+  // 첨부 파일명으로 제목을 채워준다, 받는 쪽 ⬇ 저장 파일명이 된다
   if (!body.title && STATE.pendingFile) { body.title = STATE.pendingFile.name; $("snipTitle").value = body.title; }
   if (body.content.length > NOTE_LIMIT) {
     showToast(`내용이 너무 큽니다 (${Math.round(body.content.length / 1048576 * 10) / 10}MB / 한도 8MB)`, true); return;

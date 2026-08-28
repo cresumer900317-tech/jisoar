@@ -1,4 +1,4 @@
-/* 박기백·박지은 웨딩 — 업로드 페이지 (v3, 시네마틱)
+/* 박기백·박지은 웨딩, 업로드 페이지 (v3, 시네마틱)
    따뜻한 아이보리/블러시/샴페인 톤 + 세리프 타이포 + 꽃잎 + 필름 그레인.
    ※ 갤러리(gallery.css/html)가 쓰는 변수·공용 클래스(.wp-shell/.wp-hero/.wp-heart/
      .wp-title/.wp-subtitle/.wp-and/.wp-btn*/.wp-done-icon)는 그대로 유지함. */
@@ -9,10 +9,10 @@
   --wp-card:      #fffdf9;
   --wp-card-edge: #e7d8c3;
   --wp-text:      #46382a;
-  --wp-text-soft: #6e5c4b;          /* 보조 텍스트 — 아이보리 위 대비 ↑ (WCAG AA 근접, 어르신 가독성) */
+  --wp-text-soft: #6e5c4b;          /* 보조 텍스트, 아이보리 위 대비 ↑ (WCAG AA 근접, 어르신 가독성) */
   --wp-accent:    #c98a7d;          /* 로즈 */
   --wp-accent-2:  #a7b89a;          /* 세이지 */
-  --wp-sage-dk:   #6f8466;          /* 진한 세이지 — 포인트 컬러 */
+  --wp-sage-dk:   #6f8466;          /* 진한 세이지, 포인트 컬러 */
   --wp-accent-dk: #a6695e;
   --wp-gold:      #c5a368;          /* 샴페인 골드 */
   --wp-shadow:    0 8px 28px rgba(160, 110, 80, .12);
@@ -108,7 +108,7 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  word-break: keep-all;   /* 한글이 단어 중간(예: 만들었/어요)에서 안 끊기게 — 띄어쓰기 단위로만 */
+  word-break: keep-all;   /* 한글이 단어 중간(예: 만들었/어요)에서 안 끊기게, 띄어쓰기 단위로만 */
 }
 
 /* ── 첫 화면 (갤러리 입장) ────────────── */
@@ -137,7 +137,7 @@ html, body {
   36%  { opacity: 0; }
   100% { opacity: 0; }
 }
-/* 아이보리 베일 — 사진 위, 텍스트 아래. 글씨가 주인공, 사진은 분위기 */
+/* 아이보리 베일, 사진 위, 텍스트 아래. 글씨가 주인공, 사진은 분위기 */
 .wp-hero::before {
   content: "";
   position: absolute;
@@ -150,7 +150,7 @@ html, body {
     #f3e9dc 100%);
 }
 .wp-hero > *:not(.wp-hero-photos) { position: relative; }
-/* 글씨가 주인공 — 사진은 분위기. 텍스트엔 아주 옅은 화이트 그림자만 */
+/* 글씨가 주인공, 사진은 분위기. 텍스트엔 아주 옅은 화이트 그림자만 */
 .wp-names, .wp-date { text-shadow: 0 1px 2px rgba(255, 253, 248, .6); }
 /* 얇은 글씨(아이브로·슬로건)는 사진 위에서 묻히기 쉬워 화이트 글로우로 또렷하게 */
 .wp-eyebrow { text-shadow: 0 1px 2px rgba(255,255,255,.95), 0 0 12px rgba(255,250,242,.85); }
@@ -290,7 +290,7 @@ html, body {
   gap: 16px;
 }
 
-/* (갤러리 gate 가 쓰는 잔존 클래스 — 유지) */
+/* (갤러리 gate 가 쓰는 잔존 클래스, 유지) */
 .wp-hero-deco { display: flex; justify-content: center; margin-bottom: 14px; }
 .wp-heart {
   display: inline-flex; align-items: center; justify-content: center;
@@ -553,7 +553,7 @@ html, body {
 }
 .wp-maker b { color: var(--wp-accent-dk); font-weight: 700; }
 
-/* ── Footer (제작자 브랜딩 — 누르면 기술스택 모달) ── */
+/* ── Footer (제작자 브랜딩, 누르면 기술스택 모달) ── */
 .wp-footer { text-align: center; margin-top: 6px; }
 .wp-brand {
   display: inline-flex;
@@ -692,7 +692,7 @@ html, body {
   font-size: 14.5px; line-height: 1.6;
   color: var(--wp-text);
 }
-/* 거래 경로 — 점잖게, 모달 안쪽에만 */
+/* 거래 경로, 점잖게, 모달 안쪽에만 */
 .wp-modal-contact {
   margin: 20px 0 0;
   padding-top: 16px;

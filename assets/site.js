@@ -1,4 +1,4 @@
-/* jisoar. — shared site behavior (v3) */
+/* jisoar., shared site behavior (v3) */
 (function(){
   // nav: scrolled state + mobile menu
   var nav = document.getElementById('nav');

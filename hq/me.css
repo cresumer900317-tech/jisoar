@@ -1,10 +1,10 @@
 :root {
-  /* ── Surface layer (2026 refresh — warm off-black) ─────── */
-  --bg: #0D0E13;              /* app bg — 차가운 블루블랙 → 따뜻한 오프블랙 */
+  /* ── Surface layer (2026 refresh, warm off-black) ─────── */
+  --bg: #0D0E13;              /* app bg, 차가운 블루블랙 → 따뜻한 오프블랙 */
   --surface-1: #15161D;       /* sunken / inputs */
-  --surface-2: #1D1F29;       /* cards / panels — 배경과 분리되게 살짝 밝게 */
+  --surface-2: #1D1F29;       /* cards / panels, 배경과 분리되게 살짝 밝게 */
   --surface-3: #282A36;       /* hover / elevated */
-  /* 절제: 경계선은 거의 안 보이게 — 카드 구분은 표면 밝기 단차로 */
+  /* 절제: 경계선은 거의 안 보이게, 카드 구분은 표면 밝기 단차로 */
   --border: rgba(255,255,255,0.065);
   --border-strong: rgba(255,255,255,0.12);
 
@@ -13,17 +13,17 @@
   --bg-elev: var(--surface-3);
   --panel: var(--surface-2);
 
-  /* ── Text — 절제: 딱 3단계 (strong / body / meta) ──────── */
+  /* ── Text, 절제: 딱 3단계 (strong / body / meta) ──────── */
   --text-strong: #F5F8FC;
   --text: rgba(255,255,255,0.91);
   --text-meta: rgba(255,255,255,0.62);
-  /* legacy aliases — 3단계로 수렴 (dim·faint 폐지) */
+  /* legacy aliases, 3단계로 수렴 (dim·faint 폐지) */
   --text-dim: var(--text-meta);
   --text-faint: var(--text-meta);
 
   /* ── Brand & status ────────────────────────────────────── */
   --primary: #7C6CF2;         /* slightly muted indigo */
-  --primary-rgb: 124,108,242; /* rgba() 용 — 브랜드 컬러 단일 소스 */
+  --primary-rgb: 124,108,242; /* rgba() 용, 브랜드 컬러 단일 소스 */
   --primary-soft: #5B4FD9;
   --danger: #EF4444;          /* 위험 / overdue */
   --warn: #F59E0B;            /* 임박 */
@@ -50,7 +50,7 @@
   --sp-5: 24px;
   --sp-6: 32px;
 
-  /* ── Shape (2026 — 라운드 키워 부드럽게) ──────────────── */
+  /* ── Shape (2026, 라운드 키워 부드럽게) ──────────────── */
   --radius-lg: 22px;
   --radius: 16px;
   --radius-sm: 11px;
@@ -87,7 +87,7 @@ body {
 
 input, button, select, textarea { font: inherit; color: inherit; }
 
-/* ── Keyboard focus — 앱 전역 포커스 링 (키보드 탐색 가시성) ── */
+/* ── Keyboard focus, 앱 전역 포커스 링 (키보드 탐색 가시성) ── */
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
@@ -762,7 +762,7 @@ input, button, select, textarea { font: inherit; color: inherit; }
   font-weight: 500;
 }
 
-/* ── Dashboard widgets — Bento 위계 ────────────────────── */
+/* ── Dashboard widgets, Bento 위계 ────────────────────── */
 .widget-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -776,7 +776,7 @@ input, button, select, textarea { font: inherit; color: inherit; }
 .widget-english  { grid-column: 1; grid-row: 4; }
 .widget-logs     { grid-column: 2; grid-row: 4; }
 
-/* 오늘 할 일 — primary 카드 (시선이 멈추는 곳) */
+/* 오늘 할 일, primary 카드 (시선이 멈추는 곳) */
 .widget-primary {
   background:
     radial-gradient(420px 200px at 100% 0%, rgba(124,108,242,0.13), transparent 70%),
@@ -2025,7 +2025,7 @@ input, button, select, textarea { font: inherit; color: inherit; }
 }
 
 /* ── Privacy mode (어깨너머 방어) ──────────────────────── */
-/* 화면 블러 — 마우스 올리면 그 부분만 보임. 네트워크 로그는 못 막음(IT 레벨) */
+/* 화면 블러, 마우스 올리면 그 부분만 보임. 네트워크 로그는 못 막음(IT 레벨) */
 body.privacy-on .app-main { filter: blur(9px); transition: filter 0.12s var(--ease); }
 body.privacy-on .app-main:hover { filter: none; }
 body.privacy-on .hero,
@@ -2034,7 +2034,7 @@ body.privacy-on .hero:hover,
 body.privacy-on .briefing:hover { filter: none; }
 #privacyToggle.is-on { background: var(--primary); color: #fff; }
 
-/* 패닉 커버 — 평범한 로딩 화면처럼 보이게 (정체 노출 안 함) */
+/* 패닉 커버, 평범한 로딩 화면처럼 보이게 (정체 노출 안 함) */
 .privacy-cover {
   position: fixed; inset: 0; z-index: 9999;
   display: grid; place-items: center;
@@ -2066,7 +2066,7 @@ body.privacy-on .briefing:hover { filter: none; }
   }
   .user-chip { display: none; }
 
-  /* 터치 타깃 — 손가락으로 누를 수 있게 (Apple/Material ≥44px) */
+  /* 터치 타깃, 손가락으로 누를 수 있게 (Apple/Material ≥44px) */
   .nav-tab { padding: 9px 14px; min-height: 40px; }
   .icon-btn, .modal-close { width: 44px; height: 44px; }
   .cal-cell .cal-event { min-height: 20px; display: flex; align-items: center; }
@@ -2158,7 +2158,7 @@ body.privacy-on .briefing:hover { filter: none; }
 }
 
 /* ════════════════════════════════════════════════════════
-   Phase 7a — AI Dashboard Briefing
+   Phase 7a, AI Dashboard Briefing
    ════════════════════════════════════════════════════════ */
 .briefing {
   background: var(--surface-2);
@@ -2263,7 +2263,7 @@ body.privacy-on .briefing:hover { filter: none; }
 }
 
 /* ════════════════════════════════════════════════════════
-   Phase 7c — Daily auto-template "🪄 자동 채우기" 버튼
+   Phase 7c, Daily auto-template "🪄 자동 채우기" 버튼
    ════════════════════════════════════════════════════════ */
 .btn-magic {
   background: transparent;
@@ -2277,7 +2277,7 @@ body.privacy-on .briefing:hover { filter: none; }
 }
 
 /* ════════════════════════════════════════════════════════
-   Phase 7d — Quick Memo (Cmd/Ctrl + N) 모달
+   Phase 7d, Quick Memo (Cmd/Ctrl + N) 모달
    ════════════════════════════════════════════════════════ */
 .qmemo-backdrop {
   position: fixed;
@@ -2338,7 +2338,7 @@ body.privacy-on .briefing:hover { filter: none; }
 .qmemo-hint { color: var(--text-meta); font-size: var(--fs-4); }
 
 /* ════════════════════════════════════════════════════════
-   Phase 7e — 피드백 가이드 (배너 / 카운트 / # 자동완성)
+   Phase 7e, 피드백 가이드 (배너 / 카운트 / # 자동완성)
    ════════════════════════════════════════════════════════ */
 .feedback-banner {
   position: relative;
@@ -2717,7 +2717,7 @@ body.privacy-on .briefing:hover { filter: none; }
 }
 
 /* ════════════════════════════════════════════════════════
-   2026 Refresh — Life OS Hero
+   2026 Refresh, Life OS Hero
    ════════════════════════════════════════════════════════ */
 .hero {
   position: relative;
@@ -2810,7 +2810,7 @@ body.privacy-on .briefing:hover { filter: none; }
 }
 
 /* ════════════════════════════════════════════════════════
-   영어 한 입 — 오늘의 표현 + 스트릭
+   영어 한 입, 오늘의 표현 + 스트릭
    ════════════════════════════════════════════════════════ */
 .eng-streak {
   display: inline-flex; align-items: center; gap: 7px;
@@ -2888,7 +2888,7 @@ body.privacy-on .briefing:hover { filter: none; }
 }
 
 /* ════════════════════════════════════════════════════════
-   프로젝트 상세 페이지 (S2 — 워크스페이스)
+   프로젝트 상세 페이지 (S2, 워크스페이스)
    ════════════════════════════════════════════════════════ */
 .detail-back {
   background: transparent; border: 0; cursor: pointer;
@@ -3046,7 +3046,7 @@ body.privacy-on .briefing:hover { filter: none; }
 .pd-view-btn:hover { color: var(--text); }
 .pd-view-btn.is-active { background: var(--primary); color: #fff; }
 
-/* 타임라인 (간트) — % 좌표 기반 */
+/* 타임라인 (간트), % 좌표 기반 */
 .tl { margin-top: 4px; }
 .tl-row { display: flex; align-items: stretch; }
 .tl-label {
@@ -3088,7 +3088,7 @@ body.privacy-on .briefing:hover { filter: none; }
 }
 .tl-row:not(.tl-head):hover .tl-label { color: var(--text-strong); }
 .tl-row:not(.tl-head):hover { background: rgba(255,255,255,0.02); }
-/* 막대 — 계획(외곽선) 위, 실제(채움) 아래 */
+/* 막대, 계획(외곽선) 위, 실제(채움) 아래 */
 .tl-bar { position: absolute; border-radius: 5px; z-index: 1; }
 .tl-plan {
   top: 9px; height: 14px;

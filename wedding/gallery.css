@@ -1,4 +1,4 @@
-/* 박기백·박지은 — 웨딩 사진 갤러리 (관리자 전용) */
+/* 박기백·박지은, 웨딩 사진 갤러리 (관리자 전용) */
 
 .wg-shell {
   min-height: 100vh;
@@ -308,7 +308,7 @@
 }
 @media (max-width: 560px) { .wg-select-btn { width: 100%; } }
 
-/* 카드 체크 배지 — 선택 모드에서만 표시 */
+/* 카드 체크 배지, 선택 모드에서만 표시 */
 .wg-card-check {
   position: absolute;
   top: 10px; left: 10px;

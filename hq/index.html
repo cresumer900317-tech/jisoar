@@ -46,7 +46,7 @@
             <span class="cmdk-trigger-text">검색·명령</span>
             <span class="cmdk-trigger-kbd">⌘K</span>
           </button>
-          <button class="icon-btn" id="privacyToggle" title="프라이버시 모드 — 화면 블러 (Ctrl+Shift+H: 즉시 가리기)">🔓</button>
+          <button class="icon-btn" id="privacyToggle" title="프라이버시 모드, 화면 블러 (Ctrl+Shift+H: 즉시 가리기)">🔓</button>
           <button class="icon-btn" id="manageCategoriesBtn" title="카테고리 관리">⚙</button>
           <div class="user-chip" id="userChip"></div>
         </div>
@@ -115,7 +115,7 @@
         </div>
 
         <div class="widget-grid">
-          <!-- 오늘 — primary -->
+          <!-- 오늘, primary -->
           <div class="widget widget-primary widget-today">
             <div class="widget-head">
               <h3>오늘 해야 할 일</h3>
@@ -169,9 +169,9 @@
           </div>
         </div>
 
-        <!-- 보조 위젯 — 평소엔 접어둠 -->
+        <!-- 보조 위젯, 평소엔 접어둠 -->
         <details class="dash-more">
-          <summary>더보기 — 이번 주 피드백 · AI 사용량</summary>
+          <summary>더보기 · 이번 주 피드백 · AI 사용량</summary>
           <div class="dash-more-grid">
             <!-- 이번 주 피드백 카운트 (Phase 7) -->
             <div class="widget" id="feedbackCountsWidget" hidden>
@@ -217,7 +217,7 @@
             <input
               type="text"
               id="inboxAddInput"
-              placeholder="떠오른 생각, 할 일, 아이디어 — 일단 적어두세요 (피드백은 #friction / #unused / #automate / #repeat)"
+              placeholder="떠오른 생각, 할 일, 아이디어, 일단 적어두세요 (피드백은 #friction / #unused / #automate / #repeat)"
               maxlength="2000"
               autocomplete="off"
             />
@@ -233,7 +233,7 @@
         <div class="inbox-ai-bar" id="inboxAiBar" hidden>
           <div class="inbox-ai-bar-text">
             <strong>✨ AI 정리</strong>
-            <span id="inboxAiBarHint">— 미처리 메모 각각에 카테고리·우선순위·태그·제목을 제안받습니다.</span>
+            <span id="inboxAiBarHint">미처리 메모 각각에 카테고리·우선순위·태그·제목을 제안받습니다.</span>
           </div>
           <button class="btn-ai" id="inboxAiBtn">
             <span class="btn-ai-label">AI로 정리</span>
@@ -337,7 +337,7 @@
       <!-- ═══════════════════════ 6) Gantt (365일) ══════════════════ -->
       <section class="page" id="pageGantt" hidden>
         <div class="page-header">
-          <h2>간트차트 — 365일 일단위</h2>
+          <h2>간트차트 · 365일 일단위</h2>
           <div class="gantt-controls">
             <button class="btn btn-outline" id="ganttJumpToday">오늘로</button>
             <select id="ganttZoom">
@@ -428,7 +428,7 @@
           </div>
         </div>
         <p class="snip-note">
-          🔒 <strong>업무 코드만</strong> 올리세요 (개인정보 X). 회사 노트북에서 열면 IT 네트워크 로그에는 남습니다 — 코드 전달 자체는 안전하지만 민감한 건 넣지 마세요.
+          🔒 <strong>업무 코드만</strong> 올리세요 (개인정보 X). 회사 노트북에서 열면 IT 네트워크 로그에는 남습니다, 코드 전달 자체는 안전하지만 민감한 건 넣지 마세요.
         </p>
         <div class="snip-list" id="snipList"></div>
       </section>
@@ -669,7 +669,7 @@
     <div class="modal-backdrop" id="aiUsageModal" hidden>
       <div class="modal modal-lg" role="dialog" aria-modal="true">
         <header class="modal-head">
-          <h2>💰 AI 사용량 — 자세히</h2>
+          <h2>💰 AI 사용량 · 자세히</h2>
           <button class="modal-close" data-close="aiUsage">✕</button>
         </header>
         <div class="modal-body aiu-modal-body" id="aiUsageModalBody">
@@ -737,7 +737,7 @@
 
     <div id="toast" class="toast" hidden></div>
 
-    <!-- 패닉 커버 — Ctrl/Cmd+Shift+H 로 화면 즉시 가리기 (어깨너머 방어, 네트워크 로그와 무관) -->
+    <!-- 패닉 커버, Ctrl/Cmd+Shift+H 로 화면 즉시 가리기 (어깨너머 방어, 네트워크 로그와 무관) -->
     <div id="privacyCover" class="privacy-cover" hidden>
       <div class="privacy-cover-inner">
         <div class="privacy-cover-dots"><span></span><span></span><span></span></div>
@@ -749,7 +749,7 @@
     <!-- # 태그 자동완성 popup (Phase 7) -->
     <div class="tag-suggest" id="tagSuggest" hidden></div>
 
-    <!-- Quick Memo (Cmd/Ctrl + N) — Phase 7 -->
+    <!-- Quick Memo (Cmd/Ctrl + N), Phase 7 -->
     <div class="qmemo-backdrop" id="qmemoBackdrop" hidden>
       <div class="qmemo-panel" role="dialog" aria-modal="true" aria-label="빠른 메모">
         <div class="qmemo-head">

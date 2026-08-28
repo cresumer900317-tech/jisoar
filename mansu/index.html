@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>만수로그 — 박만수 성장기록</title>
+<title>만수로그 | 박만수 성장기록</title>
 <meta name="description" content="렉돌 박만수 몸무게 기록장" />
 <meta name="robots" content="noindex" />
 <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)" />
@@ -105,7 +105,7 @@ footer a{color:var(--muted)}
     <input type="number" id="grams" inputmode="numeric" placeholder="몸무게 (g)" min="1" max="20000" />
   </div>
   <div class="entry-row">
-    <input type="text" id="memo" placeholder="메모 — 먹은 양, 컨디션 등 (선택)" maxlength="200" />
+    <input type="text" id="memo" placeholder="메모, 먹은 양, 컨디션 등 (선택)" maxlength="200" />
   </div>
   <button id="save">오늘 몸무게 저장</button>
   <div id="msg"></div>
@@ -237,7 +237,7 @@ function renderStats(){
     let dot, label, cls;
     if(avg >= 10){ dot="var(--good-dot)"; label="잘 크는 중 ✓"; cls="up"; }
     else if(avg >= 0){ dot="var(--warn-dot)"; label="증가가 느려요"; cls="flat"; }
-    else { dot="var(--bad-dot)"; label="감소 — 병원 상담"; cls="down"; }
+    else { dot="var(--bad-dot)"; label="감소, 병원 상담"; cls="down"; }
     note.innerHTML = `<span class="dot" style="background:${dot}"></span><span class="${cls}">${label}</span>`;
   } else {
     $("t-avg").textContent = "—";

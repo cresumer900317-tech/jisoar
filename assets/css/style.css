@@ -666,7 +666,7 @@ main { padding: 0 0 48px; }
   transform: scale(2.64);
   transform-origin: center 50%;
 }
-/* 리스트 카드 아바타: 기본값(scale 2.99, origin 50%)과 동일 — 별도 오버라이드 불필요 */
+/* 리스트 카드 아바타: 기본값(scale 2.99, origin 50%)과 동일, 별도 오버라이드 불필요 */
 .character-avatar.no-image {
   display: flex;
   align-items: center;
