@@ -116,7 +116,7 @@ section{position:relative}
 /* ── statement ── */
 .statement{font-size:clamp(30px,4.6vw,72px); font-weight:800; letter-spacing:-.04em; line-height:1.24;
   max-width:19em}
-.statement em{font-style:normal; color:#c3d4e6; transition:color .5s ease}
+.statement em{font-style:normal; white-space:nowrap; color:#c3d4e6; transition:color .5s ease}
 .statement em.lit{color:var(--ink)}
 .state-grid{display:grid; gap:clamp(40px,6vw,90px)}
 @media(min-width:960px){.state-grid{grid-template-columns:1.7fr 1fr; align-items:end}}
@@ -182,6 +182,11 @@ footer a:hover{color:var(--ink)}
   .rv{opacity:1 !important; transform:none !important}
   .marq .track{animation:none}
 }
+
+/* ── Korean line balance ── */
+.nb{white-space:nowrap}
+h1,h2,h3,.statement,.big,.lead,.side p,.phead p,.hero-sub{text-wrap:balance}
+p,.desc,li{text-wrap:pretty}
 </style>
 </head>
 <body>
@@ -220,7 +225,7 @@ footer a:hover{color:var(--ink)}
     <div class="state-grid">
       <h2 class="statement rv" id="statement">홈페이지 한 장부터
         설비 모니터링 시스템까지.
-        기획부터 배포·운영까지
+        기획부터 <span class="nb">배포·운영까지</span>
         직접 만듭니다.</h2>
       <div class="state-side rv d1">
         <p>jisoar는 직접 만들고 직접 운영해 본 것만 서비스로 제공합니다.
@@ -275,7 +280,7 @@ footer a:hover{color:var(--ink)}
       <a class="svc rv" href="/services/#web">
         <div class="no">(01)</div>
         <h3>웹사이트 · 홈페이지</h3>
-        <p>브랜드 홈페이지, 랜딩 페이지, 커뮤니티 플랫폼. 반응형·SEO·도메인 연결까지 완성된 상태로.</p>
+        <p>브랜드 홈페이지, 랜딩 페이지, 커뮤니티 플랫폼. <span class="nb">반응형·SEO·도메인</span> 연결까지 완성된 상태로.</p>
       </a>
       <a class="svc rv d1" href="/services/#app">
         <div class="no">(02)</div>
@@ -285,12 +290,12 @@ footer a:hover{color:var(--ink)}
       <a class="svc rv d1" href="/services/#dashboard">
         <div class="no">(03)</div>
         <h3>대시보드 · 업무 시스템</h3>
-        <p>데이터 조회·관리, 다단계 권한, 자동 리포트. 엑셀로 돌리던 일을 시스템으로.</p>
+        <p>데이터 <span class="nb">조회·관리,</span> 다단계 권한, 자동 리포트. 엑셀로 돌리던 일을 시스템으로.</p>
       </a>
       <a class="svc rv d2" href="/services/#iot">
         <div class="no">(04)</div>
         <h3>산업 IoT · 설비 모니터링</h3>
-        <p>PLC 데이터 수집부터 실시간 모니터링 대시보드까지. 물류·제조 현장을 한 화면에서.</p>
+        <p>PLC 데이터 수집부터 실시간 모니터링 대시보드까지. <span class="nb">물류·제조</span> 현장을 한 화면에서.</p>
       </a>
     </div>
   </div>

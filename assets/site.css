@@ -254,3 +254,8 @@ footer{background:#fff; border-top:1px solid var(--line); padding:72px 0 48px; f
   *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
   .reveal{opacity:1 !important; transform:none !important}
 }
+
+/* ── Korean line balance ── */
+.nb{white-space:nowrap}
+h1,h2,h3,.statement,.big,.lead,.side p,.phead p,.hero-sub{text-wrap:balance}
+p,.desc,li{text-wrap:pretty}

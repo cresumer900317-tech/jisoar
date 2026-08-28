@@ -49,7 +49,7 @@ a{color:inherit; text-decoration:none}
 .sect{padding:clamp(70px,9vw,140px) 0}
 .shead{display:flex; justify-content:space-between; align-items:baseline;
   padding-bottom:22px; border-bottom:1px solid var(--line); margin-bottom:clamp(36px,5vw,64px)}
-.shead .t{font-size:12px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--mut)}
+.shead .t{white-space:nowrap; font-size:12px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--mut)}
 .shead .t i{font-style:normal; margin-right:10px}
 .shead .n{font-size:12px; font-weight:600; letter-spacing:.14em; color:var(--faint)}
 
@@ -181,3 +181,10 @@ footer a:hover{color:var(--ink)}
   *{animation-duration:.001ms !important; transition-duration:.001ms !important}
   .rv{opacity:1 !important; transform:none !important}
 }
+
+/* ── Korean line balance ── */
+.nb{white-space:nowrap}
+h1,h2,h3,.statement,.big,.lead,.side p,.phead p,.hero-sub{text-wrap:balance}
+p,.desc,li{text-wrap:pretty}
+
+@media(max-width:560px){.shead .n{display:none}}
