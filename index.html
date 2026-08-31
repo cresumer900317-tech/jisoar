@@ -122,8 +122,9 @@ section{position:relative}
 .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
 
 /* ── statement ── */
-.statement{font-size:clamp(30px,4.6vw,72px); font-weight:800; letter-spacing:-.04em; line-height:1.24;
+.statement{font-size:clamp(26px,3.5vw,54px); font-weight:800; letter-spacing:-.04em; line-height:1.24;
   max-width:19em}
+.statement .ln{display:block}
 .statement em{font-style:normal; white-space:nowrap; color:#93a7bd; transition:color .5s ease}
 .statement em.lit{color:var(--ink)}
 .state-grid{display:grid; gap:clamp(40px,6vw,90px)}
@@ -247,10 +248,11 @@ p,.desc,li{text-wrap:pretty}
   <div class="wrap">
     <div class="shead rv"><div class="t"><i>✳</i>Studio</div><div class="n">(01)</div></div>
     <div class="state-grid">
-      <h2 class="statement rv" id="statement">대기업 시스템 엔지니어 출신.
-        웹서비스 · 홈페이지 · 앱을
-        기획부터 배포·운영까지
-        직접 만듭니다.</h2>
+      <h2 class="statement rv" id="statement">
+        <span class="ln">대기업 시스템 엔지니어 출신.</span>
+        <span class="ln">웹서비스 · 홈페이지 · 앱을 기획부터</span>
+        <span class="ln">배포 · 운영 · 유지보수까지</span>
+        <span class="ln">모두 직접 진행합니다.</span></h2>
       <div class="state-side rv d1">
         <p>직접 만들고 직접 운영해 본 것만 서비스로 제공합니다.
           엑셀로 돌리던 업무와 반복 작업을 조회·자동화·권한 시스템으로 바꾸고,
@@ -356,8 +358,11 @@ p,.desc,li{text-wrap:pretty}
   /* statement: light words up progressively on scroll */
   var st=document.getElementById('statement');
   if(st){
-    var words=st.textContent.trim().split(/\s+/);
-    st.innerHTML=words.map(function(w){return '<em>'+w+'</em>';}).join(' ');
+    var lines=st.querySelectorAll('.ln'); if(!lines.length) lines=[st];
+    lines.forEach(function(l){
+      var words=l.textContent.trim().split(/\s+/);
+      l.innerHTML=words.map(function(w){return '<em>'+w+'</em>';}).join(' ');
+    });
     var ems=st.querySelectorAll('em');
     addEventListener('scroll', function(){
       var r=st.getBoundingClientRect();
