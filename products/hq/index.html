@@ -2,56 +2,135 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>개인 업무 관리 대시보드 · HQ | JISOAR</title>
-<meta name="description" content="일·프로젝트·삶을 한 화면에서 관리하는 개인 command center. JISOAR가 만든 프로젝트." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e1a'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffae82' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23aa5638' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="../case.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<meta name="description" content="일·프로젝트·삶을 한 화면에서 관리하는 개인 대시보드. JISOAR가 만든 프로젝트." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jisoar.com/products/hq/" />
+<meta property="og:title" content="개인 업무 관리 대시보드 · HQ | JISOAR" />
+<meta property="og:description" content="개인 업무 관리 대시보드. 매일 쓰면서 다듬어 온 업무 시스템의 원형." />
+<meta property="og:image" content="https://jisoar.com/og.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" />
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="/assets/editorial.css?v=7" />
 </head>
 <body>
-<div class="wrap">
-  <a class="back" href="/"><span>←</span><span class="m">jisoar<span class="dot">.</span></span></a>
 
-  <header class="cs">
-    <div class="eyebrow">운영 중 · 대시보드 · HQ</div>
-    <h1 class="ko">개인 업무 관리 대시보드</h1>
-    <p class="tagline">A personal operating system.</p>
-  </header>
+<header class="bar" id="bar">
+  <a class="brand" href="/">jisoar<sup>®</sup></a>
+  <nav>
+    <a class="on" href="/work/">Work</a>
+    <a href="/services/">Services</a>
+    <a class="cta" href="/contact/">Contact</a>
+  </nav>
+</header>
 
-  <section class="cs">
-    <h2>Overview</h2>
-    <p>일, 사이드 프로젝트, 배우는 것, 삶, 여러 곳에 흩어져 있던 걸 <b>한 화면에서</b> 보고 관리하는 개인 대시보드입니다. 누군가에게 파는 게 아니라, 제가 매일 쓰려고 만들었어요.</p>
-  </section>
+<header class="phero">
+  <div class="wrap">
+    <div class="eyebrow rv"><i>✳</i>Work · Case Study</div>
+    <div class="chips rv d1"><span class="chip dark">운영 중</span><span class="chip">대시보드</span><span class="chip">HQ</span></div>
+    <h1 class="rv d1">개인 업무 관리 대시보드</h1>
+    <p class="rv d2">일, 사이드 프로젝트, 배우는 것, 삶. 여러 곳에 흩어져 있던 걸 <b>한 화면에서</b> 보고 관리하는 개인 대시보드입니다. 누군가에게 파는 게 아니라, 매일 쓰려고 만들었습니다.</p>
+  </div>
+</header>
 
-  <section class="cs">
-    <h2>Why I built it</h2>
-    <p>마음에 꼭 맞는 도구를 찾다가, 그냥 만드는 게 빨랐습니다. 매일 여는 화면이라 제 흐름에 정확히 맞게, 군더더기 없이, 어디서든 열리게.</p>
-  </section>
-
-  <section class="cs">
-    <h2>What it does</h2>
-    <ul class="feat">
-      <li>영역별 할 일 관리, work · projects · growth · life</li>
-      <li>오늘 · 이번 주 한눈에</li>
-      <li>PC · 폰 어디서나 동기화</li>
-      <li>비공개, 본인만 접근 (로그인 게이트)</li>
-    </ul>
-  </section>
-
-  <section class="cs">
-    <h2>Details</h2>
-    <div class="meta">
-      <div class="row"><span class="k">Stack</span><span class="v">Vanilla JS · FastAPI · Supabase · GitHub Pages / Railway</span></div>
-      <div class="row"><span class="k">Role</span><span class="v">기획 · 디자인 · 개발 (solo)</span></div>
-      <div class="row"><span class="k">Status</span><span class="v">매일 사용 중</span></div>
+<section class="sect" style="padding-top:0">
+  <div class="wrap">
+    <div class="case-shot rv">
+      <div class="shot tile"><span>HQ</span><small>Private · Login only</small></div>
     </div>
-    <p class="note">개인 일정·업무가 담겨 비공개로 운영됩니다.</p>
-  </section>
+  </div>
+</section>
 
-  <footer><div class="name">jisoar<span class="dot">.</span></div></footer>
-</div>
+<section class="sect" style="padding-top:0">
+  <div class="wrap">
+    <div class="split">
+      <div class="side rv">
+        <div class="lbl">Background</div>
+        <h2>왜 만들었나</h2>
+      </div>
+      <div class="pcard rv">
+        <p class="body-text">마음에 꼭 맞는 도구를 찾다가, 그냥 만드는 게 빨랐습니다. 매일 여는 화면이라 제 흐름에 정확히 맞게, 군더더기 없이, 어디서든 열리게. 업무 시스템 서비스를 만들 때 기준이 되는 원형이기도 합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sect" style="padding-top:0">
+  <div class="wrap">
+    <div class="split">
+      <div class="side rv">
+        <div class="lbl">Features</div>
+        <h2>주요 기능</h2>
+      </div>
+      <div class="pcard rv">
+        <ul class="plist" style="margin-top:0">
+            <li><b>영역별 할 일 관리</b>: work · projects · growth · life</li>
+            <li>오늘 · 이번 주 한눈에</li>
+            <li>PC · 폰 어디서나 동기화</li>
+            <li>본인만 접근 (로그인 게이트)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sect" style="padding-top:0">
+  <div class="wrap">
+    <div class="split">
+      <div class="side rv">
+        <div class="lbl">Details</div>
+        <h2>프로젝트 정보</h2>
+      </div>
+      <div class="pcard rv">
+        <div class="spec">
+            <div class="row"><span class="k">Stack</span><span class="v">Vanilla JS · FastAPI · Supabase · GitHub Pages / Railway</span></div>
+            <div class="row"><span class="k">Role</span><span class="v">기획 · 디자인 · 개발 (1인)</span></div>
+            <div class="row"><span class="k">Status</span><span class="v">매일 사용 중</span></div>
+        </div>
+        <div class="links">
+
+            <a class="ghost" href="/work/">다른 프로젝트 보기</a>
+        </div>
+          <p class="note">개인 일정·업무가 담겨 있어 공개 링크는 두지 않습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sect" style="padding-top:0">
+  <div class="wrap">
+    <div class="darkcard rv">
+      <div class="small">Let's Talk</div>
+      <div class="big">이런 걸 만들고 싶다면</div>
+      <a class="btn" href="/contact/">프로젝트 문의하기 <span class="a">→</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>© 2026 jisoar®</span>
+      <span><a href="/about/">About</a> &nbsp;/&nbsp; <a href="/work/">Work</a> &nbsp;/&nbsp; <a href="/services/">Services</a> &nbsp;/&nbsp; <a href="/contact/">Contact</a></span>
+      <span>Ideas into Reality™</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var bar=document.getElementById('bar');
+  addEventListener('scroll', function(){ bar.classList.toggle('scrolled', scrollY>16); }, {passive:true});
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting||e.boundingClientRect.top<0){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  },{threshold:.12, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+})();
+</script>
 </body>
 </html>
