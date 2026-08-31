@@ -20,6 +20,7 @@ body{
 .back .m .dot{color:var(--dawn)}
 header.cs{padding:46px 0 38px;border-bottom:1px solid var(--line)}
 .eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--dawn);margin-bottom:16px}
+h1.ko{font-family:'Pretendard Variable',Pretendard,sans-serif;font-weight:700;letter-spacing:-.035em;font-size:clamp(32px,6.5vw,54px);line-height:1.18}
 h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(40px,9vw,66px);line-height:1.04;letter-spacing:-.01em;
   background:linear-gradient(180deg,#fff 0%,#aebcea 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.04em}
 .tagline{margin-top:14px;color:var(--dawn-2);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:clamp(18px,4.5vw,25px)}
