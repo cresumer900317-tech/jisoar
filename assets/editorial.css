@@ -217,3 +217,7 @@ p,.desc,li{text-wrap:pretty}
 .links a.ghost:hover{background:var(--card); color:var(--ink); border-color:var(--ink)}
 .note{margin-top:18px; font-size:13px; color:var(--faint); line-height:1.7}
 @media(max-width:560px){.spec .row{grid-template-columns:1fr; gap:4px}}
+
+/* desktop-only line breaks in copy */
+@media(max-width:720px){br.d{display:none}}
+@media(max-width:1100px){.mini p br.d{display:none}}
