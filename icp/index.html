@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
   <title>ICP 코드 브릿지</title>
-  <link rel="stylesheet" href="icp.css" />
+  <link rel="stylesheet" href="icp.css?v=2" />
 </head>
 <body>
   <!-- ── 로그인 화면 ─────────────────────────── -->
@@ -28,7 +28,8 @@
         </label>
         <button type="submit" class="btn btn-primary btn-block" id="loginBtn">들어가기</button>
       </form>
-      <p class="login-note">팀 내부용 페이지입니다. 접속코드는 담당자에게 문의하세요.</p>
+      <p class="login-note">개인 작업용 페이지입니다. 개인 PC에서 작성한 코드를 옮기는 용도로만 쓰며,
+        회사 시스템에서 내보낸 자료·내부 IP·웹훅·토큰·계정 정보는 저장되지 않습니다.</p>
     </div>
   </div>
 
@@ -59,6 +60,10 @@
           <button class="btn btn-outline" id="addMemoBtn">＋ 메모 추가</button>
           <button class="btn btn-primary" id="addBtn">＋ 코드 추가</button>
         </div>
+      </div>
+      <div class="policy-note">
+        개인 PC → 회사 PC 단방향 전달함입니다. 저장한 항목은 <strong><span id="retentionDays">7</span>일</strong> 뒤 자동 삭제됩니다.
+        회사 시스템에서 내보낸 자료(대시보드·플로우 export, 태그·주소 목록), 내부 IP, 웹훅 URL, 토큰, 계정 정보는 올리지 마세요 — 저장 시 거부됩니다.
       </div>
       <div id="snipList"></div>
     </main>
@@ -91,7 +96,7 @@
           <div id="fieldsNote" hidden>
             <label class="field">
               <span>내용</span>
-              <textarea id="snipNote" class="memo-input" rows="14" placeholder="태그매핑, 설비 정보, 작업 메모 등 자유롭게 적으세요"></textarea>
+              <textarea id="snipNote" class="memo-input" rows="14" placeholder="개인 PC에서 작성한 메모·문서를 적으세요 (회사 시스템 export·태그 주소 목록은 올리지 마세요)"></textarea>
             </label>
             <div class="file-row">
               <input type="file" id="snipFileInput" hidden />
@@ -121,6 +126,6 @@
   </div>
 
   <div id="toast" class="toast" hidden></div>
-  <script src="icp.js"></script>
+  <script src="icp.js?v=2"></script>
 </body>
 </html>

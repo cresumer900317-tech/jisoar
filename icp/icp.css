@@ -107,6 +107,8 @@ body {
 /* ── 목록 ── */
 .container { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
 .list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.policy-note { margin: -4px 0 14px; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb; font-size: 0.74rem; color: #6b7280; line-height: 1.6; }
+.policy-note strong { color: #374151; }
 .list-head-btns { display: flex; gap: 8px; }
 .snip-count { font-size: 0.8rem; color: var(--muted); }
 .empty-state {

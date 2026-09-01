@@ -22,6 +22,26 @@ const ALL_TAB = "__all__";
 const MEMBERS = ["Jett", "Minhyun"];   // 고정 사용자, 탭과 로그인 선택지
 function myName() { return localStorage.getItem("icp_name") || ""; }
 
+// ── 보안 가드 ─────────────────────────────────
+// 이 페이지는 "개인 PC에서 만든 코드를 회사 PC로 가져가는" 단방향 전달함이다.
+// 회사 시스템에서 내보낸 정보(웹훅 URL, 토큰, 내부 IP, 사내 계정, 비밀번호 값)는 개인 서비스에
+// 저장되면 안 되므로 저장 전에 거부한다. 백엔드(main.py _SENSITIVE_PATTERNS)에도 같은 검사가 있다.
+const RETENTION_DAYS = 7;   // 백엔드 SNIPPET_RETENTION_DAYS 와 같게, 지나면 자동 삭제
+const SENSITIVE_PATTERNS = [
+  [/webhook\.office\.com|logic\.azure\.com|powerautomate\.com|hooks\.slack\.com|discord(?:app)?\.com\/api\/webhooks/i, "웹훅 URL"],
+  [/eyJ[A-Za-z0-9_-]{20,}\.eyJ[A-Za-z0-9_-]{20,}/, "인증 토큰(JWT)"],
+  [/\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b/, "내부 IP 주소"],
+  [/[\w.+-]+@coupang\.com/i, "사내 이메일"],
+  [/\b(?:password|passwd|pwd|secret|api[_-]?key|access[_-]?token)\b\s*[:=]\s*["'][^"']{4,}["']/i, "비밀번호/키 값"],
+];
+function findSensitive(...parts) {
+  for (const p of parts) {
+    if (!p) continue;
+    for (const [rx, label] of SENSITIVE_PATTERNS) if (rx.test(p)) return label;
+  }
+  return "";
+}
+
 const TB4_PARTS = [
   { key: "html", label: "HTML" },
   { key: "css", label: "CSS" },
@@ -122,6 +142,7 @@ function showApp() {
   $("loginView").hidden = true;
   $("appView").hidden = false;
   $("userName").textContent = myName();
+  $("retentionDays").textContent = String(RETENTION_DAYS);
   STATE.filter = localStorage.getItem("icp_filter") || myName() || ALL_TAB;
   loadSnippets();
 }
@@ -443,7 +464,7 @@ function setPendingFile(f) {
     info.textContent = "";
     clr.hidden = true;
     ta.disabled = false;
-    ta.placeholder = "태그매핑, 설비 정보, 작업 메모 등 자유롭게 적으세요";
+    ta.placeholder = "개인 PC에서 작성한 메모·문서를 적으세요 (회사 시스템 export·태그 주소 목록은 올리지 마세요)";
   }
 }
 
@@ -469,6 +490,11 @@ async function saveSnippet(e) {
   }
   const hasContent = body.content.trim() || body.html.trim() || body.css.trim() || body.js.trim() || body.settings.trim();
   if (!hasContent) { showToast(STATE.kind === "note" ? "내용을 입력해주세요" : "코드를 입력해주세요", true); return; }
+  const hit = findSensitive(body.title, body.content, body.html, body.css, body.js, body.settings);
+  if (hit) {
+    showToast(`${hit}이(가) 들어 있어 저장할 수 없어요. 회사 내부 정보는 올리지 마세요 (해당 값은 회사 PC에서 직접 채우세요)`, true);
+    return;
+  }
   try {
     if (STATE.editingId) {
       const updated = await api("PATCH", `/api/icp/snippets/${STATE.editingId}`, body);
