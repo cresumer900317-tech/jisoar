@@ -1,0 +1,1782 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head><script type="text/javascript" src="mock_data.js"></script><script type="text/javascript" src="item_data.js"></script><script type="text/javascript" src="mock_shim.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="robots" content="noarchive" />
+  <style type="text/css"> /*******************************[general]*************************************************/
+
+html,body {
+	margin:0;
+	padding:0;
+	height:100%;
+	
+	background:#FFFFFF;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+/*******************************[container]*************************************************/
+
+div#container {
+	min-height:100%;
+	position:relative;
+}
+
+#content {
+	padding:10px;
+	padding-bottom:36px;	/* Height of the footer */
+	padding-left:10px;
+	width:770px;
+	background-color:#FFFFFF;
+}
+
+#footer {
+	position:absolute;
+  bottom:0;
+	width:790px;
+	height:36px;			/* Height of the footer */
+	background-color:#FFFFFF;
+}
+
+/********************************[content]************************************************/
+
+.TitleBar {
+  padding-top:0px;
+  padding-bottom:10px;
+  clear: both;
+  width: 766px;
+	height: 30px;
+}
+
+.TitleText {
+  clear: left;
+  width: 640px;
+  float: left;
+  text-align: left;
+  font-weight: bold; 
+  font-size: 22px;
+  padding-top: 10px;
+}
+
+.TitleRefresh {
+  clear: right;
+  float: right;
+  text-align: right;
+}
+
+/* --------------------------------- */
+
+.VariableContainer {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 0px;
+  width: 770px;
+  height: auto;
+  text-align:left;
+  clear: both;
+}
+
+.VariableWx{
+  margin-top: 0px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 4px;
+  float: left;
+  border-width: 1px;
+  border-color: #043d5d;
+  border-style: solid;
+	background-color:#FFFFFF;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 2px;  
+}
+
+/* --------------------------------- */
+
+.header-container {
+	width: 100%;
+	min-width: 1100px;
+	height: 75px;
+	background-color: #043d5d;
+	color: #FFFFFF;
+	overflow: hidden;
+}
+
+.header-column {
+	padding: 10px 20px;
+	display: inline-block;
+}
+
+.header-item {
+	padding: 2px 0px;
+}
+
+.header-image {
+	float: left;
+	padding: 5px 0px;
+}
+
+.header-link {
+	color: #FFFFFF;
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+/* --------------------------------- */
+
+.WarningContainer {
+  display:none;
+  width: 770px;
+  height: auto;
+  padding-top: 12px;
+  padding-bottom: 3px;
+  /*background-color:#FFFF00;*/
+}
+
+.WarningIconArea {
+  float: left;
+  width: 40px;
+  /*background-color:#FF00FF;*/
+  clear: left;
+  padding-bottom: 3px;
+}
+
+.WarningItemArea {
+  float: left;
+  color: #FF0000;
+  width: 710px;
+  padding-top: 3px;
+  /*background-color:#00FFFF;*/
+  clear: right;
+}
+
+/* --------------------------------- */
+
+.NotesArea {
+  margin-top: 0px;
+  margin-bottom: 32px;
+  clear:both;
+}
+
+div#copyright {
+  text-align:center;
+  font-size:11px;
+	width:790px;
+}
+
+.ImgIcon {
+	border-width:0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:-6px;
+	margin-bottom:-4px;
+	padding:0;
+	vertical-align:middle;
+}
+
+.ErrorText {
+	color: #FF0000;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+.hiddenArea {
+	color:#FFFFFF;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  clear:both;
+}
+
+/* --------------------------------- */
+
+.alink {
+  color: #043d5d;
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+.PointerCursor {
+  cursor:pointer;
+}
+
+.defaultHidden {
+  display:none;
+}
+
+.centeredImg {
+  margin: 0 auto;
+}
+
+input[type=checkbox] {
+	accent-color: #043d5d;
+} </style>
+  <style type="text/css"> .trl {
+  background-color: #FFFFFF;
+}
+
+.trl_ok {
+  background-color: #00ff00;
+}
+
+.trl_er {
+  background-color: #ff0000;
+}
+ </style>
+  <style type="text/css"> /* The Modal box's background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1001; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+
+.modal-content {
+  background-color: #ffffff;
+  margin: 15% auto;
+  padding: 0px;
+  border: 1px solid #000;
+  width: 720px;
+}
+
+.modal-content .modal-header {
+  padding: 1px 12px;
+  background-color: #043d5d;
+  color: #FFFFFF;
+}
+
+.modal-content .modal-body {
+	padding: 10px 12px;
+	display: block;
+}
+
+.modal-content .modal-body input {
+	vertical-align: bottom;
+	position: relative;
+	top: 2px;
+}
+
+.modal-content .modal-body > div {
+	margin: 6px 0px;
+}
+
+.modal-content .modal-footer {
+  padding: 10px 12px;
+  height: 25px;
+}
+
+.modal-content .modal-footer input {
+	float: right;
+}
+
+.modal-content .modal-header .close {
+  color: #444;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  padding-top: 4px;
+}
+
+.modal-content .modal-header .close:hover,
+.modal-content .modal-header .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+ </style>
+  <style type="text/css"> 
+.maintenance-content {
+  background-color: #FFC0C0;
+  margin-top: 100px;
+  margin-bottom: 10px;
+  padding: 0px;
+  border: 6px double #FF0000;
+  width: 756px;
+}
+
+.maintenance-content .maintenance-header {
+  padding: 1px 12px;
+  background-color: #FF8080;
+}
+
+.maintenance-content .maintenance-body {
+	padding: 4px;
+	display: block;
+}
+
+.maintenance-content .maintenance-body ul {
+	padding: 0px;
+}
+
+.maintenance-content .maintenance-body ul > li {
+	padding: 0px;
+	margin-left: 20px;
+}
+
+.maintenance-content .maintenance-header .close {
+  float: right;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.maintenance-content .maintenance-header .close:hover,
+.maintenance-content .maintenance-header .close:focus {
+  text-decoration: none;
+  cursor: pointer;
+} 
+ </style>
+  <title>ComBricks - 장치 관리</title>
+  <!-- content_specific_includes -->
+  <style type="text/css"> .ConfigTable {
+  width:768px;
+
+  margin-top: 4px;
+  margin-bottom: 20px;
+  
+  border-left-color: #043d5d;
+	border-left-style: solid;
+	border-left-width: 1px;
+  
+  border-top-color: #043d5d;
+	border-top-style: solid;
+	border-top-width: 1px;
+
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 0px;
+	
+	rules:cols;
+  clear:both;
+  
+  /*table-layout:fixed;
+  word-wrap:break-word;*/
+}
+
+.TableCell{
+  padding-top:6px;
+  padding-bottom:6px;
+  padding-left:4px;
+  padding-right:4px;
+}
+
+.CompactTableCell{
+  padding-top:1px;
+  padding-bottom:1px;
+}
+
+.TableCell table {
+  margin-left:auto; 
+  margin-right:auto;
+  border-collapse: collapse;
+}
+
+.TableCell table tr td{
+  height:32px;
+  width:100%;
+}
+
+.R1Center table, .R0Center table {
+  text-align: center;
+}
+
+.R1Left table, .R0Left table {
+  text-align: left;
+  width: 100%;
+}
+
+.R1Right table, .R0Right table {
+  text-align: right;
+  width: 100%;
+}
+
+.R0Left {
+  background-color: #f9f9f9;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Left {
+  background-color: #FFFFFF;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Center {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Center {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Right {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Right {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.header-cell {
+  background-color: #043d5d;
+  color: #FFFFFF;
+
+  border-right-color: #eceef1;
+	border-right-style: solid;
+	border-right-width: 1px;
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+
+.header-left { // HeaderLeft
+  text-align:left;
+}
+
+.header-center { // HeaderCenter
+  text-align:center;
+}
+
+.header-right { // HeaderRight
+  text-align:right;
+}
+
+.header-last {
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+}
+
+.SingleLineRow {
+	margin-top: 0px;
+	padding-top: 0px;
+
+	border-top-width: 0px;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+
+	border-bottom-width: 0px;
+}
+
+.MultiLineRow {
+	margin-top: 4px;
+	padding-top: 4px;
+
+	border-top-width: 1px;
+	border-top-color: #fcfcfc;
+	border-top-style: solid;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	
+	border-bottom-width: 0px;
+}
+
+/* ---------------------------------------- */
+
+.LeftItem {
+	height: 30px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  float: left;
+  padding-right: 10px;
+}
+
+.LeftItem div {
+	padding-top: 4px;
+}
+
+/* ---------------------------------------- */
+
+.TextBlock {
+  table-layout:fixed;
+  word-wrap:break-word;
+  width:754px;  
+}
+
+/* ---------------------------------------- */
+
+div.list ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 16px;
+}
+
+div.list ul li {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+
+/* ----------------------------------------------------------------------- */
+
+.DivKey {
+  float: left;
+  clear:left;
+  width: 220px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  margin-right: 10px;
+}
+
+.DivValue {
+  float: left;
+  clear:right;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.DivValue div {
+  float: left;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.NotImportantText {
+  color: #808080;
+}
+
+.RowOfMultipleTables {
+/*  background-color: #FF0000;*/
+  float:left;
+  clear:both;
+  width:768px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.CfgTableIntDiv {
+  text-align: center;
+}
+
+.CfgTableIntDiv table{
+  /*background-color: #FF0000;*/
+  text-align: left;
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.TableCell ul li {
+	padding-bottom: 8px;
+}
+
+.ActionButtonLeft{
+	float:left; 
+	margin-right: 10px; 
+	margin-bottom: 10px;
+}
+
+.ActionButtonRight{
+	float:right; 
+	margin-left: 10px; 
+	margin-bottom: 10px;
+} </style>
+  <script type="text/javascript"> 
+function loadXMLDocASynch(url,params,onReadyStateChangeFunction,onTimeoutFunction,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+
+  if (onReadyStateChangeFunction != undefined){
+    xmlhttp.onreadystatechange = onReadyStateChangeFunction;
+  }
+  if (onTimeoutFunction != undefined){
+  	if ('ontimeout' in xmlhttp){
+      xmlhttp.ontimeout = onTimeoutFunction;
+    }
+  }
+
+  var full_url = url;
+  if (params != null) full_url = full_url+"?"+params;
+
+  xmlhttp.open("GET",full_url,true);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send();
+  return xmlhttp;
+}
+
+//-----------
+
+function loadXMLDocSynch(url,params,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+  if (xmlhttp == null) return "400\x1D브라우저에서 HTTP 요구 생성 에러";
+
+  xmlhttp.open("POST",url,false);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send(params);
+  return xmlhttp.responseText;
+}
+
+//-----------
+
+function SaveSegmentedSettingsCombined(url,args,act,disp_result)
+{
+  var CombinedArray = [];
+
+  if (args != null){
+  	var ItemCount = args.length;
+
+  	var StdString = "save=";
+    var CurrentString = "";
+  	for(var i=0; i<ItemCount; i++){
+  	  if ((CurrentString.length + args[i].length) < 200){
+  	    if (CurrentString.length > 0) CurrentString = CurrentString + "+";
+  	    CurrentString = CurrentString + args[i];
+  	  }
+  	  else {
+  	    if (CurrentString.length > 0) {
+  	      CombinedArray.push(StdString+CurrentString);
+  	      CurrentString = args[i];
+  	    }
+  	  }
+  	}
+  	if (CurrentString.length > 0) CombinedArray.push(StdString+CurrentString);
+  }
+
+	if (act != null){
+	  if (act.length > 0) CombinedArray.push("action="+act);
+	}
+
+	return SaveSegmentedSettings(url,CombinedArray,disp_result);
+}
+
+//-----------
+
+function SaveSegmentedSettings(url,args,disp_result)
+{
+	var ItemCount = args.length;
+
+	var LastResultText = "전송설정 에러. Http 오류.";
+	var LastResultCode = 500;
+
+	for(var i=0; i<ItemCount; i++){
+	  var HttpResult = decodeURIComponent(loadXMLDocSynch(url,args[i]));
+
+	  if (HttpResult == null){
+	  	LastResultText = "네트워크의 시간초과입니다.";
+	  	LastResultCode = 500;
+	    break;
+	  }
+	  else {
+      var Result_arr = [];
+      Result_arr = HttpResult.split('\x1D');
+
+      var Result_Code = 0;
+      var Result_Text = "";
+      for(var j=0; j<Result_arr.length; j++){
+        var ItemRes_arr = [];
+        ItemRes_arr = Result_arr[j].split("\x1F");
+        if (ItemRes_arr.length == 2){
+          var CurrentCode = parseInt(ItemRes_arr[0],10);
+          if (CurrentCode > Result_Code){
+            Result_Code = CurrentCode;
+            Result_Text = ItemRes_arr[1];
+          }
+        }
+      }
+
+      if (Result_Code > 0){
+	      LastResultText = Result_Text;
+	      LastResultCode = Result_Code;
+	    }
+	    else {
+	      LastResultText = "알수없는 결과";
+	      LastResultCode = 500;
+	    }
+
+	    if (LastResultCode != 200) break;
+	  }
+	}
+
+	if (disp_result != 0) alert(LastResultText);
+  var ResultArray = {Text:LastResultText,Code:LastResultCode};
+	return ResultArray;
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> 
+function GetGlobalVar(var_name, default_value)
+{
+  var cookie_result = readCookie(var_name);
+  if (cookie_result != null) default_value = cookie_result;
+  return default_value;
+}
+
+//-----------
+
+function GetGlobalInt(var_name, default_value)
+{
+  return parseInt(GetGlobalVar(var_name,default_value));
+}
+
+//-----------
+
+function SetGlobalVar(var_name, value_to_set)
+{
+  createCookie(var_name,value_to_set,0);
+}
+
+//-----------
+
+function createCookie(c_name,c_value,days)
+{
+  var expires = "";
+
+	if (days != 0) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		expires = "; expires="+date.toGMTString();
+	}
+	document.cookie = c_name+"="+c_value+expires+"; path=/; SameSite=Lax";
+}
+
+//-----------
+
+function readCookie(c_name)
+{
+	var nameEQ = c_name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+//-----------
+
+function eraseCookie(c_name)
+{
+	createCookie(c_name,"",-1);
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> 
+function SetEnabled(obj_id, set_enabled)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    obj_ref.disabled = (set_enabled == false);
+  }
+}
+
+//-----------
+
+function GetEnabled(obj_id, default_value)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    default_value = (!obj_ref.disabled);
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetRadioButtonValue(radio_group,default_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (radio_group[i].checked == true){
+      default_value = radio_group[i].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetRadioButtonValue(radio_group,to_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (to_value == radio_group[i].value){
+      radio_group[i].checked = true;
+    }
+  }
+}
+
+//-----------
+
+function GetCheckBoxValue(checkbox_id,default_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    if (CheckBox_obj.checked == true){
+      default_value = 1;
+    }
+    else {
+      default_value = 0;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetCheckBoxValue(checkbox_id,chk_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    CheckBox_obj.checked = chk_value;
+  }
+}
+
+//-----------
+
+function SetSelectBoxValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  var Result = -1;
+  if (obj != null){
+    var len = obj.length;
+    for(var i=0; i<len; i++){
+      if (obj[i].value == to_value){
+        obj.selectedIndex = i;
+        Result = 0;
+      }
+    }
+  }
+  return Result;
+}
+
+//-----------
+
+function GetSelectBoxValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxText(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].text;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxOptionArray(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj == null) return [];
+
+	var Items = [];
+  for(var i=0; i<obj.length; i++){
+  	Items.push({value: obj[i].value, selected: (obj.selectedIndex == i), text: obj[i].text });
+  }
+  return Items;
+}
+
+//-----------
+
+function GetSelectBoxIndex(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.selectedIndex;
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxTitle(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].title;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+function GetSelectBoxOptionCount(ctrl_id,default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.options.length;
+  }
+  return default_value;
+}
+
+//-----------
+function ClearSelectBoxOptions(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.options.length = 0;
+  }
+}
+
+//-----------
+
+function AddSelectBoxOption(ctrl_id, caption, val, selectd)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    var NewOption = undefined;
+    
+    if (idx >= 0){
+      NewOption = obj.options[i];
+    }
+
+    if (idx < 0){ // new item
+      NewOption = document.createElement('option');
+    }
+    
+    NewOption.text  = caption;
+    NewOption.value = val;
+    if (selectd != undefined){
+      if (selectd != false) NewOption.selected = true;
+    }
+    
+    if (idx < 0){ // new item
+      obj.options[obj.options.length] = NewOption;
+    }
+  }
+}
+
+//-----------
+
+function RemoveSelectBoxOption(ctrl_id, val)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    if (idx >= 0) obj.remove(idx);
+    return obj.options.length;
+  }
+  return -1;
+}
+
+//-----------
+
+function SetSelectBoxIndex(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.selectedIndex = to_value;
+  }
+}
+
+//-----------
+
+
+function GetTextValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.value;
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetTextValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.value = to_value;
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+  	var id_code_new = "["+to_value+"]";
+    if (obj.id_code != id_code_new){
+      obj.innerHTML = to_value;
+      obj.id_code = id_code_new;
+    }
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValueGlobal(ctrl_id, to_value)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+    	var id_code_new = "["+to_value+"]";
+      if (ResultObj.id_code != id_code_new){
+        ResultObj.innerHTML = to_value;
+        ResultObj.id_code = id_code_new;
+      }
+    }
+  }
+}
+
+//-----------
+
+function GetInnerHtmlValue(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    return obj.innerHTML;
+  }
+  return "";
+}
+
+//-----------
+
+function SetVisibility(ctrl_id, show_it, show_as)
+{
+  var WasVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    WasVisible = (Obj.style.display != "none");
+    if (show_it == true){
+      if (show_as != undefined){
+        Obj.style.display = show_as;
+      }
+      else {
+        Obj.style.display = "block";
+      }
+    }
+    else {
+      Obj.style.display = "none";
+    }
+  }
+  return WasVisible;
+}
+
+//-----------
+
+function GetVisibility(ctrl_id)
+{
+  var IsVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    IsVisible = (Obj.style.display != "none");
+  }
+  return IsVisible;
+}
+
+//-----------
+
+function SetDivColor(ctrl_id,color)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    Obj.style.backgroundColor = color;
+  }
+}
+
+//-----------
+
+function SetDivBackgroundImage(ctrl_id,filename)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.bg_imagetag != filename){
+      Obj.bg_imagetag = filename;
+      Obj.style.backgroundImage = filename;
+    }
+  }
+}
+
+//-----------
+
+function SetImageSrc(ctrl_id,fileName)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.imagetag != fileName){
+      Obj.imagetag = fileName;
+      Obj.src = fileName + "?ts="+Date().toLocaleString();
+    }
+  }
+}
+
+//-----------
+
+function SetClass(ctrl_id, class_name)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if (obj.className != class_name){
+      obj.className = class_name;
+    }
+  }
+}
+
+//-----------
+
+function SetClassGlobal(ctrl_id, class_name)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+      if (ResultObj.className != class_name){
+        ResultObj.className = class_name;
+      }
+    }
+  }
+}
+
+//-----------
+
+function SetProperty(ctrl_id, property, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  obj[property] = to_value;
+}
+
+//-----------
+
+function GetProperty(ctrl_id, property)
+{
+  var obj = document.getElementById(ctrl_id);
+  return obj[property];
+}
+
+//-----------
+
+function IndexOfArray(ArrayObj, ItemToFind)
+{
+  var Index = -1;
+  for(var i=0; i<ArrayObj.length; i++){
+    if (ArrayObj[i] == ItemToFind){
+      Index = i;
+      break;
+    }
+  }
+  return Index;
+}
+
+//-----------
+
+function RemoveSelectBoxNonExistingValues(ctrl_id,ExistingValuesArray)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    for(var i=0; i<obj.options.length; i++){
+      
+      var CurrentValue = obj.options[i].value;
+      var FoundItem = false;
+      
+      for(var j=0; j<ExistingValuesArray.length; j++){
+        if (ExistingValuesArray[j] == CurrentValue){
+          FoundItem = true;
+          break;
+        }
+      }
+      
+      if (FoundItem == false){
+        obj.remove(i);
+        i--;
+      }
+    }
+  }
+}
+
+//-----------
+
+function FixTableRows(table_id)
+{
+  var Table = document.getElementById(table_id);
+  //var rows = Table.getElementsByTagName("TR");
+  var rows = Table.rows;
+  
+  var index = 0;
+  
+  for (var j = 0; j < rows.length; j++) {
+    
+    if (rows[j].offsetHeight > 0){
+
+      var LeftCell   = sprintf("R%sLeft"  ,index%2);
+      var CenterCell = sprintf("R%sCenter",index%2);
+      var RightCell  = sprintf("R%sRight" ,index%2);
+      index++;
+      
+      var cells = rows[j].cells;
+      for (var i = 0; i < cells.length; i++) {
+  
+        var classValue = cells[i].className;
+        if ((classValue.search("R0Left") >= 0) || (classValue.search("R1Left") >= 0)){
+          classValue = classValue.replace("R0Left","");
+          classValue = classValue.replace("R1Left","");
+          classValue = classValue + " " + LeftCell;        
+        }
+        if ((classValue.search("R0Center") >= 0) || (classValue.search("R1Center") >= 0)){
+          classValue = classValue.replace("R0Center","");
+          classValue = classValue.replace("R1Center","");
+          classValue = classValue + " " + CenterCell;        
+        }
+        if ((classValue.search("R0Right") >= 0) || (classValue.search("R1Right") >= 0)){
+          classValue = classValue.replace("R0Right","");
+          classValue = classValue.replace("R1Right","");
+          classValue = classValue + " " + RightCell;        
+        }
+        cells[i].className = classValue;        
+      }
+    }
+  }  
+}
+
+//-----------
+ </script>
+	<script type="text/javascript"> 
+function NavigateTo(page_to_get)
+{
+  if (parent.frames.length > 0){
+    parent.main_frame.location = page_to_get;
+  }
+  else {
+    parent.location = page_to_get;
+  }
+}
+
+//-----------
+
+function GenerateNavigateLink(page_to_get, text_to_display, class_to_style)
+{
+  return GenerateSpecialModuleLink("NavigateTo('"+page_to_get+"')", text_to_display, class_to_style);
+}
+
+//-----------
+
+function GenerateSpecialModuleLink(function_to_exec, text_to_display, class_to_style)
+{
+	if (class_to_style == undefined){
+		class_to_style = "alink";
+	}
+  var Result = "<a class='"+class_to_style+"' onClick="+function_to_exec+">"+text_to_display+"</a>";
+  return Result;
+}
+
+//-----------
+
+ </script>
+  <script type="text/javascript" src="cfg_set.js"></script>
+  <script type="text/javascript" src="maintenance.js"></script>
+</head>
+
+<body>
+  
+<!-- *******************[container]************************************* -->
+
+  <div id="container">
+
+<!-- header content -->
+<script type="text/javascript"> //-----------
+
+function TemperatureToText(CurrentTemp)
+{
+  var TempArray = CurrentTemp.split("\x1F");
+  CurrentTemp = TempArray[0];
+  
+  if (TempArray.length >= 2){
+    switch(parseInt(TempArray[1])){
+      case 0:
+        CurrentTemp = TempArray[0] + "&deg;C"; //celcius
+        break;
+      case 1:
+        CurrentTemp = TempArray[0] + "&deg;F"; //fahrenheit
+        break;
+      case 2:
+        CurrentTemp = TempArray[0] + "K"; //kelvin
+        break;
+    }
+  }
+  return CurrentTemp;
+}
+
+//-----------
+
+function WriteTopInfo(UpTime,SystemTime,CurrentTemp,MeasurementTime,ClearDataLinkAllowed)
+{
+  CurrentTemp = TemperatureToText(CurrentTemp);
+  SetInnerHtmlValue("timestamp","시스템 가동시간: <strong>" + UpTime + "</strong>");
+  SetInnerHtmlValue("cbtime"   ,"시스템 시간: <strong>" + SystemTime + "</strong>");
+  SetInnerHtmlValue("cbtemp"   ,"온도: <strong>" + CurrentTemp + "</strong>");
+
+	var MeasurementTimeText = "Measuring since";
+	var MeasurementTimeValue = ": <strong>" + MeasurementTime + "</strong>";
+  
+  if (ClearDataLinkAllowed == true){
+  	SetInnerHtmlValue("cbmeas"   ,GenerateNavigateLink("cfg_set.htm",MeasurementTimeText,"header-link") + MeasurementTimeValue);
+  }
+  else {
+  	SetInnerHtmlValue("cbmeas"   ,MeasurementTimeText + MeasurementTimeValue );
+  }  
+}
+
+//-----------
+
+function FixFooter()
+{
+  var ContentObj = document.getElementById('content_area');
+  var FooterObj = document.getElementById('footer');
+  if ((ContentObj != null) && (FooterObj != null)){
+    var ContentEnd = (ContentObj.offsetTop + ContentObj.offsetHeight);
+    if (ContentEnd > FooterObj.offsetTop) FooterObj.style.top = ContentEnd;
+  }
+}
+
+//-----------
+
+var TopDataTimeout = 0;
+var TopDataXmlHttp = null;
+
+//-----------
+
+function onTimeoutTopData()
+{
+  TopDataTimeout = 0;
+  TopDataXmlHttp.onreadystatechange = function() {}
+  TopDataXmlHttp.abort();
+}
+
+//-----------
+
+function onStateChangeTopData()
+{
+  if (TopDataXmlHttp != null){
+    if (TopDataXmlHttp.readyState == 4){
+      if (TopDataXmlHttp.status == 200){
+
+        var Response = decodeURIComponent(TopDataXmlHttp.responseText);
+        var ControlVars = Response.split("\x1D");
+
+        var TimeStamp   = "";
+        var CurrentTime = "";
+        var CurrentTemp = "";
+        var MeasurementTime = "";
+        var ClearDataLinkAllowed = 0;
+
+        if (ControlVars.length >= 5){
+          
+          TimeStamp    = ControlVars[0];
+          CurrentTime  = ControlVars[1];
+          CurrentTemp  = ControlVars[2]; // temperature �C is encoded
+          MeasurementTime = ControlVars[3];
+          ClearDataLinkAllowed = (parseInt(ControlVars[4]) == 2);
+        }
+        
+        WriteTopInfo(TimeStamp,CurrentTime,CurrentTemp,MeasurementTime,ClearDataLinkAllowed);
+        FixFooter();
+        
+        onTimeoutTopData();
+      }
+    }
+  }
+}
+
+//-----------
+
+function PeriodicTimerUpdateTopData()
+{
+  if (TopDataTimeout > 0){
+    TopDataTimeout--;
+    return;
+  }
+
+  if (TopDataXmlHttp != null){
+    TopDataXmlHttp.abort();
+  }
+
+  TopDataXmlHttp = loadXMLDocASynch("data_srv.cgi", "property=Uptime+Time+Temperature+MeasurementTime+page-access:cfg_set.htm", onStateChangeTopData, onTimeoutTopData);
+  TopDataTimeout = 10;
+}
+
+
+//-----------
+
+PeriodicTimerUpdateTopData();
+var TopDataTimerHandle = setInterval('PeriodicTimerUpdateTopData()',1 * 1000); </script>
+<div class="header-container">
+	<div class="header-column">
+  	<img class="header-image" src="var_cb/logo.png" alt="ComBricks">
+  	<div><strong>V1.312</strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item">IP주소: <strong>172.27.125.251</strong></div>
+    <div class="header-item">공정: <strong></strong></div>
+    <div class="header-item">회사: <strong></strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item">MAC 주소: <strong>9C:B2:06:00:42:0B</strong></div>
+    <div class="header-item" id='cbtemp'>온도: ?</div>
+    <div class="header-item">라인명: <strong></strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item" id='timestamp'>시스템 가동시간: ?</div>
+    <div class="header-item" id='cbtime'>시스템 시간: ?</div>
+    <div class="header-item" id='cbmeas'>Measuring since: ?</div>        
+  </div>
+</div>
+
+<!-- **************[contentbar]****************** -->
+
+    <div id="content">
+
+
+<!-- Maintenance box content -->
+<div class="maintenance-content defaultHidden" id="maintenance-box">
+  <div class="maintenance-header">
+    <input type="button" value="Disable" class="close" onclick="ShowDisableMaintenanceDialog();">
+    <h2>Maintenance mode is enabled</h2>
+  </div>
+  <div class="maintenance-body">
+   	<div id="maintenance-message">
+   		<ul><li>Maintenance mode is disabled. All measurements are running.</li></ul>
+   	</div>
+  </div>
+</div>
+
+<!-- The Modal to Disable maintenance mode -->
+<div id="DisableMaintenanceModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideDisableMaintenanceDialog()">&times;</span>
+      <h2>Disable maintenance mode</h2>
+    </div>
+    <div class="modal-body">
+    	<p>Check the networks you want maintenance mode to be disabled on:</p>
+    	<div id="SectionDisableMaintenanceNetwork1">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork1" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork1">Network 1</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork2">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork2" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork2">Network 2</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork3">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork3" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork3">Network 3</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork4">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork4" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork4">Network 4</label>
+     	</div>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="Disable" id="DisableMaintenanceButton" onclick="DisableMaintenanceMode(document.getElementById('CheckboxDisableMaintenanceNetwork1').checked, document.getElementById('CheckboxDisableMaintenanceNetwork2').checked, document.getElementById('CheckboxDisableMaintenanceNetwork3').checked, document.getElementById('CheckboxDisableMaintenanceNetwork4').checked);"/>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- The Modal to enable maintenance mode -->
+<div id="EnableMaintenanceModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideEnableMaintenanceDialog()">&times;</span>
+      <h2>Enable maintenance mode</h2>
+    </div>
+    <div class="modal-body">
+    	<p>Check the networks you want maintenance mode to be enabled on:</p>
+    	<div id="SectionEnableMaintenanceNetwork1">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork1" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork1">Network 1</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork2">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork2" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork2">Network 2</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork3">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork3" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork3">Network 3</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork4">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork4" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork4">Network 4</label>
+     	</div>
+     	<p>
+     		The diagnostic events will be paused for the selected Profibus networks.
+     		The current state of the network is still shown, but limits and counters will be frozen and network related events are blocked.
+     	</p>
+     	<p>
+     		During maintenance mode:
+     		<ul>
+     			<li>Statistics will keep the same value.</li>
+     			<li>Bargraph Min/Max will keep the same value.</li>
+     			<li>Message recording will be temporarily turned off.</li>
+     			<li>Oscilloscope images Min/Max will be reset as soon as maintenance mode is disabled.</li>
+     			<li>Oscilloscope error images will be discarded.</li>
+     			<li>All network related Email, Log, SNMP Trap and Output events are blocked.</li>
+     			<li>The Alarms and illegals of detected ProfiHub diagnostic devices will be reset as soon as maintenance mode is disabled.</li>
+     		</ul>
+     	</p>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="유효화" id="EnableMaintenanceButton" onclick="EnableMaintenanceMode(document.getElementById('CheckboxEnableMaintenanceNetwork1').checked, document.getElementById('CheckboxEnableMaintenanceNetwork2').checked, document.getElementById('CheckboxEnableMaintenanceNetwork3').checked, document.getElementById('CheckboxEnableMaintenanceNetwork4').checked);"/>
+    </div>
+  </div>
+
+</div>
+
+<div class="TitleBar">
+  <div class="TitleText">장치 관리</div>
+</div>
+
+      <div id="content_area">
+        
+<!-- ------------------------------------------------ -->
+
+<!-- ***************************************************************** -->
+        
+<table class="ConfigTable" cellspacing="0" id="BackupSettings">
+  
+  <tr>
+    <th class="TableCell header-cell header-left">백업 또는 복구 설정</th>
+    <th class="TableCell header-cell header-left header-last" style="width:260px">&nbsp;</th>
+  </tr>
+  <tr>
+    <td class="TableCell R1Left">내부 메모리로부터 SD카드로 백업 설정</td>
+    <td class="TableCell R1Center"><input type="button" value="SD카드로 백업설정" onclick="BackupSettings()"></td>
+  </tr>
+  <tr>
+    <td class="TableCell R0Left">SD카드로부터 내부메모리로 설정 복구</td>
+    <td class="TableCell R0Center"><input type="button" value="SD카드로부터 설정 복구" onclick="RestoreSettings()"></td>
+  </tr>
+</table>
+
+<table class="ConfigTable" cellspacing="0" id="DefaultSettings">
+  
+  <tr>
+    <th class="TableCell header-cell header-left">초기화로 재설정</th>
+    <th class="TableCell header-cell header-left header-last" style="width:260px">&nbsp;</th>
+  </tr>
+
+  <tr>
+    <td class="TableCell R1Left">공장기본값으로 설정 복구:</td>
+    <td class="TableCell R1Center"><input type="button" value="공장기본값으로 설정 복구" onclick="ResetSettings()"></td>
+  </tr>
+  
+  <tr>
+    <td class="TableCell R0Left">수집된 모든정보 지움 (Start a new measurement):</td>
+    <td class="TableCell R0Center"><input type="button" value="모든 데이터 지움" onclick="ClearAllData()"></td>
+  </tr>
+  
+</table>
+
+<table class="ConfigTable" cellspacing="0" id="WarmRestart">
+  
+  <tr>
+    <th class="TableCell header-cell header-left">기기 재시작</th>
+    <th class="TableCell header-cell header-left header-last" style="width:260px">&nbsp;</th>
+  </tr>
+
+  <tr>
+    <td class="TableCell R1Left">기기 재시작 (소프트-리셋):</td>
+    <td class="TableCell R1Center"><input type="button" value="기기 재시작" onclick="RestartDevice()"></td>
+  </tr>
+  
+</table>
+
+<table class="ConfigTable" cellspacing="0" id="MaintenanceEnable">
+  
+  <tr>
+    <th class="TableCell header-cell header-left">Maintenance mode</th>
+    <th class="TableCell header-cell header-left header-last" style="width:260px">&nbsp;</th>
+  </tr>
+
+  <tr>
+    <td class="TableCell R1Left">Enable maintenance mode:</td>
+    <td class="TableCell R1Center"><input type="button" value="Enable maintenance mode" onclick="ShowEnableMaintenanceDialog()"></td>
+  </tr>
+  
+</table>
+
+<!-- ***************************************************************** -->
+
+<div class="hiddenArea" style='height:40px;'>_</div>
+
+<!-- ***************************************************************** -->
+
+</form>
+
+<!-- ------------------------------------------------ -->
+
+      </div>
+
+    </div>
+
+<!-- ************[footer]******************** -->
+
+    <div id="footer">
+      <div id="copyright">
+        <hr>
+        Copyright (C)2010-2026 <a class='alink' href='http://www.anybus.com'>ANYBUS</a>. All rights reserved.
+      </div>
+    </div>
+
+<!-- **********[end contentbar]********************** -->
+
+  </div>
+
+<!-- *******************[end container]************************************* -->
+
+<script type="text/javascript">
+  InitializeJavascript();
+  InitializeMaintenanceMode();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3416 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head><script type="text/javascript" src="mock_data.js"></script><script type="text/javascript" src="item_data.js"></script><script type="text/javascript" src="mock_shim.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="robots" content="noarchive" />
+  <style type="text/css"> /*******************************[general]*************************************************/
+
+html,body {
+	margin:0;
+	padding:0;
+	height:100%;
+	
+	background:#FFFFFF;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+/*******************************[container]*************************************************/
+
+div#container {
+	min-height:100%;
+	position:relative;
+}
+
+#content {
+	padding:10px;
+	padding-bottom:36px;	/* Height of the footer */
+	padding-left:10px;
+	width:770px;
+	background-color:#FFFFFF;
+}
+
+#footer {
+	position:absolute;
+  bottom:0;
+	width:790px;
+	height:36px;			/* Height of the footer */
+	background-color:#FFFFFF;
+}
+
+/********************************[content]************************************************/
+
+.TitleBar {
+  padding-top:0px;
+  padding-bottom:10px;
+  clear: both;
+  width: 766px;
+	height: 30px;
+}
+
+.TitleText {
+  clear: left;
+  width: 640px;
+  float: left;
+  text-align: left;
+  font-weight: bold; 
+  font-size: 22px;
+  padding-top: 10px;
+}
+
+.TitleRefresh {
+  clear: right;
+  float: right;
+  text-align: right;
+}
+
+/* --------------------------------- */
+
+.VariableContainer {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 0px;
+  width: 770px;
+  height: auto;
+  text-align:left;
+  clear: both;
+}
+
+.VariableWx{
+  margin-top: 0px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 4px;
+  float: left;
+  border-width: 1px;
+  border-color: #043d5d;
+  border-style: solid;
+	background-color:#FFFFFF;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 2px;  
+}
+
+/* --------------------------------- */
+
+.header-container {
+	width: 100%;
+	min-width: 1100px;
+	height: 75px;
+	background-color: #043d5d;
+	color: #FFFFFF;
+	overflow: hidden;
+}
+
+.header-column {
+	padding: 10px 20px;
+	display: inline-block;
+}
+
+.header-item {
+	padding: 2px 0px;
+}
+
+.header-image {
+	float: left;
+	padding: 5px 0px;
+}
+
+.header-link {
+	color: #FFFFFF;
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+/* --------------------------------- */
+
+.WarningContainer {
+  display:none;
+  width: 770px;
+  height: auto;
+  padding-top: 12px;
+  padding-bottom: 3px;
+  /*background-color:#FFFF00;*/
+}
+
+.WarningIconArea {
+  float: left;
+  width: 40px;
+  /*background-color:#FF00FF;*/
+  clear: left;
+  padding-bottom: 3px;
+}
+
+.WarningItemArea {
+  float: left;
+  color: #FF0000;
+  width: 710px;
+  padding-top: 3px;
+  /*background-color:#00FFFF;*/
+  clear: right;
+}
+
+/* --------------------------------- */
+
+.NotesArea {
+  margin-top: 0px;
+  margin-bottom: 32px;
+  clear:both;
+}
+
+div#copyright {
+  text-align:center;
+  font-size:11px;
+	width:790px;
+}
+
+.ImgIcon {
+	border-width:0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:-6px;
+	margin-bottom:-4px;
+	padding:0;
+	vertical-align:middle;
+}
+
+.ErrorText {
+	color: #FF0000;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+.hiddenArea {
+	color:#FFFFFF;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  clear:both;
+}
+
+/* --------------------------------- */
+
+.alink {
+  color: #043d5d;
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+.PointerCursor {
+  cursor:pointer;
+}
+
+.defaultHidden {
+  display:none;
+}
+
+.centeredImg {
+  margin: 0 auto;
+}
+
+input[type=checkbox] {
+	accent-color: #043d5d;
+} </style>
+  <style type="text/css"> .trl {
+  background-color: #FFFFFF;
+}
+
+.trl_ok {
+  background-color: #00ff00;
+}
+
+.trl_er {
+  background-color: #ff0000;
+}
+ </style>
+  <style type="text/css"> /* The Modal box's background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1001; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+
+.modal-content {
+  background-color: #ffffff;
+  margin: 15% auto;
+  padding: 0px;
+  border: 1px solid #000;
+  width: 720px;
+}
+
+.modal-content .modal-header {
+  padding: 1px 12px;
+  background-color: #043d5d;
+  color: #FFFFFF;
+}
+
+.modal-content .modal-body {
+	padding: 10px 12px;
+	display: block;
+}
+
+.modal-content .modal-body input {
+	vertical-align: bottom;
+	position: relative;
+	top: 2px;
+}
+
+.modal-content .modal-body > div {
+	margin: 6px 0px;
+}
+
+.modal-content .modal-footer {
+  padding: 10px 12px;
+  height: 25px;
+}
+
+.modal-content .modal-footer input {
+	float: right;
+}
+
+.modal-content .modal-header .close {
+  color: #444;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  padding-top: 4px;
+}
+
+.modal-content .modal-header .close:hover,
+.modal-content .modal-header .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+ </style>
+	<style type="text/css"> 
+.maintenance-content {
+  background-color: #FFC0C0;
+  margin-top: 100px;
+  margin-bottom: 10px;
+  padding: 0px;
+  border: 6px double #FF0000;
+  width: 756px;
+}
+
+.maintenance-content .maintenance-header {
+  padding: 1px 12px;
+  background-color: #FF8080;
+}
+
+.maintenance-content .maintenance-body {
+	padding: 4px;
+	display: block;
+}
+
+.maintenance-content .maintenance-body ul {
+	padding: 0px;
+}
+
+.maintenance-content .maintenance-body ul > li {
+	padding: 0px;
+	margin-left: 20px;
+}
+
+.maintenance-content .maintenance-header .close {
+  float: right;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.maintenance-content .maintenance-header .close:hover,
+.maintenance-content .maintenance-header .close:focus {
+  text-decoration: none;
+  cursor: pointer;
+} 
+ </style>
+  <title>ComBricks - 채널별 장치 리스트</title>
+  <!-- content_specific_includes -->
+  <style type="text/css"> .ConfigTable {
+  width:768px;
+
+  margin-top: 4px;
+  margin-bottom: 20px;
+  
+  border-left-color: #043d5d;
+	border-left-style: solid;
+	border-left-width: 1px;
+  
+  border-top-color: #043d5d;
+	border-top-style: solid;
+	border-top-width: 1px;
+
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 0px;
+	
+	rules:cols;
+  clear:both;
+  
+  /*table-layout:fixed;
+  word-wrap:break-word;*/
+}
+
+.TableCell{
+  padding-top:6px;
+  padding-bottom:6px;
+  padding-left:4px;
+  padding-right:4px;
+}
+
+.CompactTableCell{
+  padding-top:1px;
+  padding-bottom:1px;
+}
+
+.TableCell table {
+  margin-left:auto; 
+  margin-right:auto;
+  border-collapse: collapse;
+}
+
+.TableCell table tr td{
+  height:32px;
+  width:100%;
+}
+
+.R1Center table, .R0Center table {
+  text-align: center;
+}
+
+.R1Left table, .R0Left table {
+  text-align: left;
+  width: 100%;
+}
+
+.R1Right table, .R0Right table {
+  text-align: right;
+  width: 100%;
+}
+
+.R0Left {
+  background-color: #f9f9f9;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Left {
+  background-color: #FFFFFF;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Center {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Center {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Right {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Right {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.header-cell {
+  background-color: #043d5d;
+  color: #FFFFFF;
+
+  border-right-color: #eceef1;
+	border-right-style: solid;
+	border-right-width: 1px;
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+
+.header-left { // HeaderLeft
+  text-align:left;
+}
+
+.header-center { // HeaderCenter
+  text-align:center;
+}
+
+.header-right { // HeaderRight
+  text-align:right;
+}
+
+.header-last {
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+}
+
+.SingleLineRow {
+	margin-top: 0px;
+	padding-top: 0px;
+
+	border-top-width: 0px;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+
+	border-bottom-width: 0px;
+}
+
+.MultiLineRow {
+	margin-top: 4px;
+	padding-top: 4px;
+
+	border-top-width: 1px;
+	border-top-color: #fcfcfc;
+	border-top-style: solid;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	
+	border-bottom-width: 0px;
+}
+
+/* ---------------------------------------- */
+
+.LeftItem {
+	height: 30px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  float: left;
+  padding-right: 10px;
+}
+
+.LeftItem div {
+	padding-top: 4px;
+}
+
+/* ---------------------------------------- */
+
+.TextBlock {
+  table-layout:fixed;
+  word-wrap:break-word;
+  width:754px;  
+}
+
+/* ---------------------------------------- */
+
+div.list ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 16px;
+}
+
+div.list ul li {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+
+/* ----------------------------------------------------------------------- */
+
+.DivKey {
+  float: left;
+  clear:left;
+  width: 220px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  margin-right: 10px;
+}
+
+.DivValue {
+  float: left;
+  clear:right;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.DivValue div {
+  float: left;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.NotImportantText {
+  color: #808080;
+}
+
+.RowOfMultipleTables {
+/*  background-color: #FF0000;*/
+  float:left;
+  clear:both;
+  width:768px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.CfgTableIntDiv {
+  text-align: center;
+}
+
+.CfgTableIntDiv table{
+  /*background-color: #FF0000;*/
+  text-align: left;
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.TableCell ul li {
+	padding-bottom: 8px;
+}
+
+.ActionButtonLeft{
+	float:left; 
+	margin-right: 10px; 
+	margin-bottom: 10px;
+}
+
+.ActionButtonRight{
+	float:right; 
+	margin-left: 10px; 
+	margin-bottom: 10px;
+} </style>
+  <style type="text/css"> .channelTable {
+  clear: both;
+	padding-top: 20px;
+	padding-bottom: 10px;
+	border: 0px;
+}
+
+.channelTable tr td {
+  text-align: center;
+}
+
+.channelTable tr td div.ChannelRelatedHeader {
+  text-align: left;
+  height: 22px;
+  width: auto;
+  font-weight:bold;
+  background-color: #FFFFFF;
+  border-color: #000000;
+  border-style: solid;
+  border-width: 1px;
+  display: block; 
+  vertical-align: middle;
+  padding-left: 3px;
+  padding-top: 8px;
+}
+
+.channelTable tr td div.ChannelRelatedValue {
+  text-align: center;
+  height: 22px;
+  width: auto;
+  overflow: hidden;
+  background-color: #FFFFFF;
+  border-color: #000000;
+  border-style: solid;
+  border-width: 1px;
+  display: block; 
+  vertical-align: middle;
+  padding-top: 8px;
+}
+
+.channelTable tr td div.ChannelRelatedValue img {
+  height: 18px;
+  width: 18px;
+}
+
+.channelTable tr td div.ChannelRelatedEmpty {
+  overflow: hidden;
+  width: 0px;
+  border-width: 0px;
+}
+
+.channelTable tr td div.ChannelRelatedAction {
+  text-align: center;
+  height: 22px;
+  width: 100px;
+  display: table-cell; 
+  vertical-align: middle;
+}
+
+.topRowChannel {
+  vertical-align:bottom;
+}
+
+.bottomRowChannel {
+  vertical-align:top;
+}
+
+.StationList {
+  background-color: #d0d0d0;
+}
+ 
+.ModuleCellInfo {
+  position: relative;
+  width: auto;
+  height: 270px;
+  z-index: 99;
+}
+
+.ModuleCellImage {
+  position: relative;
+  z-index: -1;
+}
+
+.ModuleCellOverlay {
+  padding-top: 0px;
+  position: absolute;
+  left: 0px;
+  z-index: 100;
+  width: 100%;
+}
+
+.ModuleCellOverlaySlot {
+  color : #043d5d;
+  top : 4px;
+}
+
+.ModuleCellOverlayHint {
+  color : #F00F00;
+  top : 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.ModuleCellOverlayStatus {
+  color : #000000;
+  top : 80px;
+}
+
+.ModuleCell {
+  background-repeat:no-repeat;
+  background-position:center center; 
+
+  height: 270px;
+  width: 64px;
+
+  font-size: 12px;
+  vertical-align:top;
+}
+'
+.NoModuleCell {
+  background-repeat:no-repeat;
+  background-position:center center; 
+
+  height: 270px;
+  width: 1px;
+}
+
+.Channel1 {
+  background-image: url("chan_dn.gif");
+  background-repeat:no-repeat;
+  background-position:top center; 
+  font-weight:bold;
+  height: 40px;
+}
+
+.Channel2 {
+  background-image: url("chan_up.gif");
+  background-repeat:no-repeat;
+  background-position:bottom center; 
+  font-weight:bold;
+  height: 40px;
+}
+
+.Channel1RedOk {
+  background-image: url("chan_dn_gr.gif");
+  background-repeat:no-repeat;
+  background-position:top center; 
+  font-weight:bold;
+  height: 40px;
+}
+
+.Channel1RedEr {
+  background-image: url("chan_dn_rd.gif");
+  background-repeat:no-repeat;
+  background-position:top center; 
+  font-weight:bold;
+  height: 40px;
+}
+
+.Channel2RedOk {
+  background-image: url("chan_up_gr.gif");
+  background-repeat:no-repeat;
+  background-position:bottom center; 
+  font-weight:bold;
+  height: 40px;
+}
+
+.Channel2RedEr {
+  background-image: url("chan_up_rd.gif");
+  background-repeat:no-repeat;
+  background-position:bottom center; 
+  font-weight:bold;
+  height: 40px;
+}
+
+.NoStations {
+  background-color: transparent;
+}
+
+.DeviceChannelTable {
+  width: 100%;
+  background-color : #FFFFFF;
+  border-left-width : 1px;
+  border-left-style : solid;
+  border-left-color : #000000;
+  border-right-width : 1px;
+  border-right-style : solid;
+  border-right-color : #000000;
+  border-bottom-width : 1px;
+  border-bottom-style : solid;
+  border-bottom-color : #000000;
+}
+
+.DeviceChannelTable tr th{
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: #000000;
+  height: 20px;
+}
+
+.DeviceChannelTable tr td{
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: #000000;
+  height: 20px;
+}
+
+.invisibleTable {
+  clear: both;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 100%;
+}
+
+.invisibleTable tr td {
+  padding-top: 0px;
+  text-align: left;
+}
+
+.invisibleTable tr td div {
+  padding-top: 2px;
+  padding-right: 8px;
+  padding-left: 4px;
+  float: left;
+} </style>
+  <style type="text/css"> /* Livelist table properties */
+
+.LiveListDataCell {
+	text-align: center;
+	height: 32px;
+	width: 72px;
+	background-color: #FFFFFF;
+	font-size: 12px;
+	overflow:hidden;
+	word-wrap:break-word;
+	border-bottom: 1px solid #808080;
+	border-right: 1px solid #808080;
+}
+
+.LiveListDataCell-FF {
+	text-align: center;
+	height: 22px;
+	width: 72px;
+	background-color: #FFFFFF;
+	font-size: 12px;
+	overflow:hidden;
+	border-bottom: 1px solid #808080;
+	border-right: 1px solid #808080;
+
+}
+
+.ChannelListDataCell {
+	text-align: center;
+	height: 32px;
+	width: 64px;
+	background-color: #FFFFFF;
+	font-size: 12px;
+	overflow:hidden;
+}
+
+/* Livelist text cell styles */
+
+.LiveListDataCell-MasterSlave {
+  color: #000000;
+  font-weight: bold;
+}
+
+.LiveListDataCell-Master {
+  color: #FF0000;
+  font-weight: bold;
+}
+
+.LiveListDataCell-Slave {
+	color: #0000FF;
+  font-weight: bold;
+}
+
+.LiveListDataCell-FFTempDev {
+	color: #008000;
+  font-weight: bold;
+}
+
+.LiveListDataCell-NoStation {
+	color: #C0C0C0;
+  font-weight: normal;
+}
+
+/* Livelist background cell styles */
+
+.LiveListDataCell-Invalid {
+  background-color: #C0C0C0;
+}
+
+.LiveListDataCell-Station-Dx {
+  background-color: #00FF00;
+}
+
+.LiveListDataCell-Station-Lost {
+  background-color: #FFFF00;
+}
+
+.LiveListDataCell-Station-Idle {
+	background-color: #FFFFFF;
+}
+
+.LiveListDataCell-Station-ConfigError {
+	background-color: #FF00FF;
+}
+
+.LiveListDataCell-Station-ParamError {
+	background-color: #FF0000;
+}
+
+/* to have both internal and external diag, we need 1 gif with both dots for the width of the cell */
+
+.LiveListDataCell-Station-ExtDiag {
+	background-image: url('DIAG_ANI.GIF');
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+.LiveListDataCell-Station-StaticDiag {
+	background-image: url('DIAG_ANI.GIF');
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
+.LiveListDataCell-Station-ExtStaticDiag {
+	background-image: url('DIAG_AN2.GIF');
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+
+/* Statistic cell styles */
+
+
+/* other items */
+
+.LivelistSmallCell{
+  width:16px;
+  height:16px;
+  margin-left:10px;
+  background-color:#ffffff;
+}
+
+/* legend styles */
+
+.LegendStyle {
+  padding-left:8px;
+  padding-right:8px;
+  width: 200px;
+}
+
+.LegendDescription {
+  padding-left:8px;
+  padding-right:8px;
+  width: 440px;
+}
+
+.LegendExample{
+  padding-left:8px;
+  padding-bottom: 8px;
+  width: 65px;
+}
+
+.LegendHeader {
+  color: #ffffff;
+  background-color: #043d5d;
+  font-weight: bold;
+  padding-bottom: 8px;
+  padding-top: 6px;
+}
+
+.LegendData {
+  background-color: #ffffff;
+}
+
+.ClickableLivelistItem {
+	cursor: pointer;
+	text-decoration: underline;
+} </style>
+  <style type="text/css"> 
+div.tooltip span {
+  display:none; 
+}
+
+div.tooltip:hover span{
+  display:inline; 
+  position:absolute; 
+  background:#FFFFFF; 
+  border:1px 
+  solid #043d5d; 
+  color:#000000;
+  text-align:left;
+  white-space:nowrap;
+
+  padding-left:4px;
+  padding-top:4px; 
+  padding-right:4px; 
+  padding-bottom:4px; 
+  
+  width:auto;
+  z-index:1000;
+}
+
+div.tooltip span.systemStatusStyle{
+  margin-top:0px; 
+  margin-left:0px; 
+}
+
+div.tooltip span.channelListStyle{
+  margin-top:-25px; 
+  margin-left:-32px;
+}
+
+div.tooltip span.livelistStyle{
+  margin-top:-3px; 
+  margin-left:10px; 
+}
+
+div.tooltip span.statisticsStyle{
+  margin-top:-25px; 
+  margin-left:0px; 
+}
+
+div.tooltip span.snmpTrapStyle{
+  margin-top:5px; 
+  margin-left:0px; 
+}
+
+div.tooltip ul {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+div.tooltip ul li {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 16px;
+  padding-left: 0px;
+}
+
+div.tooltip ul lh {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+div.tooltip {
+  width: 100%;
+  height: 100%;
+} </style>
+  <script type="text/javascript"> 
+function loadXMLDocASynch(url,params,onReadyStateChangeFunction,onTimeoutFunction,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+
+  if (onReadyStateChangeFunction != undefined){
+    xmlhttp.onreadystatechange = onReadyStateChangeFunction;
+  }
+  if (onTimeoutFunction != undefined){
+  	if ('ontimeout' in xmlhttp){
+      xmlhttp.ontimeout = onTimeoutFunction;
+    }
+  }
+
+  var full_url = url;
+  if (params != null) full_url = full_url+"?"+params;
+
+  xmlhttp.open("GET",full_url,true);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send();
+  return xmlhttp;
+}
+
+//-----------
+
+function loadXMLDocSynch(url,params,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+  if (xmlhttp == null) return "400\x1D브라우저에서 HTTP 요구 생성 에러";
+
+  xmlhttp.open("POST",url,false);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send(params);
+  return xmlhttp.responseText;
+}
+
+//-----------
+
+function SaveSegmentedSettingsCombined(url,args,act,disp_result)
+{
+  var CombinedArray = [];
+
+  if (args != null){
+  	var ItemCount = args.length;
+
+  	var StdString = "save=";
+    var CurrentString = "";
+  	for(var i=0; i<ItemCount; i++){
+  	  if ((CurrentString.length + args[i].length) < 200){
+  	    if (CurrentString.length > 0) CurrentString = CurrentString + "+";
+  	    CurrentString = CurrentString + args[i];
+  	  }
+  	  else {
+  	    if (CurrentString.length > 0) {
+  	      CombinedArray.push(StdString+CurrentString);
+  	      CurrentString = args[i];
+  	    }
+  	  }
+  	}
+  	if (CurrentString.length > 0) CombinedArray.push(StdString+CurrentString);
+  }
+
+	if (act != null){
+	  if (act.length > 0) CombinedArray.push("action="+act);
+	}
+
+	return SaveSegmentedSettings(url,CombinedArray,disp_result);
+}
+
+//-----------
+
+function SaveSegmentedSettings(url,args,disp_result)
+{
+	var ItemCount = args.length;
+
+	var LastResultText = "전송설정 에러. Http 오류.";
+	var LastResultCode = 500;
+
+	for(var i=0; i<ItemCount; i++){
+	  var HttpResult = decodeURIComponent(loadXMLDocSynch(url,args[i]));
+
+	  if (HttpResult == null){
+	  	LastResultText = "네트워크의 시간초과입니다.";
+	  	LastResultCode = 500;
+	    break;
+	  }
+	  else {
+      var Result_arr = [];
+      Result_arr = HttpResult.split('\x1D');
+
+      var Result_Code = 0;
+      var Result_Text = "";
+      for(var j=0; j<Result_arr.length; j++){
+        var ItemRes_arr = [];
+        ItemRes_arr = Result_arr[j].split("\x1F");
+        if (ItemRes_arr.length == 2){
+          var CurrentCode = parseInt(ItemRes_arr[0],10);
+          if (CurrentCode > Result_Code){
+            Result_Code = CurrentCode;
+            Result_Text = ItemRes_arr[1];
+          }
+        }
+      }
+
+      if (Result_Code > 0){
+	      LastResultText = Result_Text;
+	      LastResultCode = Result_Code;
+	    }
+	    else {
+	      LastResultText = "알수없는 결과";
+	      LastResultCode = 500;
+	    }
+
+	    if (LastResultCode != 200) break;
+	  }
+	}
+
+	if (disp_result != 0) alert(LastResultText);
+  var ResultArray = {Text:LastResultText,Code:LastResultCode};
+	return ResultArray;
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> 
+function GetGlobalVar(var_name, default_value)
+{
+  var cookie_result = readCookie(var_name);
+  if (cookie_result != null) default_value = cookie_result;
+  return default_value;
+}
+
+//-----------
+
+function GetGlobalInt(var_name, default_value)
+{
+  return parseInt(GetGlobalVar(var_name,default_value));
+}
+
+//-----------
+
+function SetGlobalVar(var_name, value_to_set)
+{
+  createCookie(var_name,value_to_set,0);
+}
+
+//-----------
+
+function createCookie(c_name,c_value,days)
+{
+  var expires = "";
+
+	if (days != 0) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		expires = "; expires="+date.toGMTString();
+	}
+	document.cookie = c_name+"="+c_value+expires+"; path=/; SameSite=Lax";
+}
+
+//-----------
+
+function readCookie(c_name)
+{
+	var nameEQ = c_name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+//-----------
+
+function eraseCookie(c_name)
+{
+	createCookie(c_name,"",-1);
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> 
+function SetEnabled(obj_id, set_enabled)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    obj_ref.disabled = (set_enabled == false);
+  }
+}
+
+//-----------
+
+function GetEnabled(obj_id, default_value)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    default_value = (!obj_ref.disabled);
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetRadioButtonValue(radio_group,default_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (radio_group[i].checked == true){
+      default_value = radio_group[i].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetRadioButtonValue(radio_group,to_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (to_value == radio_group[i].value){
+      radio_group[i].checked = true;
+    }
+  }
+}
+
+//-----------
+
+function GetCheckBoxValue(checkbox_id,default_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    if (CheckBox_obj.checked == true){
+      default_value = 1;
+    }
+    else {
+      default_value = 0;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetCheckBoxValue(checkbox_id,chk_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    CheckBox_obj.checked = chk_value;
+  }
+}
+
+//-----------
+
+function SetSelectBoxValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  var Result = -1;
+  if (obj != null){
+    var len = obj.length;
+    for(var i=0; i<len; i++){
+      if (obj[i].value == to_value){
+        obj.selectedIndex = i;
+        Result = 0;
+      }
+    }
+  }
+  return Result;
+}
+
+//-----------
+
+function GetSelectBoxValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxText(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].text;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxOptionArray(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj == null) return [];
+
+	var Items = [];
+  for(var i=0; i<obj.length; i++){
+  	Items.push({value: obj[i].value, selected: (obj.selectedIndex == i), text: obj[i].text });
+  }
+  return Items;
+}
+
+//-----------
+
+function GetSelectBoxIndex(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.selectedIndex;
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxTitle(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].title;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+function GetSelectBoxOptionCount(ctrl_id,default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.options.length;
+  }
+  return default_value;
+}
+
+//-----------
+function ClearSelectBoxOptions(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.options.length = 0;
+  }
+}
+
+//-----------
+
+function AddSelectBoxOption(ctrl_id, caption, val, selectd)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    var NewOption = undefined;
+    
+    if (idx >= 0){
+      NewOption = obj.options[i];
+    }
+
+    if (idx < 0){ // new item
+      NewOption = document.createElement('option');
+    }
+    
+    NewOption.text  = caption;
+    NewOption.value = val;
+    if (selectd != undefined){
+      if (selectd != false) NewOption.selected = true;
+    }
+    
+    if (idx < 0){ // new item
+      obj.options[obj.options.length] = NewOption;
+    }
+  }
+}
+
+//-----------
+
+function RemoveSelectBoxOption(ctrl_id, val)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    if (idx >= 0) obj.remove(idx);
+    return obj.options.length;
+  }
+  return -1;
+}
+
+//-----------
+
+function SetSelectBoxIndex(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.selectedIndex = to_value;
+  }
+}
+
+//-----------
+
+
+function GetTextValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.value;
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetTextValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.value = to_value;
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+  	var id_code_new = "["+to_value+"]";
+    if (obj.id_code != id_code_new){
+      obj.innerHTML = to_value;
+      obj.id_code = id_code_new;
+    }
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValueGlobal(ctrl_id, to_value)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+    	var id_code_new = "["+to_value+"]";
+      if (ResultObj.id_code != id_code_new){
+        ResultObj.innerHTML = to_value;
+        ResultObj.id_code = id_code_new;
+      }
+    }
+  }
+}
+
+//-----------
+
+function GetInnerHtmlValue(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    return obj.innerHTML;
+  }
+  return "";
+}
+
+//-----------
+
+function SetVisibility(ctrl_id, show_it, show_as)
+{
+  var WasVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    WasVisible = (Obj.style.display != "none");
+    if (show_it == true){
+      if (show_as != undefined){
+        Obj.style.display = show_as;
+      }
+      else {
+        Obj.style.display = "block";
+      }
+    }
+    else {
+      Obj.style.display = "none";
+    }
+  }
+  return WasVisible;
+}
+
+//-----------
+
+function GetVisibility(ctrl_id)
+{
+  var IsVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    IsVisible = (Obj.style.display != "none");
+  }
+  return IsVisible;
+}
+
+//-----------
+
+function SetDivColor(ctrl_id,color)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    Obj.style.backgroundColor = color;
+  }
+}
+
+//-----------
+
+function SetDivBackgroundImage(ctrl_id,filename)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.bg_imagetag != filename){
+      Obj.bg_imagetag = filename;
+      Obj.style.backgroundImage = filename;
+    }
+  }
+}
+
+//-----------
+
+function SetImageSrc(ctrl_id,fileName)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.imagetag != fileName){
+      Obj.imagetag = fileName;
+      Obj.src = fileName + "?ts="+Date().toLocaleString();
+    }
+  }
+}
+
+//-----------
+
+function SetClass(ctrl_id, class_name)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if (obj.className != class_name){
+      obj.className = class_name;
+    }
+  }
+}
+
+//-----------
+
+function SetClassGlobal(ctrl_id, class_name)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+      if (ResultObj.className != class_name){
+        ResultObj.className = class_name;
+      }
+    }
+  }
+}
+
+//-----------
+
+function SetProperty(ctrl_id, property, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  obj[property] = to_value;
+}
+
+//-----------
+
+function GetProperty(ctrl_id, property)
+{
+  var obj = document.getElementById(ctrl_id);
+  return obj[property];
+}
+
+//-----------
+
+function IndexOfArray(ArrayObj, ItemToFind)
+{
+  var Index = -1;
+  for(var i=0; i<ArrayObj.length; i++){
+    if (ArrayObj[i] == ItemToFind){
+      Index = i;
+      break;
+    }
+  }
+  return Index;
+}
+
+//-----------
+
+function RemoveSelectBoxNonExistingValues(ctrl_id,ExistingValuesArray)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    for(var i=0; i<obj.options.length; i++){
+      
+      var CurrentValue = obj.options[i].value;
+      var FoundItem = false;
+      
+      for(var j=0; j<ExistingValuesArray.length; j++){
+        if (ExistingValuesArray[j] == CurrentValue){
+          FoundItem = true;
+          break;
+        }
+      }
+      
+      if (FoundItem == false){
+        obj.remove(i);
+        i--;
+      }
+    }
+  }
+}
+
+//-----------
+
+function FixTableRows(table_id)
+{
+  var Table = document.getElementById(table_id);
+  //var rows = Table.getElementsByTagName("TR");
+  var rows = Table.rows;
+  
+  var index = 0;
+  
+  for (var j = 0; j < rows.length; j++) {
+    
+    if (rows[j].offsetHeight > 0){
+
+      var LeftCell   = sprintf("R%sLeft"  ,index%2);
+      var CenterCell = sprintf("R%sCenter",index%2);
+      var RightCell  = sprintf("R%sRight" ,index%2);
+      index++;
+      
+      var cells = rows[j].cells;
+      for (var i = 0; i < cells.length; i++) {
+  
+        var classValue = cells[i].className;
+        if ((classValue.search("R0Left") >= 0) || (classValue.search("R1Left") >= 0)){
+          classValue = classValue.replace("R0Left","");
+          classValue = classValue.replace("R1Left","");
+          classValue = classValue + " " + LeftCell;        
+        }
+        if ((classValue.search("R0Center") >= 0) || (classValue.search("R1Center") >= 0)){
+          classValue = classValue.replace("R0Center","");
+          classValue = classValue.replace("R1Center","");
+          classValue = classValue + " " + CenterCell;        
+        }
+        if ((classValue.search("R0Right") >= 0) || (classValue.search("R1Right") >= 0)){
+          classValue = classValue.replace("R0Right","");
+          classValue = classValue.replace("R1Right","");
+          classValue = classValue + " " + RightCell;        
+        }
+        cells[i].className = classValue;        
+      }
+    }
+  }  
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> 
+function GetLivelistTextColor(StationInfo)
+{
+  var CellClasses = "";
+
+  // TEXT-COLOR of a CELL:
+  switch(StationInfo & 0x3){
+    case 0x3:
+      CellClasses = " LiveListDataCell-MasterSlave";
+      break;
+    case 0x2:
+      CellClasses = " LiveListDataCell-Master";
+      break;
+    case 0x1:
+      CellClasses = " LiveListDataCell-Slave";
+      break;
+    default:
+      CellClasses = " LiveListDataCell-NoStation";
+  }
+  return CellClasses;
+}
+
+//-----------
+
+function GetLivelistBackgroundColor(StationInfo)
+{
+  var CellClasses = "";
+
+  // BACKGROUND-COLOR of a CELL:
+  if ((StationInfo & 0x8) == 0){ // not existent
+    if ((StationInfo & 0x3) != 0){ // if it should be master or slave
+      CellClasses = " LiveListDataCell-Station-Lost";
+    }
+  }
+  else if (StationInfo & 0x10){
+    CellClasses = " LiveListDataCell-Station-ParamError";
+  }
+  else if (StationInfo & 0x20){
+    CellClasses = " LiveListDataCell-Station-ConfigError";
+  }
+  else if (StationInfo & 0x04){
+    CellClasses = " LiveListDataCell-Station-Dx";
+  }
+  else {
+    CellClasses = " LiveListDataCell-Station-Idle";
+  }
+
+  return CellClasses;
+}
+
+//-----------
+
+function GetLivelistDiagstate(StationInfo)
+{
+  var CellClasses = "";
+
+  if ((StationInfo & 0x8) != 0){
+    switch(StationInfo & 0xC0){
+      case 0xC0:
+        CellClasses = " LiveListDataCell-Station-ExtStaticDiag";
+        break;
+      case 0x40:
+        CellClasses = " LiveListDataCell-Station-ExtDiag";
+        break;
+      case 0x80:
+        CellClasses = " LiveListDataCell-Station-StaticDiag";
+        break;
+      default:
+        // nothing
+    }
+  }
+
+  return CellClasses;
+}
+
+//-----------
+
+function GetLivelistClasses(StationInfo, BaseClasses)
+{
+  var CellClasses = BaseClasses;
+
+  CellClasses = CellClasses + GetLivelistTextColor(StationInfo);
+  CellClasses = CellClasses + GetLivelistBackgroundColor(StationInfo);
+  CellClasses = CellClasses + GetLivelistDiagstate(StationInfo);
+
+  return CellClasses;
+}
+
+//-----------
+
+ </script>
+  <script type="text/javascript"> 
+function GetFFLivelistTextColor(StationInfo)
+{
+  var CellClasses = "";
+
+  // TEXT-COLOR of a CELL:
+  if ((StationInfo & 0x0003) == 0x0003){
+    CellClasses = " LiveListDataCell-MasterSlave";
+  }
+  else if (StationInfo & 0x0002){
+    CellClasses = " LiveListDataCell-Master";
+  }
+  else if (StationInfo & 0x0001){
+    CellClasses = " LiveListDataCell-Slave";
+  }
+  else if (StationInfo & 0x0002){
+    CellClasses = " LiveListDataCell-Master";
+  }
+  else if (StationInfo & 0x0400){
+    CellClasses = " LiveListDataCell-FFTempDev";
+  }
+  else {
+    CellClasses = " LiveListDataCell-NoStation";
+  }
+  
+  return CellClasses;
+}
+
+//-----------
+
+function GetFFLivelistBackgroundColor(StationInfo)
+{
+  var CellClasses = "";
+
+  // BACKGROUND-COLOR of a CELL:
+  if ((StationInfo & 0x0008) == 0){ // not existent
+    if ((StationInfo & 0x0403) != 0){ // if it should be master or slave
+      CellClasses = " LiveListDataCell-Station-Lost";
+    }
+  }
+  else if (StationInfo & 0x0004){
+    CellClasses = " LiveListDataCell-Station-Dx";
+  }
+  else {
+    CellClasses = " LiveListDataCell-Station-Idle";
+  }
+
+  return CellClasses;
+/*  var CellClasses = "";
+  
+  // BACKGROUND-COLOR of a CELL:
+/*
+  if ((StationInfo & 0x100) == 0){ // not existent
+    if ((StationInfo & 0xF0) != 0){ // if it should be master or slave
+      CellClasses = " LiveListDataCell-Station-Lost";
+    }
+  }
+  else *//*
+  if (StationInfo & 0x30){
+    CellClasses = " LiveListDataCell-Station-Dx";
+  }
+  else {
+    CellClasses = " LiveListDataCell-Station-Idle";
+  }
+
+  return CellClasses;*/
+}
+
+//-----------
+
+function GetFFLivelistDiagstate(StationInfo)
+{
+  var CellClasses = "";
+  /*
+  if ((StationInfo & 0x8) != 0){
+    switch(StationInfo & 0xC0){
+      case 0xC0:
+        CellClasses = " LiveListDataCell-Station-ExtStaticDiag";
+        break;
+      case 0x40:
+        CellClasses = " LiveListDataCell-Station-ExtDiag";
+        break;
+      case 0x80:
+        CellClasses = " LiveListDataCell-Station-StaticDiag";
+        break;
+      default:
+        // nothing
+    }
+  }
+  */
+  return CellClasses;
+}
+
+//-----------
+
+function GetFFLivelistClasses(StationInfo, BaseClasses)
+{
+  var CellClasses = BaseClasses;
+
+  CellClasses = CellClasses + GetFFLivelistTextColor(StationInfo);
+  CellClasses = CellClasses + GetFFLivelistBackgroundColor(StationInfo);
+  CellClasses = CellClasses + GetFFLivelistDiagstate(StationInfo);
+
+  return CellClasses;
+}
+
+//-----------
+
+ </script>
+  <script type="text/javascript"> 
+function TextLengthInBytes(value)
+{
+  var Size = 0;
+  for(var i=0; i<value.length; i++){
+    var CurrentCharValue = value.charCodeAt(i);
+    
+    if (CurrentCharValue <= 0x7F){
+      Size += 1;
+    }
+    else if (CurrentCharValue <= 0x7FF){
+      Size += 2;
+    }
+    else if (CurrentCharValue <= 0xFFFF){
+      Size += 3;
+    }
+    else if (CurrentCharValue <= 0x1FFFFF){
+      Size += 4;
+    }
+    else if (CurrentCharValue <= 0x3FFFFFF){
+      Size += 5;
+    }
+    else if (CurrentCharValue <= 0x7FFFFFFF){
+      Size += 6;
+    }    
+  }
+  return Size;
+}
+
+//-----------
+
+function TextToSize(DecValue, Digits, Digit)
+{
+	if (DecValue == "") return "";
+
+	while(DecValue.length < Digits){
+		DecValue = Digit + DecValue;
+	}
+	return DecValue.toUpperCase();
+}
+
+//-----------
+
+function TextToHex(DecValue, Digits, Digit)
+{
+	if (DecValue == "") return "";
+
+	DecValue = parseInt(DecValue,10);
+	DecValue = DecValue.toString(16);
+
+	while(Result.length < Digits){
+		Result = Digit + Result;
+	}
+	return Result.toUpperCase();
+}
+
+//-----------
+
+function CheckNumber(input_value, minimum_value, maximum_value)
+{
+  // check if it is a number
+  var input_value_int = parseInt(input_value);
+  if (input_value_int != input_value) return 1;
+  if (input_value_int.toString() != input_value) return 2;
+  if (input_value.length == 0) return 3;
+
+  // it is a number, check range
+  if (minimum_value != undefined){
+    if (input_value_int < minimum_value) return 4;
+  }
+  if (maximum_value != undefined){
+    if (input_value_int > maximum_value) return 5;
+  }
+
+  // succesful
+  return 0;
+}
+
+
+//-----------
+
+function CheckHex(input_value, minimum_value, maximum_value)
+{
+  // check if it is a number
+  var input_value_int = parseInt(input_value,16);
+  if (input_value_int.toString(16) != input_value) return 2;
+  if (input_value.length == 0) return 3;
+
+  // it is a number, check range
+  if (minimum_value != undefined){
+    if (input_value_int < minimum_value) return 4;
+  }
+  if (maximum_value != undefined){
+    if (input_value_int > maximum_value) return 5;
+  }
+
+  // succesful
+  return 0;
+}
+
+
+//-----------
+
+function CheckString(input_value, maxlength, regex_expression)
+{
+  // check the max length of the string
+  if (TextLengthInBytes(input_value) > maxlength) return 1;
+
+  // check the illegal characters if it is supplied
+  if (regex_expression != undefined){
+    var regex_result = [];
+    regex_result = input_value.match(regex_expression);
+    if (regex_result == null) return -1;
+  }
+
+  return 0;
+}
+
+//-----------
+
+function CheckIpAddress(input_value,allow_limits)
+{
+  var ipPattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+  var ipArray = [];
+  ipArray = input_value.match(ipPattern);
+  if (ipArray == null) return 1;
+  if (ipArray.length != 5) return 2;
+
+  var CountAmount = 0;
+  for (var i = 0; i < 4; i++) {
+    var thisSegment = ipArray[i+1];
+    if (thisSegment > 255) return (5 + i);
+    CountAmount += thisSegment;
+  }
+
+  if (allow_limits != true){
+    if (CountAmount == 0) return 3;
+    if (CountAmount == (4*255)) return 4;
+  }
+
+  return 0;
+}
+
+//-----------
+
+function SplitArray(ArrayToSplit,Characters)
+{
+  if (Characters.length == 0) return ArrayToSplit;
+  
+  var Result = [];
+  var CurrentChar = Characters.charAt(0);
+  Characters = Characters.substr(1);
+  
+  for(var i=0; i<ArrayToSplit.length; i++){
+    var Splitted = ArrayToSplit[i].split(CurrentChar);
+    Result = Result.concat(Splitted);
+  }
+  
+  return SplitArray(Result,Characters);
+}
+
+//-----------
+
+function SplitEmailAddresses(textToSplit,PossibleChars)
+{
+  return SplitArray(Array(textToSplit),PossibleChars);
+}
+
+//-----------
+
+function CheckEmailAddresses(input_value)
+{
+  // can be combined by a ';' or ',' and some whitespaces
+
+  var EmailAddress = [];
+  EmailAddress = SplitEmailAddresses(input_value,";,");
+  
+  if (EmailAddress.length == 0) return 0;  // 'nothing' is valid
+
+  for(var i=0; i<EmailAddress.length; i++){
+    var result = CheckEmailAddress(trim(EmailAddress[i]));
+    if (result != 0) return result;
+  }
+
+  return 0;
+}
+
+//-----------
+
+function CheckEmailAddress(input_value)
+{
+  if (input_value.length == 0) return 0;
+  var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+  if (reg.test(input_value) == false) return 1;
+  return 0;
+}
+
+//-----------
+
+function trim(input_value) {
+  input_value = input_value.replace(/^\s+/,'');
+  input_value = input_value.replace(/\s+$/,'');
+  input_value = input_value.replace(/[\"\']/g, '');
+
+  return input_value;
+}
+
+//-----------
+
+function GenerateEnumeration(value_from, value_to)
+{
+  var EnumerationText = "";
+  for(var i=value_from; i<= value_to; i++){
+    if (i > value_from){
+      if (i == value_to) {
+        EnumerationText = EnumerationText + " 그리고 ";
+      }
+      else {
+        EnumerationText = EnumerationText + ", ";
+      }
+    }
+    EnumerationText = EnumerationText + i;
+  }
+  return EnumerationText;
+}
+
+//-----------
+
+function nl2br(text_str)
+{
+  text_str = text_str.replace(/%0D%0A/g,"<br>");
+  text_str = text_str.replace(/%0D/g,"<br>");
+  text_str = text_str.replace(/%0A/g,"<br>");
+
+  return text_str;
+}
+
+//-----------
+
+function GetConditionalText(condition,value_true,value_false)
+{
+  if (condition == true) return value_true;
+  return value_false;
+}
+
+//-----------
+
+function GetOnOffText(on_value)
+{
+  return GetConditionalText(on_value != 0,"켜짐","꺼짐");
+}
+
+//-----------
+
+function GetYesNoText(yes_value)
+{
+  return GetConditionalText(yes_value != 0,"네","없음");
+}
+
+//-----------
+
+function GetColorBallHtml(green_value,text_1,text_0)
+{
+  // for compatibility with existing code:
+  green_value = parseInt(green_value);
+  
+  var indexArray = [1,0];
+  var textArray  = [text_1,text_0];
+  var imageArray = ["green.gif","red.gif"];
+  
+  if (indexArray.indexOf(green_value) < 0){
+    green_value = indexArray[0];
+  }
+  return GetColorHtml(green_value,indexArray,imageArray,textArray);
+}
+
+//-----------
+
+function GetColorHtml(light_value,state_array,image_array,text_array)
+{
+  if (state_array == undefined) return "JS-Error (GetColorHtml:1)";
+  light_value = parseInt(light_value);
+  var index_value = state_array.indexOf(light_value);
+  if (index_value == -1) return "JS-Error (GetColorHtml:2)";
+  
+  var Result = "";
+  if (image_array != undefined){
+    if (image_array[index_value] != undefined){
+      Result += "<img src='" + image_array[index_value]+ "'>";
+    }
+  }
+  if (text_array != undefined){
+    if (text_array[index_value] != undefined){
+      Result += " " + text_array[index_value];
+    }
+  }
+  
+  return Result;
+}
+
+//-----------
+
+function GetSwDswText(sw_value)
+{
+  return GetConditionalText(sw_value != 0,"소프트웨어","딥스위치");
+}
+
+//-----------
+
+function GetConditionalText(condition, true_text, false_text)
+{
+  if (condition == true){
+    return true_text;
+  }
+  return false_text;
+}
+
+//-----------
+
+function GetMvToVoltText(mv_value)
+{
+  var volts = parseFloat(mv_value)/1000;
+  if (isNaN(volts)) return mv_value;
+  return (volts.toFixed(2) + " V");
+}
+
+//-----------
+
+function IntervalToText(IntervalInSeconds, leadingchar)
+{
+  IntervalInSeconds = parseInt(IntervalInSeconds);
+
+  var Hours = parseInt(IntervalInSeconds / 3600);
+  var Minutes = parseInt(IntervalInSeconds / 60) % 60;
+  var Seconds = (IntervalInSeconds % 60);
+
+  Hours = Hours.toString();
+  Minutes = Minutes.toString();
+  Seconds = Seconds.toString();
+
+  if (leadingchar != undefined){
+    while(Minutes.length < 2){
+      Minutes = leadingchar+Minutes;
+    }
+    while(Seconds.length < 2){
+      Seconds = leadingchar+Seconds;
+    }
+  }
+
+  var Result = [Hours,Minutes,Seconds];
+  return Result;
+  
+}
+
+//-----------
+
+function BcdTimeToText(TimeInt, leadingchar)
+{
+  TimeInt = parseInt(TimeInt);
+
+  var Hours   = parseInt(TimeInt / 10000);
+  var Minutes = parseInt(TimeInt   / 100) % 100;
+  var Seconds = parseInt(TimeInt        ) % 100;
+
+  if (Hours   > 23) Hours   = 23;
+  if (Minutes > 59) Minutes = 59;
+  if (Seconds > 59) Seconds = 59;
+
+  Hours = Hours.toString();
+  Minutes = Minutes.toString();
+  Seconds = Seconds.toString();
+
+  if (leadingchar != undefined){
+    while(Minutes.length < 2){
+      Minutes = leadingchar+Minutes;
+    }
+    while(Seconds.length < 2){
+      Seconds = leadingchar+Seconds;
+    }
+  }
+
+  var Result = [Hours,Minutes,Seconds];
+  return Result;
+}
+
+//-----------
+
+function GetTextForModuleStatus(code)
+{
+  switch(parseInt(code)){
+    case 101: return "갱신중";
+    case 102: return "에러";
+    case 103: return "지원되지 않음";
+    default : return "빈공간";
+  }
+}
+
+//-----------
+
+function GetScopeErrorText(TriggerEvents)
+{
+  TriggerEvents = parseInt(TriggerEvents);
+  if ((TriggerEvents & 0x80) == 0x00){
+    return "No error";
+  }
+
+  TriggerEvents = (TriggerEvents & 0x7F);
+  
+  if (TriggerEvents & 0x40) return "MBP BIT error";
+  if (TriggerEvents & 0x20) return "MBP CRC error";
+  if (TriggerEvents & 0x10) return "페러티/프레임 에러";
+  if (TriggerEvents & 0x08) return "SD2 LEr/SDr 에러";
+  if (TriggerEvents & 0x04) return "SD2 LE 에러";
+  if (TriggerEvents & 0x02) return "ED 에러";
+  if (TriggerEvents & 0x01) return "SD 에러";
+
+  return "알수없음 ("+TriggerEvents.toString(16)+")";
+}
+
+//-----------
+
+function getInternetExplorerVersion() 
+{
+  var rv = 0; // Return value assumes failure.
+  if (navigator.appName == 'Microsoft Internet Explorer') {
+    var ua = navigator.userAgent;
+    var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+    if (re.exec(ua) != null){
+      rv = parseFloat(RegExp.$1);
+    }
+  }
+  return rv;
+}
+
+//-------------
+
+function GetBrowserDisplayStyle(wanted_disp_style)
+{
+  var ieVersion = getInternetExplorerVersion();
+  if (ieVersion == 0) return wanted_disp_style; // not ie
+  
+  if (ieVersion <= 7){
+    var NotPossibleStylesInIE7 = "inline-table|run-in|table|table-caption|table-cell|table-column|table-column-group|table-row|table-row-group|inherit";
+    if (NotPossibleStylesInIE7.indexOf(wanted_disp_style) > 0){
+      wanted_disp_style = "block";
+    }
+  }
+
+  return wanted_disp_style;
+}
+
+//-------------
+
+function IsItemInArray(Arr,Item)
+{
+  var Found = false;
+  for(var i=0; i<Arr.length; i++){
+    if (Arr[i] == Item){
+      Found = true;
+      break;
+    }
+  }
+  return Found;
+}
+
+//-------------
+
+function sprintf(text_line, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+{
+  if (arg0 != undefined) text_line = text_line.replace("%s",arg0);
+  if (arg1 != undefined) text_line = text_line.replace("%s",arg1);
+  if (arg2 != undefined) text_line = text_line.replace("%s",arg2);
+  if (arg3 != undefined) text_line = text_line.replace("%s",arg3);
+  if (arg4 != undefined) text_line = text_line.replace("%s",arg4);
+  if (arg5 != undefined) text_line = text_line.replace("%s",arg5);
+  if (arg6 != undefined) text_line = text_line.replace("%s",arg6);
+  if (arg7 != undefined) text_line = text_line.replace("%s",arg7);
+  if (arg8 != undefined) text_line = text_line.replace("%s",arg8);
+  if (arg9 != undefined) text_line = text_line.replace("%s",arg9);
+  return text_line;
+}
+
+//-------------
+
+function GetDiagSlaveRedundacyText(RedundancySupported, RedundancyStatus)
+{
+	if (RedundancySupported == false){
+		RedundancyStatus = 0;
+	}
+	
+	return GetColorHtml(parseInt(RedundancyStatus),
+		[5,4,3,2,1,0],
+		["green.gif","red.gif","red.gif","red.gif","grey.gif","grey.gif"],
+		["Redundancy OK", "Redundancy error on both channels", "Redundancy error on right channel", "Redundancy error on left channel", "Redundancy not used", "지원되지 않음"]
+	);
+}
+
+//-----------
+
+function GetDiagSlavePowerStatus(PowerSupported,PowerStatus)
+{
+	if (PowerSupported == false) return "지원되지 않음";
+	return GetYesNoText(PowerStatus);
+}
+
+//-----------
+
+
+function GetDiagSlaveRelayState(RelayState, ShowReason)
+{
+	var RelayStateValue = parseInt(RelayState);
+	
+	if (RelayStateValue == 0){
+		return "Inactive";
+	}
+	if (ShowReason == false){
+		return "Active";
+	}
+	
+	RelayText = "<strong>Active due to the following reason(s):</strong>";
+
+	if (RelayStateValue & 0x00000001) RelayText = RelayText + "<br>" + "Live list changed";
+	if (RelayStateValue & 0x00000002) RelayText = RelayText + "<br>" + "Baudrate error";
+	if (RelayStateValue & 0x00000004) RelayText = RelayText + "<br>" + "Power error";
+	if (RelayStateValue & 0x00000008) RelayText = RelayText + "<br>" + "Redundancy error";
+	if (RelayStateValue & 0x00000010) RelayText = RelayText + "<br>" + "Termination changed";
+	if (RelayStateValue & 0x00000020) RelayText = RelayText + "<br>" + "Channel lost";
+
+	if (RelayStateValue & 0x00000100) RelayText = RelayText + "<br>" + "Lost statistic changed";
+	if (RelayStateValue & 0x00000200) RelayText = RelayText + "<br>" + "Syncs statistic changed";
+	if (RelayStateValue & 0x00000400) RelayText = RelayText + "<br>" + "Repeats total statistic changed";
+	if (RelayStateValue & 0x00000800) RelayText = RelayText + "<br>" + "Repeats max. statistic changed";
+	if (RelayStateValue & 0x00001000) RelayText = RelayText + "<br>" + "Illegals statistic changed";
+	if (RelayStateValue & 0x00002000) RelayText = RelayText + "<br>" + "Int. Diag statistic changed";
+	if (RelayStateValue & 0x00004000) RelayText = RelayText + "<br>" + "Ext. Diag statistic changed";
+	if (RelayStateValue & 0x00008000) RelayText = RelayText + "<br>" + "Diag while in DX statistic changed";
+
+	if (RelayStateValue & 0x00010000) RelayText = RelayText + "<br>" + "Fiber optic channel port 1 error";
+	if (RelayStateValue & 0x00020000) RelayText = RelayText + "<br>" + "Fiber optic channel port 2 error";
+	if (RelayStateValue & 0x00040000) RelayText = RelayText + "<br>" + "Fiber optic ring error";
+	
+  return RelayText;
+}
+
+//-----------
+
+function GetDiagSlaveFiberChannelState(ChannelState)
+{
+	return GetColorHtml(parseInt(ChannelState),
+		[3,2,1,0],
+		["green.gif","yellow.gif","red.gif","grey.gif"],
+		["Signal OK", "Signal warning", "Signal error", "꺼짐"]
+	);
+}
+
+//-----------
+function GetDiagSlaveFiberChannelType(ChannelType)
+{
+	if (parseInt(ChannelType) == 0){
+		return "Multi mode";
+	}
+	return "Single mode";
+}
+
+//-----------
+
+function GetDiagSlaveFiberRingState(RingState)
+{
+	return GetColorHtml(parseInt(RingState),
+		[2,1,0],
+		["green.gif","red.gif","grey.gif"],
+		["Ring OK", "Ring error", "꺼짐"]
+	);
+}
+
+//-----------
+
+function GetDiagSlaveFiberRingMode(RingState)
+{
+	if (parseInt(RingState) == 0){
+		return "Line mode";
+	}
+	return "Ring mode";
+}
+
+//-----------
+
+function DecodeHtml(InputValue)
+{
+	var doc = new DOMParser().parseFromString(InputValue, "text/html");
+	return doc.documentElement.textContent;
+} </script>
+  <script type="text/javascript"> 
+function AddToolTip(code_to_display,tooltip_to_display,position_class)
+{
+  return "<div class='tooltip'>" + code_to_display + "<span class='"+position_class+"'>" + tooltip_to_display + "</span></div>";
+}
+
+//-----------
+
+function CalcCrc(message)
+{
+  var remainder = 0xFFFFFFFF;
+  for (var byte=0; byte < message.length; byte++){
+    remainder ^= message.charCodeAt(byte);
+    for (var bit = 0; bit<8; bit++){
+      if (remainder & 0x00000001){
+        remainder = (remainder >> 1) ^ 0xEDB88320;
+      }
+      else{
+        remainder = (remainder >> 1);
+      }
+    }
+  }
+  return (remainder ^ 0xFFFFFFFF);
+}
+
+
+//-----------
+
+function AddWarning(WarnArray, warningText)
+{
+  if (warningText.length == 0) return WarnArray;
+
+  var NewArr = [];
+  NewArr.push("<img src='error.gif' class='ImgIcon'>");
+	NewArr.push(warningText);
+	NewArr.push(CalcCrc(warningText));
+
+  WarnArray.push(NewArr);
+  return WarnArray;
+}
+
+//-----------
+
+function DisplayWarnings(WarnArray, object_id)
+{
+  if (object_id == undefined) object_id = "warnings_area";
+
+	var DisplayedWarningCount = 0;
+	var DisplayText = "";
+
+	var IdCode = 0;
+
+	for(var i=0; i<WarnArray.length; i++){
+		var CurrentWarning = WarnArray[i];
+		if (CurrentWarning.length >= 3){
+		  if (CurrentWarning[1].length > 0){
+			  DisplayedWarningCount++;
+			  DisplayText = DisplayText + "<div class='WarningIconArea'>" + CurrentWarning[0] + "</div><div class='WarningItemArea'>" + CurrentWarning[1] + "</div>";
+			  IdCode ^= CurrentWarning[2];
+			}
+		}
+	}
+
+  SetVisibility(object_id,DisplayedWarningCount > 0);
+  SetInnerHtmlValue(object_id,DisplayText);
+}
+
+//---------------
+
+ </script>
+  <script type="text/javascript"> 
+//-----------
+
+function GetDeviceListHtml(ChannelData,LivelistTagArray,IncludeNetworkHeader)
+{	
+  var TableHtml = "<table class='DeviceChannelTable' cellspacing='0'>";
+  var TableHtmlEnd = "</table>";
+  var Result = [];
+  
+  if (ChannelData.Network != undefined){
+  	// display a list of devices on the same network
+  	if (ChannelData.Devices.length == 0) return "";
+  	// there are devices to display
+    Result.push(TableHtml);
+    if (IncludeNetworkHeader != false){
+    	Result.push(AddNetworkHeaderRow(ChannelData.Network + 1));
+    }
+    for(var i=0; i<ChannelData.Devices.length; i++){
+      
+      var CurrentDevice = ChannelData.Devices[i];
+      
+      var CurrentLivelistTag = "";
+      if (ChannelData.Network <= LivelistTagArray.length){
+        var CurrentLivelist = LivelistTagArray[ChannelData.Network];
+        if (CurrentDevice.Address < CurrentLivelist.length){
+          CurrentLivelistTag = CurrentLivelist[CurrentDevice.Address];
+        }
+      }
+      
+      Result.push(AddLivelistTableRow(CurrentDevice,CurrentLivelistTag));
+    }
+    Result.push(TableHtmlEnd);  
+  }
+  else {
+    for(var i=0; i<ChannelData.length; i++){
+    	// display network + livelist state per device
+      var CurrentDevice = ChannelData[i];
+      Result.push(TableHtml);
+      if (IncludeNetworkHeader != false){
+      	Result.push(AddNetworkHeaderRow(CurrentDevice.Network + 1));
+      }
+      Result.push(AddLivelistTableRow(CurrentDevice,""));
+      Result.push(TableHtmlEnd);
+      Result.push("&nbsp;");
+    }
+  }
+  
+  return Result.join("");
+}
+
+//-----------
+
+function GetAltDeviceListHtml(ChannelData)
+{
+  var TableHtml = "<table class='DeviceChannelTable' cellspacing='0'>";
+  var TableHtmlEnd = "</table>";
+  var Result = [];
+  
+  if (ChannelData.Network != undefined){
+    Result.push(TableHtml);
+    Result.push(AddNetworkHeaderRow(ChannelData.Network + 1));
+    for(var i=0; i<ChannelData.AltDevices.length; i++){
+      var CurrentDevice = ChannelData.AltDevices[i];
+      Result.push(AddAltLivelistTableRow(CurrentDevice));
+    }
+    Result.push(TableHtmlEnd);  
+  }
+  else {
+    for(var i=0; i<ChannelData.length; i++){
+      var CurrentDevice = ChannelData[i];
+      Result.push(TableHtml);
+      Result.push(AddNetworkHeaderRow(CurrentDevice.Network + 1));
+      Result.push(AddAltLivelistTableRow(CurrentDevice));
+      Result.push(TableHtmlEnd);
+      Result.push("&nbsp;");
+    }
+  }
+  
+  return Result.join("");
+}
+
+//-----------
+
+function AddNetworkHeaderRow(NetworkNumber)
+{
+  if ((NetworkNumber >= 1) && (NetworkNumber <= 4)){
+    return ("<tr><th class='LiveListDataCell-Invalid'>Nw "+ NetworkNumber +":</th></tr>");
+  }
+  return ("<tr><th class='LiveListDataCell-Invalid'>N/C</th></tr>");
+}
+
+//-----------
+
+function AddLivelistTableRow(StationData, Tag)
+{
+	var ClickLink = "";
+  if (StationData.onclick != undefined){
+  	ClickLink = StationData.onclick.toString();
+  }
+  
+  var BaseClasses = "ChannelListDataCell";
+  var OnClickEvent = ""; 
+
+  if (ClickLink.length > 0){
+  	BaseClasses = BaseClasses + " ClickableLivelistItem";
+ 		OnClickEvent = "onclick=\""+ClickLink+"\"";
+  }
+
+  Result = [];
+  Result.push("<tr>");
+  Result.push("<td class='" + GetLivelistClasses(StationData.Livelist,BaseClasses) + "' "+OnClickEvent+">");
+  
+  var CellContent = StationData.Address;
+  if (Tag.length > 0){
+    CellContent = AddToolTip(CellContent,Tag,"livelistStyle");
+  }
+  
+  Result.push(CellContent);
+  Result.push("</td>");
+  Result.push("</tr>");
+  return Result.join("");
+}
+
+//-----------
+
+function AddAltLivelistTableRow(StationData)
+{
+  Result = [];
+  Result.push("<tr>");
+  Result.push("<td class='" + GetFFLivelistClasses(StationData.Livelist,"ChannelListDataCell") + "'>");
+  
+  var CellContent = StationData.Address;
+  
+  Result.push(CellContent);
+  Result.push("</td>");
+  Result.push("</tr>");
+  return Result.join("");
+}
+
+//-----------
+
+ </script>
+	<script type="text/javascript"> 
+function NavigateTo(page_to_get)
+{
+  if (parent.frames.length > 0){
+    parent.main_frame.location = page_to_get;
+  }
+  else {
+    parent.location = page_to_get;
+  }
+}
+
+//-----------
+
+function GenerateNavigateLink(page_to_get, text_to_display, class_to_style)
+{
+  return GenerateSpecialModuleLink("NavigateTo('"+page_to_get+"')", text_to_display, class_to_style);
+}
+
+//-----------
+
+function GenerateSpecialModuleLink(function_to_exec, text_to_display, class_to_style)
+{
+	if (class_to_style == undefined){
+		class_to_style = "alink";
+	}
+  var Result = "<a class='"+class_to_style+"' onClick="+function_to_exec+">"+text_to_display+"</a>";
+  return Result;
+}
+
+//-----------
+
+ </script>
+  <script type="text/javascript" src="mon_chan.js"></script>
+  <script type="text/javascript" src="maintenance.js"></script>
+</head>
+
+<body>
+
+<!-- The Modal network 1 -->
+<div id="ResetLivelistModalBox0" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideResetLivelistModal(0)">&times;</span>
+      <h2>Reset live list of network 1</h2>
+    </div>
+    <div class="modal-body">
+    	<input type="checkbox" id="CheckboxIncludeIdentNrs0">
+     	<label for="CheckboxIncludeIdentNrs0">Also reset discovered IdentNrs.</label>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="실시간상태 초기화" onclick="ResetLiveList(0,document.getElementById('CheckboxIncludeIdentNrs0').checked);"/>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal network 2 -->
+<div id="ResetLivelistModalBox1" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideResetLivelistModal(1)">&times;</span>
+      <h2>Reset live list of network 2</h2>
+    </div>
+    <div class="modal-body">
+    	<input type="checkbox" id="CheckboxIncludeIdentNrs1">
+     	<label for="CheckboxIncludeIdentNrs1">Also reset discovered IdentNrs.</label>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="실시간상태 초기화" onclick="ResetLiveList(1,document.getElementById('CheckboxIncludeIdentNrs1').checked);"/>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal network 3 -->
+<div id="ResetLivelistModalBox2" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideResetLivelistModal(2)">&times;</span>
+      <h2>Reset live list of network 3</h2>
+    </div>
+    <div class="modal-body">
+    	<input type="checkbox" id="CheckboxIncludeIdentNrs2">
+     	<label for="CheckboxIncludeIdentNrs2">Also reset discovered IdentNrs.</label>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="실시간상태 초기화" onclick="ResetLiveList(2,document.getElementById('CheckboxIncludeIdentNrs2').checked);"/>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal network 4 -->
+<div id="ResetLivelistModalBox3" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideResetLivelistModal(3)">&times;</span>
+      <h2>Reset live list of network 4</h2>
+    </div>
+    <div class="modal-body">
+    	<input type="checkbox" id="CheckboxIncludeIdentNrs3">
+     	<label for="CheckboxIncludeIdentNrs3">Also reset discovered IdentNrs.</label>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="실시간상태 초기화" onclick="ResetLiveList(3,document.getElementById('CheckboxIncludeIdentNrs3').checked);"/>
+    </div>
+  </div>
+</div>
+  
+<!-- *******************[container]************************************* -->
+
+  <div id="container">
+
+<!-- header content -->
+<script type="text/javascript"> //-----------
+
+function TemperatureToText(CurrentTemp)
+{
+  var TempArray = CurrentTemp.split("\x1F");
+  CurrentTemp = TempArray[0];
+  
+  if (TempArray.length >= 2){
+    switch(parseInt(TempArray[1])){
+      case 0:
+        CurrentTemp = TempArray[0] + "&deg;C"; //celcius
+        break;
+      case 1:
+        CurrentTemp = TempArray[0] + "&deg;F"; //fahrenheit
+        break;
+      case 2:
+        CurrentTemp = TempArray[0] + "K"; //kelvin
+        break;
+    }
+  }
+  return CurrentTemp;
+}
+
+//-----------
+
+function WriteTopInfo(UpTime,SystemTime,CurrentTemp,MeasurementTime,ClearDataLinkAllowed)
+{
+  CurrentTemp = TemperatureToText(CurrentTemp);
+  SetInnerHtmlValue("timestamp","시스템 가동시간: <strong>" + UpTime + "</strong>");
+  SetInnerHtmlValue("cbtime"   ,"시스템 시간: <strong>" + SystemTime + "</strong>");
+  SetInnerHtmlValue("cbtemp"   ,"온도: <strong>" + CurrentTemp + "</strong>");
+
+	var MeasurementTimeText = "Measuring since";
+	var MeasurementTimeValue = ": <strong>" + MeasurementTime + "</strong>";
+  
+  if (ClearDataLinkAllowed == true){
+  	SetInnerHtmlValue("cbmeas"   ,GenerateNavigateLink("cfg_set.htm",MeasurementTimeText,"header-link") + MeasurementTimeValue);
+  }
+  else {
+  	SetInnerHtmlValue("cbmeas"   ,MeasurementTimeText + MeasurementTimeValue );
+  }  
+}
+
+//-----------
+
+function FixFooter()
+{
+  var ContentObj = document.getElementById('content_area');
+  var FooterObj = document.getElementById('footer');
+  if ((ContentObj != null) && (FooterObj != null)){
+    var ContentEnd = (ContentObj.offsetTop + ContentObj.offsetHeight);
+    if (ContentEnd > FooterObj.offsetTop) FooterObj.style.top = ContentEnd;
+  }
+}
+
+//-----------
+
+var TopDataTimeout = 0;
+var TopDataXmlHttp = null;
+
+//-----------
+
+function onTimeoutTopData()
+{
+  TopDataTimeout = 0;
+  TopDataXmlHttp.onreadystatechange = function() {}
+  TopDataXmlHttp.abort();
+}
+
+//-----------
+
+function onStateChangeTopData()
+{
+  if (TopDataXmlHttp != null){
+    if (TopDataXmlHttp.readyState == 4){
+      if (TopDataXmlHttp.status == 200){
+
+        var Response = decodeURIComponent(TopDataXmlHttp.responseText);
+        var ControlVars = Response.split("\x1D");
+
+        var TimeStamp   = "";
+        var CurrentTime = "";
+        var CurrentTemp = "";
+        var MeasurementTime = "";
+        var ClearDataLinkAllowed = 0;
+
+        if (ControlVars.length >= 5){
+          
+          TimeStamp    = ControlVars[0];
+          CurrentTime  = ControlVars[1];
+          CurrentTemp  = ControlVars[2]; // temperature �C is encoded
+          MeasurementTime = ControlVars[3];
+          ClearDataLinkAllowed = (parseInt(ControlVars[4]) == 2);
+        }
+        
+        WriteTopInfo(TimeStamp,CurrentTime,CurrentTemp,MeasurementTime,ClearDataLinkAllowed);
+        FixFooter();
+        
+        onTimeoutTopData();
+      }
+    }
+  }
+}
+
+//-----------
+
+function PeriodicTimerUpdateTopData()
+{
+  if (TopDataTimeout > 0){
+    TopDataTimeout--;
+    return;
+  }
+
+  if (TopDataXmlHttp != null){
+    TopDataXmlHttp.abort();
+  }
+
+  TopDataXmlHttp = loadXMLDocASynch("data_srv.cgi", "property=Uptime+Time+Temperature+MeasurementTime+page-access:cfg_set.htm", onStateChangeTopData, onTimeoutTopData);
+  TopDataTimeout = 10;
+}
+
+
+//-----------
+
+PeriodicTimerUpdateTopData();
+var TopDataTimerHandle = setInterval('PeriodicTimerUpdateTopData()',1 * 1000); </script>
+<div class="header-container">
+	<div class="header-column">
+  	<img class="header-image" src="var_cb/logo.png" alt="ComBricks">
+  	<div><strong>V1.312</strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item">IP주소: <strong>172.27.125.251</strong></div>
+    <div class="header-item">공정: <strong></strong></div>
+    <div class="header-item">회사: <strong></strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item">MAC 주소: <strong>9C:B2:06:00:42:0B</strong></div>
+    <div class="header-item" id='cbtemp'>온도: ?</div>
+    <div class="header-item">라인명: <strong></strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item" id='timestamp'>시스템 가동시간: ?</div>
+    <div class="header-item" id='cbtime'>시스템 시간: ?</div>
+    <div class="header-item" id='cbmeas'>Measuring since: ?</div>        
+  </div>
+</div>
+
+<!-- **************[contentbar]****************** -->
+
+    <div id="content">
+
+
+<!-- Maintenance box content -->
+<div class="maintenance-content defaultHidden" id="maintenance-box">
+  <div class="maintenance-header">
+    <input type="button" value="Disable" class="close" onclick="ShowDisableMaintenanceDialog();">
+    <h2>Maintenance mode is enabled</h2>
+  </div>
+  <div class="maintenance-body">
+   	<div id="maintenance-message">
+   		<ul><li>Maintenance mode is disabled. All measurements are running.</li></ul>
+   	</div>
+  </div>
+</div>
+
+<!-- The Modal to Disable maintenance mode -->
+<div id="DisableMaintenanceModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideDisableMaintenanceDialog()">&times;</span>
+      <h2>Disable maintenance mode</h2>
+    </div>
+    <div class="modal-body">
+    	<p>Check the networks you want maintenance mode to be disabled on:</p>
+    	<div id="SectionDisableMaintenanceNetwork1">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork1" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork1">Network 1</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork2">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork2" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork2">Network 2</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork3">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork3" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork3">Network 3</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork4">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork4" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork4">Network 4</label>
+     	</div>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="Disable" id="DisableMaintenanceButton" onclick="DisableMaintenanceMode(document.getElementById('CheckboxDisableMaintenanceNetwork1').checked, document.getElementById('CheckboxDisableMaintenanceNetwork2').checked, document.getElementById('CheckboxDisableMaintenanceNetwork3').checked, document.getElementById('CheckboxDisableMaintenanceNetwork4').checked);"/>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- The Modal to enable maintenance mode -->
+<div id="EnableMaintenanceModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideEnableMaintenanceDialog()">&times;</span>
+      <h2>Enable maintenance mode</h2>
+    </div>
+    <div class="modal-body">
+    	<p>Check the networks you want maintenance mode to be enabled on:</p>
+    	<div id="SectionEnableMaintenanceNetwork1">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork1" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork1">Network 1</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork2">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork2" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork2">Network 2</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork3">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork3" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork3">Network 3</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork4">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork4" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork4">Network 4</label>
+     	</div>
+     	<p>
+     		The diagnostic events will be paused for the selected Profibus networks.
+     		The current state of the network is still shown, but limits and counters will be frozen and network related events are blocked.
+     	</p>
+     	<p>
+     		During maintenance mode:
+     		<ul>
+     			<li>Statistics will keep the same value.</li>
+     			<li>Bargraph Min/Max will keep the same value.</li>
+     			<li>Message recording will be temporarily turned off.</li>
+     			<li>Oscilloscope images Min/Max will be reset as soon as maintenance mode is disabled.</li>
+     			<li>Oscilloscope error images will be discarded.</li>
+     			<li>All network related Email, Log, SNMP Trap and Output events are blocked.</li>
+     			<li>The Alarms and illegals of detected ProfiHub diagnostic devices will be reset as soon as maintenance mode is disabled.</li>
+     		</ul>
+     	</p>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="유효화" id="EnableMaintenanceButton" onclick="EnableMaintenanceMode(document.getElementById('CheckboxEnableMaintenanceNetwork1').checked, document.getElementById('CheckboxEnableMaintenanceNetwork2').checked, document.getElementById('CheckboxEnableMaintenanceNetwork3').checked, document.getElementById('CheckboxEnableMaintenanceNetwork4').checked);"/>
+    </div>
+  </div>
+
+</div>
+
+<div class="TitleBar">
+  <div class="TitleText">채널별 장치 리스트</div>
+</div>
+
+      <div id="content_area">
+
+<!-- ------------------------------------------------ -->
+
+<!-- ***************************************************************** -->
+<div class='VariableContainer'>
+  <div style='width:420px' class='VariableWx'>최초의 10슬롯의 각채널만 표시됩니다.</div>
+</div>
+
+<table class="invisibleTable" cellspacing="0" border="0">
+  <tr>
+    <td><div>네트워크1 표시:</div><input type="checkbox" id="display_nw1" checked></td>
+    <td><div>네트워크2 표시:</div><input type="checkbox" id="display_nw2" checked></td>
+    <td><div>네트워크3 표시:</div><input type="checkbox" id="display_nw3" checked></td>
+    <td><div>네트워크4 표시:</div><input type="checkbox" id="display_nw4" checked></td>
+  </tr>
+  <tr>
+    <td><input type='button' value="네트워크1의 실시간상태 초기화" onclick='ShowResetLiveListModal(0)' /></td>
+    <td><input type='button' value="네트워크2의 실시간상태 초기화" onclick='ShowResetLiveListModal(1)' /></td>
+    <td><input type='button' value="네트워크3의 실시간상태 초기화" onclick='ShowResetLiveListModal(2)' /></td>
+    <td><input type='button' value="네트워크4의 실시간상태 초기화" onclick='ShowResetLiveListModal(3)' /></td>
+  </tr>
+</table>
+
+<input type='button' value="표시 범례" onclick="window.open('legend-all.htm','LegendWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=800')" />
+<input type='button' value="Reset Live list of FF networks" onclick='ResetFFLiveList()' /></td>
+
+<table class="channelTable" cellspacing="0" border="0">
+  <tr>
+    <td class="topRowChannel" rowspan="2">&nbsp;</td>
+    <td class="topRowChannel" id="dev1"  >&nbsp;</td>
+    <td class="topRowChannel" id="dev3"  >&nbsp;</td>
+    <td class="topRowChannel" id="dev5"  >&nbsp;</td>
+    <td class="topRowChannel" id="dev7"  >&nbsp;</td>
+    <td class="topRowChannel" id="dev9"  >&nbsp;</td>
+    <td class="topRowChannel" id="dev11" >&nbsp;</td>
+    <td class="topRowChannel" id="dev13" >&nbsp;</td>
+    <td class="topRowChannel" id="dev15" >&nbsp;</td>
+    <td class="topRowChannel" id="dev17" >&nbsp;</td>
+    <td class="topRowChannel" id="dev19" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td id="ch1" >&nbsp;</td>
+    <td id="ch3" >&nbsp;</td>
+    <td id="ch5" >&nbsp;</td>
+    <td id="ch7" >&nbsp;</td>
+    <td id="ch9" >&nbsp;</td>
+    <td id="ch11">&nbsp;</td>
+    <td id="ch13">&nbsp;</td>
+    <td id="ch15">&nbsp;</td>
+    <td id="ch17">&nbsp;</td>
+    <td id="ch19">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="ModuleCell">
+      <div class="ModuleCellInfo">
+        <img id="img_mod_main" class="ModuleCellImage" src="var_cb/modimg/0001FF00.png">
+        <div id="slot_mod_main"   class="ModuleCellOverlay ModuleCellOverlaySlot"></div>
+        <div id="status_mod_main" class="ModuleCellOverlay ModuleCellOverlayStatus"></div>
+        <div id="hint_mod_main"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+      
+    </td>
+    <td class="ModuleCell">
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub1" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub1" class="ModuleCellOverlay ModuleCellOverlaySlot">1</div>
+        <div id="status_mod_sub1" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub1"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>    
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub2" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub2" class="ModuleCellOverlay ModuleCellOverlaySlot">2</div>
+        <div id="status_mod_sub2" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub2"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub3" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub3" class="ModuleCellOverlay ModuleCellOverlaySlot">3</div>
+        <div id="status_mod_sub3" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub3"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub4" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub4" class="ModuleCellOverlay ModuleCellOverlaySlot">4</div>
+        <div id="status_mod_sub4" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub4"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub5" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub5" class="ModuleCellOverlay ModuleCellOverlaySlot">5</div>
+        <div id="status_mod_sub5" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub5"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub6" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub6" class="ModuleCellOverlay ModuleCellOverlaySlot">6</div>
+        <div id="status_mod_sub6" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub6"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub7" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub7" class="ModuleCellOverlay ModuleCellOverlaySlot">7</div>
+        <div id="status_mod_sub7" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub7"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub8" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub8" class="ModuleCellOverlay ModuleCellOverlaySlot">8</div>
+        <div id="status_mod_sub8" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub8"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub9" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub9" class="ModuleCellOverlay ModuleCellOverlaySlot">9</div>
+        <div id="status_mod_sub9" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub9"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+    <td class="ModuleCell">  
+      <div class="ModuleCellInfo">
+        <img id="img_mod_sub10" class="ModuleCellImage" src="var_cb/modimg/empty.png"   >
+        <div id="slot_mod_sub10" class="ModuleCellOverlay ModuleCellOverlaySlot">10</div>
+        <div id="status_mod_sub10" class="ModuleCellOverlay ModuleCellOverlayStatus">Empty</div>
+        <div id="hint_mod_sub10"   class="ModuleCellOverlay ModuleCellOverlayHint"></div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td id="ch_int">&nbsp;</td>
+    <td id="ch0"   >&nbsp;</td>
+    <td id="ch2"   >&nbsp;</td>
+    <td id="ch4"   >&nbsp;</td>
+    <td id="ch6"   >&nbsp;</td>
+    <td id="ch8"   >&nbsp;</td>
+    <td id="ch10"  >&nbsp;</td>
+    <td id="ch12"  >&nbsp;</td>
+    <td id="ch14"  >&nbsp;</td>
+    <td id="ch16"  >&nbsp;</td>
+    <td id="ch18"  >&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="bottomRowChannel" id="dev_int">&nbsp;</td>
+    <td class="bottomRowChannel" id="dev0"   >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev2"   >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev4"   >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev6"   >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev8"   >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev10"  >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev12"  >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev14"  >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev16"  >&nbsp;</td>
+    <td class="bottomRowChannel" id="dev18"  >&nbsp;</td>
+  </tr>
+</table>
+
+<!-- ***************************************************************** -->
+
+<div class="hiddenArea" style='height:40px;'>_</div>
+
+<!-- ***************************************************************** -->
+
+</form>
+
+<!-- ------------------------------------------------ -->
+
+      </div>
+
+    </div>
+
+<!-- ************[footer]******************** -->
+
+    <div id="footer">
+      <div id="copyright">
+        <hr>
+        Copyright (C)2010-2026 <a class='alink' href='http://www.anybus.com'>ANYBUS</a>. All rights reserved.
+      </div>
+    </div>
+
+<!-- **********[end contentbar]********************** -->
+
+  </div>
+
+<!-- *******************[end container]************************************* -->
+
+<script type="text/javascript">
+  InitializeJavascript();
+  InitializeMaintenanceMode();
+</script>
+
+</body>
+</html>

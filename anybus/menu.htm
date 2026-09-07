@@ -1,0 +1,1146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+  <head><script type="text/javascript" src="mock_data.js"></script><script type="text/javascript" src="item_data.js"></script><script type="text/javascript" src="menu_html.js"></script><script type="text/javascript" src="mock_shim.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=
+    UTF-8
+    ">
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="noarchive" />
+    <style type="text/css">
+      html,body {
+	margin:0;
+	padding:0;
+	background:#FFFFFF;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+  cursor:default;
+}
+
+.mainmenu {
+  left:0px;
+  margin-left:0px;
+  width:232px;
+}
+
+.mainmenu img {
+	padding-left:10px;
+	padding-top:13px;
+	padding-bottom: 10px;
+}
+
+.menu_item {
+  padding-left: 0px;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.submenu_item {
+  padding-left: 5px;
+  padding-bottom: 8px;
+}
+
+.menu_bullet{
+  color: #043d5d;
+  font-size: 14px;
+}
+
+.menu_link{
+  color: #043d5d;
+  margin-left: 3px;
+  cursor:pointer;
+  text-decoration:underline;
+}
+.menu_nolink{
+  color: #404040;
+  margin-left: 3px;
+  cursor:not-allowed;
+  text-decoration:none;
+}
+.menu_head{
+  color: #043d5d;
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.menu_collapsible:after {
+	content: url(menu-arrow-down.png);
+	padding-left: 4px;
+}
+
+.menu_expanded:after {
+	content: url(menu-arrow-up.png);
+	padding-left: 4px;
+}
+
+.menu_subitems {
+	overflow: hidden;
+	height: 0px;
+	transition: height 1s;
+}
+
+.login_div{
+  color: #043d5d;
+  margin-left: 5px; 
+  display: block;
+}
+
+.login_field{
+  clear: both;
+  margin-top:6px;
+  margin-bottom:2px;
+  display: block;
+}
+
+.login_field_hidden{
+  clear: both;
+  margin-top:6px;
+  margin-bottom:2px;
+  display: none;
+}
+
+
+/*****************************[debug info for globals]*******************************/
+
+.debug_container_hidden {
+  display: none;
+  clear: both;
+}
+.global_var{
+  background-color: #FFFFFF;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
+  width: auto;
+  float: left;
+}
+
+.global_var_descr {
+  background-color: #FFFFFF;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
+  width: 120px;
+  float: left;
+}
+
+.defaultHidden {
+  display:none;
+}
+    </style>
+    <style type="text/css">
+      .trl {
+  background-color: #FFFFFF;
+}
+
+.trl_ok {
+  background-color: #00ff00;
+}
+
+.trl_er {
+  background-color: #ff0000;
+}
+
+    </style>
+    <title>ComBricks - 메뉴</title>
+    <script type="text/javascript">
+      
+function loadXMLDocASynch(url,params,onReadyStateChangeFunction,onTimeoutFunction,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+
+  if (onReadyStateChangeFunction != undefined){
+    xmlhttp.onreadystatechange = onReadyStateChangeFunction;
+  }
+  if (onTimeoutFunction != undefined){
+  	if ('ontimeout' in xmlhttp){
+      xmlhttp.ontimeout = onTimeoutFunction;
+    }
+  }
+
+  var full_url = url;
+  if (params != null) full_url = full_url+"?"+params;
+
+  xmlhttp.open("GET",full_url,true);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send();
+  return xmlhttp;
+}
+
+//-----------
+
+function loadXMLDocSynch(url,params,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+  if (xmlhttp == null) return "400\x1D브라우저에서 HTTP 요구 생성 에러";
+
+  xmlhttp.open("POST",url,false);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send(params);
+  return xmlhttp.responseText;
+}
+
+//-----------
+
+function SaveSegmentedSettingsCombined(url,args,act,disp_result)
+{
+  var CombinedArray = [];
+
+  if (args != null){
+  	var ItemCount = args.length;
+
+  	var StdString = "save=";
+    var CurrentString = "";
+  	for(var i=0; i<ItemCount; i++){
+  	  if ((CurrentString.length + args[i].length) < 200){
+  	    if (CurrentString.length > 0) CurrentString = CurrentString + "+";
+  	    CurrentString = CurrentString + args[i];
+  	  }
+  	  else {
+  	    if (CurrentString.length > 0) {
+  	      CombinedArray.push(StdString+CurrentString);
+  	      CurrentString = args[i];
+  	    }
+  	  }
+  	}
+  	if (CurrentString.length > 0) CombinedArray.push(StdString+CurrentString);
+  }
+
+	if (act != null){
+	  if (act.length > 0) CombinedArray.push("action="+act);
+	}
+
+	return SaveSegmentedSettings(url,CombinedArray,disp_result);
+}
+
+//-----------
+
+function SaveSegmentedSettings(url,args,disp_result)
+{
+	var ItemCount = args.length;
+
+	var LastResultText = "전송설정 에러. Http 오류.";
+	var LastResultCode = 500;
+
+	for(var i=0; i<ItemCount; i++){
+	  var HttpResult = decodeURIComponent(loadXMLDocSynch(url,args[i]));
+
+	  if (HttpResult == null){
+	  	LastResultText = "네트워크의 시간초과입니다.";
+	  	LastResultCode = 500;
+	    break;
+	  }
+	  else {
+      var Result_arr = [];
+      Result_arr = HttpResult.split('\x1D');
+
+      var Result_Code = 0;
+      var Result_Text = "";
+      for(var j=0; j<Result_arr.length; j++){
+        var ItemRes_arr = [];
+        ItemRes_arr = Result_arr[j].split("\x1F");
+        if (ItemRes_arr.length == 2){
+          var CurrentCode = parseInt(ItemRes_arr[0],10);
+          if (CurrentCode > Result_Code){
+            Result_Code = CurrentCode;
+            Result_Text = ItemRes_arr[1];
+          }
+        }
+      }
+
+      if (Result_Code > 0){
+	      LastResultText = Result_Text;
+	      LastResultCode = Result_Code;
+	    }
+	    else {
+	      LastResultText = "알수없는 결과";
+	      LastResultCode = 500;
+	    }
+
+	    if (LastResultCode != 200) break;
+	  }
+	}
+
+	if (disp_result != 0) alert(LastResultText);
+  var ResultArray = {Text:LastResultText,Code:LastResultCode};
+	return ResultArray;
+}
+
+//-----------
+
+    </script>
+    <script type="text/javascript">
+      
+function GetGlobalVar(var_name, default_value)
+{
+  var cookie_result = readCookie(var_name);
+  if (cookie_result != null) default_value = cookie_result;
+  return default_value;
+}
+
+//-----------
+
+function GetGlobalInt(var_name, default_value)
+{
+  return parseInt(GetGlobalVar(var_name,default_value));
+}
+
+//-----------
+
+function SetGlobalVar(var_name, value_to_set)
+{
+  createCookie(var_name,value_to_set,0);
+}
+
+//-----------
+
+function createCookie(c_name,c_value,days)
+{
+  var expires = "";
+
+	if (days != 0) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		expires = "; expires="+date.toGMTString();
+	}
+	document.cookie = c_name+"="+c_value+expires+"; path=/; SameSite=Lax";
+}
+
+//-----------
+
+function readCookie(c_name)
+{
+	var nameEQ = c_name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+//-----------
+
+function eraseCookie(c_name)
+{
+	createCookie(c_name,"",-1);
+}
+
+//-----------
+
+    </script>
+    <script type="text/javascript">
+      
+function NavigateTo(page_to_get)
+{
+  if (parent.frames.length > 0){
+    parent.main_frame.location = page_to_get;
+  }
+  else {
+    parent.location = page_to_get;
+  }
+}
+
+//-----------
+
+function GenerateNavigateLink(page_to_get, text_to_display, class_to_style)
+{
+  return GenerateSpecialModuleLink("NavigateTo('"+page_to_get+"')", text_to_display, class_to_style);
+}
+
+//-----------
+
+function GenerateSpecialModuleLink(function_to_exec, text_to_display, class_to_style)
+{
+	if (class_to_style == undefined){
+		class_to_style = "alink";
+	}
+  var Result = "<a class='"+class_to_style+"' onClick="+function_to_exec+">"+text_to_display+"</a>";
+  return Result;
+}
+
+//-----------
+
+
+    </script>
+    <script type="text/javascript">
+      
+function SetEnabled(obj_id, set_enabled)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    obj_ref.disabled = (set_enabled == false);
+  }
+}
+
+//-----------
+
+function GetEnabled(obj_id, default_value)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    default_value = (!obj_ref.disabled);
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetRadioButtonValue(radio_group,default_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (radio_group[i].checked == true){
+      default_value = radio_group[i].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetRadioButtonValue(radio_group,to_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (to_value == radio_group[i].value){
+      radio_group[i].checked = true;
+    }
+  }
+}
+
+//-----------
+
+function GetCheckBoxValue(checkbox_id,default_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    if (CheckBox_obj.checked == true){
+      default_value = 1;
+    }
+    else {
+      default_value = 0;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetCheckBoxValue(checkbox_id,chk_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    CheckBox_obj.checked = chk_value;
+  }
+}
+
+//-----------
+
+function SetSelectBoxValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  var Result = -1;
+  if (obj != null){
+    var len = obj.length;
+    for(var i=0; i<len; i++){
+      if (obj[i].value == to_value){
+        obj.selectedIndex = i;
+        Result = 0;
+      }
+    }
+  }
+  return Result;
+}
+
+//-----------
+
+function GetSelectBoxValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxText(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].text;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxOptionArray(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj == null) return [];
+
+	var Items = [];
+  for(var i=0; i<obj.length; i++){
+  	Items.push({value: obj[i].value, selected: (obj.selectedIndex == i), text: obj[i].text });
+  }
+  return Items;
+}
+
+//-----------
+
+function GetSelectBoxIndex(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.selectedIndex;
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxTitle(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].title;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+function GetSelectBoxOptionCount(ctrl_id,default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.options.length;
+  }
+  return default_value;
+}
+
+//-----------
+function ClearSelectBoxOptions(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.options.length = 0;
+  }
+}
+
+//-----------
+
+function AddSelectBoxOption(ctrl_id, caption, val, selectd)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    var NewOption = undefined;
+    
+    if (idx >= 0){
+      NewOption = obj.options[i];
+    }
+
+    if (idx < 0){ // new item
+      NewOption = document.createElement('option');
+    }
+    
+    NewOption.text  = caption;
+    NewOption.value = val;
+    if (selectd != undefined){
+      if (selectd != false) NewOption.selected = true;
+    }
+    
+    if (idx < 0){ // new item
+      obj.options[obj.options.length] = NewOption;
+    }
+  }
+}
+
+//-----------
+
+function RemoveSelectBoxOption(ctrl_id, val)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    if (idx >= 0) obj.remove(idx);
+    return obj.options.length;
+  }
+  return -1;
+}
+
+//-----------
+
+function SetSelectBoxIndex(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.selectedIndex = to_value;
+  }
+}
+
+//-----------
+
+
+function GetTextValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.value;
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetTextValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.value = to_value;
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+  	var id_code_new = "["+to_value+"]";
+    if (obj.id_code != id_code_new){
+      obj.innerHTML = to_value;
+      obj.id_code = id_code_new;
+    }
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValueGlobal(ctrl_id, to_value)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+    	var id_code_new = "["+to_value+"]";
+      if (ResultObj.id_code != id_code_new){
+        ResultObj.innerHTML = to_value;
+        ResultObj.id_code = id_code_new;
+      }
+    }
+  }
+}
+
+//-----------
+
+function GetInnerHtmlValue(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    return obj.innerHTML;
+  }
+  return "";
+}
+
+//-----------
+
+function SetVisibility(ctrl_id, show_it, show_as)
+{
+  var WasVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    WasVisible = (Obj.style.display != "none");
+    if (show_it == true){
+      if (show_as != undefined){
+        Obj.style.display = show_as;
+      }
+      else {
+        Obj.style.display = "block";
+      }
+    }
+    else {
+      Obj.style.display = "none";
+    }
+  }
+  return WasVisible;
+}
+
+//-----------
+
+function GetVisibility(ctrl_id)
+{
+  var IsVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    IsVisible = (Obj.style.display != "none");
+  }
+  return IsVisible;
+}
+
+//-----------
+
+function SetDivColor(ctrl_id,color)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    Obj.style.backgroundColor = color;
+  }
+}
+
+//-----------
+
+function SetDivBackgroundImage(ctrl_id,filename)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.bg_imagetag != filename){
+      Obj.bg_imagetag = filename;
+      Obj.style.backgroundImage = filename;
+    }
+  }
+}
+
+//-----------
+
+function SetImageSrc(ctrl_id,fileName)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.imagetag != fileName){
+      Obj.imagetag = fileName;
+      Obj.src = fileName + "?ts="+Date().toLocaleString();
+    }
+  }
+}
+
+//-----------
+
+function SetClass(ctrl_id, class_name)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if (obj.className != class_name){
+      obj.className = class_name;
+    }
+  }
+}
+
+//-----------
+
+function SetClassGlobal(ctrl_id, class_name)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+      if (ResultObj.className != class_name){
+        ResultObj.className = class_name;
+      }
+    }
+  }
+}
+
+//-----------
+
+function SetProperty(ctrl_id, property, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  obj[property] = to_value;
+}
+
+//-----------
+
+function GetProperty(ctrl_id, property)
+{
+  var obj = document.getElementById(ctrl_id);
+  return obj[property];
+}
+
+//-----------
+
+function IndexOfArray(ArrayObj, ItemToFind)
+{
+  var Index = -1;
+  for(var i=0; i<ArrayObj.length; i++){
+    if (ArrayObj[i] == ItemToFind){
+      Index = i;
+      break;
+    }
+  }
+  return Index;
+}
+
+//-----------
+
+function RemoveSelectBoxNonExistingValues(ctrl_id,ExistingValuesArray)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    for(var i=0; i<obj.options.length; i++){
+      
+      var CurrentValue = obj.options[i].value;
+      var FoundItem = false;
+      
+      for(var j=0; j<ExistingValuesArray.length; j++){
+        if (ExistingValuesArray[j] == CurrentValue){
+          FoundItem = true;
+          break;
+        }
+      }
+      
+      if (FoundItem == false){
+        obj.remove(i);
+        i--;
+      }
+    }
+  }
+}
+
+//-----------
+
+function FixTableRows(table_id)
+{
+  var Table = document.getElementById(table_id);
+  //var rows = Table.getElementsByTagName("TR");
+  var rows = Table.rows;
+  
+  var index = 0;
+  
+  for (var j = 0; j < rows.length; j++) {
+    
+    if (rows[j].offsetHeight > 0){
+
+      var LeftCell   = sprintf("R%sLeft"  ,index%2);
+      var CenterCell = sprintf("R%sCenter",index%2);
+      var RightCell  = sprintf("R%sRight" ,index%2);
+      index++;
+      
+      var cells = rows[j].cells;
+      for (var i = 0; i < cells.length; i++) {
+  
+        var classValue = cells[i].className;
+        if ((classValue.search("R0Left") >= 0) || (classValue.search("R1Left") >= 0)){
+          classValue = classValue.replace("R0Left","");
+          classValue = classValue.replace("R1Left","");
+          classValue = classValue + " " + LeftCell;        
+        }
+        if ((classValue.search("R0Center") >= 0) || (classValue.search("R1Center") >= 0)){
+          classValue = classValue.replace("R0Center","");
+          classValue = classValue.replace("R1Center","");
+          classValue = classValue + " " + CenterCell;        
+        }
+        if ((classValue.search("R0Right") >= 0) || (classValue.search("R1Right") >= 0)){
+          classValue = classValue.replace("R0Right","");
+          classValue = classValue.replace("R1Right","");
+          classValue = classValue + " " + RightCell;        
+        }
+        cells[i].className = classValue;        
+      }
+    }
+  }  
+}
+
+//-----------
+
+    </script>
+    <script type="text/javascript">
+      
+var xmlhttpLogin = null;
+var xmlhttpVerify = null;
+
+//-----------
+
+function NavigateToDefaultPage()
+{
+	// navigate to the start page (if we were on the login page)
+  var sourceFile = window.location.pathname;
+  if ((sourceFile.indexOf("403.htm") >= 0) || (sourceFile.length <= 1)){
+    sourceFile = "mon_chan.htm";
+  }
+  NavigateTo(sourceFile);	
+}
+
+//-----------
+
+function SetLoginControls(loginUser)
+{
+	var loginText = "로그인 모드: <b>"+loginUser+"</b>";
+  
+  // local page update
+  SetInnerHtmlValue('login_area_text',loginText);
+  SetClass('login_button_field',"login_field_hidden");
+
+  // menu page update
+  SetInnerHtmlValueGlobal('logged_in_user',loginText);
+
+  SetClassGlobal('logout_button_field',"login_field");
+  SetClassGlobal('login_button_field',"login_field_hidden");
+}
+
+//-----------
+
+function SetLogoutControls()
+{
+  // menu page update
+  SetInnerHtmlValueGlobal('logged_in_user',"로그인되지 않음");
+
+  SetClassGlobal('logout_button_field',"login_field_hidden");
+  SetClassGlobal('login_button_field',"login_field");
+}
+
+//-----------
+
+function onTimeoutLogin()
+{
+  xmlhttpLogin.onreadystatechange = function() {}
+  xmlhttpLogin.abort();
+}
+
+//-----------
+
+function onStateChangeLogin()
+{
+  if (xmlhttpLogin == null) return;
+  if (xmlhttpLogin.readyState != 4) return;
+  if (xmlhttpLogin.status != 200) return;
+  
+  var response = decodeURIComponent(xmlhttpLogin.responseText);
+
+	// parse the response into variables
+	var responseParts = response.split("\x1E");
+	var responseObject = responseParts[0].split("\x1F");
+	var responseValue = parseInt(responseObject[0], 10);
+	var responseText = responseObject[1];
+
+	// clear the pasword field, so it has to be re-entered when loggin in again.
+  SetTextValue('login_pass',""); 
+	
+	// if not logged in ok, return with error message
+	if (responseValue != 200){
+		// login failed
+		alert(responseText);
+	}
+	else {
+		// parse login result
+		var loginObject = responseParts[1].split("\x1F");
+		var loginUser = loginObject[0];
+		var loginToken = loginObject[1];
+	
+	  // if login ok; set login state in UI
+	  SetLoginControls(loginUser);
+	  SetGlobalVar('token',loginToken);
+	  SetGlobalVar('user',loginUser);
+	
+	  NavigateToDefaultPage();
+	}
+
+  onTimeoutLogin();
+}
+
+//-----------
+
+function LoginUser(userName, userPassword, publicSalt)
+{
+	var hashedPassword = HashPassword(userPassword, publicSalt);
+	xmlhttpLogin = loadXMLDocASynch("data_srv.cgi","action=Login:"+userName+":"+hashedPassword, onStateChangeLogin, onTimeoutLogin);
+}
+
+//-----------
+
+function onTimeoutVerify()
+{
+  xmlhttpVerify.onreadystatechange = function() {}
+  xmlhttpVerify.abort();
+}
+
+//-----------
+
+function onStateChangeVerify()
+{
+  if (xmlhttpVerify == null) return;
+  if (xmlhttpVerify.readyState != 4) return;
+  if (xmlhttpVerify.status != 200) return;
+  
+  var response = decodeURIComponent(xmlhttpVerify.responseText).split("\x1D");
+
+	var validityItems = response[0].split("\x1F");
+	var tokenValidity = parseInt(validityItems[0],10);
+	var tokenUser     = validityItems[1];
+	var navigateToDefault = (response[1] === "true");
+	
+	if (tokenValidity >= 0){
+		// token is valid
+		SetLoginControls(tokenUser);
+		SetGlobalVar('user',tokenUser);
+		if (navigateToDefault){
+			NavigateToDefaultPage();
+		}
+	}
+	else {
+		// token is invalid
+		SetGlobalVar('token',"");
+	  SetGlobalVar('user',"");
+		SetLogoutControls();
+	}
+
+  onTimeoutVerify();
+}
+
+//-----------
+
+function VerifyLoginToken(navigateToDefault)
+{
+  var token = GetGlobalVar('token',"");
+  if (token.length == 0) return;
+	xmlhttpVerify = loadXMLDocASynch("data_srv.cgi","action=checkTokenValid:"+token+"&return="+navigateToDefault, onStateChangeVerify, onTimeoutVerify);		
+}
+
+//-----------
+
+    </script>
+    <script type="text/javascript" src="menu.js"></script>
+  </head>
+
+  <body>
+    <!-- **********************[menu]********************************** -->
+
+    <div class="mainmenu" id="mainmenu">
+      <img src="anybus.png" alt="ANYBUS">
+      <div id="menu_content">
+        <div class="menu_item" id="home-area"><a class="menu_head menu_link" onClick=NavigateTo("mon_chan.htm")><strong>Home</strong></a></div>
+<div class="menu_item" id="overview-area"><a class="menu_head menu_collapsible" id="link-overview-area" onClick="ToggleMenuGroup('overview-area');"><strong>Overview</strong></a></div><div class="menu_subitems" id="subitems-overview-area">
+<div class="submenu_item"  id="overview-area-livelist"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_live.htm")><strong>실시간상태**</strong></a></div>
+<div class="submenu_item"  id="overview-area-statistic"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_stat.htm")><strong>이벤트발생 통계**</strong></a></div>
+<div class="submenu_item"  id="overview-area-main-status"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_main.htm")><strong>ComBricks status</strong></a></div>
+</div><div class="menu_item" id="msg-logs-area"><a class="menu_head menu_collapsible" id="link-msg-logs-area" onClick="ToggleMenuGroup('msg-logs-area');"><strong>Messages &amp; Logs</strong></a></div><div class="menu_subitems" id="subitems-msg-logs-area">
+<div class="submenu_item"  id="msg-logs-area-message-rec"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_msg.htm")><strong>메시지 기록내용**</strong></a></div>
+<div class="submenu_item"  id="msg-logs-area-log-network"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_log.htm")><strong>네트워크 이벤트 기록**</strong></a></div>
+<div class="submenu_item"  id="msg-logs-area-log-system"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_logs.htm")><strong>시스템 기록</strong></a></div>
+</div><div class="menu_item" id="electric-area"><a class="menu_head menu_collapsible" id="link-electric-area" onClick="ToggleMenuGroup('electric-area');"><strong>Electrical signals</strong></a></div><div class="menu_subitems" id="subitems-electric-area">
+<div class="submenu_item"  id="electric-area-scope-images"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_scope_list_all.htm")><strong>오실로스코프 파형**</strong></a></div>
+<div class="submenu_item"  id="electric-area-scope-bargraph"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("mon_bargraph.htm")><strong>바그래프</strong></a></div>
+</div><div class="menu_item" id="config-area"><a class="menu_head menu_collapsible" id="link-config-area" onClick="ToggleMenuGroup('config-area');"><strong>Configuration</strong></a></div><div class="menu_subitems" id="subitems-config-area">
+<div class="submenu_item"  id="config-area-config-notify"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_not.htm")><strong>Alarms</strong></a></div>
+<div class="submenu_item"  id="config-area-config-device"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_set.htm")><strong>장치 관리</strong></a></div>
+<div class="submenu_item"  id="config-area-config-email"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_ema.htm")><strong>E-mail account</strong></a></div>
+<div class="submenu_item"  id="config-area-config-general"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_gen.htm")><strong>General</strong></a></div>
+<div class="submenu_item"  id="config-area-config-license"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_lic.htm")><strong>Licenses</strong></a></div>
+<div class="submenu_item"  id="config-area-config-clusters"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_cls.htm")><strong>Networks</strong></a></div>
+<div class="submenu_item"  id="config-area-config-scope"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_scope.htm")><strong>Oscilloscope</strong></a></div>
+<div class="submenu_item"  id="config-area-config-password"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_pwd.htm")><strong>Password &amp; users</strong></a></div>
+<div class="submenu_item"  id="config-area-config-snmp"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_snmp.htm")><strong>SNMP</strong></a></div>
+<div class="submenu_item"  id="config-area-config-tag"><a class="menu_bullet">&bull;</a><a class="menu_link" onClick=NavigateTo("cfg_tag.htm")><strong>Tag names</strong></a></div>
+</div><div class="menu_item" id="download-area"><a class="menu_head menu_link" target="_blank" href="https://www.anybus.com/products/diagnostics/permanent-monitoring-fieldbus"><strong>다운로드</strong></a></div>
+
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="login_div">
+      <div class="login_field" id="logged_in_user">
+        <tt class="trl">Not logged in.</tt>
+      </div>
+      <div class="login_field_hidden" id="logout_button_field">
+        <input
+          type="button"
+          id="logout_button"
+          value="로그아웃"
+          onclick="LogoutClick()"
+        />
+      </div>
+      <div class="login_field" id="login_button_field">
+        <input
+          type="button"
+          id="login_button"
+          value="로그인"
+          onclick="NavigateTo('403.htm')"
+        />
+      </div>
+    </div>
+
+    <!--  some space to conserve global variables  -->
+    <div id="debug_div" class="debug_container_hidden">
+      <div class="global_var" id="debug_log" style="width: 190px">
+        debug log:
+      </div>
+    </div>
+
+    <!--  end  -->
+
+    <script type="text/javascript">
+      InitializeJavascript();
+    </script>
+  </body>
+</html>

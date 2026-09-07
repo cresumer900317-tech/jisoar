@@ -1,0 +1,589 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head><script type="text/javascript" src="mock_data.js"></script><script type="text/javascript" src="item_data.js"></script><script type="text/javascript" src="mock_shim.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="robots" content="noarchive" />
+  <style type="text/css"> /*******************************[general]*************************************************/
+
+html,body {
+	margin:0;
+	padding:0;
+	height:100%;
+	
+	background:#FFFFFF;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+/*******************************[container]*************************************************/
+
+div#container {
+	min-height:100%;
+	position:relative;
+}
+
+#content {
+	padding:10px;
+	padding-bottom:36px;	/* Height of the footer */
+	padding-left:10px;
+	width:770px;
+	background-color:#FFFFFF;
+}
+
+#footer {
+	position:absolute;
+  bottom:0;
+	width:790px;
+	height:36px;			/* Height of the footer */
+	background-color:#FFFFFF;
+}
+
+/********************************[content]************************************************/
+
+.TitleBar {
+  padding-top:0px;
+  padding-bottom:10px;
+  clear: both;
+  width: 766px;
+	height: 30px;
+}
+
+.TitleText {
+  clear: left;
+  width: 640px;
+  float: left;
+  text-align: left;
+  font-weight: bold; 
+  font-size: 22px;
+  padding-top: 10px;
+}
+
+.TitleRefresh {
+  clear: right;
+  float: right;
+  text-align: right;
+}
+
+/* --------------------------------- */
+
+.VariableContainer {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 0px;
+  width: 770px;
+  height: auto;
+  text-align:left;
+  clear: both;
+}
+
+.VariableWx{
+  margin-top: 0px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 4px;
+  float: left;
+  border-width: 1px;
+  border-color: #043d5d;
+  border-style: solid;
+	background-color:#FFFFFF;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 2px;  
+}
+
+/* --------------------------------- */
+
+.header-container {
+	width: 100%;
+	min-width: 1100px;
+	height: 75px;
+	background-color: #043d5d;
+	color: #FFFFFF;
+	overflow: hidden;
+}
+
+.header-column {
+	padding: 10px 20px;
+	display: inline-block;
+}
+
+.header-item {
+	padding: 2px 0px;
+}
+
+.header-image {
+	float: left;
+	padding: 5px 0px;
+}
+
+.header-link {
+	color: #FFFFFF;
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+/* --------------------------------- */
+
+.WarningContainer {
+  display:none;
+  width: 770px;
+  height: auto;
+  padding-top: 12px;
+  padding-bottom: 3px;
+  /*background-color:#FFFF00;*/
+}
+
+.WarningIconArea {
+  float: left;
+  width: 40px;
+  /*background-color:#FF00FF;*/
+  clear: left;
+  padding-bottom: 3px;
+}
+
+.WarningItemArea {
+  float: left;
+  color: #FF0000;
+  width: 710px;
+  padding-top: 3px;
+  /*background-color:#00FFFF;*/
+  clear: right;
+}
+
+/* --------------------------------- */
+
+.NotesArea {
+  margin-top: 0px;
+  margin-bottom: 32px;
+  clear:both;
+}
+
+div#copyright {
+  text-align:center;
+  font-size:11px;
+	width:790px;
+}
+
+.ImgIcon {
+	border-width:0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:-6px;
+	margin-bottom:-4px;
+	padding:0;
+	vertical-align:middle;
+}
+
+.ErrorText {
+	color: #FF0000;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+.hiddenArea {
+	color:#FFFFFF;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  clear:both;
+}
+
+/* --------------------------------- */
+
+.alink {
+  color: #043d5d;
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+.PointerCursor {
+  cursor:pointer;
+}
+
+.defaultHidden {
+  display:none;
+}
+
+.centeredImg {
+  margin: 0 auto;
+}
+
+input[type=checkbox] {
+	accent-color: #043d5d;
+} </style>
+  <style type="text/css"> .trl {
+  background-color: #FFFFFF;
+}
+
+.trl_ok {
+  background-color: #00ff00;
+}
+
+.trl_er {
+  background-color: #ff0000;
+}
+ </style>
+  <title>ComBricks - 언어 정보</title>
+  <!-- content_specific_includes -->
+  <style type="text/css"> .ConfigTable {
+  width:768px;
+
+  margin-top: 4px;
+  margin-bottom: 20px;
+  
+  border-left-color: #043d5d;
+	border-left-style: solid;
+	border-left-width: 1px;
+  
+  border-top-color: #043d5d;
+	border-top-style: solid;
+	border-top-width: 1px;
+
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 0px;
+	
+	rules:cols;
+  clear:both;
+  
+  /*table-layout:fixed;
+  word-wrap:break-word;*/
+}
+
+.TableCell{
+  padding-top:6px;
+  padding-bottom:6px;
+  padding-left:4px;
+  padding-right:4px;
+}
+
+.CompactTableCell{
+  padding-top:1px;
+  padding-bottom:1px;
+}
+
+.TableCell table {
+  margin-left:auto; 
+  margin-right:auto;
+  border-collapse: collapse;
+}
+
+.TableCell table tr td{
+  height:32px;
+  width:100%;
+}
+
+.R1Center table, .R0Center table {
+  text-align: center;
+}
+
+.R1Left table, .R0Left table {
+  text-align: left;
+  width: 100%;
+}
+
+.R1Right table, .R0Right table {
+  text-align: right;
+  width: 100%;
+}
+
+.R0Left {
+  background-color: #f9f9f9;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Left {
+  background-color: #FFFFFF;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Center {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Center {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Right {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Right {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.header-cell {
+  background-color: #043d5d;
+  color: #FFFFFF;
+
+  border-right-color: #eceef1;
+	border-right-style: solid;
+	border-right-width: 1px;
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+
+.header-left { // HeaderLeft
+  text-align:left;
+}
+
+.header-center { // HeaderCenter
+  text-align:center;
+}
+
+.header-right { // HeaderRight
+  text-align:right;
+}
+
+.header-last {
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+}
+
+.SingleLineRow {
+	margin-top: 0px;
+	padding-top: 0px;
+
+	border-top-width: 0px;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+
+	border-bottom-width: 0px;
+}
+
+.MultiLineRow {
+	margin-top: 4px;
+	padding-top: 4px;
+
+	border-top-width: 1px;
+	border-top-color: #fcfcfc;
+	border-top-style: solid;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	
+	border-bottom-width: 0px;
+}
+
+/* ---------------------------------------- */
+
+.LeftItem {
+	height: 30px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  float: left;
+  padding-right: 10px;
+}
+
+.LeftItem div {
+	padding-top: 4px;
+}
+
+/* ---------------------------------------- */
+
+.TextBlock {
+  table-layout:fixed;
+  word-wrap:break-word;
+  width:754px;  
+}
+
+/* ---------------------------------------- */
+
+div.list ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 16px;
+}
+
+div.list ul li {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+
+/* ----------------------------------------------------------------------- */
+
+.DivKey {
+  float: left;
+  clear:left;
+  width: 220px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  margin-right: 10px;
+}
+
+.DivValue {
+  float: left;
+  clear:right;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.DivValue div {
+  float: left;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.NotImportantText {
+  color: #808080;
+}
+
+.RowOfMultipleTables {
+/*  background-color: #FF0000;*/
+  float:left;
+  clear:both;
+  width:768px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.CfgTableIntDiv {
+  text-align: center;
+}
+
+.CfgTableIntDiv table{
+  /*background-color: #FF0000;*/
+  text-align: left;
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.TableCell ul li {
+	padding-bottom: 8px;
+}
+
+.ActionButtonLeft{
+	float:left; 
+	margin-right: 10px; 
+	margin-bottom: 10px;
+}
+
+.ActionButtonRight{
+	float:right; 
+	margin-left: 10px; 
+	margin-bottom: 10px;
+} </style>
+</head>
+
+<body>
+ 
+<!-- *******************[container]************************************* -->
+
+  <div id="container">
+
+<!-- **************[contentbar]****************** -->
+
+    <div id="content">
+
+
+      <div class="TitleBar">
+        <div class="TitleText">언어 정보</div>
+      </div>
+
+      <div id="content_area">
+
+<h2>기본 언어</h2>
+Base languages (English and German) are stored on internal memory inside the ComBricks Head Station and are present on every firmware.
+이들 언어는 헤드스테이션의 펌웨어가 갱신될때 자동으로 갱신됩니다.
+
+<h2>추가 언어</h2>
+Additional languages can be stored on the SD-Card of the ComBricks Head Station.
+언어파일이 SD-카드의 'trans' 디렉토리에 들어있어야 합니다.
+이것은 관리자가 FTP 또는 카드리더에 의해서 수동으로 실행해야 합니다.
+펌웨어를 업데이트한 경우, 언어는 수동으로 선택해야 합니다. 그렇지 않으면 일부 단어는 선택된 언어로 표시되지 않을 수 있습니다.
+
+      </div>
+
+    </div>
+
+<!-- ************[footer]******************** -->
+
+    <div id="footer">
+      <div id="copyright">
+        <hr>
+        Copyright (C)2010-2026 <a class='alink' href='http://www.anybus.com'>ANYBUS</a>. All rights reserved.
+      </div>
+    </div>
+
+<!-- **********[end contentbar]********************** -->
+
+  </div>
+
+<!-- *******************[end container]************************************* -->
+
+</body>
+</html>

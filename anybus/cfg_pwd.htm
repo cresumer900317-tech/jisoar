@@ -1,0 +1,2695 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head><script type="text/javascript" src="mock_data.js"></script><script type="text/javascript" src="item_data.js"></script><script type="text/javascript" src="mock_shim.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="robots" content="noarchive" />
+  <style type="text/css"> /*******************************[general]*************************************************/
+
+html,body {
+	margin:0;
+	padding:0;
+	height:100%;
+	
+	background:#FFFFFF;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+/*******************************[container]*************************************************/
+
+div#container {
+	min-height:100%;
+	position:relative;
+}
+
+#content {
+	padding:10px;
+	padding-bottom:36px;	/* Height of the footer */
+	padding-left:10px;
+	width:770px;
+	background-color:#FFFFFF;
+}
+
+#footer {
+	position:absolute;
+  bottom:0;
+	width:790px;
+	height:36px;			/* Height of the footer */
+	background-color:#FFFFFF;
+}
+
+/********************************[content]************************************************/
+
+.TitleBar {
+  padding-top:0px;
+  padding-bottom:10px;
+  clear: both;
+  width: 766px;
+	height: 30px;
+}
+
+.TitleText {
+  clear: left;
+  width: 640px;
+  float: left;
+  text-align: left;
+  font-weight: bold; 
+  font-size: 22px;
+  padding-top: 10px;
+}
+
+.TitleRefresh {
+  clear: right;
+  float: right;
+  text-align: right;
+}
+
+/* --------------------------------- */
+
+.VariableContainer {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 0px;
+  width: 770px;
+  height: auto;
+  text-align:left;
+  clear: both;
+}
+
+.VariableWx{
+  margin-top: 0px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  margin-right: 4px;
+  float: left;
+  border-width: 1px;
+  border-color: #043d5d;
+  border-style: solid;
+	background-color:#FFFFFF;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 2px;  
+}
+
+/* --------------------------------- */
+
+.header-container {
+	width: 100%;
+	min-width: 1100px;
+	height: 75px;
+	background-color: #043d5d;
+	color: #FFFFFF;
+	overflow: hidden;
+}
+
+.header-column {
+	padding: 10px 20px;
+	display: inline-block;
+}
+
+.header-item {
+	padding: 2px 0px;
+}
+
+.header-image {
+	float: left;
+	padding: 5px 0px;
+}
+
+.header-link {
+	color: #FFFFFF;
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+/* --------------------------------- */
+
+.WarningContainer {
+  display:none;
+  width: 770px;
+  height: auto;
+  padding-top: 12px;
+  padding-bottom: 3px;
+  /*background-color:#FFFF00;*/
+}
+
+.WarningIconArea {
+  float: left;
+  width: 40px;
+  /*background-color:#FF00FF;*/
+  clear: left;
+  padding-bottom: 3px;
+}
+
+.WarningItemArea {
+  float: left;
+  color: #FF0000;
+  width: 710px;
+  padding-top: 3px;
+  /*background-color:#00FFFF;*/
+  clear: right;
+}
+
+/* --------------------------------- */
+
+.NotesArea {
+  margin-top: 0px;
+  margin-bottom: 32px;
+  clear:both;
+}
+
+div#copyright {
+  text-align:center;
+  font-size:11px;
+	width:790px;
+}
+
+.ImgIcon {
+	border-width:0px;
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:-6px;
+	margin-bottom:-4px;
+	padding:0;
+	vertical-align:middle;
+}
+
+.ErrorText {
+	color: #FF0000;
+  font-family: verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+.hiddenArea {
+	color:#FFFFFF;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  clear:both;
+}
+
+/* --------------------------------- */
+
+.alink {
+  color: #043d5d;
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+.PointerCursor {
+  cursor:pointer;
+}
+
+.defaultHidden {
+  display:none;
+}
+
+.centeredImg {
+  margin: 0 auto;
+}
+
+input[type=checkbox] {
+	accent-color: #043d5d;
+} </style>
+  <style type="text/css"> .trl {
+  background-color: #FFFFFF;
+}
+
+.trl_ok {
+  background-color: #00ff00;
+}
+
+.trl_er {
+  background-color: #ff0000;
+}
+ </style>
+  <style type="text/css"> /* The Modal box's background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1001; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+
+.modal-content {
+  background-color: #ffffff;
+  margin: 15% auto;
+  padding: 0px;
+  border: 1px solid #000;
+  width: 720px;
+}
+
+.modal-content .modal-header {
+  padding: 1px 12px;
+  background-color: #043d5d;
+  color: #FFFFFF;
+}
+
+.modal-content .modal-body {
+	padding: 10px 12px;
+	display: block;
+}
+
+.modal-content .modal-body input {
+	vertical-align: bottom;
+	position: relative;
+	top: 2px;
+}
+
+.modal-content .modal-body > div {
+	margin: 6px 0px;
+}
+
+.modal-content .modal-footer {
+  padding: 10px 12px;
+  height: 25px;
+}
+
+.modal-content .modal-footer input {
+	float: right;
+}
+
+.modal-content .modal-header .close {
+  color: #444;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  padding-top: 4px;
+}
+
+.modal-content .modal-header .close:hover,
+.modal-content .modal-header .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+ </style>
+	<style type="text/css"> 
+.maintenance-content {
+  background-color: #FFC0C0;
+  margin-top: 100px;
+  margin-bottom: 10px;
+  padding: 0px;
+  border: 6px double #FF0000;
+  width: 756px;
+}
+
+.maintenance-content .maintenance-header {
+  padding: 1px 12px;
+  background-color: #FF8080;
+}
+
+.maintenance-content .maintenance-body {
+	padding: 4px;
+	display: block;
+}
+
+.maintenance-content .maintenance-body ul {
+	padding: 0px;
+}
+
+.maintenance-content .maintenance-body ul > li {
+	padding: 0px;
+	margin-left: 20px;
+}
+
+.maintenance-content .maintenance-header .close {
+  float: right;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.maintenance-content .maintenance-header .close:hover,
+.maintenance-content .maintenance-header .close:focus {
+  text-decoration: none;
+  cursor: pointer;
+} 
+ </style>
+  <title>ComBricks - Password &amp; user configuration</title>
+  <!-- content_specific_includes -->
+  <style type="text/css"> .ConfigTable {
+  width:768px;
+
+  margin-top: 4px;
+  margin-bottom: 20px;
+  
+  border-left-color: #043d5d;
+	border-left-style: solid;
+	border-left-width: 1px;
+  
+  border-top-color: #043d5d;
+	border-top-style: solid;
+	border-top-width: 1px;
+
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 0px;
+	
+	rules:cols;
+  clear:both;
+  
+  /*table-layout:fixed;
+  word-wrap:break-word;*/
+}
+
+.TableCell{
+  padding-top:6px;
+  padding-bottom:6px;
+  padding-left:4px;
+  padding-right:4px;
+}
+
+.CompactTableCell{
+  padding-top:1px;
+  padding-bottom:1px;
+}
+
+.TableCell table {
+  margin-left:auto; 
+  margin-right:auto;
+  border-collapse: collapse;
+}
+
+.TableCell table tr td{
+  height:32px;
+  width:100%;
+}
+
+.R1Center table, .R0Center table {
+  text-align: center;
+}
+
+.R1Left table, .R0Left table {
+  text-align: left;
+  width: 100%;
+}
+
+.R1Right table, .R0Right table {
+  text-align: right;
+  width: 100%;
+}
+
+.R0Left {
+  background-color: #f9f9f9;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Left {
+  background-color: #FFFFFF;
+  text-align:left;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Center {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Center {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R0Right {
+  background-color: #f9f9f9;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.R1Right {
+  background-color: #FFFFFF;
+  text-align:center;
+
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+
+  border-top-color: #fcfcfc;
+	border-top-style: solid;
+	border-top-width: 1px;
+}
+
+.header-cell {
+  background-color: #043d5d;
+  color: #FFFFFF;
+
+  border-right-color: #eceef1;
+	border-right-style: solid;
+	border-right-width: 1px;
+  border-bottom-color: #043d5d;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+
+.header-left { // HeaderLeft
+  text-align:left;
+}
+
+.header-center { // HeaderCenter
+  text-align:center;
+}
+
+.header-right { // HeaderRight
+  text-align:right;
+}
+
+.header-last {
+  border-right-color: #043d5d;
+	border-right-style: solid;
+	border-right-width: 1px;
+}
+
+.SingleLineRow {
+	margin-top: 0px;
+	padding-top: 0px;
+
+	border-top-width: 0px;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+
+	border-bottom-width: 0px;
+}
+
+.MultiLineRow {
+	margin-top: 4px;
+	padding-top: 4px;
+
+	border-top-width: 1px;
+	border-top-color: #fcfcfc;
+	border-top-style: solid;
+
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	
+	border-bottom-width: 0px;
+}
+
+/* ---------------------------------------- */
+
+.LeftItem {
+	height: 30px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  float: left;
+  padding-right: 10px;
+}
+
+.LeftItem div {
+	padding-top: 4px;
+}
+
+/* ---------------------------------------- */
+
+.TextBlock {
+  table-layout:fixed;
+  word-wrap:break-word;
+  width:754px;  
+}
+
+/* ---------------------------------------- */
+
+div.list ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 16px;
+}
+
+div.list ul li {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+
+/* ----------------------------------------------------------------------- */
+
+.DivKey {
+  float: left;
+  clear:left;
+  width: 220px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  margin-right: 10px;
+}
+
+.DivValue {
+  float: left;
+  clear:right;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.DivValue div {
+  float: left;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.NotImportantText {
+  color: #808080;
+}
+
+.RowOfMultipleTables {
+/*  background-color: #FF0000;*/
+  float:left;
+  clear:both;
+  width:768px;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.CfgTableIntDiv {
+  text-align: center;
+}
+
+.CfgTableIntDiv table{
+  /*background-color: #FF0000;*/
+  text-align: left;
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+/* ----------------------------------------------------------------------- */
+
+.TableCell ul li {
+	padding-bottom: 8px;
+}
+
+.ActionButtonLeft{
+	float:left; 
+	margin-right: 10px; 
+	margin-bottom: 10px;
+}
+
+.ActionButtonRight{
+	float:right; 
+	margin-left: 10px; 
+	margin-bottom: 10px;
+} </style>
+  <script type="text/javascript"> 
+function loadXMLDocASynch(url,params,onReadyStateChangeFunction,onTimeoutFunction,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+
+  if (onReadyStateChangeFunction != undefined){
+    xmlhttp.onreadystatechange = onReadyStateChangeFunction;
+  }
+  if (onTimeoutFunction != undefined){
+  	if ('ontimeout' in xmlhttp){
+      xmlhttp.ontimeout = onTimeoutFunction;
+    }
+  }
+
+  var full_url = url;
+  if (params != null) full_url = full_url+"?"+params;
+
+  xmlhttp.open("GET",full_url,true);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send();
+  return xmlhttp;
+}
+
+//-----------
+
+function loadXMLDocSynch(url,params,TimeoutMs)
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest) {         // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); // for IE5 & 6
+  }
+  if (xmlhttp == null) return "400\x1D브라우저에서 HTTP 요구 생성 에러";
+
+  xmlhttp.open("POST",url,false);
+
+  if ('timeout' in xmlhttp){
+    try {
+    	var TimeoutValue = parseInt(TimeoutMs);
+    	if (isNaN(TimeoutValue)){
+  	  	xmlhttp.timeout = 10000;
+  	  }
+  	  else {
+  	  	xmlhttp.timeout = TimeoutMs;
+  	  }
+  	}
+  	catch(err){
+  	  //
+  	}
+  }
+
+  xmlhttp.send(params);
+  return xmlhttp.responseText;
+}
+
+//-----------
+
+function SaveSegmentedSettingsCombined(url,args,act,disp_result)
+{
+  var CombinedArray = [];
+
+  if (args != null){
+  	var ItemCount = args.length;
+
+  	var StdString = "save=";
+    var CurrentString = "";
+  	for(var i=0; i<ItemCount; i++){
+  	  if ((CurrentString.length + args[i].length) < 200){
+  	    if (CurrentString.length > 0) CurrentString = CurrentString + "+";
+  	    CurrentString = CurrentString + args[i];
+  	  }
+  	  else {
+  	    if (CurrentString.length > 0) {
+  	      CombinedArray.push(StdString+CurrentString);
+  	      CurrentString = args[i];
+  	    }
+  	  }
+  	}
+  	if (CurrentString.length > 0) CombinedArray.push(StdString+CurrentString);
+  }
+
+	if (act != null){
+	  if (act.length > 0) CombinedArray.push("action="+act);
+	}
+
+	return SaveSegmentedSettings(url,CombinedArray,disp_result);
+}
+
+//-----------
+
+function SaveSegmentedSettings(url,args,disp_result)
+{
+	var ItemCount = args.length;
+
+	var LastResultText = "전송설정 에러. Http 오류.";
+	var LastResultCode = 500;
+
+	for(var i=0; i<ItemCount; i++){
+	  var HttpResult = decodeURIComponent(loadXMLDocSynch(url,args[i]));
+
+	  if (HttpResult == null){
+	  	LastResultText = "네트워크의 시간초과입니다.";
+	  	LastResultCode = 500;
+	    break;
+	  }
+	  else {
+      var Result_arr = [];
+      Result_arr = HttpResult.split('\x1D');
+
+      var Result_Code = 0;
+      var Result_Text = "";
+      for(var j=0; j<Result_arr.length; j++){
+        var ItemRes_arr = [];
+        ItemRes_arr = Result_arr[j].split("\x1F");
+        if (ItemRes_arr.length == 2){
+          var CurrentCode = parseInt(ItemRes_arr[0],10);
+          if (CurrentCode > Result_Code){
+            Result_Code = CurrentCode;
+            Result_Text = ItemRes_arr[1];
+          }
+        }
+      }
+
+      if (Result_Code > 0){
+	      LastResultText = Result_Text;
+	      LastResultCode = Result_Code;
+	    }
+	    else {
+	      LastResultText = "알수없는 결과";
+	      LastResultCode = 500;
+	    }
+
+	    if (LastResultCode != 200) break;
+	  }
+	}
+
+	if (disp_result != 0) alert(LastResultText);
+  var ResultArray = {Text:LastResultText,Code:LastResultCode};
+	return ResultArray;
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> 
+function TextLengthInBytes(value)
+{
+  var Size = 0;
+  for(var i=0; i<value.length; i++){
+    var CurrentCharValue = value.charCodeAt(i);
+    
+    if (CurrentCharValue <= 0x7F){
+      Size += 1;
+    }
+    else if (CurrentCharValue <= 0x7FF){
+      Size += 2;
+    }
+    else if (CurrentCharValue <= 0xFFFF){
+      Size += 3;
+    }
+    else if (CurrentCharValue <= 0x1FFFFF){
+      Size += 4;
+    }
+    else if (CurrentCharValue <= 0x3FFFFFF){
+      Size += 5;
+    }
+    else if (CurrentCharValue <= 0x7FFFFFFF){
+      Size += 6;
+    }    
+  }
+  return Size;
+}
+
+//-----------
+
+function TextToSize(DecValue, Digits, Digit)
+{
+	if (DecValue == "") return "";
+
+	while(DecValue.length < Digits){
+		DecValue = Digit + DecValue;
+	}
+	return DecValue.toUpperCase();
+}
+
+//-----------
+
+function TextToHex(DecValue, Digits, Digit)
+{
+	if (DecValue == "") return "";
+
+	DecValue = parseInt(DecValue,10);
+	DecValue = DecValue.toString(16);
+
+	while(Result.length < Digits){
+		Result = Digit + Result;
+	}
+	return Result.toUpperCase();
+}
+
+//-----------
+
+function CheckNumber(input_value, minimum_value, maximum_value)
+{
+  // check if it is a number
+  var input_value_int = parseInt(input_value);
+  if (input_value_int != input_value) return 1;
+  if (input_value_int.toString() != input_value) return 2;
+  if (input_value.length == 0) return 3;
+
+  // it is a number, check range
+  if (minimum_value != undefined){
+    if (input_value_int < minimum_value) return 4;
+  }
+  if (maximum_value != undefined){
+    if (input_value_int > maximum_value) return 5;
+  }
+
+  // succesful
+  return 0;
+}
+
+
+//-----------
+
+function CheckHex(input_value, minimum_value, maximum_value)
+{
+  // check if it is a number
+  var input_value_int = parseInt(input_value,16);
+  if (input_value_int.toString(16) != input_value) return 2;
+  if (input_value.length == 0) return 3;
+
+  // it is a number, check range
+  if (minimum_value != undefined){
+    if (input_value_int < minimum_value) return 4;
+  }
+  if (maximum_value != undefined){
+    if (input_value_int > maximum_value) return 5;
+  }
+
+  // succesful
+  return 0;
+}
+
+
+//-----------
+
+function CheckString(input_value, maxlength, regex_expression)
+{
+  // check the max length of the string
+  if (TextLengthInBytes(input_value) > maxlength) return 1;
+
+  // check the illegal characters if it is supplied
+  if (regex_expression != undefined){
+    var regex_result = [];
+    regex_result = input_value.match(regex_expression);
+    if (regex_result == null) return -1;
+  }
+
+  return 0;
+}
+
+//-----------
+
+function CheckIpAddress(input_value,allow_limits)
+{
+  var ipPattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+  var ipArray = [];
+  ipArray = input_value.match(ipPattern);
+  if (ipArray == null) return 1;
+  if (ipArray.length != 5) return 2;
+
+  var CountAmount = 0;
+  for (var i = 0; i < 4; i++) {
+    var thisSegment = ipArray[i+1];
+    if (thisSegment > 255) return (5 + i);
+    CountAmount += thisSegment;
+  }
+
+  if (allow_limits != true){
+    if (CountAmount == 0) return 3;
+    if (CountAmount == (4*255)) return 4;
+  }
+
+  return 0;
+}
+
+//-----------
+
+function SplitArray(ArrayToSplit,Characters)
+{
+  if (Characters.length == 0) return ArrayToSplit;
+  
+  var Result = [];
+  var CurrentChar = Characters.charAt(0);
+  Characters = Characters.substr(1);
+  
+  for(var i=0; i<ArrayToSplit.length; i++){
+    var Splitted = ArrayToSplit[i].split(CurrentChar);
+    Result = Result.concat(Splitted);
+  }
+  
+  return SplitArray(Result,Characters);
+}
+
+//-----------
+
+function SplitEmailAddresses(textToSplit,PossibleChars)
+{
+  return SplitArray(Array(textToSplit),PossibleChars);
+}
+
+//-----------
+
+function CheckEmailAddresses(input_value)
+{
+  // can be combined by a ';' or ',' and some whitespaces
+
+  var EmailAddress = [];
+  EmailAddress = SplitEmailAddresses(input_value,";,");
+  
+  if (EmailAddress.length == 0) return 0;  // 'nothing' is valid
+
+  for(var i=0; i<EmailAddress.length; i++){
+    var result = CheckEmailAddress(trim(EmailAddress[i]));
+    if (result != 0) return result;
+  }
+
+  return 0;
+}
+
+//-----------
+
+function CheckEmailAddress(input_value)
+{
+  if (input_value.length == 0) return 0;
+  var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+  if (reg.test(input_value) == false) return 1;
+  return 0;
+}
+
+//-----------
+
+function trim(input_value) {
+  input_value = input_value.replace(/^\s+/,'');
+  input_value = input_value.replace(/\s+$/,'');
+  input_value = input_value.replace(/[\"\']/g, '');
+
+  return input_value;
+}
+
+//-----------
+
+function GenerateEnumeration(value_from, value_to)
+{
+  var EnumerationText = "";
+  for(var i=value_from; i<= value_to; i++){
+    if (i > value_from){
+      if (i == value_to) {
+        EnumerationText = EnumerationText + " 그리고 ";
+      }
+      else {
+        EnumerationText = EnumerationText + ", ";
+      }
+    }
+    EnumerationText = EnumerationText + i;
+  }
+  return EnumerationText;
+}
+
+//-----------
+
+function nl2br(text_str)
+{
+  text_str = text_str.replace(/%0D%0A/g,"<br>");
+  text_str = text_str.replace(/%0D/g,"<br>");
+  text_str = text_str.replace(/%0A/g,"<br>");
+
+  return text_str;
+}
+
+//-----------
+
+function GetConditionalText(condition,value_true,value_false)
+{
+  if (condition == true) return value_true;
+  return value_false;
+}
+
+//-----------
+
+function GetOnOffText(on_value)
+{
+  return GetConditionalText(on_value != 0,"켜짐","꺼짐");
+}
+
+//-----------
+
+function GetYesNoText(yes_value)
+{
+  return GetConditionalText(yes_value != 0,"네","없음");
+}
+
+//-----------
+
+function GetColorBallHtml(green_value,text_1,text_0)
+{
+  // for compatibility with existing code:
+  green_value = parseInt(green_value);
+  
+  var indexArray = [1,0];
+  var textArray  = [text_1,text_0];
+  var imageArray = ["green.gif","red.gif"];
+  
+  if (indexArray.indexOf(green_value) < 0){
+    green_value = indexArray[0];
+  }
+  return GetColorHtml(green_value,indexArray,imageArray,textArray);
+}
+
+//-----------
+
+function GetColorHtml(light_value,state_array,image_array,text_array)
+{
+  if (state_array == undefined) return "JS-Error (GetColorHtml:1)";
+  light_value = parseInt(light_value);
+  var index_value = state_array.indexOf(light_value);
+  if (index_value == -1) return "JS-Error (GetColorHtml:2)";
+  
+  var Result = "";
+  if (image_array != undefined){
+    if (image_array[index_value] != undefined){
+      Result += "<img src='" + image_array[index_value]+ "'>";
+    }
+  }
+  if (text_array != undefined){
+    if (text_array[index_value] != undefined){
+      Result += " " + text_array[index_value];
+    }
+  }
+  
+  return Result;
+}
+
+//-----------
+
+function GetSwDswText(sw_value)
+{
+  return GetConditionalText(sw_value != 0,"소프트웨어","딥스위치");
+}
+
+//-----------
+
+function GetConditionalText(condition, true_text, false_text)
+{
+  if (condition == true){
+    return true_text;
+  }
+  return false_text;
+}
+
+//-----------
+
+function GetMvToVoltText(mv_value)
+{
+  var volts = parseFloat(mv_value)/1000;
+  if (isNaN(volts)) return mv_value;
+  return (volts.toFixed(2) + " V");
+}
+
+//-----------
+
+function IntervalToText(IntervalInSeconds, leadingchar)
+{
+  IntervalInSeconds = parseInt(IntervalInSeconds);
+
+  var Hours = parseInt(IntervalInSeconds / 3600);
+  var Minutes = parseInt(IntervalInSeconds / 60) % 60;
+  var Seconds = (IntervalInSeconds % 60);
+
+  Hours = Hours.toString();
+  Minutes = Minutes.toString();
+  Seconds = Seconds.toString();
+
+  if (leadingchar != undefined){
+    while(Minutes.length < 2){
+      Minutes = leadingchar+Minutes;
+    }
+    while(Seconds.length < 2){
+      Seconds = leadingchar+Seconds;
+    }
+  }
+
+  var Result = [Hours,Minutes,Seconds];
+  return Result;
+  
+}
+
+//-----------
+
+function BcdTimeToText(TimeInt, leadingchar)
+{
+  TimeInt = parseInt(TimeInt);
+
+  var Hours   = parseInt(TimeInt / 10000);
+  var Minutes = parseInt(TimeInt   / 100) % 100;
+  var Seconds = parseInt(TimeInt        ) % 100;
+
+  if (Hours   > 23) Hours   = 23;
+  if (Minutes > 59) Minutes = 59;
+  if (Seconds > 59) Seconds = 59;
+
+  Hours = Hours.toString();
+  Minutes = Minutes.toString();
+  Seconds = Seconds.toString();
+
+  if (leadingchar != undefined){
+    while(Minutes.length < 2){
+      Minutes = leadingchar+Minutes;
+    }
+    while(Seconds.length < 2){
+      Seconds = leadingchar+Seconds;
+    }
+  }
+
+  var Result = [Hours,Minutes,Seconds];
+  return Result;
+}
+
+//-----------
+
+function GetTextForModuleStatus(code)
+{
+  switch(parseInt(code)){
+    case 101: return "갱신중";
+    case 102: return "에러";
+    case 103: return "지원되지 않음";
+    default : return "빈공간";
+  }
+}
+
+//-----------
+
+function GetScopeErrorText(TriggerEvents)
+{
+  TriggerEvents = parseInt(TriggerEvents);
+  if ((TriggerEvents & 0x80) == 0x00){
+    return "No error";
+  }
+
+  TriggerEvents = (TriggerEvents & 0x7F);
+  
+  if (TriggerEvents & 0x40) return "MBP BIT error";
+  if (TriggerEvents & 0x20) return "MBP CRC error";
+  if (TriggerEvents & 0x10) return "페러티/프레임 에러";
+  if (TriggerEvents & 0x08) return "SD2 LEr/SDr 에러";
+  if (TriggerEvents & 0x04) return "SD2 LE 에러";
+  if (TriggerEvents & 0x02) return "ED 에러";
+  if (TriggerEvents & 0x01) return "SD 에러";
+
+  return "알수없음 ("+TriggerEvents.toString(16)+")";
+}
+
+//-----------
+
+function getInternetExplorerVersion() 
+{
+  var rv = 0; // Return value assumes failure.
+  if (navigator.appName == 'Microsoft Internet Explorer') {
+    var ua = navigator.userAgent;
+    var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+    if (re.exec(ua) != null){
+      rv = parseFloat(RegExp.$1);
+    }
+  }
+  return rv;
+}
+
+//-------------
+
+function GetBrowserDisplayStyle(wanted_disp_style)
+{
+  var ieVersion = getInternetExplorerVersion();
+  if (ieVersion == 0) return wanted_disp_style; // not ie
+  
+  if (ieVersion <= 7){
+    var NotPossibleStylesInIE7 = "inline-table|run-in|table|table-caption|table-cell|table-column|table-column-group|table-row|table-row-group|inherit";
+    if (NotPossibleStylesInIE7.indexOf(wanted_disp_style) > 0){
+      wanted_disp_style = "block";
+    }
+  }
+
+  return wanted_disp_style;
+}
+
+//-------------
+
+function IsItemInArray(Arr,Item)
+{
+  var Found = false;
+  for(var i=0; i<Arr.length; i++){
+    if (Arr[i] == Item){
+      Found = true;
+      break;
+    }
+  }
+  return Found;
+}
+
+//-------------
+
+function sprintf(text_line, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+{
+  if (arg0 != undefined) text_line = text_line.replace("%s",arg0);
+  if (arg1 != undefined) text_line = text_line.replace("%s",arg1);
+  if (arg2 != undefined) text_line = text_line.replace("%s",arg2);
+  if (arg3 != undefined) text_line = text_line.replace("%s",arg3);
+  if (arg4 != undefined) text_line = text_line.replace("%s",arg4);
+  if (arg5 != undefined) text_line = text_line.replace("%s",arg5);
+  if (arg6 != undefined) text_line = text_line.replace("%s",arg6);
+  if (arg7 != undefined) text_line = text_line.replace("%s",arg7);
+  if (arg8 != undefined) text_line = text_line.replace("%s",arg8);
+  if (arg9 != undefined) text_line = text_line.replace("%s",arg9);
+  return text_line;
+}
+
+//-------------
+
+function GetDiagSlaveRedundacyText(RedundancySupported, RedundancyStatus)
+{
+	if (RedundancySupported == false){
+		RedundancyStatus = 0;
+	}
+	
+	return GetColorHtml(parseInt(RedundancyStatus),
+		[5,4,3,2,1,0],
+		["green.gif","red.gif","red.gif","red.gif","grey.gif","grey.gif"],
+		["Redundancy OK", "Redundancy error on both channels", "Redundancy error on right channel", "Redundancy error on left channel", "Redundancy not used", "지원되지 않음"]
+	);
+}
+
+//-----------
+
+function GetDiagSlavePowerStatus(PowerSupported,PowerStatus)
+{
+	if (PowerSupported == false) return "지원되지 않음";
+	return GetYesNoText(PowerStatus);
+}
+
+//-----------
+
+
+function GetDiagSlaveRelayState(RelayState, ShowReason)
+{
+	var RelayStateValue = parseInt(RelayState);
+	
+	if (RelayStateValue == 0){
+		return "Inactive";
+	}
+	if (ShowReason == false){
+		return "Active";
+	}
+	
+	RelayText = "<strong>Active due to the following reason(s):</strong>";
+
+	if (RelayStateValue & 0x00000001) RelayText = RelayText + "<br>" + "Live list changed";
+	if (RelayStateValue & 0x00000002) RelayText = RelayText + "<br>" + "Baudrate error";
+	if (RelayStateValue & 0x00000004) RelayText = RelayText + "<br>" + "Power error";
+	if (RelayStateValue & 0x00000008) RelayText = RelayText + "<br>" + "Redundancy error";
+	if (RelayStateValue & 0x00000010) RelayText = RelayText + "<br>" + "Termination changed";
+	if (RelayStateValue & 0x00000020) RelayText = RelayText + "<br>" + "Channel lost";
+
+	if (RelayStateValue & 0x00000100) RelayText = RelayText + "<br>" + "Lost statistic changed";
+	if (RelayStateValue & 0x00000200) RelayText = RelayText + "<br>" + "Syncs statistic changed";
+	if (RelayStateValue & 0x00000400) RelayText = RelayText + "<br>" + "Repeats total statistic changed";
+	if (RelayStateValue & 0x00000800) RelayText = RelayText + "<br>" + "Repeats max. statistic changed";
+	if (RelayStateValue & 0x00001000) RelayText = RelayText + "<br>" + "Illegals statistic changed";
+	if (RelayStateValue & 0x00002000) RelayText = RelayText + "<br>" + "Int. Diag statistic changed";
+	if (RelayStateValue & 0x00004000) RelayText = RelayText + "<br>" + "Ext. Diag statistic changed";
+	if (RelayStateValue & 0x00008000) RelayText = RelayText + "<br>" + "Diag while in DX statistic changed";
+
+	if (RelayStateValue & 0x00010000) RelayText = RelayText + "<br>" + "Fiber optic channel port 1 error";
+	if (RelayStateValue & 0x00020000) RelayText = RelayText + "<br>" + "Fiber optic channel port 2 error";
+	if (RelayStateValue & 0x00040000) RelayText = RelayText + "<br>" + "Fiber optic ring error";
+	
+  return RelayText;
+}
+
+//-----------
+
+function GetDiagSlaveFiberChannelState(ChannelState)
+{
+	return GetColorHtml(parseInt(ChannelState),
+		[3,2,1,0],
+		["green.gif","yellow.gif","red.gif","grey.gif"],
+		["Signal OK", "Signal warning", "Signal error", "꺼짐"]
+	);
+}
+
+//-----------
+function GetDiagSlaveFiberChannelType(ChannelType)
+{
+	if (parseInt(ChannelType) == 0){
+		return "Multi mode";
+	}
+	return "Single mode";
+}
+
+//-----------
+
+function GetDiagSlaveFiberRingState(RingState)
+{
+	return GetColorHtml(parseInt(RingState),
+		[2,1,0],
+		["green.gif","red.gif","grey.gif"],
+		["Ring OK", "Ring error", "꺼짐"]
+	);
+}
+
+//-----------
+
+function GetDiagSlaveFiberRingMode(RingState)
+{
+	if (parseInt(RingState) == 0){
+		return "Line mode";
+	}
+	return "Ring mode";
+}
+
+//-----------
+
+function DecodeHtml(InputValue)
+{
+	var doc = new DOMParser().parseFromString(InputValue, "text/html");
+	return doc.documentElement.textContent;
+} </script>
+  <script type="text/javascript"> 
+function SetEnabled(obj_id, set_enabled)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    obj_ref.disabled = (set_enabled == false);
+  }
+}
+
+//-----------
+
+function GetEnabled(obj_id, default_value)
+{
+  var obj_ref = document.getElementById(obj_id);
+  if (obj_ref != null){
+    default_value = (!obj_ref.disabled);
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetRadioButtonValue(radio_group,default_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (radio_group[i].checked == true){
+      default_value = radio_group[i].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetRadioButtonValue(radio_group,to_value)
+{
+  var len = radio_group.length;
+  for(var i=0; i<len; i++){
+    if (to_value == radio_group[i].value){
+      radio_group[i].checked = true;
+    }
+  }
+}
+
+//-----------
+
+function GetCheckBoxValue(checkbox_id,default_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    if (CheckBox_obj.checked == true){
+      default_value = 1;
+    }
+    else {
+      default_value = 0;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetCheckBoxValue(checkbox_id,chk_value)
+{
+  var CheckBox_obj = document.getElementById(checkbox_id);
+
+  if (CheckBox_obj != null){
+    CheckBox_obj.checked = chk_value;
+  }
+}
+
+//-----------
+
+function SetSelectBoxValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  var Result = -1;
+  if (obj != null){
+    var len = obj.length;
+    for(var i=0; i<len; i++){
+      if (obj[i].value == to_value){
+        obj.selectedIndex = i;
+        Result = 0;
+      }
+    }
+  }
+  return Result;
+}
+
+//-----------
+
+function GetSelectBoxValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].value;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxText(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].text;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxOptionArray(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj == null) return [];
+
+	var Items = [];
+  for(var i=0; i<obj.length; i++){
+  	Items.push({value: obj[i].value, selected: (obj.selectedIndex == i), text: obj[i].text });
+  }
+  return Items;
+}
+
+//-----------
+
+function GetSelectBoxIndex(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.selectedIndex;
+  }
+  return default_value;
+}
+
+//-----------
+
+function GetSelectBoxTitle(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if ((obj.selectedIndex >= 0) && (obj.selectedIndex < obj.options.length)){
+      default_value = obj.options[obj.selectedIndex].title;
+    }
+  }
+  return default_value;
+}
+
+//-----------
+function GetSelectBoxOptionCount(ctrl_id,default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.options.length;
+  }
+  return default_value;
+}
+
+//-----------
+function ClearSelectBoxOptions(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.options.length = 0;
+  }
+}
+
+//-----------
+
+function AddSelectBoxOption(ctrl_id, caption, val, selectd)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    var NewOption = undefined;
+    
+    if (idx >= 0){
+      NewOption = obj.options[i];
+    }
+
+    if (idx < 0){ // new item
+      NewOption = document.createElement('option');
+    }
+    
+    NewOption.text  = caption;
+    NewOption.value = val;
+    if (selectd != undefined){
+      if (selectd != false) NewOption.selected = true;
+    }
+    
+    if (idx < 0){ // new item
+      obj.options[obj.options.length] = NewOption;
+    }
+  }
+}
+
+//-----------
+
+function RemoveSelectBoxOption(ctrl_id, val)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    var idx = -1;
+    for(var i=0; i<obj.options.length; i++){
+      if (obj.options[i].value == val){
+        idx = i;
+        break;
+      }
+    }
+    if (idx >= 0) obj.remove(idx);
+    return obj.options.length;
+  }
+  return -1;
+}
+
+//-----------
+
+function SetSelectBoxIndex(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.selectedIndex = to_value;
+  }
+}
+
+//-----------
+
+
+function GetTextValue(ctrl_id, default_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    default_value = obj.value;
+  }
+  return default_value;
+}
+
+//-----------
+
+function SetTextValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    obj.value = to_value;
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValue(ctrl_id, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+  	var id_code_new = "["+to_value+"]";
+    if (obj.id_code != id_code_new){
+      obj.innerHTML = to_value;
+      obj.id_code = id_code_new;
+    }
+  }
+}
+
+//-----------
+
+function SetInnerHtmlValueGlobal(ctrl_id, to_value)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+    	var id_code_new = "["+to_value+"]";
+      if (ResultObj.id_code != id_code_new){
+        ResultObj.innerHTML = to_value;
+        ResultObj.id_code = id_code_new;
+      }
+    }
+  }
+}
+
+//-----------
+
+function GetInnerHtmlValue(ctrl_id)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    return obj.innerHTML;
+  }
+  return "";
+}
+
+//-----------
+
+function SetVisibility(ctrl_id, show_it, show_as)
+{
+  var WasVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    WasVisible = (Obj.style.display != "none");
+    if (show_it == true){
+      if (show_as != undefined){
+        Obj.style.display = show_as;
+      }
+      else {
+        Obj.style.display = "block";
+      }
+    }
+    else {
+      Obj.style.display = "none";
+    }
+  }
+  return WasVisible;
+}
+
+//-----------
+
+function GetVisibility(ctrl_id)
+{
+  var IsVisible = true;
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    IsVisible = (Obj.style.display != "none");
+  }
+  return IsVisible;
+}
+
+//-----------
+
+function SetDivColor(ctrl_id,color)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    Obj.style.backgroundColor = color;
+  }
+}
+
+//-----------
+
+function SetDivBackgroundImage(ctrl_id,filename)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.bg_imagetag != filename){
+      Obj.bg_imagetag = filename;
+      Obj.style.backgroundImage = filename;
+    }
+  }
+}
+
+//-----------
+
+function SetImageSrc(ctrl_id,fileName)
+{
+  var Obj = document.getElementById(ctrl_id);
+  if (Obj != null){
+    if (Obj.imagetag != fileName){
+      Obj.imagetag = fileName;
+      Obj.src = fileName + "?ts="+Date().toLocaleString();
+    }
+  }
+}
+
+//-----------
+
+function SetClass(ctrl_id, class_name)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    if (obj.className != class_name){
+      obj.className = class_name;
+    }
+  }
+}
+
+//-----------
+
+function SetClassGlobal(ctrl_id, class_name)
+{
+  var ParentObj = parent.frames['menu_frame'];
+  if (ParentObj != null){
+    var ResultObj = ParentObj.document.getElementById(ctrl_id);
+    if (ResultObj != null){
+      if (ResultObj.className != class_name){
+        ResultObj.className = class_name;
+      }
+    }
+  }
+}
+
+//-----------
+
+function SetProperty(ctrl_id, property, to_value)
+{
+  var obj = document.getElementById(ctrl_id);
+  obj[property] = to_value;
+}
+
+//-----------
+
+function GetProperty(ctrl_id, property)
+{
+  var obj = document.getElementById(ctrl_id);
+  return obj[property];
+}
+
+//-----------
+
+function IndexOfArray(ArrayObj, ItemToFind)
+{
+  var Index = -1;
+  for(var i=0; i<ArrayObj.length; i++){
+    if (ArrayObj[i] == ItemToFind){
+      Index = i;
+      break;
+    }
+  }
+  return Index;
+}
+
+//-----------
+
+function RemoveSelectBoxNonExistingValues(ctrl_id,ExistingValuesArray)
+{
+  var obj = document.getElementById(ctrl_id);
+  if (obj != null){
+    for(var i=0; i<obj.options.length; i++){
+      
+      var CurrentValue = obj.options[i].value;
+      var FoundItem = false;
+      
+      for(var j=0; j<ExistingValuesArray.length; j++){
+        if (ExistingValuesArray[j] == CurrentValue){
+          FoundItem = true;
+          break;
+        }
+      }
+      
+      if (FoundItem == false){
+        obj.remove(i);
+        i--;
+      }
+    }
+  }
+}
+
+//-----------
+
+function FixTableRows(table_id)
+{
+  var Table = document.getElementById(table_id);
+  //var rows = Table.getElementsByTagName("TR");
+  var rows = Table.rows;
+  
+  var index = 0;
+  
+  for (var j = 0; j < rows.length; j++) {
+    
+    if (rows[j].offsetHeight > 0){
+
+      var LeftCell   = sprintf("R%sLeft"  ,index%2);
+      var CenterCell = sprintf("R%sCenter",index%2);
+      var RightCell  = sprintf("R%sRight" ,index%2);
+      index++;
+      
+      var cells = rows[j].cells;
+      for (var i = 0; i < cells.length; i++) {
+  
+        var classValue = cells[i].className;
+        if ((classValue.search("R0Left") >= 0) || (classValue.search("R1Left") >= 0)){
+          classValue = classValue.replace("R0Left","");
+          classValue = classValue.replace("R1Left","");
+          classValue = classValue + " " + LeftCell;        
+        }
+        if ((classValue.search("R0Center") >= 0) || (classValue.search("R1Center") >= 0)){
+          classValue = classValue.replace("R0Center","");
+          classValue = classValue.replace("R1Center","");
+          classValue = classValue + " " + CenterCell;        
+        }
+        if ((classValue.search("R0Right") >= 0) || (classValue.search("R1Right") >= 0)){
+          classValue = classValue.replace("R0Right","");
+          classValue = classValue.replace("R1Right","");
+          classValue = classValue + " " + RightCell;        
+        }
+        cells[i].className = classValue;        
+      }
+    }
+  }  
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> 
+function GetGlobalVar(var_name, default_value)
+{
+  var cookie_result = readCookie(var_name);
+  if (cookie_result != null) default_value = cookie_result;
+  return default_value;
+}
+
+//-----------
+
+function GetGlobalInt(var_name, default_value)
+{
+  return parseInt(GetGlobalVar(var_name,default_value));
+}
+
+//-----------
+
+function SetGlobalVar(var_name, value_to_set)
+{
+  createCookie(var_name,value_to_set,0);
+}
+
+//-----------
+
+function createCookie(c_name,c_value,days)
+{
+  var expires = "";
+
+	if (days != 0) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		expires = "; expires="+date.toGMTString();
+	}
+	document.cookie = c_name+"="+c_value+expires+"; path=/; SameSite=Lax";
+}
+
+//-----------
+
+function readCookie(c_name)
+{
+	var nameEQ = c_name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+//-----------
+
+function eraseCookie(c_name)
+{
+	createCookie(c_name,"",-1);
+}
+
+//-----------
+ </script>
+  <script type="text/javascript"> /**
+*
+*  Base64 encode / decode
+*  http://www.webtoolkit.info/
+*
+**/
+
+function EncodePassword(input,ramdomizer)
+{
+  input = SaltFunction(input,ramdomizer,-1);
+  return Base64.encode(input);
+}
+
+//------------------
+
+function DecodePassword(input, randomizer)
+{
+  input = Base64.decode(input);
+  return SaltFunction(input,randomizer,1);
+}
+
+//------------------
+
+function SaltFunction(string_to_salt, randomizer, encode_decode)
+{
+  var Result = "";
+  for(var i=0; i<string_to_salt.length; i++){
+    var currentChar = string_to_salt.charCodeAt(i);
+    currentChar = currentChar + ((randomizer % 10) * encode_decode);
+    Result = Result + String.fromCharCode(currentChar)
+  }
+  return Result;
+}
+
+//------------------
+
+var Base64 = {
+
+	// private property
+	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+	// public method for encoding
+	encode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+
+		input = Base64._utf8_encode(input);
+
+		while (i < input.length) {
+
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+
+			output = output +
+			this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+			this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+
+		}
+
+		return output;
+	},
+
+	// public method for decoding
+	decode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+		while (i < input.length) {
+
+			enc1 = this._keyStr.indexOf(input.charAt(i++));
+			enc2 = this._keyStr.indexOf(input.charAt(i++));
+			enc3 = this._keyStr.indexOf(input.charAt(i++));
+			enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+
+			output = output + String.fromCharCode(chr1);
+
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+
+		}
+
+		output = Base64._utf8_decode(output);
+
+		return output;
+
+	},
+
+	// private method for UTF-8 encoding
+	_utf8_encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+
+		for (var n = 0; n < string.length; n++) {
+
+			var c = string.charCodeAt(n);
+
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+
+		}
+
+		return utftext;
+	},
+
+	// private method for UTF-8 decoding
+	_utf8_decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+
+		while ( i < utftext.length ) {
+
+			c = utftext.charCodeAt(i);
+
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+		}
+		return string;
+	}
+} </script>
+  <script type="text/javascript"> 
+function RemoveRow(TableObject, RowCount)
+{
+  if (TableObject == null) return;
+
+	for(var i=0; i<RowCount; i++){
+    var LastRowIndex = TableObject.rows.length;
+    if (LastRowIndex > 2) TableObject.deleteRow(LastRowIndex - 1);
+  }
+}
+
+//------------------------------------------------------------------------------
+
+
+function AddRow(TableObject, RowCount, CellAlignment, preId, className)
+{
+  if (TableObject == null) return;
+  if (preId == undefined) preId = "row";
+  if (className == undefined) className = "TableCell";
+
+	for(var i=0; i<RowCount; i++){
+		var CurrentRowIndex = TableObject.rows.length;
+    var Row = TableObject.insertRow(CurrentRowIndex);
+    for(var j=0; j<CellAlignment.length; j++){
+      var Cell = Row.insertCell(j);
+      Cell.appendChild(document.createTextNode(""));
+    	Cell.className = className + " R" + (CurrentRowIndex % 2) + CellAlignment[j];
+    	Cell.id = preId + CurrentRowIndex + "_" + j; // ex: row14_3
+    }
+  }
+  FixFooter();
+}
+
+//------------------------------------------------------------------------------
+
+function ReducePages(PageButtonArray,CurrentPage)
+{
+  if (PageButtonArray.length > 11){ // remove some items to reduce the line width
+    var PageStartCount = 2;
+    var PageEndCount = 2;
+
+    if (CurrentPage < 6){
+      PageStartCount = 3;
+      PageEndCount += (5-CurrentPage);
+    }
+
+    if (CurrentPage > (PageButtonArray.length-7)){
+      PageEndCount = 3;
+      PageStartCount += (6-(PageButtonArray.length-CurrentPage));
+    }
+
+    for(var PageIndex=0; PageIndex < PageButtonArray.length; PageIndex++){
+      var KeepPage = 0;
+      if (PageIndex<(PageStartCount)) KeepPage |= 0x01;
+      if (PageIndex>=((PageButtonArray.length)-PageEndCount)) KeepPage |= 0x02;
+      if ((PageIndex>CurrentPage-3) && (PageIndex<CurrentPage+3)) KeepPage |= 0x04;
+
+      if (KeepPage == 0) PageButtonArray[PageIndex] = "";
+    }
+  }
+  return PageButtonArray;
+}
+
+//------------------------------------------------------------------------------
+
+ </script>
+	<script type="text/javascript"> 
+function NavigateTo(page_to_get)
+{
+  if (parent.frames.length > 0){
+    parent.main_frame.location = page_to_get;
+  }
+  else {
+    parent.location = page_to_get;
+  }
+}
+
+//-----------
+
+function GenerateNavigateLink(page_to_get, text_to_display, class_to_style)
+{
+  return GenerateSpecialModuleLink("NavigateTo('"+page_to_get+"')", text_to_display, class_to_style);
+}
+
+//-----------
+
+function GenerateSpecialModuleLink(function_to_exec, text_to_display, class_to_style)
+{
+	if (class_to_style == undefined){
+		class_to_style = "alink";
+	}
+  var Result = "<a class='"+class_to_style+"' onClick="+function_to_exec+">"+text_to_display+"</a>";
+  return Result;
+}
+
+//-----------
+
+ </script>
+	<script type="text/javascript"> "use strict";var sjcl={cipher:{},hash:{},keyexchange:{},mode:{},misc:{},codec:{},exception:{corrupt:function(a){this.toString=function(){return"CORRUPT: "+this.message};this.message=a},invalid:function(a){this.toString=function(){return"INVALID: "+this.message};this.message=a},bug:function(a){this.toString=function(){return"BUG: "+this.message};this.message=a},notReady:function(a){this.toString=function(){return"NOT READY: "+this.message};this.message=a}}};
+sjcl.cipher.aes=function(a){this.s[0][0][0]||this.O();var b,c,d,e,f=this.s[0][4],g=this.s[1];b=a.length;var h=1;if(4!==b&&6!==b&&8!==b)throw new sjcl.exception.invalid("invalid aes key size");this.b=[d=a.slice(0),e=[]];for(a=b;a<4*b+28;a++){c=d[a-1];if(0===a%b||8===b&&4===a%b)c=f[c>>>24]<<24^f[c>>16&255]<<16^f[c>>8&255]<<8^f[c&255],0===a%b&&(c=c<<8^c>>>24^h<<24,h=h<<1^283*(h>>7));d[a]=d[a-b]^c}for(b=0;a;b++,a--)c=d[b&3?a:a-4],e[b]=4>=a||4>b?c:g[0][f[c>>>24]]^g[1][f[c>>16&255]]^g[2][f[c>>8&255]]^g[3][f[c&
+255]]};
+sjcl.cipher.aes.prototype={encrypt:function(a){return t(this,a,0)},decrypt:function(a){return t(this,a,1)},s:[[[],[],[],[],[]],[[],[],[],[],[]]],O:function(){var a=this.s[0],b=this.s[1],c=a[4],d=b[4],e,f,g,h=[],k=[],l,n,m,p;for(e=0;0x100>e;e++)k[(h[e]=e<<1^283*(e>>7))^e]=e;for(f=g=0;!c[f];f^=l||1,g=k[g]||1)for(m=g^g<<1^g<<2^g<<3^g<<4,m=m>>8^m&255^99,c[f]=m,d[m]=f,n=h[e=h[l=h[f]]],p=0x1010101*n^0x10001*e^0x101*l^0x1010100*f,n=0x101*h[m]^0x1010100*m,e=0;4>e;e++)a[e][f]=n=n<<24^n>>>8,b[e][m]=p=p<<24^p>>>8;for(e=
+0;5>e;e++)a[e]=a[e].slice(0),b[e]=b[e].slice(0)}};
+function t(a,b,c){if(4!==b.length)throw new sjcl.exception.invalid("invalid aes block size");var d=a.b[c],e=b[0]^d[0],f=b[c?3:1]^d[1],g=b[2]^d[2];b=b[c?1:3]^d[3];var h,k,l,n=d.length/4-2,m,p=4,r=[0,0,0,0];h=a.s[c];a=h[0];var q=h[1],v=h[2],w=h[3],x=h[4];for(m=0;m<n;m++)h=a[e>>>24]^q[f>>16&255]^v[g>>8&255]^w[b&255]^d[p],k=a[f>>>24]^q[g>>16&255]^v[b>>8&255]^w[e&255]^d[p+1],l=a[g>>>24]^q[b>>16&255]^v[e>>8&255]^w[f&255]^d[p+2],b=a[b>>>24]^q[e>>16&255]^v[f>>8&255]^w[g&255]^d[p+3],p+=4,e=h,f=k,g=l;for(m=
+0;4>m;m++)r[c?3&-m:m]=x[e>>>24]<<24^x[f>>16&255]<<16^x[g>>8&255]<<8^x[b&255]^d[p++],h=e,e=f,f=g,g=b,b=h;return r}
+sjcl.bitArray={bitSlice:function(a,b,c){a=sjcl.bitArray.$(a.slice(b/32),32-(b&31)).slice(1);return void 0===c?a:sjcl.bitArray.clamp(a,c-b)},extract:function(a,b,c){var d=Math.floor(-b-c&31);return((b+c-1^b)&-32?a[b/32|0]<<32-d^a[b/32+1|0]>>>d:a[b/32|0]>>>d)&(1<<c)-1},concat:function(a,b){if(0===a.length||0===b.length)return a.concat(b);var c=a[a.length-1],d=sjcl.bitArray.getPartial(c);return 32===d?a.concat(b):sjcl.bitArray.$(b,d,c|0,a.slice(0,a.length-1))},bitLength:function(a){var b=a.length;return 0===
+b?0:32*(b-1)+sjcl.bitArray.getPartial(a[b-1])},clamp:function(a,b){if(32*a.length<b)return a;a=a.slice(0,Math.ceil(b/32));var c=a.length;b=b&31;0<c&&b&&(a[c-1]=sjcl.bitArray.partial(b,a[c-1]&2147483648>>b-1,1));return a},partial:function(a,b,c){return 32===a?b:(c?b|0:b<<32-a)+0x10000000000*a},getPartial:function(a){return Math.round(a/0x10000000000)||32},equal:function(a,b){if(sjcl.bitArray.bitLength(a)!==sjcl.bitArray.bitLength(b))return!1;var c=0,d;for(d=0;d<a.length;d++)c|=a[d]^b[d];return 0===
+c},$:function(a,b,c,d){var e;e=0;for(void 0===d&&(d=[]);32<=b;b-=32)d.push(c),c=0;if(0===b)return d.concat(a);for(e=0;e<a.length;e++)d.push(c|a[e]>>>b),c=a[e]<<32-b;e=a.length?a[a.length-1]:0;a=sjcl.bitArray.getPartial(e);d.push(sjcl.bitArray.partial(b+a&31,32<b+a?c:d.pop(),1));return d},i:function(a,b){return[a[0]^b[0],a[1]^b[1],a[2]^b[2],a[3]^b[3]]},byteswapM:function(a){var b,c;for(b=0;b<a.length;++b)c=a[b],a[b]=c>>>24|c>>>8&0xff00|(c&0xff00)<<8|c<<24;return a}};
+sjcl.codec.utf8String={fromBits:function(a){var b="",c=sjcl.bitArray.bitLength(a),d,e;for(d=0;d<c/8;d++)0===(d&3)&&(e=a[d/4]),b+=String.fromCharCode(e>>>8>>>8>>>8),e<<=8;return decodeURIComponent(escape(b))},toBits:function(a){a=unescape(encodeURIComponent(a));var b=[],c,d=0;for(c=0;c<a.length;c++)d=d<<8|a.charCodeAt(c),3===(c&3)&&(b.push(d),d=0);c&3&&b.push(sjcl.bitArray.partial(8*(c&3),d));return b}};
+sjcl.codec.hex={fromBits:function(a){var b="",c;for(c=0;c<a.length;c++)b+=((a[c]|0)+0xf00000000000).toString(16).substr(4);return b.substr(0,sjcl.bitArray.bitLength(a)/4)},toBits:function(a){var b,c=[],d;a=a.replace(/\s|0x/g,"");d=a.length;a=a+"00000000";for(b=0;b<a.length;b+=8)c.push(parseInt(a.substr(b,8),16)^0);return sjcl.bitArray.clamp(c,4*d)}};
+sjcl.codec.base32={B:"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",X:"0123456789ABCDEFGHIJKLMNOPQRSTUV",BITS:32,BASE:5,REMAINING:27,fromBits:function(a,b,c){var d=sjcl.codec.base32.BASE,e=sjcl.codec.base32.REMAINING,f="",g=0,h=sjcl.codec.base32.B,k=0,l=sjcl.bitArray.bitLength(a);c&&(h=sjcl.codec.base32.X);for(c=0;f.length*d<l;)f+=h.charAt((k^a[c]>>>g)>>>e),g<d?(k=a[c]<<d-g,g+=e,c++):(k<<=d,g-=d);for(;f.length&7&&!b;)f+="=";return f},toBits:function(a,b){a=a.replace(/\s|=/g,"").toUpperCase();var c=sjcl.codec.base32.BITS,
+d=sjcl.codec.base32.BASE,e=sjcl.codec.base32.REMAINING,f=[],g,h=0,k=sjcl.codec.base32.B,l=0,n,m="base32";b&&(k=sjcl.codec.base32.X,m="base32hex");for(g=0;g<a.length;g++){n=k.indexOf(a.charAt(g));if(0>n){if(!b)try{return sjcl.codec.base32hex.toBits(a)}catch(p){}throw new sjcl.exception.invalid("this isn't "+m+"!");}h>e?(h-=e,f.push(l^n>>>h),l=n<<c-h):(h+=d,l^=n<<c-h)}h&56&&f.push(sjcl.bitArray.partial(h&56,l,1));return f}};
+sjcl.codec.base32hex={fromBits:function(a,b){return sjcl.codec.base32.fromBits(a,b,1)},toBits:function(a){return sjcl.codec.base32.toBits(a,1)}};
+sjcl.codec.base64={B:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",fromBits:function(a,b,c){var d="",e=0,f=sjcl.codec.base64.B,g=0,h=sjcl.bitArray.bitLength(a);c&&(f=f.substr(0,62)+"-_");for(c=0;6*d.length<h;)d+=f.charAt((g^a[c]>>>e)>>>26),6>e?(g=a[c]<<6-e,e+=26,c++):(g<<=6,e-=6);for(;d.length&3&&!b;)d+="=";return d},toBits:function(a,b){a=a.replace(/\s|=/g,"");var c=[],d,e=0,f=sjcl.codec.base64.B,g=0,h;b&&(f=f.substr(0,62)+"-_");for(d=0;d<a.length;d++){h=f.indexOf(a.charAt(d));
+if(0>h)throw new sjcl.exception.invalid("this isn't base64!");26<e?(e-=26,c.push(g^h>>>e),g=h<<32-e):(e+=6,g^=h<<32-e)}e&56&&c.push(sjcl.bitArray.partial(e&56,g,1));return c}};sjcl.codec.base64url={fromBits:function(a){return sjcl.codec.base64.fromBits(a,1,1)},toBits:function(a){return sjcl.codec.base64.toBits(a,1)}};sjcl.hash.sha256=function(a){this.b[0]||this.O();a?(this.F=a.F.slice(0),this.A=a.A.slice(0),this.l=a.l):this.reset()};sjcl.hash.sha256.hash=function(a){return(new sjcl.hash.sha256).update(a).finalize()};
+sjcl.hash.sha256.prototype={blockSize:512,reset:function(){this.F=this.Y.slice(0);this.A=[];this.l=0;return this},update:function(a){"string"===typeof a&&(a=sjcl.codec.utf8String.toBits(a));var b,c=this.A=sjcl.bitArray.concat(this.A,a);b=this.l;a=this.l=b+sjcl.bitArray.bitLength(a);if(0x1fffffffffffff<a)throw new sjcl.exception.invalid("Cannot hash more than 2^53 - 1 bits");if("undefined"!==typeof Uint32Array){var d=new Uint32Array(c),e=0;for(b=512+b-(512+b&0x1ff);b<=a;b+=512)u(this,d.subarray(16*e,
+16*(e+1))),e+=1;c.splice(0,16*e)}else for(b=512+b-(512+b&0x1ff);b<=a;b+=512)u(this,c.splice(0,16));return this},finalize:function(){var a,b=this.A,c=this.F,b=sjcl.bitArray.concat(b,[sjcl.bitArray.partial(1,1)]);for(a=b.length+2;a&15;a++)b.push(0);b.push(Math.floor(this.l/0x100000000));for(b.push(this.l|0);b.length;)u(this,b.splice(0,16));this.reset();return c},Y:[],b:[],O:function(){function a(a){return 0x100000000*(a-Math.floor(a))|0}for(var b=0,c=2,d,e;64>b;c++){e=!0;for(d=2;d*d<=c;d++)if(0===c%d){e=
+!1;break}e&&(8>b&&(this.Y[b]=a(Math.pow(c,.5))),this.b[b]=a(Math.pow(c,1/3)),b++)}}};
+function u(a,b){var c,d,e,f=a.F,g=a.b,h=f[0],k=f[1],l=f[2],n=f[3],m=f[4],p=f[5],r=f[6],q=f[7];for(c=0;64>c;c++)16>c?d=b[c]:(d=b[c+1&15],e=b[c+14&15],d=b[c&15]=(d>>>7^d>>>18^d>>>3^d<<25^d<<14)+(e>>>17^e>>>19^e>>>10^e<<15^e<<13)+b[c&15]+b[c+9&15]|0),d=d+q+(m>>>6^m>>>11^m>>>25^m<<26^m<<21^m<<7)+(r^m&(p^r))+g[c],q=r,r=p,p=m,m=n+d|0,n=l,l=k,k=h,h=d+(k&l^n&(k^l))+(k>>>2^k>>>13^k>>>22^k<<30^k<<19^k<<10)|0;f[0]=f[0]+h|0;f[1]=f[1]+k|0;f[2]=f[2]+l|0;f[3]=f[3]+n|0;f[4]=f[4]+m|0;f[5]=f[5]+p|0;f[6]=f[6]+r|0;f[7]=
+f[7]+q|0}
+sjcl.mode.ccm={name:"ccm",G:[],listenProgress:function(a){sjcl.mode.ccm.G.push(a)},unListenProgress:function(a){a=sjcl.mode.ccm.G.indexOf(a);-1<a&&sjcl.mode.ccm.G.splice(a,1)},fa:function(a){var b=sjcl.mode.ccm.G.slice(),c;for(c=0;c<b.length;c+=1)b[c](a)},encrypt:function(a,b,c,d,e){var f,g=b.slice(0),h=sjcl.bitArray,k=h.bitLength(c)/8,l=h.bitLength(g)/8;e=e||64;d=d||[];if(7>k)throw new sjcl.exception.invalid("ccm: iv must be at least 7 bytes");for(f=2;4>f&&l>>>8*f;f++);f<15-k&&(f=15-k);c=h.clamp(c,
+8*(15-f));b=sjcl.mode.ccm.V(a,b,c,d,e,f);g=sjcl.mode.ccm.C(a,g,c,b,e,f);return h.concat(g.data,g.tag)},decrypt:function(a,b,c,d,e){e=e||64;d=d||[];var f=sjcl.bitArray,g=f.bitLength(c)/8,h=f.bitLength(b),k=f.clamp(b,h-e),l=f.bitSlice(b,h-e),h=(h-e)/8;if(7>g)throw new sjcl.exception.invalid("ccm: iv must be at least 7 bytes");for(b=2;4>b&&h>>>8*b;b++);b<15-g&&(b=15-g);c=f.clamp(c,8*(15-b));k=sjcl.mode.ccm.C(a,k,c,l,e,b);a=sjcl.mode.ccm.V(a,k.data,c,d,e,b);if(!f.equal(k.tag,a))throw new sjcl.exception.corrupt("ccm: tag doesn't match");
+return k.data},na:function(a,b,c,d,e,f){var g=[],h=sjcl.bitArray,k=h.i;d=[h.partial(8,(b.length?64:0)|d-2<<2|f-1)];d=h.concat(d,c);d[3]|=e;d=a.encrypt(d);if(b.length)for(c=h.bitLength(b)/8,65279>=c?g=[h.partial(16,c)]:0xffffffff>=c&&(g=h.concat([h.partial(16,65534)],[c])),g=h.concat(g,b),b=0;b<g.length;b+=4)d=a.encrypt(k(d,g.slice(b,b+4).concat([0,0,0])));return d},V:function(a,b,c,d,e,f){var g=sjcl.bitArray,h=g.i;e/=8;if(e%2||4>e||16<e)throw new sjcl.exception.invalid("ccm: invalid tag length");
+if(0xffffffff<d.length||0xffffffff<b.length)throw new sjcl.exception.bug("ccm: can't deal with 4GiB or more data");c=sjcl.mode.ccm.na(a,d,c,e,g.bitLength(b)/8,f);for(d=0;d<b.length;d+=4)c=a.encrypt(h(c,b.slice(d,d+4).concat([0,0,0])));return g.clamp(c,8*e)},C:function(a,b,c,d,e,f){var g,h=sjcl.bitArray;g=h.i;var k=b.length,l=h.bitLength(b),n=k/50,m=n;c=h.concat([h.partial(8,f-1)],c).concat([0,0,0]).slice(0,4);d=h.bitSlice(g(d,a.encrypt(c)),0,e);if(!k)return{tag:d,data:[]};for(g=0;g<k;g+=4)g>n&&(sjcl.mode.ccm.fa(g/
+k),n+=m),c[3]++,e=a.encrypt(c),b[g]^=e[0],b[g+1]^=e[1],b[g+2]^=e[2],b[g+3]^=e[3];return{tag:d,data:h.clamp(b,l)}}};
+sjcl.mode.ocb2={name:"ocb2",encrypt:function(a,b,c,d,e,f){if(128!==sjcl.bitArray.bitLength(c))throw new sjcl.exception.invalid("ocb iv must be 128 bits");var g,h=sjcl.mode.ocb2.S,k=sjcl.bitArray,l=k.i,n=[0,0,0,0];c=h(a.encrypt(c));var m,p=[];d=d||[];e=e||64;for(g=0;g+4<b.length;g+=4)m=b.slice(g,g+4),n=l(n,m),p=p.concat(l(c,a.encrypt(l(c,m)))),c=h(c);m=b.slice(g);b=k.bitLength(m);g=a.encrypt(l(c,[0,0,0,b]));m=k.clamp(l(m.concat([0,0,0]),g),b);n=l(n,l(m.concat([0,0,0]),g));n=a.encrypt(l(n,l(c,h(c))));
+d.length&&(n=l(n,f?d:sjcl.mode.ocb2.pmac(a,d)));return p.concat(k.concat(m,k.clamp(n,e)))},decrypt:function(a,b,c,d,e,f){if(128!==sjcl.bitArray.bitLength(c))throw new sjcl.exception.invalid("ocb iv must be 128 bits");e=e||64;var g=sjcl.mode.ocb2.S,h=sjcl.bitArray,k=h.i,l=[0,0,0,0],n=g(a.encrypt(c)),m,p,r=sjcl.bitArray.bitLength(b)-e,q=[];d=d||[];for(c=0;c+4<r/32;c+=4)m=k(n,a.decrypt(k(n,b.slice(c,c+4)))),l=k(l,m),q=q.concat(m),n=g(n);p=r-32*c;m=a.encrypt(k(n,[0,0,0,p]));m=k(m,h.clamp(b.slice(c),p).concat([0,
+0,0]));l=k(l,m);l=a.encrypt(k(l,k(n,g(n))));d.length&&(l=k(l,f?d:sjcl.mode.ocb2.pmac(a,d)));if(!h.equal(h.clamp(l,e),h.bitSlice(b,r)))throw new sjcl.exception.corrupt("ocb: tag doesn't match");return q.concat(h.clamp(m,p))},pmac:function(a,b){var c,d=sjcl.mode.ocb2.S,e=sjcl.bitArray,f=e.i,g=[0,0,0,0],h=a.encrypt([0,0,0,0]),h=f(h,d(d(h)));for(c=0;c+4<b.length;c+=4)h=d(h),g=f(g,a.encrypt(f(h,b.slice(c,c+4))));c=b.slice(c);128>e.bitLength(c)&&(h=f(h,d(h)),c=e.concat(c,[-2147483648,0,0,0]));g=f(g,c);
+return a.encrypt(f(d(f(h,d(h))),g))},S:function(a){return[a[0]<<1^a[1]>>>31,a[1]<<1^a[2]>>>31,a[2]<<1^a[3]>>>31,a[3]<<1^135*(a[0]>>>31)]}};
+sjcl.mode.gcm={name:"gcm",encrypt:function(a,b,c,d,e){var f=b.slice(0);b=sjcl.bitArray;d=d||[];a=sjcl.mode.gcm.C(!0,a,f,d,c,e||128);return b.concat(a.data,a.tag)},decrypt:function(a,b,c,d,e){var f=b.slice(0),g=sjcl.bitArray,h=g.bitLength(f);e=e||128;d=d||[];e<=h?(b=g.bitSlice(f,h-e),f=g.bitSlice(f,0,h-e)):(b=f,f=[]);a=sjcl.mode.gcm.C(!1,a,f,d,c,e);if(!g.equal(a.tag,b))throw new sjcl.exception.corrupt("gcm: tag doesn't match");return a.data},ka:function(a,b){var c,d,e,f,g,h=sjcl.bitArray.i;e=[0,0,
+0,0];f=b.slice(0);for(c=0;128>c;c++){(d=0!==(a[Math.floor(c/32)]&1<<31-c%32))&&(e=h(e,f));g=0!==(f[3]&1);for(d=3;0<d;d--)f[d]=f[d]>>>1|(f[d-1]&1)<<31;f[0]>>>=1;g&&(f[0]^=-0x1f000000)}return e},j:function(a,b,c){var d,e=c.length;b=b.slice(0);for(d=0;d<e;d+=4)b[0]^=0xffffffff&c[d],b[1]^=0xffffffff&c[d+1],b[2]^=0xffffffff&c[d+2],b[3]^=0xffffffff&c[d+3],b=sjcl.mode.gcm.ka(b,a);return b},C:function(a,b,c,d,e,f){var g,h,k,l,n,m,p,r,q=sjcl.bitArray;m=c.length;p=q.bitLength(c);r=q.bitLength(d);h=q.bitLength(e);
+g=b.encrypt([0,0,0,0]);96===h?(e=e.slice(0),e=q.concat(e,[1])):(e=sjcl.mode.gcm.j(g,[0,0,0,0],e),e=sjcl.mode.gcm.j(g,e,[0,0,Math.floor(h/0x100000000),h&0xffffffff]));h=sjcl.mode.gcm.j(g,[0,0,0,0],d);n=e.slice(0);d=h.slice(0);a||(d=sjcl.mode.gcm.j(g,h,c));for(l=0;l<m;l+=4)n[3]++,k=b.encrypt(n),c[l]^=k[0],c[l+1]^=k[1],c[l+2]^=k[2],c[l+3]^=k[3];c=q.clamp(c,p);a&&(d=sjcl.mode.gcm.j(g,h,c));a=[Math.floor(r/0x100000000),r&0xffffffff,Math.floor(p/0x100000000),p&0xffffffff];d=sjcl.mode.gcm.j(g,d,a);k=b.encrypt(e);
+d[0]^=k[0];d[1]^=k[1];d[2]^=k[2];d[3]^=k[3];return{tag:q.bitSlice(d,0,f),data:c}}};sjcl.misc.hmac=function(a,b){this.W=b=b||sjcl.hash.sha256;var c=[[],[]],d,e=b.prototype.blockSize/32;this.w=[new b,new b];a.length>e&&(a=b.hash(a));for(d=0;d<e;d++)c[0][d]=a[d]^909522486,c[1][d]=a[d]^1549556828;this.w[0].update(c[0]);this.w[1].update(c[1]);this.R=new b(this.w[0])};
+sjcl.misc.hmac.prototype.encrypt=sjcl.misc.hmac.prototype.mac=function(a){if(this.aa)throw new sjcl.exception.invalid("encrypt on already updated hmac called!");this.update(a);return this.digest(a)};sjcl.misc.hmac.prototype.reset=function(){this.R=new this.W(this.w[0]);this.aa=!1};sjcl.misc.hmac.prototype.update=function(a){this.aa=!0;this.R.update(a)};sjcl.misc.hmac.prototype.digest=function(){var a=this.R.finalize(),a=(new this.W(this.w[1])).update(a).finalize();this.reset();return a};
+sjcl.misc.pbkdf2=function(a,b,c,d,e){c=c||1E4;if(0>d||0>c)throw new sjcl.exception.invalid("invalid params to pbkdf2");"string"===typeof a&&(a=sjcl.codec.utf8String.toBits(a));"string"===typeof b&&(b=sjcl.codec.utf8String.toBits(b));e=e||sjcl.misc.hmac;a=new e(a);var f,g,h,k,l=[],n=sjcl.bitArray;for(k=1;32*l.length<(d||1);k++){e=f=a.encrypt(n.concat(b,[k]));for(g=1;g<c;g++)for(f=a.encrypt(f),h=0;h<f.length;h++)e[h]^=f[h];l=l.concat(e)}d&&(l=n.clamp(l,d));return l};
+sjcl.prng=function(a){this.c=[new sjcl.hash.sha256];this.m=[0];this.P=0;this.H={};this.N=0;this.U={};this.Z=this.f=this.o=this.ha=0;this.b=[0,0,0,0,0,0,0,0];this.h=[0,0,0,0];this.L=void 0;this.M=a;this.D=!1;this.K={progress:{},seeded:{}};this.u=this.ga=0;this.I=1;this.J=2;this.ca=0x10000;this.T=[0,48,64,96,128,192,0x100,384,512,768,1024];this.da=3E4;this.ba=80};
+sjcl.prng.prototype={randomWords:function(a,b){var c=[],d;d=this.isReady(b);var e;if(d===this.u)throw new sjcl.exception.notReady("generator isn't seeded");if(d&this.J){d=!(d&this.I);e=[];var f=0,g;this.Z=e[0]=(new Date).valueOf()+this.da;for(g=0;16>g;g++)e.push(0x100000000*Math.random()|0);for(g=0;g<this.c.length&&(e=e.concat(this.c[g].finalize()),f+=this.m[g],this.m[g]=0,d||!(this.P&1<<g));g++);this.P>=1<<this.c.length&&(this.c.push(new sjcl.hash.sha256),this.m.push(0));this.f-=f;f>this.o&&(this.o=
+f);this.P++;this.b=sjcl.hash.sha256.hash(this.b.concat(e));this.L=new sjcl.cipher.aes(this.b);for(d=0;4>d&&(this.h[d]=this.h[d]+1|0,!this.h[d]);d++);}for(d=0;d<a;d+=4)0===(d+1)%this.ca&&y(this),e=z(this),c.push(e[0],e[1],e[2],e[3]);y(this);return c.slice(0,a)},setDefaultParanoia:function(a,b){if(0===a&&"Setting paranoia=0 will ruin your security; use it only for testing"!==b)throw new sjcl.exception.invalid("Setting paranoia=0 will ruin your security; use it only for testing");this.M=a},addEntropy:function(a,
+b,c){c=c||"user";var d,e,f=(new Date).valueOf(),g=this.H[c],h=this.isReady(),k=0;d=this.U[c];void 0===d&&(d=this.U[c]=this.ha++);void 0===g&&(g=this.H[c]=0);this.H[c]=(this.H[c]+1)%this.c.length;switch(typeof a){case "number":void 0===b&&(b=1);this.c[g].update([d,this.N++,1,b,f,1,a|0]);break;case "object":c=Object.prototype.toString.call(a);if("[object Uint32Array]"===c){e=[];for(c=0;c<a.length;c++)e.push(a[c]);a=e}else for("[object Array]"!==c&&(k=1),c=0;c<a.length&&!k;c++)"number"!==typeof a[c]&&
+(k=1);if(!k){if(void 0===b)for(c=b=0;c<a.length;c++)for(e=a[c];0<e;)b++,e=e>>>1;this.c[g].update([d,this.N++,2,b,f,a.length].concat(a))}break;case "string":void 0===b&&(b=a.length);this.c[g].update([d,this.N++,3,b,f,a.length]);this.c[g].update(a);break;default:k=1}if(k)throw new sjcl.exception.bug("random: addEntropy only supports number, array of numbers or string");this.m[g]+=b;this.f+=b;h===this.u&&(this.isReady()!==this.u&&A("seeded",Math.max(this.o,this.f)),A("progress",this.getProgress()))},
+isReady:function(a){a=this.T[void 0!==a?a:this.M];return this.o&&this.o>=a?this.m[0]>this.ba&&(new Date).valueOf()>this.Z?this.J|this.I:this.I:this.f>=a?this.J|this.u:this.u},getProgress:function(a){a=this.T[a?a:this.M];return this.o>=a?1:this.f>a?1:this.f/a},startCollectors:function(){if(!this.D){this.a={loadTimeCollector:B(this,this.ma),mouseCollector:B(this,this.oa),keyboardCollector:B(this,this.la),accelerometerCollector:B(this,this.ea),touchCollector:B(this,this.qa)};if(window.addEventListener)window.addEventListener("load",
+this.a.loadTimeCollector,!1),window.addEventListener("mousemove",this.a.mouseCollector,!1),window.addEventListener("keypress",this.a.keyboardCollector,!1),window.addEventListener("devicemotion",this.a.accelerometerCollector,!1),window.addEventListener("touchmove",this.a.touchCollector,!1);else if(document.attachEvent)document.attachEvent("onload",this.a.loadTimeCollector),document.attachEvent("onmousemove",this.a.mouseCollector),document.attachEvent("keypress",this.a.keyboardCollector);else throw new sjcl.exception.bug("can't attach event");
+this.D=!0}},stopCollectors:function(){this.D&&(window.removeEventListener?(window.removeEventListener("load",this.a.loadTimeCollector,!1),window.removeEventListener("mousemove",this.a.mouseCollector,!1),window.removeEventListener("keypress",this.a.keyboardCollector,!1),window.removeEventListener("devicemotion",this.a.accelerometerCollector,!1),window.removeEventListener("touchmove",this.a.touchCollector,!1)):document.detachEvent&&(document.detachEvent("onload",this.a.loadTimeCollector),document.detachEvent("onmousemove",
+this.a.mouseCollector),document.detachEvent("keypress",this.a.keyboardCollector)),this.D=!1)},addEventListener:function(a,b){this.K[a][this.ga++]=b},removeEventListener:function(a,b){var c,d,e=this.K[a],f=[];for(d in e)e.hasOwnProperty(d)&&e[d]===b&&f.push(d);for(c=0;c<f.length;c++)d=f[c],delete e[d]},la:function(){C(this,1)},oa:function(a){var b,c;try{b=a.x||a.clientX||a.offsetX||0,c=a.y||a.clientY||a.offsetY||0}catch(d){c=b=0}0!=b&&0!=c&&this.addEntropy([b,c],2,"mouse");C(this,0)},qa:function(a){a=
+a.touches[0]||a.changedTouches[0];this.addEntropy([a.pageX||a.clientX,a.pageY||a.clientY],1,"touch");C(this,0)},ma:function(){C(this,2)},ea:function(a){a=a.accelerationIncludingGravity.x||a.accelerationIncludingGravity.y||a.accelerationIncludingGravity.z;if(window.orientation){var b=window.orientation;"number"===typeof b&&this.addEntropy(b,1,"accelerometer")}a&&this.addEntropy(a,2,"accelerometer");C(this,0)}};
+function A(a,b){var c,d=sjcl.random.K[a],e=[];for(c in d)d.hasOwnProperty(c)&&e.push(d[c]);for(c=0;c<e.length;c++)e[c](b)}function C(a,b){"undefined"!==typeof window&&window.performance&&"function"===typeof window.performance.now?a.addEntropy(window.performance.now(),b,"loadtime"):a.addEntropy((new Date).valueOf(),b,"loadtime")}function y(a){a.b=z(a).concat(z(a));a.L=new sjcl.cipher.aes(a.b)}function z(a){for(var b=0;4>b&&(a.h[b]=a.h[b]+1|0,!a.h[b]);b++);return a.L.encrypt(a.h)}
+function B(a,b){return function(){b.apply(a,arguments)}}sjcl.random=new sjcl.prng(6);
+a:try{var D,E,F,G;if(G="undefined"!==typeof module&&module.exports){var H;try{H=require("crypto")}catch(a){H=null}G=E=H}if(G&&E.randomBytes)D=E.randomBytes(128),D=new Uint32Array((new Uint8Array(D)).buffer),sjcl.random.addEntropy(D,1024,"crypto['randomBytes']");else if("undefined"!==typeof window&&"undefined"!==typeof Uint32Array){F=new Uint32Array(32);if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(F);else if(window.msCrypto&&window.msCrypto.getRandomValues)window.msCrypto.getRandomValues(F);
+else break a;sjcl.random.addEntropy(F,1024,"crypto['getRandomValues']")}}catch(a){"undefined"!==typeof window&&window.console&&(console.log("There was an error collecting entropy from the browser:"),console.log(a))}
+sjcl.json={defaults:{v:1,iter:1E4,ks:128,ts:64,mode:"ccm",adata:"",cipher:"aes"},ja:function(a,b,c,d){c=c||{};d=d||{};var e=sjcl.json,f=e.g({iv:sjcl.random.randomWords(4,0)},e.defaults),g;e.g(f,c);c=f.adata;"string"===typeof f.salt&&(f.salt=sjcl.codec.base64.toBits(f.salt));"string"===typeof f.iv&&(f.iv=sjcl.codec.base64.toBits(f.iv));if(!sjcl.mode[f.mode]||!sjcl.cipher[f.cipher]||"string"===typeof a&&100>=f.iter||64!==f.ts&&96!==f.ts&&128!==f.ts||128!==f.ks&&192!==f.ks&&0x100!==f.ks||2>f.iv.length||
+4<f.iv.length)throw new sjcl.exception.invalid("json encrypt: invalid parameters");"string"===typeof a?(g=sjcl.misc.cachedPbkdf2(a,f),a=g.key.slice(0,f.ks/32),f.salt=g.salt):sjcl.ecc&&a instanceof sjcl.ecc.elGamal.publicKey&&(g=a.kem(),f.kemtag=g.tag,a=g.key.slice(0,f.ks/32));"string"===typeof b&&(b=sjcl.codec.utf8String.toBits(b));"string"===typeof c&&(f.adata=c=sjcl.codec.utf8String.toBits(c));g=new sjcl.cipher[f.cipher](a);e.g(d,f);d.key=a;f.ct="ccm"===f.mode&&sjcl.arrayBuffer&&sjcl.arrayBuffer.ccm&&
+b instanceof ArrayBuffer?sjcl.arrayBuffer.ccm.encrypt(g,b,f.iv,c,f.ts):sjcl.mode[f.mode].encrypt(g,b,f.iv,c,f.ts);return f},encrypt:function(a,b,c,d){var e=sjcl.json,f=e.ja.apply(e,arguments);return e.encode(f)},ia:function(a,b,c,d){c=c||{};d=d||{};var e=sjcl.json;b=e.g(e.g(e.g({},e.defaults),b),c,!0);var f,g;f=b.adata;"string"===typeof b.salt&&(b.salt=sjcl.codec.base64.toBits(b.salt));"string"===typeof b.iv&&(b.iv=sjcl.codec.base64.toBits(b.iv));if(!sjcl.mode[b.mode]||!sjcl.cipher[b.cipher]||"string"===
+typeof a&&100>=b.iter||64!==b.ts&&96!==b.ts&&128!==b.ts||128!==b.ks&&192!==b.ks&&0x100!==b.ks||!b.iv||2>b.iv.length||4<b.iv.length)throw new sjcl.exception.invalid("json decrypt: invalid parameters");"string"===typeof a?(g=sjcl.misc.cachedPbkdf2(a,b),a=g.key.slice(0,b.ks/32),b.salt=g.salt):sjcl.ecc&&a instanceof sjcl.ecc.elGamal.secretKey&&(a=a.unkem(sjcl.codec.base64.toBits(b.kemtag)).slice(0,b.ks/32));"string"===typeof f&&(f=sjcl.codec.utf8String.toBits(f));g=new sjcl.cipher[b.cipher](a);f="ccm"===
+b.mode&&sjcl.arrayBuffer&&sjcl.arrayBuffer.ccm&&b.ct instanceof ArrayBuffer?sjcl.arrayBuffer.ccm.decrypt(g,b.ct,b.iv,b.tag,f,b.ts):sjcl.mode[b.mode].decrypt(g,b.ct,b.iv,f,b.ts);e.g(d,b);d.key=a;return 1===c.raw?f:sjcl.codec.utf8String.fromBits(f)},decrypt:function(a,b,c,d){var e=sjcl.json;return e.ia(a,e.decode(b),c,d)},encode:function(a){var b,c="{",d="";for(b in a)if(a.hasOwnProperty(b)){if(!b.match(/^[a-z0-9]+$/i))throw new sjcl.exception.invalid("json encode: invalid property name");c+=d+'"'+
+b+'":';d=",";switch(typeof a[b]){case "number":case "boolean":c+=a[b];break;case "string":c+='"'+escape(a[b])+'"';break;case "object":c+='"'+sjcl.codec.base64.fromBits(a[b],0)+'"';break;default:throw new sjcl.exception.bug("json encode: unsupported type");}}return c+"}"},decode:function(a){a=a.replace(/\s/g,"");if(!a.match(/^\{.*\}$/))throw new sjcl.exception.invalid("json decode: this isn't json!");a=a.replace(/^\{|\}$/g,"").split(/,/);var b={},c,d;for(c=0;c<a.length;c++){if(!(d=a[c].match(/^\s*(?:(["']?)([a-z][a-z0-9]*)\1)\s*:\s*(?:(-?\d+)|"([a-z0-9+\/%*_.@=\-]*)"|(true|false))$/i)))throw new sjcl.exception.invalid("json decode: this isn't json!");
+null!=d[3]?b[d[2]]=parseInt(d[3],10):null!=d[4]?b[d[2]]=d[2].match(/^(ct|adata|salt|iv)$/)?sjcl.codec.base64.toBits(d[4]):unescape(d[4]):null!=d[5]&&(b[d[2]]="true"===d[5])}return b},g:function(a,b,c){void 0===a&&(a={});if(void 0===b)return a;for(var d in b)if(b.hasOwnProperty(d)){if(c&&void 0!==a[d]&&a[d]!==b[d])throw new sjcl.exception.invalid("required parameter overridden");a[d]=b[d]}return a},sa:function(a,b){var c={},d;for(d in a)a.hasOwnProperty(d)&&a[d]!==b[d]&&(c[d]=a[d]);return c},ra:function(a,
+b){var c={},d;for(d=0;d<b.length;d++)void 0!==a[b[d]]&&(c[b[d]]=a[b[d]]);return c}};sjcl.encrypt=sjcl.json.encrypt;sjcl.decrypt=sjcl.json.decrypt;sjcl.misc.pa={};sjcl.misc.cachedPbkdf2=function(a,b){var c=sjcl.misc.pa,d;b=b||{};d=b.iter||1E3;c=c[a]=c[a]||{};d=c[d]=c[d]||{firstSalt:b.salt&&b.salt.length?b.salt.slice(0):sjcl.random.randomWords(2,0)};c=void 0===b.salt?d.firstSalt:b.salt;d[c]=d[c]||sjcl.misc.pbkdf2(a,c,b.iter);return{key:d[c].slice(0),salt:c.slice(0)}};
+"undefined"!==typeof module&&module.exports&&(module.exports=sjcl);"function"===typeof define&&define([],function(){return sjcl});
+ </script>
+	<script type="text/javascript"> 
+function AsciiToHex(str){
+	var result = [];
+	for (var n=0; n<str.length; n++){
+		var hex = Number(str.charCodeAt(n)).toString(16);
+		result.push(hex);
+	}
+	return result.join('');
+}
+
+function HashPassword(pass, salt){
+	var keyLength = 16 * 8;
+	var iterations = 1000;
+	var saltBits = sjcl.codec.hex.toBits(AsciiToHex(salt));
+	return sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(pass, saltBits, iterations, keyLength));	
+}
+ </script>
+  <script type="text/javascript" src="cfg_pwd.js"></script>
+  <script type="text/javascript" src="maintenance.js"></script>
+</head>
+
+<body>
+  
+<!-- *******************[container]************************************* -->
+
+  <div id="container">
+
+<!-- header content -->
+<script type="text/javascript"> //-----------
+
+function TemperatureToText(CurrentTemp)
+{
+  var TempArray = CurrentTemp.split("\x1F");
+  CurrentTemp = TempArray[0];
+  
+  if (TempArray.length >= 2){
+    switch(parseInt(TempArray[1])){
+      case 0:
+        CurrentTemp = TempArray[0] + "&deg;C"; //celcius
+        break;
+      case 1:
+        CurrentTemp = TempArray[0] + "&deg;F"; //fahrenheit
+        break;
+      case 2:
+        CurrentTemp = TempArray[0] + "K"; //kelvin
+        break;
+    }
+  }
+  return CurrentTemp;
+}
+
+//-----------
+
+function WriteTopInfo(UpTime,SystemTime,CurrentTemp,MeasurementTime,ClearDataLinkAllowed)
+{
+  CurrentTemp = TemperatureToText(CurrentTemp);
+  SetInnerHtmlValue("timestamp","시스템 가동시간: <strong>" + UpTime + "</strong>");
+  SetInnerHtmlValue("cbtime"   ,"시스템 시간: <strong>" + SystemTime + "</strong>");
+  SetInnerHtmlValue("cbtemp"   ,"온도: <strong>" + CurrentTemp + "</strong>");
+
+	var MeasurementTimeText = "Measuring since";
+	var MeasurementTimeValue = ": <strong>" + MeasurementTime + "</strong>";
+  
+  if (ClearDataLinkAllowed == true){
+  	SetInnerHtmlValue("cbmeas"   ,GenerateNavigateLink("cfg_set.htm",MeasurementTimeText,"header-link") + MeasurementTimeValue);
+  }
+  else {
+  	SetInnerHtmlValue("cbmeas"   ,MeasurementTimeText + MeasurementTimeValue );
+  }  
+}
+
+//-----------
+
+function FixFooter()
+{
+  var ContentObj = document.getElementById('content_area');
+  var FooterObj = document.getElementById('footer');
+  if ((ContentObj != null) && (FooterObj != null)){
+    var ContentEnd = (ContentObj.offsetTop + ContentObj.offsetHeight);
+    if (ContentEnd > FooterObj.offsetTop) FooterObj.style.top = ContentEnd;
+  }
+}
+
+//-----------
+
+var TopDataTimeout = 0;
+var TopDataXmlHttp = null;
+
+//-----------
+
+function onTimeoutTopData()
+{
+  TopDataTimeout = 0;
+  TopDataXmlHttp.onreadystatechange = function() {}
+  TopDataXmlHttp.abort();
+}
+
+//-----------
+
+function onStateChangeTopData()
+{
+  if (TopDataXmlHttp != null){
+    if (TopDataXmlHttp.readyState == 4){
+      if (TopDataXmlHttp.status == 200){
+
+        var Response = decodeURIComponent(TopDataXmlHttp.responseText);
+        var ControlVars = Response.split("\x1D");
+
+        var TimeStamp   = "";
+        var CurrentTime = "";
+        var CurrentTemp = "";
+        var MeasurementTime = "";
+        var ClearDataLinkAllowed = 0;
+
+        if (ControlVars.length >= 5){
+          
+          TimeStamp    = ControlVars[0];
+          CurrentTime  = ControlVars[1];
+          CurrentTemp  = ControlVars[2]; // temperature �C is encoded
+          MeasurementTime = ControlVars[3];
+          ClearDataLinkAllowed = (parseInt(ControlVars[4]) == 2);
+        }
+        
+        WriteTopInfo(TimeStamp,CurrentTime,CurrentTemp,MeasurementTime,ClearDataLinkAllowed);
+        FixFooter();
+        
+        onTimeoutTopData();
+      }
+    }
+  }
+}
+
+//-----------
+
+function PeriodicTimerUpdateTopData()
+{
+  if (TopDataTimeout > 0){
+    TopDataTimeout--;
+    return;
+  }
+
+  if (TopDataXmlHttp != null){
+    TopDataXmlHttp.abort();
+  }
+
+  TopDataXmlHttp = loadXMLDocASynch("data_srv.cgi", "property=Uptime+Time+Temperature+MeasurementTime+page-access:cfg_set.htm", onStateChangeTopData, onTimeoutTopData);
+  TopDataTimeout = 10;
+}
+
+
+//-----------
+
+PeriodicTimerUpdateTopData();
+var TopDataTimerHandle = setInterval('PeriodicTimerUpdateTopData()',1 * 1000); </script>
+<div class="header-container">
+	<div class="header-column">
+  	<img class="header-image" src="var_cb/logo.png" alt="ComBricks">
+  	<div><strong>V1.312</strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item">IP주소: <strong>172.27.125.251</strong></div>
+    <div class="header-item">공정: <strong></strong></div>
+    <div class="header-item">회사: <strong></strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item">MAC 주소: <strong>9C:B2:06:00:42:0B</strong></div>
+    <div class="header-item" id='cbtemp'>온도: ?</div>
+    <div class="header-item">라인명: <strong></strong></div>
+  </div>
+  <div class="header-column">
+    <div class="header-item" id='timestamp'>시스템 가동시간: ?</div>
+    <div class="header-item" id='cbtime'>시스템 시간: ?</div>
+    <div class="header-item" id='cbmeas'>Measuring since: ?</div>        
+  </div>
+</div>
+
+<!-- **************[contentbar]****************** -->
+
+    <div id="content">
+
+
+<!-- Maintenance box content -->
+<div class="maintenance-content defaultHidden" id="maintenance-box">
+  <div class="maintenance-header">
+    <input type="button" value="Disable" class="close" onclick="ShowDisableMaintenanceDialog();">
+    <h2>Maintenance mode is enabled</h2>
+  </div>
+  <div class="maintenance-body">
+   	<div id="maintenance-message">
+   		<ul><li>Maintenance mode is disabled. All measurements are running.</li></ul>
+   	</div>
+  </div>
+</div>
+
+<!-- The Modal to Disable maintenance mode -->
+<div id="DisableMaintenanceModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideDisableMaintenanceDialog()">&times;</span>
+      <h2>Disable maintenance mode</h2>
+    </div>
+    <div class="modal-body">
+    	<p>Check the networks you want maintenance mode to be disabled on:</p>
+    	<div id="SectionDisableMaintenanceNetwork1">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork1" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork1">Network 1</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork2">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork2" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork2">Network 2</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork3">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork3" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork3">Network 3</label>
+     	</div>
+    	<div id="SectionDisableMaintenanceNetwork4">
+    		<input type="checkbox" id="CheckboxDisableMaintenanceNetwork4" onclick="CheckDisableButtonEnabled();">
+     		<label for="CheckboxDisableMaintenanceNetwork4">Network 4</label>
+     	</div>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="Disable" id="DisableMaintenanceButton" onclick="DisableMaintenanceMode(document.getElementById('CheckboxDisableMaintenanceNetwork1').checked, document.getElementById('CheckboxDisableMaintenanceNetwork2').checked, document.getElementById('CheckboxDisableMaintenanceNetwork3').checked, document.getElementById('CheckboxDisableMaintenanceNetwork4').checked);"/>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- The Modal to enable maintenance mode -->
+<div id="EnableMaintenanceModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close" onclick="HideEnableMaintenanceDialog()">&times;</span>
+      <h2>Enable maintenance mode</h2>
+    </div>
+    <div class="modal-body">
+    	<p>Check the networks you want maintenance mode to be enabled on:</p>
+    	<div id="SectionEnableMaintenanceNetwork1">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork1" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork1">Network 1</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork2">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork2" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork2">Network 2</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork3">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork3" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork3">Network 3</label>
+     	</div>
+    	<div id="SectionEnableMaintenanceNetwork4">
+    		<input type="checkbox" id="CheckboxEnableMaintenanceNetwork4" onclick="CheckEnableButtonEnabled();">
+     		<label for="CheckboxEnableMaintenanceNetwork4">Network 4</label>
+     	</div>
+     	<p>
+     		The diagnostic events will be paused for the selected Profibus networks.
+     		The current state of the network is still shown, but limits and counters will be frozen and network related events are blocked.
+     	</p>
+     	<p>
+     		During maintenance mode:
+     		<ul>
+     			<li>Statistics will keep the same value.</li>
+     			<li>Bargraph Min/Max will keep the same value.</li>
+     			<li>Message recording will be temporarily turned off.</li>
+     			<li>Oscilloscope images Min/Max will be reset as soon as maintenance mode is disabled.</li>
+     			<li>Oscilloscope error images will be discarded.</li>
+     			<li>All network related Email, Log, SNMP Trap and Output events are blocked.</li>
+     			<li>The Alarms and illegals of detected ProfiHub diagnostic devices will be reset as soon as maintenance mode is disabled.</li>
+     		</ul>
+     	</p>
+    </div>
+    <div class="modal-footer">
+      <input type='button' value="유효화" id="EnableMaintenanceButton" onclick="EnableMaintenanceMode(document.getElementById('CheckboxEnableMaintenanceNetwork1').checked, document.getElementById('CheckboxEnableMaintenanceNetwork2').checked, document.getElementById('CheckboxEnableMaintenanceNetwork3').checked, document.getElementById('CheckboxEnableMaintenanceNetwork4').checked);"/>
+    </div>
+  </div>
+
+</div>
+
+<div class="TitleBar">
+  <div class="TitleText">Password &amp; user configuration</div>
+</div>
+
+      
+      <div id="content_area">
+        
+<!-- ------------------------------------------------ -->
+        
+<table  class="ConfigTable" cellspacing="0" id="PasswordConfig">
+  <tr>
+    <th class="TableCell header-cell header-left">암호</th>
+    <th class="TableCell header-cell header-center" style="width:170px">Current Admin password</th>
+    <th class="TableCell header-cell header-center" style="width:170px">새로운 암호</th>
+    <th class="TableCell header-cell header-center" style="width:170px">새로운 암호 재입력</th>
+    <th class="TableCell header-cell header-center header-last" style="width:80px">저장</th>
+  </tr>
+  <tr>
+    <td class="TableCell R1Left">사용자 암호:</td>
+    <td class="TableCell R1Center"><input type="password" id="pass_user_current" value="" maxlength="16" size="20"></td>
+    <td class="TableCell R1Center"><input type="password" id="pass_user1" value="" maxlength="16" size="20"></td>
+    <td class="TableCell R1Center"><input type="password" id="pass_user2" value="" maxlength="16" size="20"></td>
+    <td class="TableCell R1Center"><input id="CfgPwdSaveUserPassButton" type="button" value="저장" onClick="SaveUserPassword()"></td>
+  </tr>
+  <tr>
+    <td class="TableCell R0Left">관리자 암호:</td>
+    <td class="TableCell R0Center"><input type="password" id="pass_admin_current" value="" maxlength="16" size="20"></td>
+    <td class="TableCell R0Center"><input type="password" id="pass_admin1" value="" maxlength="16" size="20"></td>
+    <td class="TableCell R0Center"><input type="password" id="pass_admin2" value="" maxlength="16" size="20"></td>
+    <td class="TableCell R0Center"><input id="CfgPwdSaveAdminPassButton" type="button" value="저장" onClick="SaveAdminPassword()"></td>
+  </tr>
+</table>
+
+<div class="NotesArea" id="password_notes">
+  Please note: These passwords apply to the <b>WEB, FTP, TELNET, STREAMING, FDL-CONRTOLLERS and DISCOVERY-TOOL</b> interfaces.
+</div>
+
+    
+<table class="ConfigTable" cellspacing="0" id="UserMessage">
+  
+  <tr>
+    <th class="TableCell header-cell header-left">사용자로부터의 메시지</th>
+    <th class="TableCell header-cell header-center header-last">저장</th>
+  </tr>
+  <tr>
+    <td class="TableCell R1Center">
+      <textarea rows="15" cols="90" id="message_area" onKeyUp="LimitText()"></textarea>
+      <div id="usermessage_notes">
+			  이메시지는 상태 페이지에 표시되며, 이메일로 보내질 것입니다.
+			</div>
+    </td>
+    <td class="TableCell R1Center"></td>
+  </tr>
+  <tr>
+    <td class="TableCell R0Left">
+    	<div id="charactersleft">?</div>
+    </td>
+    <td class="TableCell R0Left">
+    	<input type="button" value="저장" onClick="SaveUserMessage()">
+    </td>
+  </tr>
+</table>
+
+
+<table  class="ConfigTable" cellspacing="0" id="MenuVisual">
+  <tr>
+    <th class="TableCell header-cell header-left">User access visual config</th>
+    <th class="TableCell header-cell header-center header-last" style="width:160px">&nbsp;</th>
+  </tr>
+  <tr>
+    <td class="TableCell R1Left">Hide blocked items instead of disabling them</td>
+    <td class="TableCell R1Center"><input type="checkbox" id="user_access_hide_items" ></td>
+  </tr>
+</table>
+
+
+<table class="ConfigTable" cellspacing="0" id="MenuAccessConfig">
+  
+  <tr>
+    <th class="TableCell header-cell header-left">User access config</th>
+    <th class="TableCell header-cell header-center header-last" style="width:160px">Allow user</th>
+  </tr>
+  <tr>
+    <td class="TableCell R1Left"   id="row1_0">?</td>
+    <td class="TableCell R1Center" id="row1_1">?</td>
+  </tr>
+    
+</table>
+
+<input id="CfgPwdSaveButton" type="button" value="저장" onclick="SaveUserAccessClick()">
+
+
+      </div> <!-- content-area -->
+
+    </div> <!-- content -->
+
+<!-- ************[footer]******************** -->
+
+    <div id="footer">
+      <div id="copyright">
+        <hr>
+        Copyright (C)2010-2026 <a class='alink' href='http://www.anybus.com'>ANYBUS</a>. All rights reserved.
+      </div>
+    </div>
+
+<!-- **********[end contentbar]********************** -->
+
+  </div>
+
+<!-- *******************[end container]************************************* -->
+
+<script type="text/javascript">
+  InitializeJavascript();
+  InitializeMaintenanceMode();
+</script>
+
+</body>
+</html>
