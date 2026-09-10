@@ -15,9 +15,15 @@
     const data = new FormData(form);
     const body = ['[JISOAR 프로젝트 문의]', '', '제작 분야: ' + data.get('service'), '해결하고 싶은 문제: ' + data.get('goal'), '희망 일정: ' + (data.get('schedule') || '상담 후 결정'), '예산 범위: ' + (data.get('budget') || '상담 후 결정'), '참고 링크: ' + (data.get('reference') || '없음')].join('\n');
     text.value = body;
-    document.getElementById('brief-email').href = 'mailto:hello@jisoar.com?subject=' + encodeURIComponent('[JISOAR] ' + data.get('service') + ' 문의') + '&body=' + encodeURIComponent(body);
+    const email = document.getElementById('brief-email');
+    const subject = 'mailto:hello@jisoar.com?subject=' + encodeURIComponent('[JISOAR] ' + data.get('service') + ' 문의');
+    const mailto = subject + '&body=' + encodeURIComponent(body);
+    const longMessage = mailto.length > 1800;
+    email.href = longMessage ? subject : mailto;
     output.hidden = false;
-    status.textContent = '문의 초안을 만들었습니다. 내용을 확인한 뒤 이메일이나 카카오톡으로 보내주세요.';
+    status.textContent = longMessage
+      ? '초안이 길어 이메일에 자동 입력하지 않습니다. 아래 내용을 복사한 뒤 이메일 또는 카카오톡에 붙여넣어 주세요.'
+      : '문의 초안을 만들었습니다. 내용을 확인한 뒤 이메일이나 카카오톡으로 보내주세요.';
     text.focus();
   });
   form.addEventListener('input', () => { output.hidden = true; status.textContent = ''; });
