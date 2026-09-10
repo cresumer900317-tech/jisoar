@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://api.fontshare.com; font-src 'self' https://cdn.jsdelivr.net https://api.fontshare.com https://cdn.fontshare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://api.fontshare.com; font-src 'self' https://cdn.jsdelivr.net https://api.fontshare.com https://cdn.fontshare.com; img-src 'self' data: https://images.unsplash.com; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://jisoar.com/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,12 +24,16 @@
 
 <link rel="stylesheet" href="/assets/editorial.css?v=10">
 <link rel="stylesheet" href="/assets/refresh.css?v=1">
+<link rel="stylesheet" href="/assets/hero-media.css?v=1">
 </head>
 <body>
 <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
 <header class="bar" id="bar"><a class="brand" href="/" aria-label="JISOAR 홈">jisoar.</a><nav aria-label="주요 메뉴"><a href="/work/">작업 사례</a><a href="/services/">서비스</a><a class="cta" href="/contact/">프로젝트 문의</a></nav></header>
 <main id="main-content">
-<section class="hero-v2"><div class="wrap">
+<section class="hero-v2 hero-with-media">
+<video id="hero-video" muted loop playsinline preload="none" data-src="/assets/media/jisoar-sky-loop.mp4" poster="/assets/media/jisoar-sky-poster.jpg" aria-hidden="true" hidden></video>
+<button id="hero-video-toggle" type="button" hidden>배경 영상 재생</button>
+<div class="wrap">
 <p class="hero-kicker">JISOAR / DIGITAL PRODUCT STUDIO</p>
 <h1>생각에 머물던 서비스를,<br><span>실제로 쓰이는 제품으로.</span></h1>
 <p class="hero-copy">비즈니스를 소개하는 홈페이지부터 반복 업무를 줄이는 시스템, 모바일 앱까지. 기획과 디자인, 개발, 출시 후 운영을 함께합니다.</p>
@@ -61,4 +65,5 @@
   </div>
 </footer>
 <script src="/assets/marketing.js" defer></script>
+<script src="/assets/hero-media.js?v=1" defer></script>
 </body></html>
