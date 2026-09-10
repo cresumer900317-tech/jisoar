@@ -2,6 +2,9 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://api.fontshare.com; font-src 'self' https://cdn.jsdelivr.net https://api.fontshare.com https://cdn.fontshare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://jisoar.com/products/wedding/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>결혼식 하객 사진 공유 서비스 · Wedding Memory Cloud | JISOAR</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
@@ -13,20 +16,23 @@
 <meta property="og:image" content="https://jisoar.com/og.png" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" />
-<script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="/assets/editorial.css?v=9" />
+
+<link rel="stylesheet" href="/assets/editorial.css?v=10" />
+<link rel="stylesheet" href="/assets/refresh.css?v=1">
 </head>
 <body>
+<a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
 
 <header class="bar" id="bar">
   <a class="brand" href="/">jisoar<sup>®</sup></a>
-  <nav>
-    <a class="on" href="/work/">Work</a>
-    <a href="/services/">Services</a>
-    <a class="cta" href="/contact/">Contact</a>
+  <nav aria-label="주요 메뉴">
+    <a class="on" href="/work/">작업 사례</a>
+    <a href="/services/">서비스</a>
+    <a class="cta" href="/contact/">프로젝트 문의</a>
   </nav>
 </header>
 
+<main id="main-content">
 <header class="phero">
   <div class="wrap">
     <div class="eyebrow rv"><i>✳</i>Work · Case Study</div>
@@ -111,27 +117,18 @@
   </div>
 </section>
 
+</main>
 <footer>
   <div class="wrap">
     <div class="row">
       <span>© 2026 jisoar®</span>
-      <span><a href="/about/">About</a> &nbsp;/&nbsp; <a href="/work/">Work</a> &nbsp;/&nbsp; <a href="/services/">Services</a> &nbsp;/&nbsp; <a href="/contact/">Contact</a></span>
+      <span><a href="/about/">소개</a> &nbsp;/&nbsp; <a href="/work/">작업 사례</a> &nbsp;/&nbsp; <a href="/services/">서비스</a> &nbsp;/&nbsp; <a href="/contact/">프로젝트 문의</a></span>
       <span>Ideas into Reality™</span>
     </div>
   </div>
 </footer>
 
-<script>
-(function(){
-  var bar=document.getElementById('bar');
-  addEventListener('scroll', function(){ bar.classList.toggle('scrolled', scrollY>16); }, {passive:true});
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      if(e.isIntersecting||e.boundingClientRect.top<0){ e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  },{threshold:.12, rootMargin:'0px 0px -6% 0px'});
-  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
-})();
-</script>
+
+<script src="/assets/marketing.js" defer></script>
 </body>
 </html>

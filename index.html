@@ -2,377 +2,63 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://api.fontshare.com; font-src 'self' https://cdn.jsdelivr.net https://api.fontshare.com https://cdn.fontshare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://jisoar.com/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>JISOAR | 생각한 그대로 서비스가 됩니다</title>
+<title>JISOAR | 웹사이트·업무 시스템·앱 제작</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1812'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <meta name="description" content="JISOAR, 생각한 그대로 서비스가 됩니다. 웹서비스·홈페이지·앱을 기획부터 배포·운영까지 직접 만듭니다." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jisoar.com/" />
-<meta property="og:title" content="JISOAR | 생각한 그대로 서비스가 됩니다" />
+<meta property="og:title" content="JISOAR | 웹사이트·업무 시스템·앱 제작" />
 <meta property="og:description" content="웹서비스 · 홈페이지 · 앱, 기획부터 운영까지." />
 <meta property="og:image" content="https://jisoar.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<script>document.documentElement.classList.add('js')</script>
+
 <link rel="preconnect" href="https://images.unsplash.com" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" />
-<style>
-/* ═══════════════════════════════════════════════════════
-   jisoar. home v7 / light editorial + real photography
-   ivory · ink type · real sky photo hero · minimal accent
-   photo: Unsplash (free commercial license)
-   ═══════════════════════════════════════════════════════ */
-:root{
-  --bg:#f4f8fd; --ink:#16222e; --mut:#5d6b7a; --faint:#9aa9b8;
-  --line:#dde7f1; --accent:#3b87f0;
-  --sans:'Pretendard Variable', Pretendard, -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
-  --disp:'Clash Display', 'Pretendard Variable', Pretendard, sans-serif;
-  --ease:cubic-bezier(.16,1,.3,1);
-}
-*{box-sizing:border-box; margin:0; padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans); background:var(--bg); color:var(--ink);
-  -webkit-font-smoothing:antialiased; line-height:1.6; overflow-x:hidden;
-  word-break:keep-all; overflow-wrap:break-word}
-::selection{background:var(--accent); color:#fff}
-a{color:inherit; text-decoration:none}
-.wrap{max-width:1520px; margin:0 auto; padding:0 clamp(20px,3.4vw,52px)}
 
-/* ── top bar ── */
-.bar{position:fixed; top:0; left:0; right:0; z-index:100;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:22px clamp(20px,3.4vw,52px); color:#fff;
-  transition:background .4s ease, padding .4s ease, color .4s ease, box-shadow .4s ease}
-.bar.scrolled{background:rgba(244,248,253,.86); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
-  padding:14px clamp(20px,3.4vw,52px); color:var(--ink); box-shadow:0 1px 0 var(--line)}
-.bar .brand{font-family:var(--disp); font-weight:600; font-size:18px; letter-spacing:-.01em}
-.bar .brand sup{font-size:9px; vertical-align:super; margin-left:1px; opacity:.6}
-.bar nav{display:flex; gap:clamp(14px,2.4vw,36px)}
-.bar nav a{font-size:12.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-  opacity:.75; transition:opacity .25s ease; position:relative}
-.bar nav a:hover, .bar nav a.on{opacity:1}
-.bar nav a.on::after{content:""; position:absolute; left:0; right:0; bottom:-7px; height:2px; background:var(--accent)}
-@media(max-width:720px){.bar nav a:nth-child(1),.bar nav a:nth-child(4){display:none}}
-.bar nav a{padding:12px 6px; margin:-12px -6px}
-.bar nav a.on::after{bottom:5px}
-.bar nav a.cta{opacity:1; margin:-8px 0 -8px 4px; padding:8px 14px; border:1px solid var(--ink); border-radius:999px;
-  transition:background .25s ease, color .25s ease, border-color .25s ease}
-.bar nav a.cta::after{display:none}
-.bar nav a.cta:hover, .bar nav a.cta.on{background:var(--ink); color:#fff}
-footer a{display:inline-block; padding:10px 2px; margin:-10px -2px}
-
-/* ── hero: real sky photograph + wordmark ── */
-.mast{height:100svh; position:relative; overflow:hidden;
-  display:flex; flex-direction:column; align-items:center; justify-content:center}
-.mast .photo{position:absolute; inset:0;
-  background-image:url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?q=85&w=2560&auto=format&fit=crop");
-  background-image:image-set(
-    url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?q=85&w=2560&auto=format&fit=crop") 1x,
-    url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?q=85&w=5120&auto=format&fit=crop") 2x);
-  background-position:center 55%; background-size:cover; background-repeat:no-repeat;
-  background-color:#6aa7e8}
-.mast .photo::before{content:""; position:absolute; inset:0; opacity:.05; pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
-.mast .photo::after{content:""; position:absolute; inset:0;
-  background:
-    radial-gradient(ellipse 62% 40% at 50% 44%, rgba(18,60,150,.62) 0%, rgba(18,60,150,.32) 45%, rgba(18,60,150,0) 100%),
-    linear-gradient(180deg, rgba(10,25,55,.10) 0%, rgba(10,25,55,0) 30%)}
-.mast .wordmark{position:relative; z-index:1; color:#fff;
-  font-family:var(--disp); font-weight:500; letter-spacing:-.02em; line-height:1.04;
-  font-size:clamp(58px,11vw,190px); white-space:nowrap; user-select:none;
-  margin-top:-12svh; text-shadow:0 4px 44px rgba(8,20,45,.3)}
-.mast .wordmark .ch{display:inline-block; opacity:0; transform:translateY(.32em);
-  animation:chUp 1s var(--ease) forwards}
-.mast .wordmark .dot{color:#fff}
-@keyframes chUp{to{opacity:1; transform:none}}
-.mast .sub{position:relative; z-index:1; margin-top:clamp(6px,1.4vh,18px);
-  color:#fff; font-size:clamp(14.5px,1.6vw,19px); font-weight:600; letter-spacing:.01em;
-  text-shadow:0 2px 18px rgba(20,60,110,.35);
-  opacity:0; animation:fadeUp 1s var(--ease) .8s forwards}
-.mast .meta{position:absolute; z-index:1; left:0; right:0; bottom:clamp(22px,4vh,42px);
-  display:flex; justify-content:space-between; align-items:flex-end;
-  padding:0 clamp(20px,3.4vw,52px);
-  font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
-  color:rgba(255,255,255,.85); text-shadow:0 1px 12px rgba(20,50,100,.35)}
-.mast .meta span{display:block; line-height:1.7}
-.mast .meta .r{text-align:right}
-@keyframes fadeUp{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
-
-/* ── marquee ── */
-.marq{border-bottom:1px solid var(--line); overflow:hidden;
-  padding:clamp(16px,2.2vw,26px) 0; white-space:nowrap; background:var(--bg)}
-.marq .track{display:inline-block; animation:marq 38s linear infinite}
-.marq span{font-family:var(--disp); font-size:clamp(28px,3.6vw,54px); font-weight:600; letter-spacing:-.01em; margin-right:1.6em}
-.marq .ast{color:var(--faint); font-weight:400}
-@keyframes marq{from{transform:translateX(0)} to{transform:translateX(-50%)}}
-
-/* ── shared section chrome ── */
-section{position:relative}
-.sect{padding:clamp(70px,9vw,140px) 0}
-.shead{display:flex; justify-content:space-between; align-items:baseline;
-  padding-bottom:22px; border-bottom:1px solid var(--line); margin-bottom:clamp(36px,5vw,72px)}
-.shead .t{font-size:12px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--mut)}
-.shead .t i{font-style:normal; color:var(--accent); margin-right:10px}
-.shead .n{font-size:12px; font-weight:600; letter-spacing:.14em; color:var(--faint)}
-
-.js .rv{opacity:0; transform:translateY(18px); transition:opacity .6s var(--ease), transform .6s var(--ease)}
-.js .rv.in{opacity:1; transform:none}
-.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
-
-/* ── statement ── */
-.statement{font-size:clamp(26px,3.5vw,54px); font-weight:800; letter-spacing:-.04em; line-height:1.24;
-  max-width:19em}
-.statement .ln{display:block}
-.statement em{font-style:normal; white-space:nowrap; color:#93a7bd; transition:color .5s ease}
-.statement em.lit{color:var(--ink)}
-.state-grid{display:grid; gap:clamp(40px,6vw,90px)}
-@media(min-width:960px){.state-grid{grid-template-columns:1.7fr 1fr; align-items:end}}
-.state-side p{color:var(--mut); font-size:15.5px; line-height:1.85; max-width:340px}
-.state-side .nums{display:flex; gap:clamp(24px,3vw,48px); margin-top:36px}
-.state-side .num .v{font-size:clamp(30px,3vw,44px); font-weight:800; letter-spacing:-.03em; line-height:1}
-.state-side .num .v i{font-style:normal; color:var(--accent)}
-.state-side .num .l{margin-top:8px; font-size:11.5px; font-weight:700; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--faint)}
-@media(max-width:720px){.state-side .nums{flex-wrap:wrap; row-gap:22px} .state-side .num .l{white-space:nowrap; letter-spacing:.08em}}
-
-/* ── work rows ── */
-.wrow{display:grid; grid-template-columns:auto auto 1fr auto; align-items:baseline; gap:clamp(16px,3vw,44px);
-  padding:clamp(26px,3.4vw,44px) 0; border-bottom:1px solid var(--line); position:relative;
-  transition:padding-left .45s var(--ease)}
-.wrow .idx{font-size:12.5px; font-weight:700; letter-spacing:.1em; color:var(--faint); min-width:2.4em}
-.wrow .name{font-family:var(--disp); font-size:clamp(22px,3vw,46px); font-weight:700; letter-spacing:-.03em; line-height:1.2;
-  transition:opacity .3s ease}
-.wrow .cat{font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
-  color:var(--mut); text-align:right; line-height:1.8; white-space:nowrap}
-.wrow .cat b{display:block; color:var(--faint); font-weight:700}
-.wrow::after{content:"→"; position:absolute; right:0; top:50%; transform:translate(18px,-50%);
-  font-size:clamp(20px,2.2vw,32px); color:var(--accent); opacity:0;
-  transition:opacity .3s ease, transform .45s var(--ease)}
-.wrow:hover{padding-left:clamp(10px,1.6vw,26px)}
-.wrow:hover .name{opacity:.55}
-.wrow:hover::after{opacity:1; transform:translate(0,-50%)}
-@media(max-width:640px){.wrow{grid-template-columns:auto 1fr}.wrow .cat,.wrow .idx{display:none}}
-.wrow .th{width:clamp(64px,8vw,116px); aspect-ratio:16/10; border-radius:8px; overflow:hidden; background:#e6edf6;
-  border:1px solid var(--line); align-self:center; display:block; flex:none}
-.wrow .th img{width:100%; height:100%; object-fit:cover; object-position:top; display:block; transition:transform .7s var(--ease)}
-.wrow:hover .th img{transform:scale(1.06)}
-.wrow .th.tile{display:flex; align-items:center; justify-content:center; background:var(--ink); color:#fff;
-  font-family:var(--disp); font-weight:600; font-size:clamp(14px,1.4vw,20px); letter-spacing:-.01em}
-
-/* ── services (compact strip) ── */
-.svc-strip{display:grid; grid-template-columns:1fr; border-top:1px solid var(--line)}
-@media(min-width:720px){.svc-strip{grid-template-columns:repeat(3,1fr)}}
-.svc-strip a{display:flex; flex-direction:column; gap:12px; padding:clamp(18px,2.4vw,30px) 0 clamp(18px,2.4vw,30px) 0;
-  border-bottom:1px solid var(--line); font-weight:800; font-size:clamp(16px,1.5vw,20px); letter-spacing:-.02em; transition:color .3s ease}
-@media(min-width:720px){.svc-strip a{padding-right:20px}}
-.svc-strip a .no{font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--accent)}
-.svc-strip a .d{font-size:13px; font-weight:500; letter-spacing:0; color:var(--mut); line-height:1.6}
-.svc-strip a:hover{color:var(--accent)}
-.svc-strip a.more{grid-column:1/-1; flex-direction:row; align-items:center; justify-content:flex-end; gap:8px;
-  font-size:13px; font-weight:700; letter-spacing:.06em; color:var(--mut); border-bottom:0; padding-right:0}
-.svc-strip a.more .a{transition:transform .3s var(--ease)} .svc-strip a.more:hover .a{transform:translateX(4px)}
-
-.svc-grid{display:grid; gap:1px; background:var(--line); border:1px solid var(--line)}
-@media(min-width:820px){.svc-grid{grid-template-columns:1fr 1fr}}
-.svc{background:var(--bg); padding:clamp(30px,3.6vw,52px); transition:background .35s ease}
-.svc:hover{background:#fff}
-.svc .no{font-size:12px; font-weight:800; letter-spacing:.12em; color:var(--accent)}
-.svc h3{margin-top:clamp(22px,3vw,44px); font-size:clamp(21px,2.1vw,29px); font-weight:800; letter-spacing:-.025em}
-.svc p{margin-top:12px; color:var(--mut); font-size:14.5px; line-height:1.8; max-width:400px}
-
-/* ── CTA ── */
-.cta{padding:clamp(90px,12vw,170px) 0; text-align:center}
-.cta .small{font-size:12px; font-weight:800; letter-spacing:.22em; text-transform:uppercase;
-  color:var(--mut); margin-bottom:26px}
-.cta .small i{font-style:normal; color:var(--accent); margin-right:10px}
-.cta a.big{display:inline-block; font-size:clamp(52px,9.5vw,170px); font-weight:800;
-  letter-spacing:-.05em; line-height:1.08; position:relative}
-.cta a.big .arr{display:inline-block; color:var(--accent); transition:transform .5s var(--ease)}
-.cta a.big::after{content:""; position:absolute; left:0; bottom:-4px; height:4px; width:100%;
-  background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .6s var(--ease)}
-.cta a.big:hover .arr{transform:translateX(.18em)}
-.cta a.big:hover::after{transform:scaleX(1)}
-.cta .mail{margin-top:34px; font-size:14px; color:var(--mut); letter-spacing:.02em}
-.cta .mail a{display:inline-block; border-bottom:1px solid var(--faint); padding:10px 0 2px; transition:color .25s, border-color .25s}
-.cta .mail a:hover{color:var(--ink); border-color:var(--accent)}
-
-/* ── footer ── */
-footer{border-top:1px solid var(--line); padding:34px 0 40px; font-size:12.5px; color:var(--faint)}
-footer .row{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
-  letter-spacing:.1em; text-transform:uppercase; font-weight:700}
-footer a:hover{color:var(--ink)}
-
-@media (prefers-reduced-motion: reduce){
-  *{animation-duration:.001ms !important; transition-duration:.001ms !important}
-  .mast .wordmark .ch{opacity:1; transform:none}
-  .rv{opacity:1 !important; transform:none !important}
-  .marq .track{animation:none}
-}
-
-/* ── Korean line balance ── */
-.nb{white-space:nowrap}
-@media(max-width:720px){br.d{display:none}}
-h1,h2,h3,.statement,.big,.lead,.side p,.phead p,.hero-sub{text-wrap:balance}
-p,.desc,li{text-wrap:pretty}
-</style>
+<link rel="stylesheet" href="/assets/editorial.css?v=10">
+<link rel="stylesheet" href="/assets/refresh.css?v=1">
 </head>
 <body>
-
-<header class="bar" id="bar">
-  <a class="brand" href="/">jisoar<sup>®</sup></a>
-  <nav>
-    <a href="/work/">Work</a>
-    <a href="/services/">Services</a>
-    <a class="cta" href="/contact/">Contact</a>
-  </nav>
-</header>
-
-<!-- ════ masthead: real sky ════ -->
-<section class="mast">
-  <div class="photo" aria-hidden="true"></div>
-  <h1 class="wordmark" id="wordmark" aria-label="jisoar">jisoar<span class="dot">.</span></h1>
-  <p class="sub">지소어, 생각한 그대로 서비스가 됩니다</p>
-  <div class="meta" aria-hidden="true">
-    <span>Ideas into Reality™<br/>Web Service · Dashboard · App</span>
-    <span class="r">Seoul, Korea<br/>©2K26</span>
-  </div>
-</section>
-
-<!-- ════ marquee ════ -->
-<div class="marq" aria-hidden="true">
-  <div class="track" id="marq"><span>WEB SERVICE <i class="ast">✳</i> DASHBOARD <i class="ast">✳</i> MONITORING <i class="ast">✳</i> APP <i class="ast">✳</i> 생각한 그대로 <i class="ast">✳</i> </span></div>
-</div>
-
-<!-- ════ statement ════ -->
-<section class="sect">
-  <div class="wrap">
-    <div class="shead rv"><div class="t"><i>✳</i>Studio</div><div class="n">(01)</div></div>
-    <div class="state-grid">
-      <h2 class="statement rv" id="statement">
-        <span class="ln">웹서비스 · 홈페이지 · 앱을 기획부터</span>
-        <span class="ln">배포 · 운영 · 유지보수까지</span>
-        <span class="ln">모두 직접 진행합니다.</span></h2>
-      <div class="state-side rv d1">
-        <p>직접 만들고 직접 운영해 본 것만 서비스로 제공합니다.<br class="d"/>
-          엑셀로 돌리던 업무와 반복 작업을<br class="d"/> 조회·자동화·권한 시스템으로 바꾸고,<br class="d"/>
-          서버 셋업부터 도메인 연결까지 마친<br class="d"/> 완성된 상태로 인도합니다.</p>
-        <div class="nums">
-          <div class="num"><div class="v">6<i>+</i></div><div class="l">Products</div></div>
-          <div class="num"><div class="v">4,100<i>+</i></div><div class="l">누적 방문 · Friends</div></div>
-          <div class="num"><div class="v">2</div><div class="l">iOS · Android 출시</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════ selected work ════ -->
-<section class="sect" style="padding-top:0">
-  <div class="wrap">
-    <div class="shead rv"><div class="t"><i>✳</i>Selected Work</div><div class="n">©2025–2026</div></div>
-    <a class="wrow rv" href="/products/guild-lounge/">
-      <span class="idx">01</span>
-      <span class="th tile">GL</span>
-      <span class="name">모바일게임 길드 관리 앱</span>
-      <span class="cat">운영 중 · 앱 서비스 · Guild Lounge<b>2026</b></span>
-    </a>
-    <a class="wrow rv" href="/work/">
-      <span class="idx">02</span>
-      <span class="th"><img src="/assets/work/ranklab.jpg" alt="" loading="lazy"/></span>
-      <span class="name">기업용 랭킹 조회·관리 대시보드</span>
-      <span class="cat">개발 중 · 대시보드 · 기업 프로젝트<b>2026</b></span>
-    </a>
-    <a class="wrow rv" href="/products/wedding/">
-      <span class="idx">03</span>
-      <span class="th"><img src="/assets/work/wedding.jpg" alt="" loading="lazy"/></span>
-      <span class="name">결혼식 하객 사진 공유 서비스</span>
-      <span class="cat">운영 중 · 웹 서비스 · Wedding Memory Cloud<b>2026</b></span>
-    </a>
-    <a class="wrow rv" href="/products/friends/">
-      <span class="idx">04</span>
-      <span class="th"><img src="/assets/work/friends.jpg" alt="" loading="lazy"/></span>
-      <span class="name">게임 커뮤니티 플랫폼</span>
-      <span class="cat">운영 중 · 웹 서비스 · Friends<b>2025</b></span>
-    </a>
-  </div>
-</section>
-
-<!-- ════ services ════ -->
-<section class="sect" style="padding-top:0">
-  <div class="wrap">
-    <div class="shead rv"><div class="t"><i>✳</i>Services</div><div class="n">(02)</div></div>
-    <div class="svc-strip rv">
-      <a href="/services/#dashboard"><span class="no">(01)</span>대시보드 · 업무 시스템<span class="d">데이터 조회 · 자동화 · 다단계 권한 · 리포트</span></a>
-      <a href="/services/#app"><span class="no">(02)</span>모바일 앱<span class="d">iOS · Android, 스토어 심사부터 출시까지</span></a>
-      <a href="/services/#web"><span class="no">(03)</span>웹사이트 · 홈페이지<span class="d">검색 · 모바일 · 공유 카드까지 완성된 상태로</span></a>
-      <a class="more" href="/services/">서비스 자세히 <span class="a">→</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- ════ CTA ════ -->
-<section class="cta">
-  <div class="wrap">
-    <div class="small rv"><i>✳</i>New Business</div>
-    <a class="big rv d1" href="/contact/">함께 만들까요<span class="arr">&nbsp;→</span></a>
-    <p class="mail rv d2"><a href="mailto:hello@jisoar.com">hello@jisoar.com</a>
-      &nbsp;·&nbsp; <a href="https://open.kakao.com/me/jettpak" target="_blank" rel="noopener">KakaoTalk</a></p>
-  </div>
-</section>
-
+<a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+<header class="bar" id="bar"><a class="brand" href="/" aria-label="JISOAR 홈">jisoar.</a><nav aria-label="주요 메뉴"><a href="/work/">작업 사례</a><a href="/services/">서비스</a><a class="cta" href="/contact/">프로젝트 문의</a></nav></header>
+<main id="main-content">
+<section class="hero-v2"><div class="wrap">
+<p class="hero-kicker">JISOAR / DIGITAL PRODUCT STUDIO</p>
+<h1>생각에 머물던 서비스를,<br><span>실제로 쓰이는 제품으로.</span></h1>
+<p class="hero-copy">비즈니스를 소개하는 홈페이지부터 반복 업무를 줄이는 시스템, 모바일 앱까지. 기획과 디자인, 개발, 출시 후 운영을 함께합니다.</p>
+<div class="actions"><a class="action primary" href="/contact/">프로젝트 상담하기 <span aria-hidden="true">↗</span></a><a class="action" href="#selected-work">만든 서비스 살펴보기</a></div>
+<p class="hero-note">초기 상담 무료 · 아이디어 단계부터 이야기해 주세요</p>
+</div></section>
+<div class="proof-strip"><div class="wrap"><p><strong>기획부터 배포까지</strong>하나의 흐름으로 이어지는 제작</p><p><strong>웹과 모바일 앱</strong>서비스에 맞는 형태로 구현</p><p><strong>출시 이후에도</strong>운영과 유지보수를 함께 설계</p></div></div>
+<section class="home-section"><div class="wrap"><p class="section-kicker">WHAT WE BUILD</p><div class="section-heading"><h2>지금 필요한 변화부터<br>함께 만듭니다</h2><p>새로운 서비스를 시작하거나, 매일 반복하는 일을 더 편하게 바꾸고 싶을 때.</p></div>
+<div class="service-lines">
+<a class="service-line" href="/services/#web"><span class="no">01</span><h3>웹사이트 · 홈페이지</h3><p>브랜드 소개와 제품 안내를 방문자의 문의로 연결하는 반응형 웹사이트.</p><span class="arrow" aria-hidden="true">↗</span></a>
+<a class="service-line" href="/services/#dashboard"><span class="no">02</span><h3>대시보드 · 업무 시스템</h3><p>엑셀에 흩어진 데이터와 반복 작업을 조회·관리·자동화 화면으로.</p><span class="arrow" aria-hidden="true">↗</span></a>
+<a class="service-line" href="/services/#app"><span class="no">03</span><h3>모바일 앱</h3><p>iOS와 Android 앱 개발부터 스토어 심사 대응, 출시 후 업데이트까지.</p><span class="arrow" aria-hidden="true">↗</span></a>
+</div></div></section>
+<section class="home-section" id="selected-work"><div class="wrap"><p class="section-kicker">SELECTED WORK</p><div class="section-heading"><h2>아이디어가<br>서비스가 된 사례</h2><a class="project-link" href="/work/">전체 작업 보기 ↗</a></div>
+<article class="featured-work"><a href="/work/#ranklab" aria-label="기업용 대시보드 작업 보기"><img src="/assets/work/ranklab.jpg" alt="가상 데이터로 구성한 랭킹 조회 대시보드 데모 화면" width="800" height="500" loading="lazy"></a><div><span class="work-status">업무 시스템 / 개발 중</span><h3>흩어진 순위 데이터를<br>한 화면에서 관리</h3><p>기업용 랭킹 조회·관리 대시보드. 다단계 권한과 채널별 데이터 관리 기능을 구축하고 있습니다.</p><p><small>화면은 가상 데이터 데모입니다.</small></p><a class="project-link" href="/work/#ranklab">프로젝트 살펴보기 ↗</a></div></article>
+<article class="featured-work"><a href="/products/wedding/" aria-label="사진 공유 서비스 작업 보기"><img src="/assets/work/wedding.jpg" alt="Wedding Memory Cloud 하객 사진 공유 서비스 화면" width="800" height="500" loading="lazy"></a><div><span class="work-status">웹 서비스 / 운영 중</span><h3>하객의 사진을<br>한곳에 모으는 경험</h3><p>QR로 접속해 앱 설치 없이 사진을 공유하는 Wedding Memory Cloud. 사진이 여러 대화방에 흩어지는 불편을 줄였습니다.</p><a class="project-link" href="/products/wedding/">서비스 살펴보기 ↗</a></div></article>
+<article class="featured-work"><a href="/products/friends/" aria-label="Friends 커뮤니티 작업 보기"><img src="/assets/work/friends.jpg" alt="Friends 게임 커뮤니티 홈 화면" width="800" height="500" loading="lazy"></a><div><span class="work-status">커뮤니티 / 운영 중</span><h3>공지와 기록이 쌓이는<br>커뮤니티 플랫폼</h3><p>길드 공지와 랭킹, 성장 기록을 모은 Friends. 모바일 앱 Guild Lounge로도 서비스를 이어갑니다.</p><a class="project-link" href="/products/friends/">웹 서비스 보기 ↗</a>　<a class="project-link" href="/products/guild-lounge/">모바일 앱 보기 ↗</a></div></article>
+</div></section>
+<section class="home-section process-band"><div class="wrap"><p class="section-kicker">HOW WE WORK</p><div class="section-heading"><h2>범위를 정하고,<br>결과를 보며 진행합니다</h2><p>필요한 기능부터 단계별로. 제작 중에도 실제 링크로 중간 결과를 확인합니다.</p></div><ol class="process-list"><li><span>01 / 상담</span><h3>문제부터 이해합니다</h3><p>목적, 사용자, 일정과 예산을 이야기합니다.</p></li><li><span>02 / 제안</span><h3>범위를 명확하게</h3><p>필요한 기능과 제작 범위, 견적을 문서로 정리합니다.</p></li><li><span>03 / 제작</span><h3>보면서 함께 조정</h3><p>중간 결과를 공유하고 피드백을 반영합니다.</p></li><li><span>04 / 출시</span><h3>운영까지 연결</h3><p>배포를 마무리하고 유지보수 방식을 함께 정합니다.</p></li></ol></div></section>
+<section class="home-close"><div class="wrap"><div><h2>어떤 일을<br>더 잘하고 싶으세요?</h2><p>한두 문장의 아이디어면 충분합니다.</p></div><div class="actions"><a class="action primary" href="/contact/">프로젝트 문의하기 ↗</a></div></div></section>
+</main>
 <footer>
   <div class="wrap">
     <div class="row">
       <span>© 2026 jisoar®</span>
-      <span><a href="/about/">About</a> &nbsp;/&nbsp; <a href="/work/">Work</a> &nbsp;/&nbsp; <a href="/services/">Services</a> &nbsp;/&nbsp; <a href="/contact/">Contact</a></span>
+      <span><a href="/about/">소개</a> &nbsp;/&nbsp; <a href="/work/">작업 사례</a> &nbsp;/&nbsp; <a href="/services/">서비스</a> &nbsp;/&nbsp; <a href="/contact/">프로젝트 문의</a></span>
       <span>Ideas into Reality™</span>
     </div>
   </div>
 </footer>
-
-<script>
-(function(){
-  /* top bar */
-  var bar=document.getElementById('bar');
-  addEventListener('scroll', function(){ bar.classList.toggle('scrolled', scrollY>16); }, {passive:true});
-
-  /* masthead: split into letters, staggered rise (no clipping wrappers) */
-  var wm=document.getElementById('wordmark');
-  wm.innerHTML='jisoar'.split('').map(function(c,i){
-    return '<span class="ch" style="animation-delay:'+(0.055*i+0.15)+'s">'+c+'</span>';
-  }).join('')+'<span class="ch dot" style="animation-delay:'+(0.055*6+0.15)+'s">.</span>';
-
-  /* marquee: duplicate until 2x viewport, then loop */
-  var tr=document.getElementById('marq'), base=tr.innerHTML;
-  while (tr.scrollWidth < innerWidth*2.2){ tr.innerHTML += base; }
-
-  /* reveals */
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      if(e.isIntersecting||e.boundingClientRect.top<0){ e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  },{threshold:.12, rootMargin:'0px 0px -6% 0px'});
-  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
-
-  /* statement: light words up progressively on scroll */
-  var st=document.getElementById('statement');
-  if(st){
-    var lines=st.querySelectorAll('.ln'); if(!lines.length) lines=[st];
-    lines.forEach(function(l){
-      var words=l.textContent.trim().split(/\s+/);
-      l.innerHTML=words.map(function(w){return '<em>'+w+'</em>';}).join(' ');
-    });
-    var ems=st.querySelectorAll('em');
-    addEventListener('scroll', function(){
-      var r=st.getBoundingClientRect();
-      var p=Math.min(1, Math.max(0, (innerHeight*0.82-r.top)/(innerHeight*0.6)));
-      var n=Math.floor(p*ems.length);
-      ems.forEach(function(em,i){ em.classList.toggle('lit', i<n); });
-    }, {passive:true});
-  }
-})();
-</script>
-</body>
-</html>
+<script src="/assets/marketing.js" defer></script>
+</body></html>

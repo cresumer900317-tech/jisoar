@@ -12,7 +12,7 @@ var StatusDataTimeout = 0;
 
 var xmlhttpSetTime = null;
 
-var CurrentIpAddress  = "172.27.125.251";
+var CurrentIpAddress  = "192.0.2.251";
 var CurrentPortNumber = "80";
 
 //-----------
@@ -440,7 +440,7 @@ function SaveSettings()
 
   if (NewDhcp == 0){  // DHCP is not enabled
     
-    var OriginalIpAddress = "172.27.125.251";
+    var OriginalIpAddress = "192.0.2.251";
     var NewIpAddress = document.getElementById('ip_address').value;
     if (NewIpAddress != OriginalIpAddress){
       args.push("setting_IP-Address:" + encodeURIComponent(NewIpAddress));
