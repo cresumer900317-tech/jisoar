@@ -818,7 +818,7 @@ function autoFill(){
   }else{
     $('#regMid').value=nvMid||'';$('#regPid').value=pid||'';
     auto.className='reg-auto show';
-    auto.innerHTML=`<span style="font-weight:800">상품ID ${esc(pid||'-')}${nvMid?' · MID '+esc(nvMid):''} 인식</span><span>수집 데이터에 아직 없는 상품입니다. 등록하면 다음 수집(${addDays(TODAY,1)} 11:00)에 상품명·단품MID·순위가 자동으로 채워집니다.</span>`;
+    auto.innerHTML=`<span style="font-weight:800">상품ID ${esc(pid||'-')}${nvMid?' · MID '+esc(nvMid):''} 인식</span><span>데모에는 수집된 상품만 즉시 조회됩니다. 실서비스에서는 링크 입력 후 10~20초 안에 상품명·몰·단품MID가 자동 조회되고, 순위는 다음 수집(${addDays(TODAY,1)} 11:00)부터 표시됩니다.</span>`;
   }
 }
 $('#regUrl').addEventListener('input',autoFill);
