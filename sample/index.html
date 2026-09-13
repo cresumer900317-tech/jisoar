@@ -631,7 +631,7 @@ tr.child .p-name{font-weight:500}
   </div>
 </aside>
 
-<script src="data.js?v=6"></script>
+<script src="data.js?v=7"></script>
 <script>
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
@@ -818,11 +818,34 @@ function autoFill(){
   }else{
     $('#regMid').value=nvMid||'';$('#regPid').value=pid||'';
     auto.className='reg-auto show';
-    auto.innerHTML=`<span style="font-weight:800">상품ID ${esc(pid||'-')}${nvMid?' · MID '+esc(nvMid):''} 인식</span><span>데모에는 수집된 상품만 즉시 조회됩니다. 실서비스에서는 링크 입력 후 10~20초 안에 상품명·몰·단품MID가 자동 조회되고, 순위는 다음 수집(${addDays(TODAY,1)} 11:00)부터 표시됩니다.</span>`;
+    auto.innerHTML=`<span style="font-weight:800">상품ID ${esc(pid||'-')}${nvMid?' · MID '+esc(nvMid):''} 인식</span><span id="regLiveHint">등록을 누르면 조회 서버가 상품명·몰·단품MID·현재 순위를 바로 조회합니다(보통 30초, 순위가 깊으면 최대 4분).</span>`;
   }
 }
 $('#regUrl').addEventListener('input',autoFill);
 $('#regUrl').addEventListener('paste',()=>setTimeout(autoFill,0));
+/* 라이브 조회 서버(큐): 수집 데이터에 없는 상품은 로그인 세션 워커가 상품명·상품ID·단일MID·순위를 조회 */
+const LIVE_API='https://guild-backend-production-75a6.up.railway.app/api/ranklab';
+let liveOnline=null;
+async function liveStatus(){try{const r=await fetch(LIVE_API+'/status',{cache:'no-store'});const j=await r.json();liveOnline=!!j.worker_online;}catch{liveOnline=false;}return liveOnline;}
+liveStatus();setInterval(liveStatus,15000);
+function isNaverProductLink(url){try{const u=new URL(url);return /(^|\.)naver\.com$/.test(u.hostname)&&/\/(?:window-)?products\/(?:[^/?#]+\/)?\d+/.test(u.pathname);}catch{return false}}
+async function liveLookup(url,kw,onStep){
+  const r=await fetch(LIVE_API+'/lookup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url,keyword:kw})});
+  if(!r.ok){let d='';try{d=(await r.json()).detail||'';}catch{}throw new Error(d||('조회 요청 실패 '+r.status));}
+  const job=await r.json();
+  const t0=Date.now();
+  for(;;){
+    await new Promise(res=>setTimeout(res,2500));
+    const g=await fetch(LIVE_API+'/lookup/'+job.id,{cache:'no-store'});
+    if(!g.ok)throw new Error('조회 상태 확인 실패 '+g.status);
+    const j=await g.json();
+    if(j.status==='done')return j.result;
+    if(j.status==='failed')throw new Error(j.error||'조회 실패');
+    const sec=Math.round((Date.now()-t0)/1000);
+    onStep(j.status==='queued'?`조회 대기 중${j.queue_position>1?` (앞에 ${j.queue_position-1}건)`:''}${j.worker_seen?'':' · 조회 서버 연결 확인 중'}`:j.step,sec);
+    if(sec>420)throw new Error('조회 시간 초과(7분)');
+  }
+}
 $('#regForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const url=$('#regUrl').value.trim(),kw=$('#regKw').value.trim(),own=$('#regOwner').value,days=Math.min(365,Math.max(1,Math.round(+$('#regDays').value)||30)),qty=Math.min(100,Math.max(1,Math.round(+$('#regQty').value)||1));
@@ -831,30 +854,47 @@ $('#regForm').addEventListener('submit',async e=>{
   if(!pid&&!nvMid){autoFill();return;}
   const btn=$('#regBtn'),lb=$('#regBtnLabel'),st=$('#regStatus');
   btn.disabled=true;lb.innerHTML=`<span class="spinner"></span>`;
-  st.className='reg-status show';st.innerHTML=`네이버에서 상품 정보를 가져오는 중…`;
-  await new Promise(r=>setTimeout(r,900));
-  // 같은 키워드에서 이 상품의 순위가 수집돼 있으면 즉시 표시
-  const hit=lookupProduct({pid,nvMid}).find(h=>h.kw===kw)||null;
-  const found=hit||regFound;
+  st.className='reg-status show';st.innerHTML=`상품 정보를 확인하는 중…`;
   const no=(SLOTS[0]?SLOTS[0].no:281000)+1;
-  let np;
-  if(found){
-    const t=found.t;
-    np={no,owner:own,kw,status:hit?'ok':'wait',rank:hit?t.rank:null,nvMid:t.nvMid,pid:t.pid||'',name:t.title||(t.pid?`스마트스토어 상품 ${t.pid}`:`가격비교 상품 ${t.nvMid}`),mall:t.mall||'다음 수집 시 자동 조회',catalog:!!t.catalog,price:t.price,review:t.review,url:t.url||'',
-      days,start:addDays(TODAY,1),end:addDays(TODAY,1+days),note:hit?'':`"${kw}" 순위는 다음 수집부터 표시 (현재 "${found.kw}" ${t.rank}위)`,color:colorOf(t.title),history:hit?[{d:TODAY,r:t.rank}]:[]};
+  const base={no,owner:own,kw,days,start:addDays(TODAY,1),end:addDays(TODAY,1+days),note:'',history:[]};
+  // 1) 수집 데이터에 같은 키워드로 순위가 있으면 즉시
+  const hit=lookupProduct({pid,nvMid}).find(h=>h.kw===kw)||null;
+  let np=null,how='';
+  if(hit){
+    const t=hit.t;
+    np=Object.assign(base,{status:'ok',rank:t.rank,nvMid:t.nvMid,pid:t.pid||'',name:t.title||`스마트스토어 상품 ${t.pid}`,mall:t.mall||'-',catalog:!!t.catalog,price:t.price,review:t.review,url:t.url||'',color:colorOf(t.title||url),history:[{d:TODAY,r:t.rank}]});
+    how=`현재 <b>${t.rank}위</b> (${TODAY} 수집 기준)`;
+    await new Promise(r=>setTimeout(r,600));
+  }else if(pid&&isNaverProductLink(url)){
+    // 2) 라이브 조회: 임시 행을 먼저 넣고 진행 상태를 갱신
+    np=Object.assign(base,{status:'wait',rank:null,nvMid:nvMid||'-',pid,name:`조회 중… 스마트스토어 상품 ${pid}`,mall:'조회 중',catalog:false,price:null,review:null,url:cleanLink(url),color:colorOf(url),live:true});
+    SLOTS.unshift(np);renderAd();$('#tbody tr')?.classList.add('flash');
+    try{
+      const res=await liveLookup(url,kw,(step,sec)=>{st.innerHTML=`<span class="spinner" style="border-color:rgba(0,0,0,.15);border-top-color:var(--ink-1)"></span>&nbsp; ${esc(step)} · ${sec}초`;np.note=step;np.name=`조회 중… ${esc(step)}`;renderAd();});
+      Object.assign(np,{name:res.name,pid:res.pid||pid,nvMid:res.nvMid||'-',mall:res.mall||'-',catalog:!!res.catalog,price:res.price,review:res.review,url:res.url||np.url,color:colorOf(res.name),
+        status:res.found?'ok':'err',rank:res.found?res.rank:null,history:res.found?[{d:TODAY,r:res.rank}]:[],
+        note:res.found?'':`"${kw}" 검색 결과 ${(res.rangeMax||1000).toLocaleString('ko-KR')}위(${res.searchedPages}페이지) 안에 없음`,live:false});
+      how=res.found?`현재 <b>${res.rank}위</b> (방금 조회, ${Math.round((res.elapsedMs||0)/1000)}초)`:`<span style="color:var(--bad)">${(res.rangeMax||1000).toLocaleString('ko-KR')}위 안에 없음</span> (방금 조회)`;
+    }catch(err){
+      // 조회 서버 불가 → 다음 수집 안내로 폴백
+      Object.assign(np,{name:`스마트스토어 상품 ${pid} (수집 대기)`,mall:'다음 수집 시 자동 조회',note:`즉시 조회 실패: ${err.message}`,live:false});
+      how=`<span style="color:var(--warn)">즉시 조회 실패(${esc(err.message)})</span> · 다음 수집(${addDays(TODAY,1)} 11:00)부터 순위가 표시됩니다.`;
+    }
+    SLOTS.shift();  // 임시 행 제거 후 아래에서 수량만큼 다시 삽입
   }else{
-    np={no,owner:own,kw,status:'wait',rank:null,nvMid:nvMid||'-',pid:pid||'',name:pid?`스마트스토어 상품 ${pid} (수집 대기)`:`가격비교 상품 ${nvMid} (수집 대기)`,mall:'다음 수집 시 자동 조회',catalog:!!nvMid&&!pid,price:null,review:null,url:pid?`https://smartstore.naver.com/main/products/${pid}`:'',
-      days,start:addDays(TODAY,1),end:addDays(TODAY,1+days),note:'',color:colorOf(url),history:[]};
+    np=Object.assign(base,{status:'wait',rank:null,nvMid:nvMid||'-',pid:pid||'',name:pid?`스마트스토어 상품 ${pid} (수집 대기)`:`가격비교 상품 ${nvMid} (수집 대기)`,mall:'다음 수집 시 자동 조회',catalog:!!nvMid&&!pid,price:null,review:null,url:'',color:colorOf(url)});
+    how=`다음 수집(${addDays(TODAY,1)} 11:00)부터 순위가 표시됩니다.`;
   }
   for(let q=qty-1;q>=0;q--)SLOTS.unshift(Object.assign({},np,{no:no+q,history:np.history.slice()}));
   LOGS.unshift({no:LOGS.length?LOGS[0].no+1:1,kind:'new',agency:'sm6974',owner:own,qty,days,created:TODAY+' '+new Date().toTimeString().slice(0,5),start:np.start,desc:`신규 등록 · ${kw} · ${np.name}${qty>1?` × ${qty}`:''}`,slot:SLOTS[0]});
-  st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · ${qty>1?`수량 ${qty} · `:''}${days}일 · ${np.status==='ok'?`현재 <b>${np.rank}위</b> (${TODAY} 수집 기준)`:`다음 수집(${addDays(TODAY,1)} 11:00)부터 순위가 표시됩니다.`}`;
+  st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · ${qty>1?`수량 ${qty} · `:''}${days}일 · ${how}`;
   $('#regUrl').value='';$('#regKw').value='';$('#regMid').value='';$('#regPid').value='';$('#regQty').value='1';$('#regDays').value='30';$('#regAuto').className='reg-auto';regFound=null;
   btn.disabled=false;lb.textContent='등록';
   filter='all';query='';owner='';$('#q').value='';$('#ownerFilter').value='';
   renderAd();renderAccount();renderSettle();renderDaily();
   const tr=$('#tbody tr');if(tr)tr.classList.add('flash');
 });
+function cleanLink(url){try{const u=new URL(url);u.search='';u.hash='';return u.toString();}catch{return url}}
 
 /* ================= drawer ================= */
 const drawer=$('#drawer'),overlay=$('#overlay');
