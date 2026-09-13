@@ -631,7 +631,12 @@ tr.child .p-name{font-weight:500}
   </div>
 </aside>
 
-<script src="data.js?v=8"></script>
+<script>
+/* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
+window.BUILD='v9';
+(async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
+</script>
+<script src="data.js?v=9"></script>
 <script>
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
@@ -828,7 +833,7 @@ const LIVE_API='https://guild-backend-production-75a6.up.railway.app/api/ranklab
 let liveOnline=null;
 async function liveStatus(){try{const r=await fetch(LIVE_API+'/status',{cache:'no-store'});const j=await r.json();liveOnline=!!j.worker_online;}catch{liveOnline=false;}return liveOnline;}
 liveStatus();setInterval(liveStatus,15000);
-function isNaverProductLink(url){try{const u=new URL(url);return /(^|\.)naver\.com$/.test(u.hostname)&&/\/(?:window-)?products\/(?:[^/?#]+\/)?\d+/.test(u.pathname);}catch{return false}}
+function isNaverProductLink(url){try{const u=new URL(url);return /(^|\.)naver\.com$/.test(u.hostname)&&(/\/(?:window-)?products\/(?:[^/?#]+\/)?\d+/.test(u.pathname)||/\/catalog\/\d+/.test(u.pathname));}catch{return false}}
 async function createLookup(url,kw){
   const r=await fetch(LIVE_API+'/lookup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url,keyword:kw})});
   if(!r.ok){let d='';try{d=(await r.json()).detail||'';}catch{}throw new Error(d||('조회 요청 실패 '+r.status));}
@@ -848,7 +853,7 @@ function applyLiveResult(np,res,kw){
     note:res.found?'':`"${kw}" 검색 결과 ${(res.rangeMax||1000).toLocaleString('ko-KR')}위(${res.searchedPages}페이지) 안에 없음`,live:false,jobId:null});
 }
 function applyLiveFail(np,msg){
-  Object.assign(np,{name:`스마트스토어 상품 ${np.pid} (수집 대기)`,mall:'다음 수집 시 자동 조회',note:`즉시 조회 실패: ${msg}`,live:false,jobId:null});
+  Object.assign(np,{name:np.pid?`스마트스토어 상품 ${np.pid} (수집 대기)`:`가격비교 상품 ${np.nvMid} (수집 대기)`,mall:'다음 수집 시 자동 조회',note:`즉시 조회 실패: ${msg}`,live:false,jobId:null});
 }
 async function pollJob(jobId,onStep){
   const t0=Date.now();
@@ -903,16 +908,16 @@ $('#regForm').addEventListener('submit',async e=>{
     np=Object.assign(base,{status:'ok',rank:t.rank,nvMid:t.nvMid,pid:t.pid||'',name:t.title||`스마트스토어 상품 ${t.pid}`,mall:t.mall||'-',catalog:!!t.catalog,price:t.price,review:t.review,url:t.url||'',color:colorOf(t.title||url),history:[{d:TODAY,r:t.rank}]});
     how=`현재 <b>${t.rank}위</b> (${TODAY} 수집 기준)`;
     await new Promise(r=>setTimeout(r,600));
-  }else if(pid&&isNaverProductLink(url)){
+  }else if((pid||nvMid)&&isNaverProductLink(url)){
     // 2) 라이브 조회: 임시 행을 먼저 넣고 진행 상태를 갱신
-    np=Object.assign(base,{status:'wait',rank:null,nvMid:nvMid||'-',pid,name:`조회 중… 스마트스토어 상품 ${pid}`,mall:'조회 중',catalog:false,price:null,review:null,url:cleanLink(url),color:colorOf(url),live:true,jobId:null,user:true});
+    np=Object.assign(base,{status:'wait',rank:null,nvMid:nvMid||'-',pid:pid||'',name:pid?`조회 중… 스마트스토어 상품 ${pid}`:`조회 중… 가격비교 상품 ${nvMid}`,mall:'조회 중',catalog:!pid&&!!nvMid,price:null,review:null,url:cleanLink(url),color:colorOf(url),live:true,jobId:null,user:true});
     let jobId=null;
     try{jobId=await createLookup(url,kw);np.jobId=jobId;}
     catch(err){applyLiveFail(np,err.message);how=`<span style="color:var(--warn)">즉시 조회 실패(${esc(err.message)})</span> · 다음 수집(${addDays(TODAY,1)} 11:00)부터 순위가 표시됩니다.`;}
     if(jobId){
       // 수량만큼 먼저 넣고 저장 → 새로고침해도 남고, 결과는 이어서 수신
       const group=[];for(let q=qty-1;q>=0;q--){const c=Object.assign({},np,{no:no+q,history:[]});group.push(c);SLOTS.unshift(c);}
-      LOGS.unshift({no:LOGS.length?LOGS[0].no+1:1,kind:'new',agency:'sm6974',owner:own,qty,days,created:TODAY+' '+new Date().toTimeString().slice(0,5),start:np.start,desc:`신규 등록 · ${kw} · 스마트스토어 상품 ${pid}${qty>1?` × ${qty}`:''}`,slot:group[group.length-1],user:true});
+      LOGS.unshift({no:LOGS.length?LOGS[0].no+1:1,kind:'new',agency:'sm6974',owner:own,qty,days,created:TODAY+' '+new Date().toTimeString().slice(0,5),start:np.start,desc:`신규 등록 · ${kw} · ${pid?`스마트스토어 상품 ${pid}`:`가격비교 상품 ${nvMid}`}${qty>1?` × ${qty}`:''}`,slot:group[group.length-1],user:true});
       saveUser();renderAd();renderSettle();renderDaily();$('#tbody tr')?.classList.add('flash');
       st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · ${qty>1?`수량 ${qty} · `:''}${days}일 · <span id="liveStep">조회 시작…</span> <span style="color:var(--ink-3)">(새로고침해도 결과는 이어서 표시됩니다)</span>`;
       $('#regUrl').value='';$('#regKw').value='';$('#regMid').value='';$('#regPid').value='';$('#regQty').value='1';$('#regDays').value='30';$('#regAuto').className='reg-auto';regFound=null;
