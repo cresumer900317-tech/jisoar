@@ -8,14 +8,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RANKLAB">
 <meta property="og:title" content="RANKLAB | 슬롯 순위 관리 시스템">
-<meta property="og:description" content="네이버·쿠팡·플레이스 통합 키워드 순위 모니터링. 링크 자동 등록 · 주간 순위 추적 · 광고주 관리.">
+<meta property="og:description" content="네이버쇼핑 키워드 순위 모니터링. 링크 자동 등록 · 매일 순위 추적 · 광고주 관리 · 정산 로그.">
 <meta property="og:image" content="https://jisoar.com/sample/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://jisoar.com/sample/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="RANKLAB | 슬롯 순위 관리 시스템">
-<meta name="twitter:description" content="네이버·쿠팡·플레이스 통합 키워드 순위 모니터링 (데모)">
+<meta name="twitter:description" content="네이버쇼핑 키워드 순위 모니터링 (데모)">
 <meta name="twitter:image" content="https://jisoar.com/sample/og.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
@@ -50,10 +50,9 @@ body{
 }
 button{font:inherit;cursor:pointer;color:inherit}
 input,select{font:inherit}
+a{color:inherit}
 ::selection{background:#d4e0f7}
-
 .app{display:flex;min-height:100vh}
-
 /* ================= sidebar ================= */
 .sidebar{
   width:236px;flex-shrink:0;background:var(--nav-bg);color:var(--nav-ink);
@@ -78,7 +77,6 @@ input,select{font:inherit}
 .nav a.active{background:var(--nav-panel);color:var(--nav-active);font-weight:700;border-left-color:var(--accent)}
 .nav a .cnt{margin-left:auto;font-size:11px;font-weight:600;color:var(--nav-ink-2);font-variant-numeric:tabular-nums}
 .nav a.active .cnt{color:#aeb6c3}
-.nav a .soon{margin-left:auto;font-size:9.5px;color:var(--nav-ink-2);border:1px solid #2a2f38;padding:0 6px}
 .acct{margin:12px;border:1px solid rgba(255,255,255,.08);background:var(--nav-panel)}
 .acct-row{display:flex;align-items:center;gap:10px;padding:12px 13px}
 .acct-badge{width:30px;height:30px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}
@@ -87,53 +85,45 @@ input,select{font:inherit}
 .acct-tree{border-top:1px solid rgba(255,255,255,.06);padding:9px 13px;font-size:10.5px;color:var(--nav-ink-2);letter-spacing:.2px}
 .acct-tree b{color:#8b93a1;font-weight:700}
 .logout{padding:11px 13px;font-size:11px;color:var(--nav-ink-2);border-top:1px solid rgba(255,255,255,.06);text-align:center}
-
 /* ================= main ================= */
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
 .demo-banner{
   display:flex;align-items:center;gap:8px;background:#141414;color:#e8c96b;
-  font-size:12px;font-weight:600;padding:7px 24px;letter-spacing:0;
+  font-size:12px;font-weight:600;padding:7px 24px;letter-spacing:0;line-height:1.4;
 }
+.demo-banner svg{flex-shrink:0}
 .topbar{
   background:var(--surface);border-bottom:1px solid var(--hairline);
-  padding:20px 28px 0;position:sticky;top:0;z-index:20;
+  padding:20px 28px 18px;position:sticky;top:0;z-index:20;
 }
 .topbar-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .topbar h1{font-size:20px;font-weight:800;letter-spacing:-.4px}
 .topbar .sub{font-size:12.5px;color:var(--ink-2);margin-top:3px}
 .topbar-meta{font-size:12px;color:var(--ink-3);text-align:right;line-height:1.75}
 .topbar-meta b{color:var(--ink-2);font-weight:700;font-variant-numeric:tabular-nums}
-/* channel tabs */
-.chtabs{display:flex;gap:0;margin-top:18px}
-.chtab{
-  border:1px solid var(--hairline);border-bottom:none;background:#f4f5f7;
-  padding:10px 22px;font-size:13px;font-weight:700;color:var(--ink-3);
-  margin-right:-1px;position:relative;display:flex;align-items:center;gap:8px;
-}
-.chtab .b{font-size:11px;font-weight:700;color:var(--ink-3);background:#e5e7ea;padding:1px 7px;font-variant-numeric:tabular-nums}
-.chtab.on{background:var(--surface);color:var(--ink-1);z-index:2}
-.chtab.on::after{content:"";position:absolute;left:0;right:0;top:-1px;height:2px;background:var(--accent)}
-.chtab.on .b{background:var(--accent);color:#fff}
-.chtab.disabled{color:#b7bcc4;cursor:default}
-
 .content{padding:24px 28px 64px}
-
+.page{display:none}
+.page.on{display:block}
 /* ================= KPI ================= */
 .panel{background:var(--panel);border:1px solid var(--hairline)}
 .kpi-card{margin-bottom:22px}
 .kpi-head{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--grid)}
 .kpi-head .t{font-size:14px;font-weight:800;letter-spacing:-.2px}
 .kpi-head .d{font-size:11.5px;color:var(--ink-3)}
-.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr)}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr)}
+.kpi-strip.five{grid-template-columns:repeat(5,1fr)}
 .kpi{text-align:center;border-left:1px solid var(--grid);padding:20px 8px}
 .kpi:first-child{border-left:none}
+.kpi.clickable{cursor:pointer}
+.kpi.clickable:hover{background:#f7f8fa}
+.kpi.sel{background:#f2f5fb}
 .k-v{font-size:30px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
 .k-v.accent{color:var(--accent)}
 .k-v.good{color:var(--good)}
 .k-v.bad{color:var(--bad)}
 .k-v.warn{color:var(--warn)}
+.k-v.small{font-size:19px;letter-spacing:-.3px;padding-top:6px}
 .k-l{font-size:12px;font-weight:600;color:var(--ink-3);margin-top:9px}
-
 /* ================= register ================= */
 .reg-head{display:flex;align-items:baseline;gap:12px;padding:16px 22px 0}
 .reg-head h2{font-size:14.5px;font-weight:800}
@@ -155,12 +145,15 @@ input,select{font:inherit}
 }
 .btn-dark:hover{background:#25292f}
 .btn-dark:disabled{opacity:.6;cursor:default}
+.btn-dark.sm,.btn-light.sm{min-height:34px;padding:0 14px;font-size:12px}
+.btn-light{background:var(--surface);color:var(--ink-2);border:1px solid var(--line-strong);padding:0 16px;min-height:44px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.btn-light:hover{border-color:var(--ink-1);color:var(--ink-1)}
+.btn-light svg{width:14px;height:14px}
 .spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:99px;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .reg-status{padding:0 22px 16px;font-size:12.5px;color:var(--ink-2);display:none;align-items:center;gap:7px}
 .reg-status.show{display:flex}
 .reg-status .ok{color:var(--good);font-weight:800}
-
 /* ================= table ================= */
 .tbl-card{margin-top:22px}
 .tbl-tools{display:flex;gap:10px;padding:15px 22px;border-bottom:1px solid var(--hairline);flex-wrap:wrap;align-items:center}
@@ -174,8 +167,10 @@ input,select{font:inherit}
 .seg button:first-child{border-left:none}
 .seg button.on{background:var(--ink-1);color:#fff;font-weight:700}
 .tbl-tools .count{margin-left:auto;font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tbl-tools .right{margin-left:auto;display:flex;gap:8px;align-items:center}
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:1000px}
+table.narrow{min-width:700px}
 thead th{
   text-align:center;font-size:11.5px;font-weight:700;color:var(--ink-2);letter-spacing:.2px;
   padding:12px 12px;background:#f5f6f8;border-bottom:1px solid var(--line-strong);white-space:nowrap;
@@ -183,37 +178,82 @@ thead th{
 thead th.left{text-align:left}
 tbody td{padding:13px 12px;border-bottom:1px solid var(--grid);font-size:12.5px;vertical-align:middle;white-space:nowrap;text-align:center}
 tbody td.left{text-align:left}
-tbody tr{cursor:pointer;transition:background .1s}
-tbody tr:hover{background:#f7f8fa}
+tbody tr.row{cursor:pointer;transition:background .1s}
+tbody tr.row:hover{background:#f7f8fa}
 tbody tr:last-child td{border-bottom:none}
 tbody tr.flash{animation:flash 1.8s ease-out}
 @keyframes flash{0%{background:#e9f0fc}100%{background:transparent}}
 .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";color:var(--ink-2);font-size:12px}
 .p-cell{display:flex;align-items:center;gap:11px;min-width:300px;white-space:normal;text-align:left}
 .p-thumb{width:36px;height:36px;flex-shrink:0;display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}
-.p-name{font-weight:600;font-size:12.5px;line-height:1.35;max-width:360px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.p-name{font-weight:600;font-size:12.5px;line-height:1.35;max-width:380px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--accent-ink)}
 .p-sub{font-size:11px;color:var(--ink-3);margin-top:2px;font-variant-numeric:tabular-nums}
 .id-tag{display:inline-block;font-size:11.5px;font-weight:700;color:var(--ink-2);border:1px solid var(--hairline);padding:2px 8px;background:#fafbfc}
 .kw-tag{display:inline-block;background:var(--surface);border:1px solid var(--line-strong);padding:3px 10px;font-size:12px;font-weight:600;color:var(--ink-1)}
 .rank{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
 .rank small{font-size:10.5px;font-weight:600;color:var(--ink-3);margin-left:1px}
-.delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums}
+.rank.none{font-size:12px;font-weight:700;color:var(--bad)}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;margin-left:5px}
 .delta.up{color:var(--good)}
 .delta.down{color:var(--bad)}
 .delta.flat{color:var(--ink-3);font-weight:600}
-.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;white-space:nowrap}
 .status .dot{width:7px;height:7px;border-radius:99px}
 .status.ok .dot{background:var(--good)}
 .status.ok{color:var(--ink-2)}
-.status.wait .dot{background:var(--warn)}
-.status.wait{color:var(--warn)}
-.spark{display:inline-block;vertical-align:middle}
-.tbl-foot{padding:13px 22px;font-size:11.5px;color:var(--ink-3);border-top:1px solid var(--hairline)}
-
+.status.err .dot{background:var(--bad)}
+.status.err{color:var(--bad)}
+.status.soon .dot{background:var(--warn)}
+.status.soon{color:var(--warn)}
+.status.wait .dot{background:#a4aab2}
+.status.wait{color:var(--ink-3)}
+.gear{width:28px;height:28px;border:1px solid var(--hairline);background:var(--surface);display:inline-grid;place-items:center;color:var(--ink-2)}
+.gear:hover{border-color:var(--ink-1);color:var(--ink-1)}
+.gear svg{width:14px;height:14px}
+.role{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border:1px solid var(--hairline)}
+.role.hq{color:#7a4bb3;border-color:#d9c8ee;background:#f8f4fd}
+.role.agency{color:var(--accent-ink);border-color:#c9d8f5;background:#f2f6fd}
+.role.adv{color:var(--good);border-color:#c6e5cf;background:#f1f9f3}
+.kind{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border:1px solid var(--hairline);background:#fafbfc;color:var(--ink-2)}
+.kind.new{color:var(--accent-ink)}
+.kind.ext{color:var(--good)}
+.kind.ref{color:var(--bad)}
+.tbl-foot{padding:13px 22px;font-size:11.5px;color:var(--ink-3);border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tbl-foot .pager{display:flex;gap:4px;align-items:center}
+.tbl-foot .pager button{width:26px;height:26px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-3);font-size:11px}
+.tbl-foot .pager button.on{background:var(--ink-1);color:#fff;border-color:var(--ink-1)}
+.empty{padding:48px;color:var(--ink-3);font-size:13px;text-align:center}
+/* date tools */
+.date-tools{display:flex;gap:8px;padding:15px 22px;border-bottom:1px solid var(--hairline);flex-wrap:wrap;align-items:center}
+.date-tools input[type=date]{border:1px solid var(--line-strong);padding:8px 10px;font-size:12.5px;background:var(--surface);color:var(--ink-2)}
+.date-tools .tilde{color:var(--ink-3);font-size:12px}
+.date-tools .quick{display:flex;gap:4px}
+.date-tools .quick button{border:1px solid var(--line-strong);background:var(--surface);padding:8px 13px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.date-tools .quick button.on{background:var(--ink-1);color:#fff;border-color:var(--ink-1)}
+/* notice / faq */
+.notice-row td.left{white-space:normal}
+.notice-title{font-weight:700;color:var(--ink-1)}
+.notice-body{display:none;background:#fafbfc;border-bottom:1px solid var(--grid)}
+.notice-body.on{display:table-row}
+.notice-body td{text-align:left;white-space:normal;padding:18px 22px 20px 62px;font-size:13px;line-height:1.75;color:var(--ink-2)}
+.notice-body td p+p{margin-top:8px}
+.notice-body td b{color:var(--ink-1)}
+.faq{padding:6px 22px 10px}
+.faq details{border-bottom:1px solid var(--grid)}
+.faq details:last-child{border-bottom:none}
+.faq summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:baseline;padding:16px 0;font-size:13.5px;font-weight:700}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .q{color:var(--accent);font-weight:900;font-size:13px;flex-shrink:0}
+.faq summary .chev{margin-left:auto;color:var(--ink-3);font-size:11px;transition:transform .15s}
+.faq details[open] summary .chev{transform:rotate(180deg)}
+.faq .a{padding:0 0 18px 30px;font-size:13px;line-height:1.75;color:var(--ink-2)}
+.faq .a b{color:var(--ink-1)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,12px);background:var(--ink-1);color:#fff;font-size:12.5px;font-weight:600;padding:11px 18px;opacity:0;pointer-events:none;transition:all .18s;z-index:60;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 /* ================= drawer ================= */
 .overlay{position:fixed;inset:0;background:rgba(13,15,19,.4);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
 .overlay.show{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:min(500px,95vw);background:var(--surface);z-index:50;transform:translateX(103%);transition:transform .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--hairline)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,95vw);background:var(--surface);z-index:50;transform:translateX(103%);transition:transform .26s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--hairline)}
 .drawer.show{transform:translateX(0)}
 .drawer-head{padding:22px;border-bottom:1px solid var(--hairline);display:flex;gap:14px;align-items:flex-start}
 .drawer-head .p-thumb{width:46px;height:46px;font-size:18px}
@@ -228,28 +268,35 @@ tbody tr.flash{animation:flash 1.8s ease-out}
 .d-stat .v{font-size:20px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
 .d-stat .v.up{color:var(--good)}
 .d-stat .v.down{color:var(--bad)}
+.d-stat .v.bad{color:var(--bad);font-size:15px}
 .chart-title{font-size:12.5px;font-weight:800;margin-bottom:2px}
 .chart-sub{font-size:11px;color:var(--ink-3);margin-bottom:12px}
 .chart-box{position:relative;border:1px solid var(--grid);padding:8px 4px 0}
 .chart-tip{position:absolute;background:var(--ink-1);color:#fff;font-size:11px;padding:5px 9px;pointer-events:none;opacity:0;transform:translate(-50%,-118%);white-space:nowrap;transition:opacity .1s;font-variant-numeric:tabular-nums;z-index:5}
 .chart-tip b{font-size:12px}
 .d-info{margin-top:22px;border-top:1px solid var(--hairline);padding-top:18px}
-.d-info dl{display:grid;grid-template-columns:96px 1fr;row-gap:11px;font-size:12.5px}
+.d-info dl{display:grid;grid-template-columns:104px 1fr;row-gap:11px;font-size:12.5px}
 .d-info dt{color:var(--ink-3);font-weight:600}
 .d-info dd{color:var(--ink-1);font-variant-numeric:tabular-nums;word-break:break-all}
-
+.d-info dd a{color:var(--accent-ink);font-weight:600;text-decoration:none;border-bottom:1px solid #c9d8f5}
+.d-links{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.d-links a{text-decoration:none}
+.topn{margin-top:22px;border-top:1px solid var(--hairline);padding-top:18px}
+.topn table{min-width:0}
+.topn td,.topn th{padding:8px 8px;font-size:12px}
+.topn td.left{white-space:normal;line-height:1.35}
+.topn tr.me td{background:#eef3fc;font-weight:700}
 @media (max-width:900px){
   .sidebar{display:none}
   .content{padding:18px 14px 48px}
-  .topbar{padding:16px 16px 0}
-  .kpi-strip{grid-template-columns:repeat(3,1fr)}
-  .kpi:nth-child(4),.kpi:nth-child(5){border-top:1px solid var(--grid)}
+  .topbar{padding:16px 16px 14px}
+  .kpi-strip,.kpi-strip.five{grid-template-columns:repeat(2,1fr)}
+  .kpi:nth-child(n+3){border-top:1px solid var(--grid)}
 }
 </style>
 </head>
 <body>
 <div class="app">
-
   <!-- ===== sidebar ===== -->
   <aside class="sidebar">
     <div class="brand">
@@ -257,32 +304,35 @@ tbody tr.flash{animation:flash 1.8s ease-out}
       <div class="brand-name">RANKLAB</div>
       <span class="brand-badge">DEMO</span>
     </div>
-    <nav class="nav">
-      <div class="nav-label">모니터링</div>
-      <a href="#" class="active" data-ch="naver" onclick="return selectChannel('naver')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
-        네이버 슬롯 <span class="cnt" id="navCntNaver">24</span>
+    <nav class="nav" id="nav">
+      <div class="nav-label">MAIN MENU</div>
+      <a href="#notice" data-page="notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        공지사항
       </a>
-      <a href="#" data-ch="coupang" onclick="return selectChannel('coupang')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        쿠팡 슬롯 <span class="cnt" id="navCntCoupang">0</span>
+      <a href="#faq" data-page="faq">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.7-2.5 2-2.5 4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>
+        자주 묻는 질문
       </a>
-      <a href="#" data-ch="place" onclick="return selectChannel('place')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        플레이스 슬롯 <span class="cnt" id="navCntPlace">0</span>
-      </a>
-      <div class="nav-label">관리</div>
-      <a href="#" onclick="return false">
+      <a href="#account" data-page="account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>
-        광고주 관리 <span class="cnt">6</span>
+        계정관리 <span class="cnt" id="navCntAcct"></span>
       </a>
-      <a href="#" onclick="return false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg>
-        작업 로그 <span class="soon">준비중</span>
+      <a href="#ad" data-page="ad" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        광고관리 <span class="cnt" id="navCntAd"></span>
       </a>
-      <a href="#" onclick="return false">
+      <a href="#settle" data-page="settle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16"/><path d="M3 10h18M8 15h5"/></svg>
-        정산 내역 <span class="soon">준비중</span>
+        정산로그
+      </a>
+      <a href="#edit" data-page="edit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/></svg>
+        수정관리
+      </a>
+      <a href="#daily" data-page="daily">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        일별마감
       </a>
     </nav>
     <div class="acct">
@@ -290,7 +340,7 @@ tbody tr.flash{animation:flash 1.8s ease-out}
         <div class="acct-badge">대행</div>
         <div><div class="acct-name">sm6974</div><div class="acct-role">대행사 (Agency)</div></div>
       </div>
-      <div class="acct-tree">총판 › <b>대행사 sm6974</b> › 광고주 6</div>
+      <div class="acct-tree">총판 › <b>대행사 sm6974</b> › 광고주 <span id="acctAdvCnt">5</span></div>
     </div>
     <div class="logout">로그아웃</div>
   </aside>
@@ -299,82 +349,235 @@ tbody tr.flash{animation:flash 1.8s ease-out}
   <main class="main">
     <div class="demo-banner">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="currentColor"/></svg>
-      데모 화면, 상품·순위·계정은 모두 가상 예시입니다. 실제 서비스에서는 네이버·쿠팡 데이터와 연동됩니다.
+      <span id="bannerText">데모 화면입니다. 순위·상품·몰·가격·리뷰수는 네이버쇼핑 통합검색에서 실제 수집한 값(광고 제외)이고, 광고주·작업 기간·정산은 예시입니다.</span>
     </div>
 
     <div class="topbar">
       <div class="topbar-row">
         <div>
-          <h1 id="pageTitle">네이버 슬롯 순위 현황</h1>
-          <div class="sub" id="pageSub">가격비교 키워드 순위 · 광고 제외 기준 · 매주 월요일 11:00 자동 수집</div>
+          <h1 id="pageTitle">광고관리</h1>
+          <div class="sub" id="pageSub">진행 중인 광고의 순위·기간을 확인하고 연장·수정·삭제를 관리합니다.</div>
         </div>
         <div class="topbar-meta">
-          최근 수집 <b>2026-08-24 (월) 11:00</b><br>
-          다음 수집 <b>2026-08-31 (월) 11:00</b> · 주 1회
+          최근 수집 <b id="metaLast">-</b><br>
+          다음 수집 <b id="metaNext">-</b> · 매일 1회
         </div>
-      </div>
-      <div class="chtabs" id="chtabs">
-        <button class="chtab on" data-ch="naver" onclick="selectChannel('naver')">네이버 <span class="b" id="tabCntNaver">24</span></button>
-        <button class="chtab" data-ch="coupang" onclick="selectChannel('coupang')">쿠팡 <span class="b" id="tabCntCoupang">0</span></button>
-        <button class="chtab" data-ch="place" onclick="selectChannel('place')">플레이스 <span class="b" id="tabCntPlace">0</span></button>
       </div>
     </div>
 
     <div class="content">
-      <!-- KPI -->
-      <section class="panel kpi-card">
-        <div class="kpi-head"><span class="t">전체 현황</span><span class="d" id="kpiChannel">네이버 채널</span></div>
-        <div class="kpi-strip" id="kpi"></div>
+
+      <!-- ================= 광고관리 ================= -->
+      <section class="page on" id="page-ad">
+        <section class="panel kpi-card">
+          <div class="kpi-head"><span class="t">전체 현황</span><span class="d">네이버쇼핑 통합검색 · 광고 제외 순위 · 카드를 누르면 목록이 필터됩니다</span></div>
+          <div class="kpi-strip" id="kpi"></div>
+        </section>
+
+        <section class="panel">
+          <div class="reg-head">
+            <h2>광고 등록</h2>
+            <span class="hint">네이버 상품 링크를 붙여넣으면 상품 정보를 자동으로 불러옵니다</span>
+          </div>
+          <form class="reg-form" id="regForm">
+            <div class="f grow">
+              <label>상품 링크</label>
+              <input type="text" id="regUrl" placeholder="https://smartstore.naver.com/… 링크 붙여넣기" required>
+            </div>
+            <div class="f mid">
+              <label>광고주</label>
+              <select id="regOwner"></select>
+            </div>
+            <div class="f mid">
+              <label>키워드</label>
+              <input type="text" id="regKw" placeholder="예: 캠핑의자" required>
+            </div>
+            <div class="f" style="flex:0 0 120px">
+              <label>작업일수</label>
+              <select id="regDays"><option>10</option><option>15</option><option>20</option><option selected>30</option><option>45</option><option>60</option></select>
+            </div>
+            <button class="btn-dark" id="regBtn" type="submit"><span id="regBtnLabel">등록</span></button>
+          </form>
+          <div class="reg-status" id="regStatus"></div>
+        </section>
+
+        <section class="panel tbl-card">
+          <div class="tbl-tools">
+            <div class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="text" id="q" placeholder="상품명 · 키워드 · 아이디 검색">
+            </div>
+            <select class="selbox" id="ownerFilter"><option value="">전체 광고주</option></select>
+            <div class="seg" id="seg">
+              <button data-f="all" class="on">전체</button>
+              <button data-f="ok">정상</button>
+              <button data-f="err">오류</button>
+              <button data-f="soon">종료예정</button>
+            </div>
+            <div class="right">
+              <span class="count" id="count"></span>
+              <button class="btn-light sm" type="button" onclick="notReady('수정')">수정</button>
+              <button class="btn-light sm" type="button" onclick="notReady('삭제')">삭제</button>
+              <button class="btn-dark sm" type="button" onclick="notReady('연장')">연장</button>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th><th>아이디</th><th>상태</th><th>키워드</th><th>순위</th>
+                  <th class="left">상품명</th><th>프로덕트ID</th><th>작업일수</th><th>시작일</th><th>종료일</th><th>관리</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+          <div class="tbl-foot"><span id="tblFoot"></span><span id="tblNote"></span></div>
+        </section>
       </section>
 
-      <!-- register -->
-      <section class="panel">
-        <div class="reg-head">
-          <h2 id="regTitle">상품 등록</h2>
-          <span class="hint" id="regHint">네이버 상품 링크를 붙여넣으면 상품 정보를 자동으로 불러옵니다</span>
-        </div>
-        <form class="reg-form" id="regForm">
-          <div class="f grow">
-            <label id="regLabel1">상품 링크</label>
-            <input type="text" id="regUrl" placeholder="https://smartstore.naver.com/… 링크 붙여넣기" required>
+      <!-- ================= 공지사항 ================= -->
+      <section class="page" id="page-notice">
+        <section class="panel tbl-card" style="margin-top:0">
+          <div class="tbl-tools">
+            <select class="selbox"><option>전체</option><option>공지</option><option>업데이트</option></select>
+            <div class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="text" id="noticeQ" placeholder="검색어를 입력해주세요.">
+            </div>
+            <span class="count" id="noticeCount"></span>
           </div>
-          <div class="f mid">
-            <label>광고주</label>
-            <select id="regOwner"></select>
+          <div class="tbl-wrap">
+            <table class="narrow">
+              <thead><tr><th style="width:70px">No</th><th style="width:90px">구분</th><th class="left">제목</th><th style="width:120px">작성일자</th></tr></thead>
+              <tbody id="noticeBody"></tbody>
+            </table>
           </div>
-          <div class="f mid">
-            <label id="regLabel2">추적 키워드</label>
-            <input type="text" id="regKw" placeholder="예: 캠핑의자" required>
-          </div>
-          <button class="btn-dark" id="regBtn" type="submit"><span id="regBtnLabel">등록</span></button>
-        </form>
-        <div class="reg-status" id="regStatus"></div>
+          <div class="tbl-foot"><span>제목을 누르면 내용이 펼쳐집니다.</span></div>
+        </section>
       </section>
 
-      <!-- table -->
-      <section class="panel tbl-card">
-        <div class="tbl-tools">
-          <div class="search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input type="text" id="q" placeholder="상품명 · 키워드 검색">
-          </div>
-          <select class="selbox" id="ownerFilter"><option value="">전체 광고주</option></select>
-          <div class="seg" id="seg">
-            <button data-f="all" class="on">전체</button>
-            <button data-f="up">상승</button>
-            <button data-f="down">하락</button>
-            <button data-f="top10">TOP 10</button>
-          </div>
-          <span class="count" id="count"></span>
-        </div>
-        <div class="tbl-wrap">
-          <table>
-            <thead id="thead"></thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
-        <div class="tbl-foot" id="tblFoot"></div>
+      <!-- ================= FAQ ================= -->
+      <section class="page" id="page-faq">
+        <section class="panel">
+          <div class="kpi-head"><span class="t">자주 묻는 질문</span><span class="d">순위 기준 · 수집 주기 · 계정 · 정산</span></div>
+          <div class="faq" id="faqList"></div>
+        </section>
       </section>
+
+      <!-- ================= 계정관리 ================= -->
+      <section class="page" id="page-account">
+        <section class="panel kpi-card">
+          <div class="kpi-head"><span class="t">계정 현황</span><span class="d">최고관리자 › 총판 › 대행사 › 광고주 4단계 권한</span></div>
+          <div class="kpi-strip" id="acctKpi"></div>
+        </section>
+        <section class="panel tbl-card">
+          <div class="tbl-tools">
+            <select class="selbox" id="acctRole"><option value="">전체</option><option value="hq">총판</option><option value="agency">대행사</option><option value="adv">광고주</option></select>
+            <div class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="text" id="acctQ" placeholder="아이디 · 소속 검색">
+            </div>
+            <div class="right">
+              <span class="count" id="acctCount"></span>
+              <button class="btn-light sm" type="button" onclick="notReady('삭제')">삭제</button>
+              <button class="btn-dark sm" type="button" onclick="notReady('등록')">등록</button>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="narrow">
+              <thead><tr><th>No</th><th>아이디</th><th>권한</th><th>소속</th><th>수량</th><th>광고</th><th class="left">메모</th><th>관리</th></tr></thead>
+              <tbody id="acctBody"></tbody>
+            </table>
+          </div>
+          <div class="tbl-foot"><span>수량 = 현재 진행 중인 광고(슬롯) 수 · 광고 = 광고관리에서 해당 아이디로 필터</span><span>비밀번호는 저장 시 단방향 암호화되어 화면에 표시되지 않습니다.</span></div>
+        </section>
+      </section>
+
+      <!-- ================= 정산로그 ================= -->
+      <section class="page" id="page-settle">
+        <section class="panel kpi-card">
+          <div class="kpi-head"><span class="t">검색 결과</span><span class="d">신규·연장·환불 일수 집계</span></div>
+          <div class="kpi-strip five" id="settleKpi"></div>
+        </section>
+        <section class="panel tbl-card">
+          <div class="date-tools" id="settleTools">
+            <select class="selbox" id="settleKind"><option value="">전체</option><option value="new">신규</option><option value="ext">연장</option><option value="ref">환불</option></select>
+            <input type="date" id="settleFrom"><span class="tilde">~</span><input type="date" id="settleTo">
+            <div class="quick" data-for="settle">
+              <button data-q="today">오늘</button><button data-q="yday">1일전</button><button data-q="m9" class="on">9월</button><button data-q="m8">8월</button><button data-q="m7">7월</button>
+            </div>
+            <div class="right">
+              <span class="count" id="settleCount"></span>
+              <button class="btn-light sm" type="button" onclick="exportCSV('settle')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v3h16v-3"/></svg>엑셀 저장
+              </button>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>No</th><th>구분</th><th>대행사</th><th>광고주</th><th>수량</th><th>기간</th><th>일수합계</th><th>생성일시</th><th>시작일</th><th class="left">내용</th><th>관리</th></tr></thead>
+              <tbody id="settleBody"></tbody>
+            </table>
+          </div>
+          <div class="tbl-foot"><span id="settleFoot"></span></div>
+        </section>
+      </section>
+
+      <!-- ================= 수정관리 ================= -->
+      <section class="page" id="page-edit">
+        <section class="panel tbl-card" style="margin-top:0">
+          <div class="date-tools">
+            <select class="selbox" id="editKind"><option value="">전체</option><option value="키워드">키워드</option><option value="종료일">종료일</option><option value="프로덕트ID">프로덕트ID</option></select>
+            <input type="date" id="editFrom"><span class="tilde">~</span><input type="date" id="editTo">
+            <div class="quick" data-for="edit">
+              <button data-q="today">오늘</button><button data-q="yday">1일전</button><button data-q="m9" class="on">9월</button><button data-q="m8">8월</button>
+            </div>
+            <div class="right">
+              <span class="count" id="editCount"></span>
+              <button class="btn-light sm" type="button" onclick="exportCSV('edit')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v3h16v-3"/></svg>엑셀 저장
+              </button>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>수정시간</th><th>구분</th><th>No</th><th>수정자 ID</th><th>대상자 ID</th><th class="left">상품명</th><th>키워드</th><th>프로덕트ID</th><th>MID</th><th>수정 전</th><th>수정 후</th></tr></thead>
+              <tbody id="editBody"></tbody>
+            </table>
+          </div>
+          <div class="tbl-foot"><span>광고 수정 이력은 자동 기록되며 삭제할 수 없습니다.</span></div>
+        </section>
+      </section>
+
+      <!-- ================= 일별마감 ================= -->
+      <section class="page" id="page-daily">
+        <section class="panel kpi-card">
+          <div class="kpi-head"><span class="t">검색 결과</span><span class="d">당월 일자별 정산 집계</span></div>
+          <div class="kpi-strip five" id="dailyKpi"></div>
+        </section>
+        <section class="panel tbl-card">
+          <div class="date-tools">
+            <input type="date" id="dailyFrom"><span class="tilde">~</span><input type="date" id="dailyTo">
+            <div class="quick" data-for="daily">
+              <button data-q="m9" class="on">9월</button><button data-q="m8">8월</button><button data-q="m7">7월</button>
+            </div>
+            <div class="right">
+              <button class="btn-light sm" type="button" onclick="exportCSV('daily')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v3h16v-3"/></svg>엑셀 저장
+              </button>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="narrow">
+              <thead><tr><th>날짜</th><th>발주 일수</th><th>연장 일수</th><th>환불 일수</th><th>일수 합계</th><th>기간 합계</th></tr></thead>
+              <tbody id="dailyBody"></tbody>
+            </table>
+          </div>
+          <div class="tbl-foot"><span>기간 합계 = 조회 시작일부터의 누적 일수</span></div>
+        </section>
+      </section>
+
     </div>
   </main>
 </div>
@@ -390,272 +593,208 @@ tbody tr.flash{animation:flash 1.8s ease-out}
   </div>
   <div class="drawer-body">
     <div class="d-stats" id="dStats"></div>
-    <div class="chart-title">주간 순위 추이</div>
-    <div class="chart-sub">매주 월요일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위</div>
+    <div class="chart-title">일별 순위 추이</div>
+    <div class="chart-sub" id="chartSub">매일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위</div>
     <div class="chart-box" id="chartBox"><div class="chart-tip" id="chartTip"></div></div>
     <div class="d-info"><dl id="dInfo"></dl></div>
+    <div class="d-links" id="dLinks"></div>
+    <div class="topn" id="dTop"></div>
   </div>
 </aside>
 
+<script src="data.js?v=2"></script>
 <script>
 /* ================= constants ================= */
-const WEEKS=['7/06','7/13','7/20','7/27','8/03','8/10','8/17','8/24'];
+const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
+const TODAY=S.collectedAt||'2026-09-14';
 const COLORS=['#3767c4','#c9772e','#2f9c6d','#b7842a','#b3557f','#4a4f96','#5a8fa8','#a2506a','#3f7d5c','#8a6bbf'];
-const OWNERS=[
-  {id:'sm7777',name:'허니에센스'},
-  {id:'mrmk',name:'엠알엠케이'},
-  {id:'eunoia2023',name:'유노이아'},
-  {id:'test-sm',name:'테스트샵'},
-  {id:'ss2277',name:'에스에스무역'},
+const ACCOUNTS=[
+  {id:'hq-master',role:'hq',name:'RANKLAB 총판',org:'-',memo:'총판 계정 · 대행사 생성/정산 권한'},
+  {id:'sm6974',role:'agency',name:'제이솔컴퍼니',org:'RANKLAB 총판',memo:'대행사 · 광고주 6개 관리 (현재 로그인)'},
+  {id:'sm7777',role:'adv',name:'허니에센스',org:'제이솔컴퍼니',memo:''},
+  {id:'mrmk',role:'adv',name:'엠알엠케이',org:'제이솔컴퍼니',memo:'월말 정산'},
+  {id:'eunoia2023',role:'adv',name:'유노이아',org:'제이솔컴퍼니',memo:''},
+  {id:'test-sm',role:'adv',name:'테스트샵',org:'제이솔컴퍼니',memo:'테스트 계정'},
+  {id:'ss2277',role:'adv',name:'에스에스무역',org:'제이솔컴퍼니',memo:''},
 ];
-
-/* per-channel column schema */
-const SCHEMA={
-  naver:{
-    title:'네이버 슬롯 순위 현황',
-    sub:'가격비교 키워드 순위 · 광고 제외 기준 · 매주 월요일 11:00 자동 수집',
-    regTitle:'상품 등록', regHint:'네이버 상품 링크를 붙여넣으면 상품 정보를 자동으로 불러옵니다',
-    label1:'상품 링크', ph1:'https://smartstore.naver.com/… 링크 붙여넣기',
-    label2:'추적 키워드', ph2:'예: 캠핑의자',
-    cols:['묶음MID','단품MID','상품ID'],
-    colKeys:['bundleMid','itemMid','productId'],
-  },
-  coupang:{
-    title:'쿠팡 슬롯 순위 현황',
-    sub:'쿠팡 검색 키워드 순위 · 광고(AD) 제외 기준 · 매주 월요일 11:00 자동 수집',
-    regTitle:'상품 등록', regHint:'쿠팡 상품 URL을 붙여넣으면 상품 정보를 자동으로 불러옵니다',
-    label1:'상품 URL', ph1:'https://www.coupang.com/vp/products/… URL 붙여넣기',
-    label2:'검색 키워드', ph2:'예: 무선 이어폰',
-    cols:['상품코드','옵션ID','검색키워드'],
-    colKeys:['productId','itemMid','searchKw'],
-  },
-  place:{
-    title:'플레이스 슬롯 순위 현황',
-    sub:'네이버 지도·플레이스 키워드 순위 · 매주 월요일 11:00 자동 수집',
-    regTitle:'업체 등록', regHint:'네이버 플레이스 URL을 붙여넣으면 업체 정보를 자동으로 불러옵니다',
-    label1:'플레이스 URL', ph1:'https://map.naver.com/… 또는 place.naver.com/… URL',
-    label2:'추적 키워드', ph2:'예: 강남 미용실',
-    cols:['플레이스ID','업종','지역키워드'],
-    colKeys:['productId','itemMid','searchKw'],
-  },
-};
-
-/* ================= data ================= */
-function mk(o){o.color=COLORS[Math.abs(hash(o.name))%COLORS.length];o.pending=o.pending||false;return o;}
-function hash(s){let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0;}return h;}
-
-const DATA={
-  naver:[
-    mk({owner:'sm7777',name:'허브펌 손가락관절 근육관절패치 원적외선 허브성분 서지컬 32매',kw:'관절패치',bundleMid:'91200273277',itemMid:'91200273277',productId:'13655762492',ranks:[38,31,24,18,14,11,10,8],start:'2026-08-20',end:'2026-09-29'}),
-    mk({owner:'sm7777',name:'노비시세우 20미 450g 30미 40미 300g 튀김용새우 냉동 손질 다이아몬드',kw:'냉동새우',bundleMid:'85739798464',itemMid:'85739798464',productId:'8195298141',ranks:[22,18,15,11,9,7,6,6],start:'2026-08-20',end:'2026-09-29'}),
-    mk({owner:'sm7777',name:'에어컨 실외기 커버 24시간 절전 가림막 날개 가리개 열자닫',kw:'실외기커버',bundleMid:'85776423588',itemMid:'85776423588',productId:'8231923265',ranks:[35,28,24,19,16,13,12,11],start:'2026-08-19',end:'2026-09-30'}),
-    mk({owner:'test-sm',name:'ASUS 노트북 라이젠5 램8G NVMe256G WIN11 업무용 사무용 대학생 인강용',kw:'가성비노트북',bundleMid:'89926355249',itemMid:'89926355249',productId:'12381844532',ranks:[19,15,13,12,11,11,10,9],start:'2026-08-22',end:'2026-09-01'}),
-    mk({owner:'sm7777',name:'모튜스 토닉 여성 남성 탈모샴푸 원형 탈모 완화방지 이방관리 맥주효모 영양제',kw:'탈모샴푸',bundleMid:'80578549282',itemMid:'80578549282',productId:'3080805034',ranks:[145,132,124,118,110,105,103,98],start:'2026-07-07',end:'2026-09-02'}),
-    mk({owner:'test-sm',name:'우즈 공간맞춤 3단 서랍장 2단 수납장 옷장 거실장 폭 500 800',kw:'서랍장',bundleMid:'87875733087',itemMid:'87875733087',productId:'10331228877',ranks:[48,42,38,35,34,33,30,29],start:'2026-08-22',end:'2026-09-03'}),
-    mk({owner:'sm7777',name:'필라멘토 직장인 종합영양제 올인원 멀티비타민 오메가3 루테인 밀크씨슬 30포',kw:'종합영양제',bundleMid:'88347038246',itemMid:'88347038246',productId:'10802532256',ranks:[55,44,38,33,30,28,26,24],start:'2026-08-25',end:'2026-09-03'}),
-    mk({owner:'mrmk',name:'명품 영광 법성포 고추장굴비 국내산 가정용 선물 고급용 500g 250g 세트 추석',kw:'고추장굴비',bundleMid:'83543083400',itemMid:'83543083400',productId:'5998583912',ranks:[12,9,7,5,4,3,2,2],start:'2026-08-26',end:'2026-09-29'}),
-    mk({owner:'sm7777',name:'울트라 대용량 샤워필터 비타민 녹앙 리필 향기 잔유엽소 제거 세트 단품',kw:'샤워필터',bundleMid:'85284366852',itemMid:'85284366852',productId:'7739866530',ranks:[44,36,29,24,21,19,17,17],start:'2026-08-26',end:'2026-09-29'}),
-    mk({owner:'mrmk',name:'프리미엄 접이식 캠핑의자 경량 릴렉스 체어 대형 야외용 낚시 의자',kw:'캠핑의자',bundleMid:'84710293845',itemMid:'84710293845',productId:'13655762111',ranks:[42,33,26,19,14,10,7,6],start:'2026-08-04',end:'2026-09-29'}),
-    mk({owner:'eunoia2023',name:'스테인리스 진공 텀블러 900ml 대용량 보온보냉 빨대 컵 휴대용',kw:'대용량 텀블러',bundleMid:'86273849102',itemMid:'86273849102',productId:'6273849102',ranks:[9,7,6,5,4,3,3,2],start:'2026-08-25',end:'2026-09-30'}),
-    mk({owner:'eunoia2023',name:'저소음 초음파 가습기 4L 대용량 무드등 사무실 침실 미니 가습기',kw:'대용량 가습기',bundleMid:'88450612739',itemMid:'88450612739',productId:'3940516273',ranks:[null,null,72,58,48,40,33,26],start:'2026-08-10',end:'2026-10-31',pending:false}),
-    mk({owner:'eunoia2023',name:'양면 실리콘 도마 항균 대형 주방 도마 세트 미끄럼방지',kw:'실리콘도마',bundleMid:'82839405162',itemMid:'82839405162',productId:'2839405162',ranks:[27,24,21,18,16,14,13,11],start:'2026-08-25',end:'2026-10-20'}),
-    mk({owner:'test-sm',name:'메모리폼 경추 베개 목편한 기능성 낮은 베개 숙면 베개',kw:'경추베개',bundleMid:'81728394051',itemMid:'81728394051',productId:'1728394051',ranks:[null,null,null,45,39,34,30,25],start:'2026-08-17',end:'2026-11-30'}),
-  ],
-  coupang:[],
-  place:[],
-};
+const OWNERS=ACCOUNTS.filter(a=>a.role==='adv');
+const ROLE_LABEL={hq:'총판',agency:'대행사',adv:'광고주'};
 
 /* ================= helpers ================= */
 const $=s=>document.querySelector(s);
-let CH='naver',filter='all',query='',owner='';
-function list(){return DATA[CH];}
-function cur(p){const r=p.ranks.filter(v=>v!=null);return r.length?r[r.length-1]:null}
-function prev(p){const r=p.ranks.filter(v=>v!=null);return r.length>1?r[r.length-2]:null}
-function delta(p){const c=cur(p),v=prev(p);return(c==null||v==null)?null:v-c}
-function best(p){const r=p.ranks.filter(v=>v!=null);return r.length?Math.min(...r):null}
-function isPending(p){return p.ranks.filter(v=>v!=null).length<2}
-function ownerName(id){const o=OWNERS.find(o=>o.id===id);return o?o.name:id}
-function esc(s){return(''+s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+const $$=s=>Array.from(document.querySelectorAll(s));
+function esc(s){return(''+(s??'')).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function hash(s){let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0;}return h;}
+function colorOf(s){return COLORS[Math.abs(hash(s))%COLORS.length]}
+function ownerName(id){const o=ACCOUNTS.find(o=>o.id===id);return o?o.name:id}
+function addDays(s,n){const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d+n)).toISOString().slice(0,10)}
+function dayDiff(a,b){return Math.round((new Date(b)-new Date(a))/86400000)}
+function fmtDate(s){const[y,m,d]=s.split('-').map(Number);return `${s} (${'일월화수목금토'[new Date(Date.UTC(y,m-1,d)).getUTCDay()]})`}
+function won(n){return n==null?'-':n.toLocaleString('ko-KR')+'원'}
+function notReady(what){toast(`${what} 기능은 데모에서 비활성화되어 있습니다. 실제 서비스에서는 선택한 항목에 대해 ${what}이(가) 처리됩니다.`)}
+let toastT;function toast(msg){let t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t);}t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
 
-/* ================= channel switch ================= */
-function selectChannel(ch){
-  CH=ch;filter='all';query='';owner='';
-  const sc=SCHEMA[ch];
-  $('#pageTitle').textContent=sc.title;
-  $('#pageSub').textContent=sc.sub;
-  $('#kpiChannel').textContent={naver:'네이버 채널',coupang:'쿠팡 채널',place:'플레이스 채널'}[ch];
-  $('#regTitle').textContent=sc.regTitle;
-  $('#regHint').textContent=sc.regHint;
-  $('#regLabel1').textContent=sc.label1;
-  $('#regUrl').placeholder=sc.ph1;
-  $('#regLabel2').textContent=sc.label2;
-  $('#regKw').placeholder=sc.ph2;
-  document.querySelectorAll('.chtab').forEach(t=>t.classList.toggle('on',t.dataset.ch===ch));
-  document.querySelectorAll('.nav a[data-ch]').forEach(a=>a.classList.toggle('active',a.dataset.ch===ch));
-  $('#q').value='';
-  $('#ownerFilter').value='';
-  document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));
-  render();
-  return false;
+/* ================= slots ================= */
+const SLOTS=S.slots.map(s=>Object.assign({},s,{color:colorOf(s.name),history:[{d:TODAY,r:s.rank}]}));
+const SOON_DAYS=3;
+function isSoon(p){return p.status!=='err'&&dayDiff(TODAY,p.end)<=SOON_DAYS}
+function stateOf(p){if(p.status==='err')return'err';if(p.status==='wait')return'wait';if(isSoon(p))return'soon';return'ok'}
+function cur(p){return p.rank}
+function delta(p){const h=p.history.filter(x=>x.r!=null);return h.length>1?h[h.length-2].r-h[h.length-1].r:null}
+
+/* ================= meta ================= */
+(function(){
+  let last=TODAY,lastTime='';
+  S.keywords.forEach(k=>{if(k.collectedAt&&k.collectedAt>lastTime)lastTime=k.collectedAt});
+  if(lastTime){const t=new Date(lastTime);lastTime=' '+t.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Seoul'});}
+  $('#metaLast').textContent=fmtDate(last)+lastTime;
+  $('#metaNext').textContent=fmtDate(addDays(TODAY,1))+' 11:00';
+})();
+
+/* ================= routing ================= */
+const PAGES={
+  ad:['광고관리','진행 중인 광고의 순위·기간을 확인하고 연장·수정·삭제를 관리합니다.'],
+  notice:['공지사항','새로운 소식, 업데이트 관련 정보를 한 곳에서 확인할 수 있습니다.'],
+  faq:['자주 묻는 질문','순위 기준과 수집 방식, 계정·정산에 대해 자주 묻는 내용입니다.'],
+  account:['계정관리','계정 정보를 확인하고, 추가·수정·삭제 등의 관리 작업을 할 수 있습니다.'],
+  settle:['정산로그','정산과 관련된 상세 정보를 조회할 수 있습니다.'],
+  edit:['수정관리','관리 중인 광고의 수정 로그를 확인할 수 있습니다.'],
+  daily:['일별마감','당월의 정산 상세 정보를 조회할 수 있습니다.'],
+};
+function go(page){
+  if(!PAGES[page])page='ad';
+  $$('.page').forEach(p=>p.classList.toggle('on',p.id==='page-'+page));
+  $$('#nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
+  $('#pageTitle').textContent=PAGES[page][0];$('#pageSub').textContent=PAGES[page][1];
+  window.scrollTo(0,0);
 }
+$('#nav').addEventListener('click',e=>{const a=e.target.closest('a[data-page]');if(!a)return;e.preventDefault();location.hash=a.dataset.page;});
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 
-/* ================= KPI ================= */
+/* ================= 광고관리 ================= */
+let filter='all',query='',owner='';
 function renderKPI(){
-  const L=list();
-  const total=L.length;
-  const ok=L.filter(p=>!isPending(p)).length;
-  const wait=L.filter(p=>isPending(p)).length;
-  const ups=L.filter(p=>delta(p)>0).length;
-  const top10=L.filter(p=>cur(p)!=null&&cur(p)<=10).length;
-  $('#kpi').innerHTML=`
-    <div class="kpi"><div class="k-v accent">${total}</div><div class="k-l">전체 슬롯</div></div>
-    <div class="kpi"><div class="k-v good">${ok}</div><div class="k-l">정상 수집</div></div>
-    <div class="kpi"><div class="k-v up" style="color:var(--good)">${ups}</div><div class="k-l">순위 상승</div></div>
-    <div class="kpi"><div class="k-v warn">${wait}</div><div class="k-l">수집 대기</div></div>
-    <div class="kpi"><div class="k-v">${top10}</div><div class="k-l">TOP 10</div></div>`;
+  const total=SLOTS.length,ok=SLOTS.filter(p=>stateOf(p)==='ok').length,err=SLOTS.filter(p=>stateOf(p)==='err').length,soon=SLOTS.filter(p=>stateOf(p)==='soon').length;
+  const c=[['all',total,'전체','accent'],['ok',ok,'정상','good'],['err',err,'오류','bad'],['soon',soon,'종료예정','warn']];
+  $('#kpi').innerHTML=c.map(([f,v,l,cls])=>`<div class="kpi clickable ${filter===f?'sel':''}" data-f="${f}"><div class="k-v ${cls}">${v}</div><div class="k-l">${l}</div></div>`).join('');
 }
-
-/* ================= sparkline ================= */
-function sparkline(p,w=104,h=28){
-  const vals=p.ranks,nums=vals.filter(v=>v!=null);
-  if(nums.length<2)return `<span style="font-size:11px;color:var(--ink-3)">수집 대기</span>`;
-  const min=Math.min(...nums),max=Math.max(...nums),span=Math.max(max-min,1);
-  const pts=[];
-  vals.forEach((v,i)=>{if(v==null)return;const x=(i/(vals.length-1))*(w-6)+3;const y=((v-min)/span)*(h-8)+4;pts.push([x,y]);});
-  const d=pts.map((pt,i)=>(i?'L':'M')+pt[0].toFixed(1)+' '+pt[1].toFixed(1)).join(' ');
-  const last=pts[pts.length-1],trend=nums[0]-nums[nums.length-1];
-  const col=trend>0?'var(--good)':(trend<0?'var(--bad)':'var(--ink-3)');
-  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="2.6" fill="${col}"/></svg>`;
+$('#kpi').addEventListener('click',e=>{const k=e.target.closest('.kpi');if(!k)return;setFilter(k.dataset.f);});
+function setFilter(f){filter=f;$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f===f));renderAd();}
+function statusHTML(p){
+  const st=stateOf(p);
+  const label={ok:'정상',err:'오류',soon:'종료예정',wait:'수집대기'}[st];
+  return `<span class="status ${st}"><span class="dot"></span>${label}</span>`;
 }
-
-/* ================= table ================= */
-function renderHead(){
-  const sc=SCHEMA[CH];
-  const idCols=sc.cols.map(c=>`<th>${c}</th>`).join('');
-  $('#thead').innerHTML=`<tr>
-    <th>상태</th><th class="left">상품</th><th>광고주</th>${idCols}
-    <th>키워드</th><th>순위</th><th>전주대비</th><th>8주 추이</th><th>시작일</th><th>종료일</th>
-  </tr>`;
+function rankHTML(p){
+  if(p.status==='err')return `<span class="rank none">순위없음</span>`;
+  if(p.rank==null)return `<span style="color:var(--ink-3)">-</span>`;
+  const d=delta(p);
+  let dl=d==null?`<span class="delta flat">신규</span>`:(d>0?`<span class="delta up">▲${d}</span>`:(d<0?`<span class="delta down">▼${Math.abs(d)}</span>`:`<span class="delta flat">0</span>`));
+  return `<span class="rank">${p.rank}<small>위</small></span>${dl}`;
 }
 function rowHTML(p,idx){
-  const sc=SCHEMA[CH];
-  const c=cur(p),d=delta(p),pend=isPending(p);
-  const st=pend?`<span class="status wait"><span class="dot"></span>수집 대기</span>`:`<span class="status ok"><span class="dot"></span>정상</span>`;
-  let dl;
-  if(pend||d==null)dl=`<span class="delta flat">—</span>`;
-  else if(d>0)dl=`<span class="delta up">▲ ${d}</span>`;
-  else if(d<0)dl=`<span class="delta down">▼ ${Math.abs(d)}</span>`;
-  else dl=`<span class="delta flat">0</span>`;
-  const rk=pend?`<span style="color:var(--ink-3)">—</span>`:`<span class="rank">${c}<small>위</small></span>`;
-  const idCells=sc.colKeys.map(k=>`<td><span class="mono">${esc(p[k]||'—')}</span></td>`).join('');
-  return `<tr data-i="${idx}">
-    <td>${st}</td>
+  return `<tr class="row" data-i="${idx}">
+    <td><span class="mono">${p.no}</span></td>
+    <td><span class="id-tag">${esc(p.owner)}</span></td>
+    <td>${statusHTML(p)}</td>
+    <td><span class="kw-tag">${esc(p.kw)}</span></td>
+    <td>${rankHTML(p)}</td>
     <td class="left"><div class="p-cell">
       <div class="p-thumb" style="background:${p.color}">${esc(p.name[0])}</div>
-      <div><div class="p-name">${esc(p.name)}</div><div class="p-sub">No. ${100000+hash(p.name)%900000|0}</div></div>
+      <div><div class="p-name">${esc(p.name)}</div><div class="p-sub">${esc(p.mall||'-')} · MID ${esc(p.nvMid)}</div></div>
     </div></td>
-    <td><span class="id-tag">${esc(p.owner)}</span></td>
-    ${idCells}
-    <td><span class="kw-tag">${esc(p.kw)}</span></td>
-    <td>${rk}</td>
-    <td>${dl}</td>
-    <td>${pend?'<span style="font-size:11px;color:var(--ink-3)">—</span>':sparkline(p)}</td>
+    <td><span class="mono">${esc(p.pid||p.nvMid)}</span></td>
+    <td><span class="mono">${p.days}일</span></td>
     <td><span class="mono">${p.start}</span></td>
     <td><span class="mono">${p.end}</span></td>
+    <td><button class="gear" type="button" aria-label="상세"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></td>
   </tr>`;
 }
-function render(){
-  renderKPI();renderHead();
-  const L=list();
-  const rows=L.map((p,i)=>({p,i})).filter(({p})=>{
-    if(query&&!(p.name+p.kw+p.owner).toLowerCase().includes(query))return false;
+function renderAd(){
+  renderKPI();
+  const rows=SLOTS.map((p,i)=>({p,i})).filter(({p})=>{
+    if(query&&!(p.name+' '+p.kw+' '+p.owner+' '+p.mall+' '+p.no).toLowerCase().includes(query))return false;
     if(owner&&p.owner!==owner)return false;
-    if(filter==='up')return delta(p)>0;
-    if(filter==='down')return delta(p)<0;
-    if(filter==='top10')return cur(p)!=null&&cur(p)<=10;
+    if(filter!=='all'&&stateOf(p)!==filter)return false;
     return true;
   });
-  const sc=SCHEMA[CH];
-  const emptySpan=6+sc.cols.length;
-  if(!L.length){
-    $('#tbody').innerHTML=`<tr><td colspan="${emptySpan}" style="padding:48px;color:var(--ink-3);font-size:13px">이 채널에 등록된 슬롯이 없습니다. 위에서 ${CH==='place'?'업체를':'상품을'} 등록해 보세요.</td></tr>`;
-  }else if(!rows.length){
-    $('#tbody').innerHTML=`<tr><td colspan="${emptySpan}" style="padding:40px;color:var(--ink-3);font-size:13px">조건에 맞는 슬롯이 없습니다.</td></tr>`;
-  }else{
-    $('#tbody').innerHTML=rows.map(({p,i})=>rowHTML(p,i)).join('');
-  }
-  $('#count').textContent=`${rows.length} / ${L.length}건`;
-  $('#tblFoot').textContent=`행을 클릭하면 상세 순위 추이를 확인할 수 있습니다. · 데모에서는 일부 슬롯만 표시됩니다.`;
-  updateCounts();
+  if(!SLOTS.length)$('#tbody').innerHTML=`<tr><td colspan="11" class="empty">등록된 광고가 없습니다. 위에서 상품을 등록해 보세요.</td></tr>`;
+  else if(!rows.length)$('#tbody').innerHTML=`<tr><td colspan="11" class="empty">조건에 맞는 광고가 없습니다.</td></tr>`;
+  else $('#tbody').innerHTML=rows.map(({p,i})=>rowHTML(p,i)).join('');
+  $('#count').textContent=`${rows.length} / ${SLOTS.length}건`;
+  $('#tblFoot').textContent=`행 또는 관리 버튼을 누르면 상세 순위와 검색 결과 상위 10개를 확인할 수 있습니다.`;
+  $('#tblNote').textContent=`순위 기준: 네이버쇼핑 통합검색 · 광고(파워링크·AD) 제외 · 1페이지 80개 × 2페이지(160위)까지 조회`;
+  $('#navCntAd').textContent=SLOTS.length;
 }
-function updateCounts(){
-  const n=DATA.naver.length,c=DATA.coupang.length,pl=DATA.place.length;
-  $('#tabCntNaver').textContent=n;$('#tabCntCoupang').textContent=c;$('#tabCntPlace').textContent=pl;
-  $('#navCntNaver').textContent=n;$('#navCntCoupang').textContent=c;$('#navCntPlace').textContent=pl;
-}
-
-/* filters */
-$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
-$('#ownerFilter').addEventListener('change',e=>{owner=e.target.value;render();});
-$('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;filter=b.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));render();});
-
-/* ================= owner selects ================= */
+$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();renderAd();});
+$('#ownerFilter').addEventListener('change',e=>{owner=e.target.value;renderAd();});
+$('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setFilter(b.dataset.f);});
 function fillOwners(){
   const opts=OWNERS.map(o=>`<option value="${o.id}">${o.id} · ${o.name}</option>`).join('');
   $('#regOwner').innerHTML=opts;
   $('#ownerFilter').innerHTML=`<option value="">전체 광고주</option>`+opts;
 }
 
-/* ================= register (simulated) ================= */
-const MOCK={
-  naver:[{name:'스마트 무선 전동 드라이버 세트 가정용 충전식 공구',},{name:'천연 라텍스 바디필로우 임산부 바디 베개 쿠션',},{name:'프리미엄 콜드브루 원두 더치커피 1L 2병 세트',}],
-  coupang:[{name:'노이즈캔슬링 무선 블루투스 이어폰 5.3 방수 스포츠',},{name:'접이식 미니 트램폴린 홈트 유산소 방방이',}],
-  place:[{name:'강남역 감성 브런치 카페 · 소금빵 맛집',},{name:'분당 정자동 1인 왁싱 · 눈썹 문신 샵',}],
-};
-let mockIdx=0;
+/* register (simulated: 다음 수집부터 순위 표시) */
+let regSeq=0;
 $('#regForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  const url=$('#regUrl').value.trim(),kw=$('#regKw').value.trim(),own=$('#regOwner').value;
+  const url=$('#regUrl').value.trim(),kw=$('#regKw').value.trim(),own=$('#regOwner').value,days=+$('#regDays').value;
   if(!url||!kw)return;
+  const m=/products\/(\d+)/.exec(url);
   const btn=$('#regBtn'),lb=$('#regBtnLabel'),st=$('#regStatus');
   btn.disabled=true;lb.innerHTML=`<span class="spinner"></span>`;
-  st.className='reg-status show';
-  st.innerHTML=`${CH==='place'?'플레이스':'네이버·쿠팡'}에서 정보를 가져오는 중…`;
-  await new Promise(r=>setTimeout(r,1300));
-  const bank=MOCK[CH],m=bank[mockIdx%bank.length];mockIdx++;
-  const rid=String(80000000+((hash(m.name+mockIdx)>>>0)%9000000));
-  const np=mk({owner:own,name:m.name,kw,
-    bundleMid:rid,itemMid:rid,productId:rid,searchKw:kw,
-    ranks:[null,null,null,null,null,null,null,null],
-    start:'2026-08-26',end:'2026-11-26',pending:true});
-  DATA[CH].unshift(np);
-  st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; "${esc(m.name)}" · ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · 다음 수집(8/31 월 11:00)부터 순위가 표시됩니다.`;
+  st.className='reg-status show';st.innerHTML=`네이버에서 상품 정보를 가져오는 중…`;
+  await new Promise(r=>setTimeout(r,1200));
+  regSeq++;
+  const pid=m?m[1]:String(10000000000+(Math.abs(hash(url))%9000000000));
+  const np={no:(SLOTS[0]?SLOTS[0].no:281000)+1,owner:own,kw,status:'wait',rank:null,nvMid:'-',pid,
+    name:m?`(수집 대기) 스마트스토어 상품 ${pid}`:`(수집 대기) ${url.replace(/^https?:\/\//,'').slice(0,40)}`,
+    mall:'등록 시 자동 조회',catalog:false,price:null,review:null,url:m?url:'',days,start:addDays(TODAY,1),end:addDays(TODAY,1+days),note:'',
+    color:colorOf(url),history:[]};
+  SLOTS.unshift(np);
+  LOGS.unshift({no:LOGS.length?LOGS[0].no+1:1,kind:'new',agency:'sm6974',owner:own,qty:1,days,created:TODAY+' '+new Date().toTimeString().slice(0,5),start:np.start,desc:`신규 등록 · ${kw} · ${np.name}`});
+  st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · ${days}일 · 다음 수집(${addDays(TODAY,1)} 11:00)부터 순위가 표시됩니다.`;
   $('#regUrl').value='';$('#regKw').value='';
   btn.disabled=false;lb.textContent='등록';
   filter='all';query='';owner='';$('#q').value='';$('#ownerFilter').value='';
-  document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));
-  render();
+  renderAd();renderAccount();
   const tr=$('#tbody tr');if(tr)tr.classList.add('flash');
 });
 
 /* ================= drawer ================= */
 const drawer=$('#drawer'),overlay=$('#overlay');
 function openDrawer(p){
-  const sc=SCHEMA[CH];
   $('#dThumb').textContent=p.name[0];$('#dThumb').style.background=p.color;
   $('#dName').textContent=p.name;
-  $('#dMeta').textContent=`${ownerName(p.owner)}(${p.owner}) · 키워드 "${p.kw}"`;
-  const c=cur(p),d=delta(p),b=best(p);
+  $('#dMeta').textContent=`No. ${p.no} · ${ownerName(p.owner)}(${p.owner}) · 키워드 "${p.kw}"`;
+  const d=delta(p),kwd=S.keywords.find(k=>k.kw===p.kw);
+  const rankV=p.status==='err'?`<div class="v bad">순위없음</div>`:(p.rank==null?`<div class="v">-</div>`:`<div class="v">${p.rank}위</div>`);
   $('#dStats').innerHTML=`
-    <div class="d-stat"><div class="l">현재 순위</div><div class="v">${c!=null?c+'위':'—'}</div></div>
-    <div class="d-stat"><div class="l">전주 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?'—':(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
-    <div class="d-stat"><div class="l">기간 최고</div><div class="v">${b!=null?b+'위':'—'}</div></div>`;
-  const infoRows=sc.cols.map((c2,i)=>`<dt>${c2}</dt><dd>${esc(p[sc.colKeys[i]]||'—')}</dd>`).join('');
-  $('#dInfo').innerHTML=`${infoRows}
-    <dt>추적 키워드</dt><dd>${esc(p.kw)}</dd>
+    <div class="d-stat"><div class="l">현재 순위</div>${rankV}</div>
+    <div class="d-stat"><div class="l">전일 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?(p.rank!=null?'신규':'-'):(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
+    <div class="d-stat"><div class="l">검색 결과</div><div class="v">${kwd&&kwd.total!=null?kwd.total.toLocaleString('ko-KR')+'건':'-'}</div></div>`;
+  $('#chartSub').textContent=p.history.filter(h=>h.r!=null).length<2?`${TODAY} 첫 수집 · 내일 11:00 수집부터 추이가 그려집니다`:`매일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위`;
+  $('#dInfo').innerHTML=`
+    <dt>키워드</dt><dd>${esc(p.kw)}</dd>
+    <dt>묶음 MID</dt><dd>${esc(p.nvMid)}</dd>
+    <dt>프로덕트ID</dt><dd>${esc(p.pid||'-')}${p.catalog?' <span style="color:var(--ink-3)">(가격비교 카탈로그)</span>':''}</dd>
+    <dt>몰</dt><dd>${esc(p.mall||'-')}</dd>
+    <dt>가격 / 리뷰</dt><dd>${won(p.price)} · 리뷰 ${p.review==null?'-':p.review.toLocaleString('ko-KR')}</dd>
     <dt>광고주</dt><dd>${esc(p.owner)} · ${esc(ownerName(p.owner))}</dd>
-    <dt>수집 주기</dt><dd>매주 월요일 11:00 (주 1회)</dd>
-    <dt>기간</dt><dd>${p.start} ~ ${p.end}</dd>`;
+    <dt>기간</dt><dd>${p.start} ~ ${p.end} (${p.days}일, 잔여 ${Math.max(0,dayDiff(TODAY,p.end))}일)</dd>
+    <dt>수집 주기</dt><dd>매일 11:00 (1일 1회)</dd>
+    ${p.note?`<dt>비고</dt><dd style="color:var(--bad)">${esc(p.note)}</dd>`:''}`;
+  const q=encodeURIComponent(p.kw);
+  $('#dLinks').innerHTML=`
+    ${p.url?`<a class="btn-light sm" href="${esc(p.url)}" target="_blank" rel="noopener">상품 페이지 열기</a>`:''}
+    <a class="btn-light sm" href="https://search.shopping.naver.com/search/all?query=${q}&pagingIndex=1&pagingSize=80&sort=rel&viewType=list&productSet=total" target="_blank" rel="noopener">네이버 검색 결과에서 확인</a>`;
+  if(kwd&&kwd.top&&kwd.top.length){
+    $('#dTop').innerHTML=`<div class="chart-title">"${esc(p.kw)}" 검색 결과 상위 10 <span style="font-weight:600;color:var(--ink-3)">(광고 제외 · ${TODAY} 수집)</span></div>
+      <table><thead><tr><th>순위</th><th class="left">상품명</th><th>몰</th><th>가격</th></tr></thead><tbody>
+      ${kwd.top.slice(0,10).map(t=>`<tr class="${t.nvMid===p.nvMid?'me':''}"><td><span class="mono">${t.rank}</span></td><td class="left">${esc(t.title)}</td><td><span class="mono">${esc(t.mall||'-')}</span></td><td><span class="mono">${t.price?t.price.toLocaleString('ko-KR'):'-'}</span></td></tr>`).join('')}
+      </tbody></table>`;
+  }else $('#dTop').innerHTML='';
   drawChart(p);
   drawer.classList.add('show');overlay.classList.add('show');drawer.setAttribute('aria-hidden','false');
 }
@@ -663,44 +802,221 @@ function closeDrawer(){drawer.classList.remove('show');overlay.classList.remove(
 $('#drawerClose').addEventListener('click',closeDrawer);
 overlay.addEventListener('click',closeDrawer);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
-$('#tbody').addEventListener('click',e=>{const tr=e.target.closest('tr[data-i]');if(!tr)return;openDrawer(list()[+tr.dataset.i]);});
+$('#tbody').addEventListener('click',e=>{const tr=e.target.closest('tr[data-i]');if(!tr)return;openDrawer(SLOTS[+tr.dataset.i]);});
 
 function drawChart(p){
   const box=$('#chartBox');box.querySelectorAll('svg').forEach(s=>s.remove());
-  const W=440,H=200,PL=36,PR=14,PT=14,PB=28;
-  const vals=p.ranks,nums=vals.filter(v=>v!=null);
-  const NS='http://www.w3.org/2000/svg';
-  const svg=document.createElementNS(NS,'svg');
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('width','100%');svg.style.display='block';
-  if(nums.length<2){
-    const t=document.createElementNS(NS,'text');t.setAttribute('x',W/2);t.setAttribute('y',H/2);
-    t.setAttribute('text-anchor','middle');t.setAttribute('fill','#868c96');t.setAttribute('font-size','13');
-    t.textContent='수집된 순위 데이터가 아직 없습니다';svg.appendChild(t);box.appendChild(svg);return;
+  const W=440,H=200,PL=36,PR=14,PT=14,PB=28,NS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('width','100%');svg.style.display='block';
+  // 최근 8일 축, 값은 history 에서
+  const days=[];for(let i=7;i>=0;i--)days.push(addDays(TODAY,-i));
+  const vals=days.map(d=>{const h=p.history.find(x=>x.d===d);return h?h.r:null});
+  const nums=vals.filter(v=>v!=null);
+  const tx=(s)=>s.slice(5).replace('-','/');
+  const x=i=>PL+(i/(days.length-1))*(W-PL-PR);
+  if(!nums.length){
+    const t=document.createElementNS(NS,'text');t.setAttribute('x',W/2);t.setAttribute('y',H/2);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#868c96');t.setAttribute('font-size','13');
+    t.textContent=p.status==='err'?'조회 범위(160위) 안에서 상품을 찾지 못했습니다':'수집된 순위 데이터가 아직 없습니다';svg.appendChild(t);box.appendChild(svg);return;
   }
-  const min=Math.max(1,Math.min(...nums)-2),max=Math.max(...nums)+3;
-  const x=i=>PL+(i/(vals.length-1))*(W-PL-PR);
+  const min=Math.max(1,Math.min(...nums)-3),max=Math.max(...nums)+3;
   const y=v=>PT+((v-min)/(max-min))*(H-PT-PB);
   for(let g=0;g<=3;g++){
     const gv=min+((max-min)/3)*g,gy=y(gv);
-    const ln=document.createElementNS(NS,'line');ln.setAttribute('x1',PL);ln.setAttribute('x2',W-PR);ln.setAttribute('y1',gy);ln.setAttribute('y2',gy);ln.setAttribute('stroke','#eaecef');ln.setAttribute('stroke-width','1');svg.appendChild(ln);
+    const ln=document.createElementNS(NS,'line');ln.setAttribute('x1',PL);ln.setAttribute('x2',W-PR);ln.setAttribute('y1',gy);ln.setAttribute('y2',gy);ln.setAttribute('stroke','#eaecef');svg.appendChild(ln);
     const lb=document.createElementNS(NS,'text');lb.setAttribute('x',PL-7);lb.setAttribute('y',gy+4);lb.setAttribute('text-anchor','end');lb.setAttribute('fill','#868c96');lb.setAttribute('font-size','10');lb.textContent=Math.round(gv)+'위';svg.appendChild(lb);
   }
-  vals.forEach((v,i)=>{if(i%2)return;const t=document.createElementNS(NS,'text');t.setAttribute('x',x(i));t.setAttribute('y',H-9);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#868c96');t.setAttribute('font-size','10');t.textContent=WEEKS[i];svg.appendChild(t);});
+  days.forEach((d,i)=>{const t=document.createElementNS(NS,'text');t.setAttribute('x',x(i));t.setAttribute('y',H-9);t.setAttribute('text-anchor','middle');t.setAttribute('fill',i===days.length-1?'#0d0f13':'#868c96');t.setAttribute('font-size','10');t.setAttribute('font-weight',i===days.length-1?'700':'400');t.textContent=tx(d);svg.appendChild(t);});
   const pts=[];vals.forEach((v,i)=>{if(v!=null)pts.push({i,x:x(i),y:y(v),v});});
-  const d=pts.map((pt,k)=>(k?'L':'M')+pt.x.toFixed(1)+' '+pt.y.toFixed(1)).join(' ');
-  const area=document.createElementNS(NS,'path');area.setAttribute('d',d+` L ${pts[pts.length-1].x} ${H-PB} L ${pts[0].x} ${H-PB} Z`);area.setAttribute('fill','rgba(31,95,214,0.07)');svg.appendChild(area);
-  const path=document.createElementNS(NS,'path');path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke','#1f5fd6');path.setAttribute('stroke-width','2');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');svg.appendChild(path);
-  pts.forEach(pt=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',pt.x);c.setAttribute('cy',pt.y);c.setAttribute('r','3.4');c.setAttribute('fill','#fff');c.setAttribute('stroke','#1f5fd6');c.setAttribute('stroke-width','2');svg.appendChild(c);});
-  const cross=document.createElementNS(NS,'line');cross.setAttribute('stroke','#c6cad1');cross.setAttribute('stroke-width','1');cross.setAttribute('stroke-dasharray','3 3');cross.setAttribute('y1',PT);cross.setAttribute('y2',H-PB);cross.style.opacity='0';svg.appendChild(cross);
+  if(pts.length>1){
+    const d=pts.map((pt,k)=>(k?'L':'M')+pt.x.toFixed(1)+' '+pt.y.toFixed(1)).join(' ');
+    const area=document.createElementNS(NS,'path');area.setAttribute('d',d+` L ${pts[pts.length-1].x} ${H-PB} L ${pts[0].x} ${H-PB} Z`);area.setAttribute('fill','rgba(31,95,214,0.07)');svg.appendChild(area);
+    const path=document.createElementNS(NS,'path');path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke','#1f5fd6');path.setAttribute('stroke-width','2');svg.appendChild(path);
+  }
+  pts.forEach(pt=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',pt.x);c.setAttribute('cy',pt.y);c.setAttribute('r','4');c.setAttribute('fill','#fff');c.setAttribute('stroke','#1f5fd6');c.setAttribute('stroke-width','2');svg.appendChild(c);
+    const lb=document.createElementNS(NS,'text');lb.setAttribute('x',pt.x);lb.setAttribute('y',pt.y<PT+16?pt.y+18:pt.y-10);lb.setAttribute('text-anchor',pt.x>W-40?'end':'middle');lb.setAttribute('fill','#0d0f13');lb.setAttribute('font-size','11');lb.setAttribute('font-weight','800');lb.textContent=pt.v+'위';svg.appendChild(lb);});
   const tip=$('#chartTip');
-  svg.addEventListener('mousemove',e=>{const rect=svg.getBoundingClientRect();const mx=(e.clientX-rect.left)*(W/rect.width);let n=pts[0];pts.forEach(pt=>{if(Math.abs(pt.x-mx)<Math.abs(n.x-mx))n=pt;});cross.setAttribute('x1',n.x);cross.setAttribute('x2',n.x);cross.style.opacity='1';tip.style.opacity='1';tip.style.left=(n.x/W*100)+'%';tip.style.top=(n.y/H*100)+'%';tip.innerHTML=`${WEEKS[n.i]} · <b>${n.v}위</b>`;});
-  svg.addEventListener('mouseleave',()=>{cross.style.opacity='0';tip.style.opacity='0';});
+  svg.addEventListener('mousemove',e=>{const rect=svg.getBoundingClientRect();const mx=(e.clientX-rect.left)*(W/rect.width);let n=pts[0];pts.forEach(pt=>{if(Math.abs(pt.x-mx)<Math.abs(n.x-mx))n=pt;});tip.style.opacity='1';tip.style.left=(n.x/W*100)+'%';tip.style.top=(n.y/H*100)+'%';tip.innerHTML=`${tx(days[n.i])} · <b>${n.v}위</b>`;});
+  svg.addEventListener('mouseleave',()=>{tip.style.opacity='0';});
   box.appendChild(svg);
+}
+
+/* ================= 공지사항 ================= */
+const NOTICES=[
+  {no:5,kind:'공지',date:TODAY,title:'RANKLAB 데모 오픈 및 실데이터 반영 안내',body:`<p>광고관리 화면의 <b>순위·상품명·몰·가격·리뷰수는 ${TODAY} 네이버쇼핑 통합검색에서 실제로 수집한 값</b>입니다. 광고주·작업 기간·정산 내역은 화면 구성을 보여 드리기 위한 예시입니다.</p><p>행을 누르면 상세 패널에서 해당 키워드의 검색 결과 상위 10개와 네이버 검색 결과 링크를 확인할 수 있어 순위를 직접 대조해 볼 수 있습니다.</p>`},
+  {no:4,kind:'공지',date:TODAY,title:'순위 산정 기준 안내 (광고 제외 · 통합검색)',body:`<p>순위는 네이버쇼핑 <b>통합검색(search/all) 결과에서 광고(파워링크·AD 표시) 상품을 제외한 순번</b>입니다. 네이버가 부여하는 rank 값과 동일한 기준으로 검증되었습니다.</p><p>1페이지 80개 × 2페이지, 즉 <b>160위까지 조회</b>하며 범위 밖이면 "순위없음"(오류)으로 표시됩니다. 조회 범위는 요청에 따라 1,000위까지 확장할 수 있습니다.</p>`},
+  {no:3,kind:'업데이트',date:'2026-09-01',title:'수집 주기 변경: 주 1회 → 매일 11:00',body:`<p>순위 수집이 <b>매일 오전 11:00 1회</b>로 변경되었습니다. 전일 대비 변동(▲▼)과 일별 추이 그래프가 함께 제공됩니다.</p>`},
+  {no:2,kind:'공지',date:'2026-08-26',title:'네이버 쇼핑검색 API 종료(7/31)에 따른 수집 방식 안내',body:`<p>네이버 개발자센터 쇼핑검색 API가 2026-07-31 종료되어, RANKLAB은 <b>실제 브라우저 기반 자체 수집기</b>로 순위를 확인합니다. 네이버 정책 변경으로 수집이 중단될 경우 유지보수 범위에서 대응합니다.</p>`},
+  {no:1,kind:'공지',date:'2026-08-26',title:'RANKLAB 상세정보',body:`<p>네이버쇼핑 키워드 순위 모니터링 시스템입니다. 상품 링크 등록 → 매일 순위 수집 → 광고주·대행사별 조회, 정산 로그, 일별 마감까지 한 화면에서 관리합니다.</p><p>권한: 최고관리자 › 총판 › 대행사 › 광고주 4단계. 비밀번호는 단방향 암호화로 저장됩니다.</p>`},
+];
+function renderNotice(){
+  const q=($('#noticeQ').value||'').trim().toLowerCase();
+  const L=NOTICES.filter(n=>!q||n.title.toLowerCase().includes(q));
+  $('#noticeBody').innerHTML=L.map(n=>`
+    <tr class="row notice-row" data-no="${n.no}"><td><span class="mono">${n.no}</span></td><td><span class="kind ${n.kind==='업데이트'?'ext':''}">${n.kind}</span></td><td class="left"><span class="notice-title">${esc(n.title)}</span></td><td><span class="mono">${n.date}</span></td></tr>
+    <tr class="notice-body" data-body="${n.no}"><td colspan="4">${n.body}</td></tr>`).join('')||`<tr><td colspan="4" class="empty">검색 결과가 없습니다.</td></tr>`;
+  $('#noticeCount').textContent=`${L.length}건`;
+}
+$('#noticeQ').addEventListener('input',renderNotice);
+$('#noticeBody').addEventListener('click',e=>{const tr=e.target.closest('tr.notice-row');if(!tr)return;const b=$(`#noticeBody tr[data-body="${tr.dataset.no}"]`);b.classList.toggle('on');});
+
+/* ================= FAQ ================= */
+const FAQS=[
+  ['순위는 어떤 기준으로 계산되나요?','네이버쇼핑 <b>통합검색 결과에서 광고 상품을 제외한 순번</b>입니다. 같은 상품이 여러 페이지에 중복 노출되면 처음 나온 위치만 인정합니다. 네이버가 검색 결과에 매기는 rank 값과 동일합니다.'],
+  ['"순위없음"(오류)은 무슨 뜻인가요?','조회 범위(현재 160위) 안에서 등록한 상품을 찾지 못한 경우입니다. 키워드와 상품이 맞는지, 상품이 품절·삭제되지 않았는지 확인해 주세요. 범위는 최대 1,000위까지 확장할 수 있습니다.'],
+  ['순위는 언제 갱신되나요?','<b>매일 오전 11:00</b>에 1회 수집합니다. 새로 등록한 광고는 다음 수집부터 순위가 표시되며, 그 전까지는 "수집대기"로 표시됩니다.'],
+  ['상품 링크만 넣으면 어떻게 상품 정보가 등록되나요?','스마트스토어·브랜드스토어 상품 링크에서 프로덕트ID를 읽고, 네이버쇼핑에서 상품명·몰·묶음 MID를 자동으로 가져옵니다. 가격비교(카탈로그) 상품은 묶음 MID 기준으로 추적합니다.'],
+  ['종료예정은 언제 표시되나요?','종료일까지 <b>3일 이하</b>로 남은 광고입니다. 광고관리에서 선택 후 "연장"으로 기간을 늘릴 수 있고, 연장 내역은 정산로그에 자동 기록됩니다.'],
+  ['광고주 계정으로 로그인하면 무엇이 보이나요?','자기 광고만 조회할 수 있고 등록·수정·삭제는 소속 대행사가 처리합니다. 대행사는 소속 광고주 전체, 총판은 소속 대행사 전체를 봅니다.'],
+  ['정산은 어떻게 집계되나요?','신규 등록·연장·환불 시 <b>작업일수</b>가 정산로그에 기록되고, 일별마감에서 날짜별 발주·연장·환불 일수와 누적 합계를 확인합니다. 엑셀 저장을 지원합니다.'],
+];
+function renderFAQ(){
+  $('#faqList').innerHTML=FAQS.map(([q,a],i)=>`<details ${i===0?'open':''}><summary><span class="q">Q${i+1}</span>${esc(q)}<span class="chev">▼</span></summary><div class="a">${a}</div></details>`).join('');
+}
+
+/* ================= 계정관리 ================= */
+function renderAccount(){
+  const role=$('#acctRole').value,q=($('#acctQ').value||'').trim().toLowerCase();
+  const cnt=id=>SLOTS.filter(s=>s.owner===id).length;
+  const kp=[['all',ACCOUNTS.length,'전체','accent'],['hq',ACCOUNTS.filter(a=>a.role==='hq').length,'총판',''],['agency',ACCOUNTS.filter(a=>a.role==='agency').length,'대행사',''],['adv',ACCOUNTS.filter(a=>a.role==='adv').length,'광고주','']];
+  $('#acctKpi').innerHTML=kp.map(([f,v,l,c])=>`<div class="kpi"><div class="k-v ${c}">${v}</div><div class="k-l">${l}</div></div>`).join('');
+  const L=ACCOUNTS.filter(a=>(!role||a.role===role)&&(!q||(a.id+a.name+a.org).toLowerCase().includes(q)));
+  $('#acctBody').innerHTML=L.map((a,i)=>{
+    const n=a.role==='adv'?cnt(a.id):(a.role==='agency'?SLOTS.length:SLOTS.length);
+    return `<tr>
+      <td><span class="mono">${22914-i*37}</span></td>
+      <td><span class="id-tag">${esc(a.id)}</span></td>
+      <td><span class="role ${a.role}">${ROLE_LABEL[a.role]}</span></td>
+      <td>${esc(a.org)}</td>
+      <td><span class="mono">${n}</span></td>
+      <td>${a.role==='adv'?`<button class="gear" type="button" title="광고관리에서 보기" onclick="viewAds('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></button>`:'-'}</td>
+      <td class="left" style="color:var(--ink-2)">${esc(a.name)}${a.memo?` · <span style="color:var(--ink-3)">${esc(a.memo)}</span>`:''}</td>
+      <td><button class="gear" type="button" onclick="notReady('계정 수정')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button></td>
+    </tr>`}).join('');
+  $('#acctCount').textContent=`${L.length} / ${ACCOUNTS.length}건`;
+  $('#navCntAcct').textContent=ACCOUNTS.length;
+}
+function viewAds(id){owner=id;$('#ownerFilter').value=id;filter='all';$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));renderAd();location.hash='ad';}
+$('#acctRole').addEventListener('change',renderAccount);
+$('#acctQ').addEventListener('input',renderAccount);
+
+/* ================= 정산로그 (슬롯에서 파생) ================= */
+const LOGS=[];
+(function(){
+  const sorted=[...SLOTS].filter(s=>s.status!=='wait').sort((a,b)=>a.start<b.start?-1:1);
+  let n=0;
+  sorted.forEach(s=>{
+    const h=Math.abs(hash(s.kw+s.nvMid));
+    LOGS.push({no:++n,kind:'new',agency:'sm6974',owner:s.owner,qty:1,days:s.days,created:`${s.start} ${String(9+h%9).padStart(2,'0')}:${String(h%60).padStart(2,'0')}`,start:s.start,desc:`신규 등록 · ${s.kw} · ${s.name}`,slot:s});
+  });
+  // 연장 예시: 작업일수 45일 이상 슬롯 일부는 중간에 15일 연장된 것으로 기록
+  sorted.filter(s=>s.days>=45).slice(0,3).forEach(s=>{
+    const d=addDays(s.start,Math.min(20,Math.max(1,dayDiff(s.start,TODAY)-1)));
+    LOGS.push({no:++n,kind:'ext',agency:'sm6974',owner:s.owner,qty:1,days:15,created:`${d} 14:${String(Math.abs(hash(s.nvMid))%60).padStart(2,'0')}`,start:d,desc:`연장 15일 · ${s.kw} · ${s.name}`,slot:s});
+  });
+  // 환불 예시 1건
+  const rf=sorted.find(s=>s.status==='err');
+  if(rf){LOGS.push({no:++n,kind:'ref',agency:'sm6974',owner:rf.owner,qty:1,days:-rf.days,created:`${addDays(TODAY,-1)} 16:20`,start:addDays(TODAY,-1),desc:`환불 ${rf.days}일 · ${rf.kw} · 순위 미노출`,slot:rf});}
+  LOGS.sort((a,b)=>a.created<b.created?1:-1);
+  LOGS.forEach((l,i)=>l.no=LOGS.length-i);
+})();
+const KIND={new:'신규',ext:'연장',ref:'환불'};
+const RANGE={settle:['2026-09-01',TODAY],edit:['2026-09-01',TODAY],daily:['2026-09-01',TODAY]};
+function quickRange(q){
+  if(q==='today')return[TODAY,TODAY];
+  if(q==='yday')return[addDays(TODAY,-1),addDays(TODAY,-1)];
+  const m=+q.slice(1);const from=`2026-${String(m).padStart(2,'0')}-01`;const to=m===9?TODAY:addDays(`2026-${String(m+1).padStart(2,'0')}-01`,-1);return[from,to];
+}
+$$('.quick').forEach(qd=>qd.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const key=qd.dataset.for;RANGE[key]=quickRange(b.dataset.q);qd.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));syncDates(key);renderRange(key);}));
+function syncDates(key){$(`#${key}From`).value=RANGE[key][0];$(`#${key}To`).value=RANGE[key][1];}
+['settle','edit','daily'].forEach(key=>{['From','To'].forEach(k=>$(`#${key}${k}`).addEventListener('change',e=>{RANGE[key][k==='From'?0:1]=e.target.value;$$(`.quick[data-for=${key}] button`).forEach(x=>x.classList.remove('on'));renderRange(key);}));});
+function renderRange(key){({settle:renderSettle,edit:renderEdit,daily:renderDaily})[key]();}
+function inRange(d,key){const[a,b]=RANGE[key];return d.slice(0,10)>=a&&d.slice(0,10)<=b}
+function renderSettle(){
+  const kind=$('#settleKind').value;
+  const L=LOGS.filter(l=>inRange(l.created,'settle')&&(!kind||l.kind===kind));
+  const sum=k=>L.filter(l=>l.kind===k).reduce((a,l)=>a+Math.abs(l.days)*l.qty,0);
+  const nw=sum('new'),ex=sum('ext'),rf=sum('ref');
+  $('#settleKpi').innerHTML=`
+    <div class="kpi"><div class="k-v small">${RANGE.settle[0]} ~ ${RANGE.settle[1]}</div><div class="k-l">조회 기간</div></div>
+    <div class="kpi"><div class="k-v">${nw}</div><div class="k-l">발주 일수</div></div>
+    <div class="kpi"><div class="k-v">${ex}</div><div class="k-l">연장 일수</div></div>
+    <div class="kpi"><div class="k-v">${rf}</div><div class="k-l">환불 일수</div></div>
+    <div class="kpi"><div class="k-v accent">${nw+ex-rf}</div><div class="k-l">일수 합계</div></div>`;
+  $('#settleBody').innerHTML=L.map(l=>`<tr>
+    <td><span class="mono">${l.no}</span></td><td><span class="kind ${l.kind}">${KIND[l.kind]}</span></td>
+    <td><span class="id-tag">${l.agency}</span></td><td><span class="id-tag">${esc(l.owner)}</span></td>
+    <td><span class="mono">${l.qty}</span></td><td><span class="mono">${Math.abs(l.days)}일</span></td>
+    <td><span class="mono" style="font-weight:700;color:${l.days<0?'var(--bad)':'var(--ink-1)'}">${l.days>0?'+':''}${l.days}</span></td>
+    <td><span class="mono">${l.created}</span></td><td><span class="mono">${l.start}</span></td>
+    <td class="left" style="white-space:normal;max-width:360px;color:var(--ink-2)">${esc(l.desc)}</td>
+    <td>${l.slot?`<button class="gear" type="button" onclick="openSlotByNo(${l.slot.no})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>`:'-'}</td>
+  </tr>`).join('')||`<tr><td colspan="11" class="empty">조회 기간에 정산 내역이 없습니다.</td></tr>`;
+  $('#settleCount').textContent=`${L.length}건`;
+  $('#settleFoot').textContent=`일수 합계 = 발주 + 연장 − 환불 · 생성일시는 등록·연장·환불이 처리된 시각`;
+}
+function openSlotByNo(no){const s=SLOTS.find(x=>x.no===no);if(s)openDrawer(s);}
+$('#settleKind').addEventListener('change',renderSettle);
+
+/* ================= 수정관리 (예시 3건) ================= */
+const EDITS=(function(){
+  const src=SLOTS.filter(s=>s.status==='ok').slice(0,12);
+  const pick=(i)=>src[i%src.length];
+  if(!src.length)return[];
+  const a=pick(2),b=pick(5),c=pick(8);
+  return[
+    {t:`${TODAY} 10:12`,kind:'종료일',no:b.no,by:'sm6974',target:b.owner,name:b.name,kw:b.kw,pid:b.pid||'-',mid:b.nvMid,before:addDays(b.end,-15),after:b.end},
+    {t:`${addDays(TODAY,-2)} 17:41`,kind:'키워드',no:a.no,by:'sm6974',target:a.owner,name:a.name,kw:a.kw,pid:a.pid||'-',mid:a.nvMid,before:a.kw.split(' ')[0]+' 추천',after:a.kw},
+    {t:`${addDays(TODAY,-6)} 09:35`,kind:'프로덕트ID',no:c.no,by:'sm6974',target:c.owner,name:c.name,kw:c.kw,pid:c.pid||'-',mid:c.nvMid,before:String(Math.abs(hash(c.nvMid))%9000000000+1000000000),after:c.pid||c.nvMid},
+  ];
+})();
+function renderEdit(){
+  const kind=$('#editKind').value;
+  const L=EDITS.filter(e=>inRange(e.t,'edit')&&(!kind||e.kind===kind));
+  $('#editBody').innerHTML=L.map(e=>`<tr>
+    <td><span class="mono">${e.t}</span></td><td><span class="kind">${e.kind}</span></td><td><span class="mono">${e.no}</span></td>
+    <td><span class="id-tag">${e.by}</span></td><td><span class="id-tag">${esc(e.target)}</span></td>
+    <td class="left" style="white-space:normal;max-width:300px">${esc(e.name)}</td>
+    <td><span class="kw-tag">${esc(e.kw)}</span></td><td><span class="mono">${esc(e.pid)}</span></td><td><span class="mono">${esc(e.mid)}</span></td>
+    <td><span class="mono" style="color:var(--bad);text-decoration:line-through">${esc(e.before)}</span></td><td><span class="mono" style="color:var(--good);font-weight:700">${esc(e.after)}</span></td>
+  </tr>`).join('')||`<tr><td colspan="11" class="empty">조회 기간에 수정 이력이 없습니다.</td></tr>`;
+  $('#editCount').textContent=`${L.length}건`;
+}
+$('#editKind').addEventListener('change',renderEdit);
+
+/* ================= 일별마감 ================= */
+function renderDaily(){
+  const[a,b]=RANGE.daily;
+  const days={};
+  LOGS.forEach(l=>{const d=l.created.slice(0,10);if(d<a||d>b)return;days[d]=days[d]||{n:0,e:0,r:0};if(l.kind==='new')days[d].n+=l.days*l.qty;if(l.kind==='ext')days[d].e+=l.days*l.qty;if(l.kind==='ref')days[d].r+=Math.abs(l.days)*l.qty;});
+  const keys=Object.keys(days).sort();
+  let acc=0,tn=0,te=0,tr=0;
+  const rows=keys.map(d=>{const v=days[d];const s=v.n+v.e-v.r;acc+=s;tn+=v.n;te+=v.e;tr+=v.r;return{d,...v,s,acc}});
+  $('#dailyKpi').innerHTML=`
+    <div class="kpi"><div class="k-v small">${a} ~ ${b}</div><div class="k-l">조회 기간</div></div>
+    <div class="kpi"><div class="k-v">${tn}</div><div class="k-l">발주 일수</div></div>
+    <div class="kpi"><div class="k-v">${te}</div><div class="k-l">연장 일수</div></div>
+    <div class="kpi"><div class="k-v">${tr}</div><div class="k-l">환불 일수</div></div>
+    <div class="kpi"><div class="k-v accent">${tn+te-tr}</div><div class="k-l">일수 합계</div></div>`;
+  $('#dailyBody').innerHTML=rows.reverse().map(r=>`<tr>
+    <td><span class="mono">${fmtDate(r.d)}</span></td><td><span class="mono">${r.n}</span></td><td><span class="mono">${r.e}</span></td>
+    <td><span class="mono" style="color:${r.r?'var(--bad)':'inherit'}">${r.r}</span></td><td><span class="mono" style="font-weight:700">${r.s}</span></td><td><span class="mono">${r.acc}</span></td>
+  </tr>`).join('')||`<tr><td colspan="6" class="empty">조회 기간에 마감 내역이 없습니다.</td></tr>`;
+}
+
+/* ================= CSV ================= */
+function exportCSV(key){
+  const tbl=$(`#page-${key} table`);
+  const rows=[...tbl.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>'"'+td.textContent.trim().replace(/"/g,'""')+'"').join(','));
+  const blob=new Blob(['﻿'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`ranklab_${key}_${RANGE[key][0]}_${RANGE[key][1]}.csv`;a.click();
 }
 
 /* ================= init ================= */
 fillOwners();
-selectChannel('naver');
+['settle','edit','daily'].forEach(syncDates);
+renderAd();renderNotice();renderFAQ();renderAccount();renderSettle();renderEdit();renderDaily();
+$('#acctAdvCnt').textContent=OWNERS.length;
+go(location.hash.slice(1)||'ad');
 </script>
 </body>
 </html>
