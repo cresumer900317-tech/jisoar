@@ -133,6 +133,7 @@ a{color:inherit}
 .reg-form .f.grow{flex:1;min-width:220px}
 .reg-form .f.mid{flex:0 0 200px}
 .reg-form input[readonly]{background:#f7f8fa;color:var(--ink-2)}
+.reg-form input[type=number]{text-align:center;font-variant-numeric:tabular-nums}
 .reg-form label{position:absolute;top:-7px;left:10px;background:var(--surface);padding:0 5px;font-size:10px;font-weight:700;color:var(--ink-3);letter-spacing:.2px}
 .reg-form input,.reg-form select{
   width:100%;height:100%;min-height:44px;border:1px solid var(--line-strong);
@@ -418,11 +419,11 @@ tr.child .p-name{font-weight:500}
             </div>
             <div class="f" style="flex:0 0 90px">
               <label>수량</label>
-              <select id="regQty"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+              <input type="number" id="regQty" value="1" min="1" max="100" step="1" inputmode="numeric" required>
             </div>
             <div class="f" style="flex:0 0 110px">
               <label>작업일수</label>
-              <select id="regDays"><option>10</option><option>15</option><option>20</option><option selected>30</option><option>45</option><option>60</option></select>
+              <input type="number" id="regDays" value="30" min="1" max="365" step="1" inputmode="numeric" required>
             </div>
             <button class="btn-dark" id="regBtn" type="submit"><span id="regBtnLabel">등록</span></button>
           </form>
@@ -824,7 +825,7 @@ $('#regUrl').addEventListener('input',autoFill);
 $('#regUrl').addEventListener('paste',()=>setTimeout(autoFill,0));
 $('#regForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  const url=$('#regUrl').value.trim(),kw=$('#regKw').value.trim(),own=$('#regOwner').value,days=+$('#regDays').value,qty=Math.max(1,+$('#regQty').value||1);
+  const url=$('#regUrl').value.trim(),kw=$('#regKw').value.trim(),own=$('#regOwner').value,days=Math.min(365,Math.max(1,Math.round(+$('#regDays').value)||30)),qty=Math.min(100,Math.max(1,Math.round(+$('#regQty').value)||1));
   if(!url||!kw)return;
   const {pid,nvMid}=parseLink(url);
   if(!pid&&!nvMid){autoFill();return;}
@@ -848,7 +849,7 @@ $('#regForm').addEventListener('submit',async e=>{
   for(let q=qty-1;q>=0;q--)SLOTS.unshift(Object.assign({},np,{no:no+q,history:np.history.slice()}));
   LOGS.unshift({no:LOGS.length?LOGS[0].no+1:1,kind:'new',agency:'sm6974',owner:own,qty,days,created:TODAY+' '+new Date().toTimeString().slice(0,5),start:np.start,desc:`신규 등록 · ${kw} · ${np.name}${qty>1?` × ${qty}`:''}`,slot:SLOTS[0]});
   st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · ${qty>1?`수량 ${qty} · `:''}${days}일 · ${np.status==='ok'?`현재 <b>${np.rank}위</b> (${TODAY} 수집 기준)`:`다음 수집(${addDays(TODAY,1)} 11:00)부터 순위가 표시됩니다.`}`;
-  $('#regUrl').value='';$('#regKw').value='';$('#regMid').value='';$('#regPid').value='';$('#regQty').value='1';$('#regAuto').className='reg-auto';regFound=null;
+  $('#regUrl').value='';$('#regKw').value='';$('#regMid').value='';$('#regPid').value='';$('#regQty').value='1';$('#regDays').value='30';$('#regAuto').className='reg-auto';regFound=null;
   btn.disabled=false;lb.textContent='등록';
   filter='all';query='';owner='';$('#q').value='';$('#ownerFilter').value='';
   renderAd();renderAccount();renderSettle();renderDaily();
