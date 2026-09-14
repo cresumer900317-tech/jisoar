@@ -195,6 +195,9 @@ tbody tr.flash{animation:flash 1.8s ease-out}
 .tg.ph{visibility:hidden}
 .qty-badge{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;color:#fff;background:var(--ink-1);padding:1px 6px;vertical-align:middle}
 tr.child td{background:#fafbfc}
+td.chk{width:36px;padding-left:14px;padding-right:0}
+td.chk input,#chkAll{width:15px;height:15px;accent-color:var(--ink-1);cursor:pointer}
+tr.sel td{background:#eef3fc}
 tr.child .p-cell{padding-left:32px;position:relative}
 tr.child .p-cell::before{content:"";position:absolute;left:12px;top:-14px;bottom:50%;width:10px;border-left:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
 tr.child .p-name{font-weight:500}
@@ -447,7 +450,7 @@ tr.child .p-name{font-weight:500}
             <div class="right">
               <span class="count" id="count"></span>
               <button class="btn-light sm" type="button" onclick="notReady('수정')">수정</button>
-              <button class="btn-light sm" type="button" onclick="notReady('삭제')">삭제</button>
+              <button class="btn-light sm" type="button" id="btnDel" onclick="deleteSelected()">삭제</button>
               <button class="btn-dark sm" type="button" onclick="notReady('연장')">연장</button>
             </div>
           </div>
@@ -455,6 +458,7 @@ tr.child .p-name{font-weight:500}
             <table>
               <thead>
                 <tr>
+                  <th style="width:36px"><input type="checkbox" id="chkAll" aria-label="전체 선택"></th>
                   <th>No</th><th>아이디</th><th>상태</th><th>키워드</th><th>순위</th>
                   <th class="left">상품명</th><th>단품MID</th><th>상품ID</th><th>작업일수</th><th>시작일</th><th>종료일</th><th>관리</th>
                 </tr>
@@ -633,10 +637,10 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v13';
+window.BUILD='v14';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
-<script src="data.js?v=13"></script>
+<script src="data.js?v=14"></script>
 <script>
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
@@ -710,8 +714,10 @@ window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 
 /* ================= 광고관리 ================= */
 let filter='all',query='',owner='';
+const SEL=new Set();const HIDDEN=new Set();
 function renderKPI(){
-  const total=SLOTS.length,ok=SLOTS.filter(p=>stateOf(p)==='ok').length,err=SLOTS.filter(p=>stateOf(p)==='err').length,soon=SLOTS.filter(p=>stateOf(p)==='soon').length;
+  const V=SLOTS.filter(p=>!HIDDEN.has(p.no));
+  const total=V.length,ok=V.filter(p=>stateOf(p)==='ok').length,err=V.filter(p=>stateOf(p)==='err').length,soon=V.filter(p=>stateOf(p)==='soon').length;
   const c=[['all',total,'전체','accent'],['ok',ok,'정상','good'],['err',err,'오류','bad'],['soon',soon,'종료예정','warn']];
   $('#kpi').innerHTML=c.map(([f,v,l,cls])=>`<div class="kpi clickable ${filter===f?'sel':''}" data-f="${f}"><div class="k-v ${cls}">${v}</div><div class="k-l">${l}</div></div>`).join('');
 }
@@ -735,7 +741,10 @@ function rowHTML(p,idx,g){
   const isParent=g&&g.n>1&&!g.child, isChild=g&&g.child;
   const tg=isParent?`<button class="tg" type="button" data-g="${esc(g.key)}" aria-label="펼치기">${OPEN.has(g.key)?'−':'+'}</button>`:`<span class="tg ph"></span>`;
   const badge=isParent?`<span class="qty-badge">×${g.n}</span>`:'';
-  return `<tr class="row ${isChild?'child':''}" data-i="${idx}">
+  const nos=isParent?g.nos:[p.no];
+  const checked=nos.every(n=>SEL.has(n));
+  return `<tr class="row ${isChild?'child':''} ${checked?'sel':''}" data-i="${idx}">
+    <td class="chk"><input type="checkbox" class="rowchk" data-nos="${nos.join(',')}" ${checked?'checked':''} aria-label="선택"></td>
     <td><span class="mono">${p.no}</span></td>
     <td><span class="id-tag">${esc(p.owner)}</span></td>
     <td>${statusHTML(p)}</td>
@@ -756,29 +765,31 @@ function rowHTML(p,idx,g){
 function renderAd(){
   renderKPI();
   const rows=SLOTS.map((p,i)=>({p,i})).filter(({p})=>{
+    if(HIDDEN.has(p.no))return false;
     if(query&&!(p.name+' '+p.kw+' '+p.owner+' '+p.mall+' '+p.no+' '+p.nvMid+' '+(p.pid||'')).toLowerCase().includes(query))return false;
     if(owner&&p.owner!==owner)return false;
     if(filter!=='all'&&stateOf(p)!==filter)return false;
     return true;
   });
-  if(!SLOTS.length)$('#tbody').innerHTML=`<tr><td colspan="12" class="empty">등록된 광고가 없습니다. 위에서 상품을 등록해 보세요.</td></tr>`;
-  else if(!rows.length)$('#tbody').innerHTML=`<tr><td colspan="12" class="empty">조건에 맞는 광고가 없습니다.</td></tr>`;
+  if(!SLOTS.length)$('#tbody').innerHTML=`<tr><td colspan="13" class="empty">등록된 광고가 없습니다. 위에서 상품을 등록해 보세요.</td></tr>`;
+  else if(!rows.length)$('#tbody').innerHTML=`<tr><td colspan="13" class="empty">조건에 맞는 광고가 없습니다.</td></tr>`;
   else{
     const groups=new Map();
     rows.forEach(r=>{const k=groupKey(r.p);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r);});
     let html='';
     groups.forEach((list,key)=>{
       const n=list.length;
-      html+=rowHTML(list[0].p,list[0].i,{key,n,child:false,i:0});
-      if(n>1&&OPEN.has(key))list.slice(1).forEach((r,j)=>{html+=rowHTML(r.p,r.i,{key,n,child:true,i:j+1});});
+      html+=rowHTML(list[0].p,list[0].i,{key,n,child:false,i:0,nos:list.map(r=>r.p.no)});
+      if(n>1&&OPEN.has(key))list.slice(1).forEach((r,j)=>{html+=rowHTML(r.p,r.i,{key,n,child:true,i:j+1,nos:[r.p.no]});});
     });
     $('#tbody').innerHTML=html;
-    $('#count').textContent=`${rows.length} / ${SLOTS.length}건 · 상품 ${groups.size}개`;
+    $('#count').textContent=`${SEL.size?`${SEL.size}개 선택 · `:''}${rows.length} / ${SLOTS.filter(x=>!HIDDEN.has(x.no)).length}건 · 상품 ${groups.size}개`;
   }
-  if(!rows.length||!SLOTS.length)$('#count').textContent=`${rows.length} / ${SLOTS.length}건`;
+  if(!rows.length||!SLOTS.length)$('#count').textContent=`${SEL.size?`${SEL.size}개 선택 · `:''}${rows.length} / ${SLOTS.length}건`;
+  const all=$('#chkAll');if(all){const vis=rows.map(r=>r.p.no);all.checked=vis.length>0&&vis.every(n=>SEL.has(n));all.indeterminate=!all.checked&&vis.some(n=>SEL.has(n));}
   $('#tblFoot').innerHTML=`행(상품명 제외) 또는 관리 버튼을 누르면 상세 순위와 검색 결과 상위 10개를 확인할 수 있습니다.${SLOTS.some(x=>x.user)?` · 등록된 ${SLOTS.filter(x=>x.user).length}건은 공용 저장(모든 화면 동일, 10초마다 동기화) <a href="#" onclick="resetUser();return false" style="color:var(--ink-3)">[초기화]</a>`:''}`;
   $('#tblNote').textContent=`순위 기준: 네이버쇼핑 통합검색 · 광고(파워링크·AD) 제외 · ${RANGE_MAX.toLocaleString('ko-KR')}위까지 조회 · 상품명을 누르면 스마트스토어(가격비교는 카탈로그)로 이동`;
-  $('#navCntAd').textContent=SLOTS.length;
+  $('#navCntAd').textContent=SLOTS.filter(x=>!HIDDEN.has(x.no)).length;
 }
 $('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();renderAd();});
 $('#ownerFilter').addEventListener('change',e=>{owner=e.target.value;renderAd();});
@@ -852,6 +863,8 @@ async function loadShared(force){
   catch(e){if(force)toast('공용 목록을 불러오지 못했습니다: '+e.message);return false;}
   if(!force&&st.version===SHARED_VERSION)return false;
   SHARED_VERSION=st.version;
+  HIDDEN.clear();(st.hidden||[]).forEach(n=>HIDDEN.add(Number(n)));
+  [...SEL].forEach(n=>{if(HIDDEN.has(n))SEL.delete(n);});
   // 기존 사용자 슬롯/로그 제거 후 서버 것으로 교체 (기본 데모 데이터는 유지)
   for(let i=SLOTS.length-1;i>=0;i--)if(SLOTS[i].user)SLOTS.splice(i,1);
   for(let i=LOGS.length-1;i>=0;i--)if(LOGS[i].user)LOGS.splice(i,1);
@@ -892,6 +905,22 @@ async function postSlots(body){
   return r.json();
 }
 function startSharedSync(){loadShared(true);if(!sharedTimer)sharedTimer=setInterval(()=>loadShared(false),10000);}
+let delArm=null;
+async function deleteSelected(){
+  const btn=$('#btnDel');
+  if(!SEL.size){toast('삭제할 항목을 맨 앞 체크박스로 선택해 주세요');return;}
+  if(!delArm){delArm=setTimeout(()=>{delArm=null;btn.textContent='삭제';btn.classList.remove('btn-dark');},4000);btn.textContent=`정말 삭제 (${SEL.size})`;btn.classList.add('btn-dark');return;}
+  clearTimeout(delArm);delArm=null;btn.textContent='삭제';btn.classList.remove('btn-dark');
+  const nos=[...SEL];
+  try{
+    const r=await fetch(LIVE_API+'/slots/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nos})});
+    if(!r.ok)throw new Error('삭제 실패 '+r.status);
+    SEL.clear();nos.forEach(n=>HIDDEN.add(n));
+    for(let i=SLOTS.length-1;i>=0;i--)if(SLOTS[i].user&&nos.includes(SLOTS[i].no))SLOTS.splice(i,1);
+    renderAd();toast(`${nos.length}개 삭제됨 (모든 화면에 반영)`);
+    loadShared(true);
+  }catch(e){toast(e.message);}
+}
 function resetUser(){
   const key=prompt('공용 등록 목록을 모두 지웁니다. 관리 키를 입력하세요.');
   if(!key)return;
@@ -984,7 +1013,9 @@ function closeDrawer(){drawer.classList.remove('show');overlay.classList.remove(
 $('#drawerClose').addEventListener('click',closeDrawer);
 overlay.addEventListener('click',closeDrawer);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
-$('#tbody').addEventListener('click',e=>{const tg=e.target.closest('button.tg');if(tg){const k=tg.dataset.g;OPEN.has(k)?OPEN.delete(k):OPEN.add(k);renderAd();return;}const tr=e.target.closest('tr[data-i]');if(!tr)return;openDrawer(SLOTS[+tr.dataset.i]);});
+$('#tbody').addEventListener('change',e=>{const c=e.target.closest('input.rowchk');if(!c)return;c.dataset.nos.split(',').map(Number).forEach(n=>c.checked?SEL.add(n):SEL.delete(n));renderAd();});
+$('#chkAll')?.addEventListener('change',e=>{const vis=[...document.querySelectorAll('#tbody input.rowchk')].flatMap(c=>c.dataset.nos.split(',').map(Number));vis.forEach(n=>e.target.checked?SEL.add(n):SEL.delete(n));renderAd();});
+$('#tbody').addEventListener('click',e=>{if(e.target.closest('td.chk'))return;const tg=e.target.closest('button.tg');if(tg){const k=tg.dataset.g;OPEN.has(k)?OPEN.delete(k):OPEN.add(k);renderAd();return;}const tr=e.target.closest('tr[data-i]');if(!tr)return;openDrawer(SLOTS[+tr.dataset.i]);});
 
 function drawChart(p){
   const box=$('#chartBox');box.querySelectorAll('svg').forEach(s=>s.remove());
