@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>정산 이체 파일 만들기 | jisoar</title>
+<style>
+:root{--ink:#111;--ink2:#444;--ink3:#8a8f98;--line:#e3e5e9;--line2:#c9cdd4;--bg:#fff;--panel:#fafafa;--ok:#0a7f3a;--warn:#b7791f;--bad:#c62828;--info:#2a5bd7}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Segoe UI","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:36px 20px 80px}
+h1{font-size:30px;font-weight:800;letter-spacing:-.8px}
+.lead{color:var(--ink2);margin-top:6px}
+.privacy{display:inline-flex;gap:8px;align-items:center;margin-top:14px;font-size:12.5px;font-weight:700;border:1px solid var(--line2);padding:6px 10px}
+.privacy .dot{width:8px;height:8px;background:var(--ok);border-radius:99px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:28px 0 0;border:1px solid var(--line2)}
+.step{padding:12px 16px;border-left:1px solid var(--line2);font-size:13px;font-weight:700;color:var(--ink3);display:flex;gap:10px;align-items:center}
+.step:first-child{border-left:none}
+.step b{display:inline-grid;place-items:center;width:22px;height:22px;border:1px solid var(--line2);font-size:12px}
+.step.on{color:var(--ink);background:var(--panel)}
+.step.on b{background:var(--ink);color:#fff;border-color:var(--ink)}
+section.card{border:1px solid var(--line2);margin-top:22px}
+.card h2{font-size:16px;font-weight:800;padding:14px 18px;border-bottom:1px solid var(--line)}
+.card .body{padding:18px}
+.drop{border:2px dashed var(--line2);padding:34px 18px;text-align:center;cursor:pointer;background:var(--panel)}
+.drop.over{border-color:var(--ink);background:#f1f3f6}
+.drop b{font-size:15px}
+.drop .sub{font-size:12.5px;color:var(--ink3);margin-top:6px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:14px}
+.f{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;color:var(--ink2)}
+.f select,.f input[type=date],.f input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line2);background:#fff;min-width:150px}
+textarea{width:100%;min-height:120px;font:12.5px/1.5 ui-monospace,Consolas,monospace;padding:10px;border:1px solid var(--line2);resize:vertical}
+.btn{font:inherit;font-weight:700;padding:10px 18px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.btn.light{background:#fff;color:var(--ink)}
+.btn.sm{padding:7px 12px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:default}
+.muted{color:var(--ink3);font-size:12.5px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line2);margin-top:4px}
+.kpi{padding:14px;border-left:1px solid var(--line);text-align:center}
+.kpi:first-child{border-left:none}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12px;color:var(--ink3);font-weight:700;margin-top:2px}
+.kpi.bad .v{color:var(--bad)}.kpi.warn .v{color:var(--warn)}.kpi.ok .v{color:var(--ok)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 10px}
+.seg{display:flex;border:1px solid var(--line2)}
+.seg button{font:inherit;font-size:12.5px;font-weight:700;padding:7px 12px;border:none;border-left:1px solid var(--line2);background:#fff;cursor:pointer;color:var(--ink2)}
+.seg button:first-child{border-left:none}.seg button.on{background:var(--ink);color:#fff}
+.tblwrap{overflow:auto;border:1px solid var(--line2);max-height:70vh}
+table{border-collapse:collapse;width:100%;min-width:1180px;font-size:12.5px}
+th{position:sticky;top:0;background:#f4f5f7;border-bottom:1px solid var(--line2);padding:9px 8px;text-align:left;font-size:12px;white-space:nowrap;z-index:1}
+td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:middle;white-space:nowrap}
+td input[type=text],td select{font:inherit;font-size:12.5px;padding:5px 7px;border:1px solid var(--line2);background:#fff}
+td input.acct{width:170px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.3px}
+td input.holder{width:90px}td input.memo{width:120px}td select{width:120px}
+tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border:1px solid;margin-right:4px;white-space:nowrap}
+.tag.bad{color:var(--bad);border-color:#efb8b8}.tag.warn{color:var(--warn);border-color:#ead4a8}.tag.info{color:var(--info);border-color:#bccdf2}.tag.ok{color:var(--ok);border-color:#b7dcc4}
+.raw{color:var(--ink3);max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-top:14px;font-size:12.5px;color:var(--ink2)}
+.dl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:10px}
+.note b{color:var(--ink)}
+.hist{font-size:12.5px}
+.hist table{min-width:0}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;font-weight:700;padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.show{opacity:1}
+[hidden]{display:none!important}
+@media (max-width:760px){.steps{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>정산 이체 파일 만들기</h1>
+  <div class="lead">리뷰체험단 시트(구글 스프레드시트)를 넣으면 국민은행 대량이체 업로드 파일을 만들어 드립니다. 계좌번호는 처음부터 끝까지 글자로만 다루어 앞자리 0이 사라지지 않습니다.</div>
+  <div class="privacy"><span class="dot"></span>모든 처리는 이 브라우저 안에서만 이루어집니다. 파일도, 계좌 정보도 서버로 보내지 않습니다.</div>
+
+  <div class="steps">
+    <div class="step on" id="st1"><b>1</b>시트 넣기</div>
+    <div class="step" id="st2"><b>2</b>검토·수정</div>
+    <div class="step" id="st3"><b>3</b>이체 파일 받기</div>
+  </div>
+
+  <!-- ===== 1. 입력 ===== -->
+  <section class="card" id="sec1">
+    <h2>1. 시트 넣기</h2>
+    <div class="body">
+      <div class="drop" id="drop">
+        <b>구글 스프레드시트에서 내려받은 엑셀 파일(.xlsx)을 여기에 끌어다 놓거나 클릭해서 선택</b>
+        <div class="sub">구글시트 메뉴 파일 › 다운로드 › Microsoft Excel(.xlsx). 월 시트가 여러 개면 아래에서 고릅니다.</div>
+        <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
+      </div>
+      <div class="row" id="sheetRow" hidden>
+        <div class="f">시트<select id="sheetSel"></select></div>
+        <div class="f">대상<input type="text" value="미입금 행만 (입금완료 표시된 행은 제외)" readonly style="background:#f4f5f7;color:var(--ink2);min-width:230px"></div>
+        <div class="f">날짜 시작<input type="date" id="dateFrom"></div>
+        <div class="f">날짜 끝<input type="date" id="dateTo"></div>
+        <div class="f">진행자<select id="ownerSel"><option value="">전체</option></select></div>
+        <button class="btn" id="btnParse">검토 화면으로</button>
+      </div>
+      <details style="margin-top:16px">
+        <summary class="muted" style="cursor:pointer">파일 대신 시트에서 복사해 붙여넣기 (헤더 줄 "날짜 진행자 …" 부터 범위를 복사)</summary>
+        <textarea id="paste" placeholder="구글시트에서 헤더 행부터 마지막 행까지 선택 → 복사 → 여기에 붙여넣기"></textarea>
+        <div class="row"><button class="btn light" id="btnPaste">붙여넣은 내용 읽기</button></div>
+      </details>
+      <div class="note" id="inputInfo"></div>
+    </div>
+  </section>
+
+  <!-- ===== 2. 검토 ===== -->
+  <section class="card" id="sec2" hidden>
+    <h2>2. 검토·수정</h2>
+    <div class="body">
+      <div class="kpis">
+        <div class="kpi"><div class="v" id="kTotal">0</div><div class="l">대상 행</div></div>
+        <div class="kpi ok"><div class="v" id="kInc">0</div><div class="l">포함(이체 파일에 들어감)</div></div>
+        <div class="kpi bad"><div class="v" id="kErr">0</div><div class="l">오류 (수정 필요)</div></div>
+        <div class="kpi warn"><div class="v" id="kWarn">0</div><div class="l">확인 권장</div></div>
+        <div class="kpi"><div class="v" id="kSum">0</div><div class="l">포함 합계(원)</div></div>
+      </div>
+      <div class="tools">
+        <div class="seg" id="seg"><button data-f="all" class="on">전체</button><button data-f="bad">오류</button><button data-f="warn">확인 권장</button><button data-f="ok">정상</button><button data-f="off">제외됨</button></div>
+        <input type="text" id="q" placeholder="이름 · 계좌 · 입금명 검색" style="font:inherit;font-size:12.5px;padding:7px 10px;border:1px solid var(--line2);min-width:220px">
+        <span class="muted" id="cnt"></span>
+        <span style="flex:1"></span>
+        <button class="btn light sm" id="btnExcludeBad">오류 행 모두 제외</button>
+        <button class="btn light sm" id="btnReparse">원문으로 다시 분석</button>
+      </div>
+      <div class="tblwrap">
+        <table>
+          <thead><tr>
+            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>날짜</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th><th>확인 사항</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="note" id="skipInfo"></div>
+      <div class="note">오류 행은 이체 파일에 들어가지 않습니다. 은행·계좌·예금주·입금명은 표에서 바로 고칠 수 있고, 고치면 즉시 다시 검사합니다. 예금주는 띄어쓰기 없이 은행에 등록된 이름 그대로여야 합니다.</div>
+    </div>
+  </section>
+
+  <!-- ===== 3. 다운로드 ===== -->
+  <section class="card" id="sec3" hidden>
+    <h2>3. 이체 파일 받기</h2>
+    <div class="body">
+      <div class="row">
+        <div class="f">은행 표기<select id="bankMode"><option value="code">은행코드 3자리 (예: 004)</option><option value="name">한글 은행명 (예: 국민)</option></select></div>
+        <div class="f">파일 형식<select id="fmt"><option value="xls">.xls (국민은행 제공 양식과 동일)</option><option value="xlsx">.xlsx</option></select></div>
+        <div class="f">파일 이름<input type="text" id="fname" placeholder="대량이체_날짜"></div>
+        <button class="btn" id="btnDown">이체 파일 내려받기</button>
+      </div>
+      <div class="note" id="downInfo"></div>
+      <div class="note"><b>다음 순서</b>: 내려받은 파일을 KB스타기업뱅킹 › 대량이체 › 파일 등록에 올리고, 은행 화면의 건수·합계가 위 숫자와 같은지 확인한 뒤 이체를 실행하세요. 예금주 조회 불일치가 나오는 건은 이 화면에서 예금주를 고쳐 다시 만들면 됩니다.</div>
+    </div>
+  </section>
+
+  <!-- ===== 이력 ===== -->
+  <section class="card" id="sec4">
+    <h2>만든 파일 이력 (이 브라우저에만 저장)</h2>
+    <div class="body hist">
+      <div class="muted">같은 계좌·금액·입금명이 이전에 만든 파일에 있으면 검토 화면에서 "이전 파일에 있음"으로 경고합니다. 계좌번호 원문은 저장하지 않고 대조용 지문만 저장합니다.</div>
+      <div class="tools"><button class="btn light sm" id="btnHistExport">이력 파일로 내보내기</button><label class="btn light sm" style="display:inline-block">이력 불러오기<input type="file" id="histImport" accept=".json" hidden></label><button class="btn light sm" id="btnHistClear">이력 지우기</button></div>
+      <table><thead><tr><th>만든 시각</th><th>파일 이름</th><th style="text-align:right">건수</th><th style="text-align:right">합계</th><th>메모</th></tr></thead><tbody id="histBody"></tbody></table>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="vendor/xlsx.full.min.js"></script>
+<script>
+/* ===================== 은행 사전 (KB 대량이체 코드표) ===================== */
+const BANKS=[
+  {code:'004',name:'국민',aliases:['국민','kb국민','kb','케이비','국민은행','kb국민은행','국민은','kb은행']},
+  {code:'088',name:'신한',aliases:['신한','신한은행','shinhan']},
+  {code:'020',name:'우리',aliases:['우리','우리은행','woori']},
+  {code:'081',name:'KEB하나',aliases:['하나','하나은행','keb하나','keb','kEB하나은행','외환','외환은행']},
+  {code:'011',name:'농협',aliases:['농협','nh농협','nh','농협은행','농협중앙회','단위농협','지역농협','축협','nh농협은행','농엽']},
+  {code:'003',name:'기업',aliases:['기업','기업은행','ibk','ibk기업','ibk기업은행','중소기업은행']},
+  {code:'090',name:'카카오뱅크',aliases:['카카오뱅크','카카오','카뱅','kakao','kakaobank','카카오 뱅크','카카오뱅']},
+  {code:'092',name:'토스뱅크',aliases:['토스뱅크','토스','토뱅','toss','tossbank','토스 뱅크']},
+  {code:'089',name:'케이뱅크',aliases:['케이뱅크','케이','k뱅크','kbank','k bank','케뱅','케이 뱅크']},
+  {code:'045',name:'새마을금고',aliases:['새마을금고','새마을','mg새마을','mg새마을금고','mg','새마을 금고']},
+  {code:'071',name:'우체국',aliases:['우체국','우체국은행','우정','post']},
+  {code:'023',name:'SC',aliases:['sc제일','sc','제일','sc제일은행','스탠다드차타드','sc은행']},
+  {code:'027',name:'씨티',aliases:['씨티','시티','씨티은행','citi','한국씨티']},
+  {code:'007',name:'수협',aliases:['수협','수협은행','수협중앙회']},
+  {code:'048',name:'신협',aliases:['신협','신용협동조합','신협중앙회']},
+  {code:'031',name:'아이엠뱅크',aliases:['아이엠뱅크','im뱅크','im','대구','대구은행','아이엠','imbank']},
+  {code:'032',name:'부산',aliases:['부산','부산은행','bnk부산','bnk']},
+  {code:'039',name:'경남',aliases:['경남','경남은행','bnk경남']},
+  {code:'034',name:'광주',aliases:['광주','광주은행']},
+  {code:'037',name:'전북',aliases:['전북','전북은행']},
+  {code:'035',name:'제주',aliases:['제주','제주은행']},
+  {code:'002',name:'산업',aliases:['산업','산업은행','kdb','kdb산업','kdb산업은행']},
+  {code:'050',name:'저축',aliases:['저축','저축은행','sbi저축','sbi','오케이저축','ok저축','페퍼저축','웰컴저축','저축은']},
+  {code:'054',name:'HSBC',aliases:['hsbc','에이치에스비씨']},
+];
+// 별칭을 길이순으로 (긴 것 먼저 매칭)
+const ALIASES=[];BANKS.forEach(b=>b.aliases.forEach(a=>ALIASES.push({a:a.toLowerCase().replace(/\s+/g,''),b})));ALIASES.sort((x,y)=>y.a.length-x.a.length);
+const bankByCode=c=>BANKS.find(b=>b.code===c);
+
+/* ===================== 계좌 텍스트 파서 ===================== */
+// 입력: "국민 123456-01-123456 홍길동" / "123401-04-123456 국민 홍길동" / "카카오뱅크3333012345678홍길동" 등
+// 출력: {bank, acct(숫자만), holder, notes[]}  — 애매하면 notes 에 남기고 확정하지 않음
+function parseAccount(raw){
+  const notes=[]; let s=String(raw||'').replace(/[（）()\[\]【】,，.:：;/|]/g,' ').replace(/\s+/g,' ').trim();
+  if(!s)return {bank:null,acct:'',holder:'',notes:['원문 없음']};
+  // 1) 은행 찾기 (공백 무시, 긴 별칭 우선)
+  const flat=s.toLowerCase().replace(/\s+/g,'');
+  let bank=null,alias=null;
+  for(const {a,b} of ALIASES){ if(flat.includes(a)){bank=b;alias=a;break;} }
+  let rest=s;
+  if(alias){
+    // 원문에서 별칭(공백 섞여도)을 제거
+    const pat=alias.split('').map(ch=>ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('\\s*');
+    rest=rest.replace(new RegExp(pat+'(은행|뱅크)?','i'),' ').replace(/\s+/g,' ').trim();
+  }
+  // 2) 예금주: 한글 2~6자 덩어리 (숫자와 붙어 있어도 분리)
+  const names=[...rest.matchAll(/[가-힣]{2,6}/g)].map(m=>m[0]);
+  let holder='';
+  if(names.length){
+    holder=names[names.length-1];            // 보통 끝에 이름
+    if(names.length>1){notes.push('이름 후보가 여러 개: '+names.join(', '));}
+  }
+  if(holder)rest=rest.replace(holder,' ');
+  // 3) 계좌: 남은 숫자/하이픈/공백 → 숫자만
+  const digitsGroups=rest.match(/[\d][\d\- ]*[\d]|\d/g)||[];
+  const joined=digitsGroups.join('');
+  const acct=joined.replace(/[^\d]/g,'');
+  const leftover=rest.replace(/[\d\- ]/g,'').replace(/(은행|뱅크)/g,'').trim();
+  if(leftover)notes.push('해석 안 된 글자: '+leftover);
+  return {bank,acct,holder,notes};
+}
+
+/* ===================== 상태 ===================== */
+const $=s=>document.querySelector(s);
+let WB=null, ROWS=[], FILTER='all', QUERY='', HIST=[];
+const COLS={date:['날짜','진행시작일'],owner:['진행자'],client:['의뢰업체명'],memo:['입금명'],orderer:['주문자명'],amount:['최종금액'],paid:['입금완료여부'],acct:['입금계좌번호','계좌','계좌번호','입금계좌']};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
+function fmtWon(n){return (n||0).toLocaleString('ko-KR')}
+function setStep(n){[1,2,3].forEach(i=>$('#st'+i).classList.toggle('on',i<=n));}
+function excelDate(v){ if(v instanceof Date)return v; if(typeof v==='number'&&v>20000&&v<80000){const d=XLSX.SSF.parse_date_code(v);return new Date(d.y,d.m-1,d.d);} const s=String(v||'').trim(); const m=/^(\d{4})[./-](\d{1,2})[./-](\d{1,2})/.exec(s); if(m)return new Date(+m[1],+m[2]-1,+m[3]); const m2=/^(\d{1,2})[./-](\d{1,2})$/.exec(s); if(m2)return new Date(new Date().getFullYear(),+m2[1]-1,+m2[2]); return null; }
+function ymd(d){return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:''}
+
+/* ===================== 입력: 파일 ===================== */
+const drop=$('#drop'),fileIn=$('#file');
+drop.addEventListener('click',()=>fileIn.click());
+drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('over')});
+drop.addEventListener('dragleave',()=>drop.classList.remove('over'));
+drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('over');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+fileIn.addEventListener('change',()=>{if(fileIn.files[0])loadFile(fileIn.files[0]);});
+function loadFile(f){
+  const r=new FileReader();
+  r.onload=e=>{
+    try{WB=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});}
+    catch(err){toast('파일을 읽지 못했습니다: '+err.message);return;}
+    const sel=$('#sheetSel');sel.innerHTML='';
+    let best=null;
+    WB.SheetNames.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);const h=findHeader(XLSX.utils.sheet_to_json(WB.Sheets[n],{header:1,raw:false,defval:''}));if(h&&(!best||/카톡/.test(n)&&!/카톡/.test(best)))best=n;});
+    if(best)sel.value=best;
+    $('#sheetRow').hidden=false;
+    $('#inputInfo').innerHTML=`<b>${f.name}</b> · 시트 ${WB.SheetNames.length}개 · 계좌 열이 있는 시트를 자동으로 골랐습니다. 대상·기간을 확인하고 <b>검토 화면으로</b>를 누르세요.`;
+    onSheetChange();
+  };
+  r.readAsArrayBuffer(f);
+}
+$('#sheetSel').addEventListener('change',onSheetChange);
+function onSheetChange(){
+  const grid=currentGrid(); if(!grid)return;
+  const {hi,map}=grid;
+  const owners=new Set();grid.rows.forEach(r=>{const o=(r[map.owner]||'').toString().trim();if(o)owners.add(o);});
+  const os=$('#ownerSel');os.innerHTML='<option value="">전체</option>';[...owners].sort().forEach(o=>{const e=document.createElement('option');e.value=o;e.textContent=o;os.appendChild(e);});
+  const dates=grid.rows.map(r=>excelDate(r[map.date])).filter(Boolean).map(ymd).sort();
+  $('#dateFrom').value=dates[0]||'';$('#dateTo').value=dates[dates.length-1]||'';
+  const missing=Object.keys(COLS).filter(k=>map[k]==null&&k!=='client');
+  $('#inputInfo').innerHTML+=`<br>시트 <b>${$('#sheetSel').value}</b>: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행` + (missing.length?` · <span style="color:var(--bad)">찾지 못한 열: ${missing.join(', ')}</span>`:' · 필요한 열을 모두 찾았습니다');
+}
+function findHeader(aoa){
+  // 헤더 행 = 셀 값이 정확히 열 이름인 행 (안내 문구 "은행/계좌번호/예금주순서로 작성" 같은 문장은 제외)
+  const isCol=(v,names)=>names.includes(v);
+  for(let i=0;i<Math.min(aoa.length,30);i++){
+    const row=aoa[i].map(v=>String(v||'').replace(/\s+/g,''));
+    const hasAcct=row.some(v=>isCol(v,['입금계좌번호','계좌번호','계좌','입금계좌']));
+    const hasAmt=row.some(v=>isCol(v,['최종금액','금액','이체금액']));
+    const hasName=row.some(v=>isCol(v,['주문자명','예금주','입금명','날짜']));
+    if(hasAcct&&hasAmt&&hasName)return i;
+  }
+  return null;
+}
+function mapColumns(hdr){
+  const H=hdr.map(v=>String(v||'').replace(/\s+/g,''));const map={};
+  for(const [k,names] of Object.entries(COLS)){let idx=null;for(const n of names){const j=H.findIndex(h=>h===n.replace(/\s+/g,''));if(j>=0){idx=j;break;}}if(idx==null){for(const n of names){const j=H.findIndex(h=>h.includes(n.replace(/\s+/g,'')));if(j>=0){idx=j;break;}}}map[k]=idx;}
+  return map;
+}
+function currentGrid(){
+  if(!WB)return null;const ws=WB.Sheets[$('#sheetSel').value];if(!ws)return null;
+  const aoa=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+  const hi=findHeader(XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:''}));if(hi==null){toast('헤더 행(입금계좌번호·최종금액)을 찾지 못했습니다');return null;}
+  const map=mapColumns(aoa[hi]);
+  // 계좌 셀 타입(숫자면 0 손실 가능) 기록
+  const range=XLSX.utils.decode_range(ws['!ref']);const acctTypes={};
+  if(map.acct!=null){for(let r=hi+1;r<=range.e.r;r++){const c=ws[XLSX.utils.encode_cell({r,c:map.acct})];if(c)acctTypes[r-hi-1]=c.t;}}
+  const rows=aoa.slice(hi+1).filter(r=>r.some(v=>v!==''&&v!=null));
+  return {hi,map,rows,acctTypes};
+}
+/* ===================== 입력: 붙여넣기 ===================== */
+$('#btnPaste').addEventListener('click',()=>{
+  const txt=$('#paste').value;if(!txt.trim()){toast('붙여넣은 내용이 없습니다');return;}
+  const aoa=txt.replace(/\r/g,'').split('\n').map(l=>l.split('\t'));
+  const hi=findHeader(aoa);if(hi==null){toast('헤더 행(날짜·입금계좌번호·최종금액)이 포함되게 복사해 주세요');return;}
+  const map=mapColumns(aoa[hi]);const rows=aoa.slice(hi+1).filter(r=>r.some(v=>v!==''));
+  buildRows({hi,map,rows,acctTypes:{}},'붙여넣기');
+});
+$('#btnParse').addEventListener('click',()=>{const g=currentGrid();if(g)buildRows(g,$('#sheetSel').value);});
+
+/* ===================== 행 구성 + 검증 ===================== */
+function buildRows(grid,srcName){
+  const {map,rows,acctTypes}=grid;
+  const from=$('#dateFrom').value,to=$('#dateTo').value,owner=$('#ownerSel').value;
+  ROWS=[];let skipped=0;
+  rows.forEach((r,i)=>{
+    const get=k=>map[k]==null?'':r[map[k]];
+    const paid=String(get('paid')||'').trim();
+    const d=excelDate(get('date'));const ds=ymd(d);
+    if(paid)return;   // 입금완료 표시된 행은 항상 제외
+    if(from&&ds&&ds<from)return;if(to&&ds&&ds>to)return;
+    if(owner&&String(get('owner')||'').trim()!==owner)return;
+    const raw=String(get('acct')||'').trim();
+    const amountRaw=get('amount');
+    const amt=parseAmount(amountRaw);
+    if(!raw&&!(amt>0)){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외
+    const p=parseAccount(raw);
+    ROWS.push({i,src:srcName,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:String(get('memo')||'').trim(),
+      amountRaw,amount:parseAmount(amountRaw),raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,acctCellType:acctTypes[i]||'',paid,include:true,edited:false});
+  });
+  validateAll();
+  $('#skipInfo').textContent=skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다.`:'';
+  $('#sec2').hidden=false;$('#sec3').hidden=false;setStep(2);
+  $('#fname').value=`대량이체_${ymd(new Date()).replace(/-/g,'')}`;
+  renderTable();
+  window.scrollTo({top:$('#sec2').offsetTop-10,behavior:'smooth'});
+}
+function parseAmount(v){
+  if(v===''||v==null)return NaN;
+  if(typeof v==='number')return v;
+  const s=String(v).replace(/[,\s원]/g,'');return s===''?NaN:Number(s);
+}
+async function fp(s){const b=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',b);return [...new Uint8Array(h)].slice(0,12).map(x=>x.toString(16).padStart(2,'0')).join('');}
+let HIST_FPS=new Set();
+function validateAll(){
+  const seen=new Map();
+  ROWS.forEach(r=>{
+    const issues=[];
+    if(!r.bank)issues.push(['bad','은행 미식별']);
+    if(!r.acct)issues.push(['bad','계좌번호 없음']);
+    else if(r.acct.length<10||r.acct.length>16)issues.push(['warn',`계좌 자릿수 ${r.acct.length} (보통 10~16)`]);
+    if(!r.holder)issues.push(['bad','예금주 없음']);
+    else if(/\s/.test(r.holder))issues.push(['bad','예금주에 공백']);
+    else if(r.holder.length>20)issues.push(['bad','예금주 20자 초과']);
+    if(!Number.isFinite(r.amount))issues.push(['bad','금액 없음']);
+    else if(r.amount<=0)issues.push(['bad','금액 0 이하']);
+    else if(!Number.isInteger(r.amount))issues.push(['bad','금액에 소수점']);
+    if(!r.memo)issues.push(['warn','입금명 비어 있음']);
+    else if(r.memo.length>10)issues.push(['bad',`입금명 ${r.memo.length}자 (10자 이내)`]);
+    if(r.acctCellType==='n')issues.push(['warn','원본 셀이 숫자 형식 (앞자리 0 손실 가능)']);
+    if(r.holder&&r.orderer&&r.holder!==r.orderer.replace(/\s+/g,''))issues.push(['info',`주문자명 "${r.orderer}"과 다름`]);
+    if(r.paid)issues.push(['info','이미 입금완료 표시']);
+    r.pnotes.forEach(n=>issues.push(['warn',n]));
+    const key=`${r.acct}|${r.amount}|${r.memo}`;
+    if(r.acct&&seen.has(key))issues.push(['warn',`같은 계좌·금액·입금명이 또 있음 (건별 지급이면 정상, 실수 중복이면 제외)`]);else seen.set(key,r.i);
+    r.key=key;r.issues=issues;
+    r.level=issues.some(x=>x[0]==='bad')?'bad':issues.some(x=>x[0]==='warn')?'warn':'ok';
+  });
+  // 이력 대조 (비동기)
+  Promise.all(ROWS.map(r=>fp(r.key))).then(fps=>{ROWS.forEach((r,i)=>{r.fp=fps[i];if(HIST_FPS.has(r.fp)&&!r.issues.some(x=>x[1]==='이전에 만든 파일에 있음')){r.issues.push(['warn','이전에 만든 파일에 있음']);if(r.level==='ok')r.level='warn';}});renderTable();});
+}
+function renderTable(){
+  const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
+  $('#kTotal').textContent=ROWS.length;$('#kInc').textContent=inc.length;
+  $('#kErr').textContent=ROWS.filter(r=>r.level==='bad').length;$('#kWarn').textContent=ROWS.filter(r=>r.level==='warn').length;
+  $('#kSum').textContent=fmtWon(inc.reduce((a,r)=>a+(r.amount||0),0));
+  const q=QUERY.toLowerCase();
+  const list=ROWS.filter(r=>{
+    if(FILTER==='off')return !r.include;
+    if(FILTER!=='all'&&r.level!==FILTER)return false;
+    if(q&&!(r.holder+' '+r.orderer+' '+r.acct+' '+r.memo+' '+r.raw).toLowerCase().includes(q))return false;
+    return true;
+  });
+  const order={bad:0,warn:1,ok:2};
+  list.sort((a,b)=>order[a.level]-order[b.level]||a.i-b.i);
+  $('#tbody').innerHTML=list.map(r=>`<tr class="${r.level} ${r.include?'':'off'}" data-i="${r.i}">
+    <td><input type="checkbox" class="inc" ${r.include?'checked':''}></td>
+    <td>${r.level==='bad'?'<span class="tag bad">오류</span>':r.level==='warn'?'<span class="tag warn">확인</span>':'<span class="tag ok">정상</span>'}</td>
+    <td>${r.date||''}</td>
+    <td>${esc(r.orderer)}</td>
+    <td class="raw" title="${esc(r.raw)}">${esc(r.raw)}</td>
+    <td><select class="bank"><option value="">(선택)</option>${BANKS.map(b=>`<option value="${b.code}" ${b.code===r.bank?'selected':''}>${b.name} ${b.code}</option>`).join('')}</select></td>
+    <td><input type="text" class="acct" value="${esc(r.acct)}" inputmode="numeric"></td>
+    <td><input type="text" class="holder" value="${esc(r.holder)}"></td>
+    <td class="amt">${Number.isFinite(r.amount)?fmtWon(r.amount):'<span class="tag bad">?</span>'}</td>
+    <td><input type="text" class="memo" value="${esc(r.memo)}" maxlength="20"></td>
+    <td>${r.issues.map(([lv,t])=>`<span class="tag ${lv}">${esc(t)}</span>`).join('')}</td>
+  </tr>`).join('')||`<tr><td colspan="11" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
+  $('#cnt').textContent=`${list.length} / ${ROWS.length}행 표시`;
+}
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+$('#tbody').addEventListener('change',e=>{
+  const tr=e.target.closest('tr[data-i]');if(!tr)return;const r=ROWS.find(x=>x.i===+tr.dataset.i);if(!r)return;
+  if(e.target.classList.contains('inc'))r.include=e.target.checked;
+  if(e.target.classList.contains('bank'))r.bank=e.target.value;
+  if(e.target.classList.contains('acct'))r.acct=e.target.value.replace(/[^\d]/g,'');
+  if(e.target.classList.contains('holder'))r.holder=e.target.value.replace(/\s+/g,'');
+  if(e.target.classList.contains('memo'))r.memo=e.target.value.trim();
+  r.edited=true;validateAll();renderTable();
+});
+$('#chkAll').addEventListener('change',e=>{document.querySelectorAll('#tbody tr[data-i]').forEach(tr=>{const r=ROWS.find(x=>x.i===+tr.dataset.i);if(r)r.include=e.target.checked;});renderTable();});
+$('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;FILTER=b.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));renderTable();});
+$('#q').addEventListener('input',e=>{QUERY=e.target.value.trim();renderTable();});
+$('#btnExcludeBad').addEventListener('click',()=>{ROWS.forEach(r=>{if(r.level==='bad')r.include=false;});renderTable();toast('오류 행을 제외했습니다');});
+$('#btnReparse').addEventListener('click',()=>{ROWS.forEach(r=>{const p=parseAccount(r.raw);r.bank=p.bank?p.bank.code:'';r.acct=p.acct;r.holder=p.holder;r.pnotes=p.notes;r.edited=false;});validateAll();renderTable();});
+
+/* ===================== 출력 ===================== */
+$('#btnDown').addEventListener('click',async()=>{
+  const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
+  if(!inc.length){toast('포함할 행이 없습니다');return;}
+  const stillBad=ROWS.filter(r=>r.include&&r.level==='bad').length;
+  const mode=$('#bankMode').value,fmt=$('#fmt').value;
+  const name=($('#fname').value.trim()||`대량이체_${ymd(new Date()).replace(/-/g,'')}`)+'.'+fmt;
+  const aoa=inc.map(r=>{const b=bankByCode(r.bank);return [
+    {v:mode==='code'?b.code:b.name,t:'s',z:'@'},
+    {v:r.acct,t:'s',z:'@'},
+    {v:r.amount,t:'n',z:'0'},
+    {v:r.holder,t:'s',z:'@'},
+    {v:r.memo,t:'s',z:'@'},
+    {v:r.memo,t:'s',z:'@'},
+  ];});
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=[{wch:10},{wch:20},{wch:12},{wch:12},{wch:16},{wch:16}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'대량이체');
+  const out=XLSX.write(wb,{bookType:fmt==='xls'?'biff8':'xlsx',type:'array'});
+  // 생성 파일 재검증: 다시 읽어 건수·합계·계좌 문자열 대조
+  const chk=XLSX.read(out,{type:'array'});const cs=chk.Sheets[chk.SheetNames[0]];const back=XLSX.utils.sheet_to_json(cs,{header:1,raw:true});
+  const okCount=back.length===inc.length, okSum=back.reduce((a,r)=>a+Number(r[2]||0),0)===inc.reduce((a,r)=>a+r.amount,0), okAcct=back.every((r,i)=>String(r[1])===inc[i].acct);
+  if(!(okCount&&okSum&&okAcct)){toast('생성 파일 검증 실패: 다시 시도해 주세요');return;}
+  const blob=new Blob([out],{type:fmt==='xls'?'application/vnd.ms-excel':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  const sum=inc.reduce((a,r)=>a+r.amount,0);
+  $('#downInfo').innerHTML=`<b>${esc(name)}</b> 생성 · <b>${inc.length}건</b> · 합계 <b>${fmtWon(sum)}원</b> · 다시 읽어 건수·합계·계좌 문자열이 일치함을 확인했습니다.`+(stillBad?` <span style="color:var(--bad)">오류 ${stillBad}건은 제외되었습니다.</span>`:'')+` 시트 이름 "대량이체", 1행부터 데이터, A·B열 텍스트 서식.`;
+  setStep(3);
+  // 이력 저장 (계좌 원문 대신 지문)
+  const fps=await Promise.all(inc.map(r=>fp(r.key)));
+  HIST.unshift({id:Date.now().toString(36),at:new Date().toLocaleString('ko-KR'),name,count:inc.length,sum,fps,note:''});
+  saveHist();renderHist();
+  toast('이체 파일을 내려받았습니다');
+});
+
+/* ===================== 이력 ===================== */
+function loadHist(){try{HIST=JSON.parse(localStorage.getItem('pay_history_v1')||'[]');}catch{HIST=[];}HIST_FPS=new Set(HIST.flatMap(h=>h.fps||[]));}
+function saveHist(){try{localStorage.setItem('pay_history_v1',JSON.stringify(HIST.slice(0,200)));}catch{}HIST_FPS=new Set(HIST.flatMap(h=>h.fps||[]));}
+function renderHist(){$('#histBody').innerHTML=HIST.map(h=>`<tr><td>${h.at}</td><td>${esc(h.name)}</td><td style="text-align:right">${h.count}</td><td style="text-align:right">${fmtWon(h.sum)}</td><td>${esc(h.note||'')}</td></tr>`).join('')||`<tr><td colspan="5" style="color:var(--ink3);padding:18px">아직 만든 파일이 없습니다.</td></tr>`;}
+$('#btnHistExport').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),history:HIST},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`이체이력_${ymd(new Date())}.json`;a.click();});
+$('#histImport').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const list=Array.isArray(j)?j:(j.history||[]);const ids=new Set(HIST.map(h=>h.id));list.forEach(h=>{if(h&&h.id&&!ids.has(h.id))HIST.push(h);});HIST.sort((a,b)=>(b.id>a.id?1:-1));saveHist();renderHist();toast('이력을 불러왔습니다');}catch{toast('이력 파일 형식이 아닙니다');}};r.readAsText(f);});
+$('#btnHistClear').addEventListener('click',()=>{if(!HIST.length)return;HIST=[];saveHist();renderHist();toast('이력을 지웠습니다');});
+loadHist();renderHist();
+</script>
+</body>
+</html>
