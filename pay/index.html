@@ -154,7 +154,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
     <div class="body">
       <div class="row">
         <div class="f">은행 표기<select id="bankMode"><option value="code">은행코드 3자리 (예: 004)</option><option value="name">한글 은행명 (예: 국민)</option></select></div>
-        <div class="f">파일 형식<select id="fmt"><option value="xls">.xls (국민은행 제공 양식과 동일)</option><option value="xlsx">.xlsx</option></select></div>
+        <div class="f">파일 형식<input type="text" value=".xls (국민은행 업로드 형식)" readonly style="background:#f4f5f7;color:var(--ink2);min-width:200px"><input type="hidden" id="fmt" value="xls"></div>
         <div class="f">파일 이름<input type="text" id="fname" placeholder="대량이체_날짜"></div>
         <button class="btn" id="btnDown">이체 파일 내려받기</button>
       </div>
