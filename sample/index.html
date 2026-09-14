@@ -248,6 +248,37 @@ tr.child .p-name{font-weight:500}
 .tbl-foot .pager{display:flex;gap:4px;align-items:center}
 .tbl-foot .pager button{width:26px;height:26px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-3);font-size:11px}
 .tbl-foot .pager button.on{background:var(--ink-1);color:#fff;border-color:var(--ink-1)}
+/* ===== table pager ===== */
+.tbl-pager{display:none}
+.tbl-pager.on{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 22px;border-top:1px solid var(--hairline);flex-wrap:wrap}
+.tbl-pager .pgsize{font-size:11.5px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.tbl-pager .pgsize select{border:1px solid var(--hairline);background:var(--surface);color:var(--ink-2);font-size:11.5px;padding:3px 5px}
+.tbl-pager .pager{display:flex;gap:4px;align-items:center}
+.tbl-pager .pager button{min-width:28px;height:28px;padding:0 8px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-2);font-size:12px;cursor:pointer;font-variant-numeric:tabular-nums}
+.tbl-pager .pager button:hover:not(:disabled){border-color:var(--line-strong);color:var(--ink-1)}
+.tbl-pager .pager button.on{background:var(--ink-1);color:#fff;border-color:var(--ink-1);font-weight:700}
+.tbl-pager .pager button:disabled{opacity:.4;cursor:default}
+.tbl-pager .pager .dots{color:var(--ink-3);padding:0 3px}
+/* ===== login ===== */
+#login{position:fixed;inset:0;z-index:1000;background:var(--nav-bg);display:flex;align-items:center;justify-content:center;padding:24px}
+#login.hide{display:none}
+#login .login-card{width:100%;max-width:352px;background:var(--surface);box-shadow:0 24px 64px rgba(0,0,0,.45)}
+#login .login-top{padding:32px 32px 22px;text-align:center;border-bottom:1px solid var(--hairline)}
+#login .login-mark{width:46px;height:46px;margin:0 auto 13px;background:var(--nav-bg);color:#fff;display:grid;place-items:center;font-weight:900;font-size:23px;letter-spacing:-1px}
+#login .login-name{font-weight:800;font-size:17px;letter-spacing:4px;color:var(--ink-1)}
+#login .login-sub{font-size:11.5px;color:var(--ink-3);margin-top:5px}
+#login form{padding:24px 32px 6px}
+#login label{display:block;font-size:11.5px;font-weight:700;color:var(--ink-2);margin:0 0 5px}
+#login .lf{margin-bottom:14px}
+#login input{width:100%;padding:11px 12px;border:1px solid var(--line-strong);font-size:13.5px;color:var(--ink-1);background:#fff}
+#login input:focus{outline:none;border-color:var(--accent)}
+#login .login-btn{width:100%;padding:12px;background:var(--nav-bg);color:#fff;border:0;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px}
+#login .login-btn:hover{background:#000}
+#login .login-err{min-height:15px;font-size:11.5px;color:var(--bad);margin-top:9px;opacity:0;transition:opacity .15s}
+#login .login-err.show{opacity:1}
+#login .login-foot{padding:14px 32px 28px}
+#login .login-hint{font-size:11px;color:var(--ink-3);background:var(--page);border:1px solid var(--hairline);padding:10px 12px;line-height:1.7}
+#login .login-hint b{color:var(--ink-2)}
 .empty{padding:48px;color:var(--ink-3);font-size:13px;text-align:center}
 /* date tools */
 .date-tools{display:flex;gap:8px;padding:15px 22px;border-bottom:1px solid var(--hairline);flex-wrap:wrap;align-items:center}
@@ -322,7 +353,26 @@ tr.child .p-name{font-weight:500}
 </style>
 </head>
 <body>
-<div class="app">
+<!-- ===== login (demo · super admin) ===== -->
+<div id="login">
+  <div class="login-card">
+    <div class="login-top">
+      <div class="login-mark">R</div>
+      <div class="login-name">RANKLAB</div>
+      <div class="login-sub">슬롯 순위 관리 시스템</div>
+    </div>
+    <form id="loginForm" autocomplete="off">
+      <div class="lf"><label for="loginId">아이디</label><input type="text" id="loginId" value="admin" autocomplete="username" autofocus></div>
+      <div class="lf"><label for="loginPw">비밀번호</label><input type="password" id="loginPw" value="ranklab" autocomplete="current-password"></div>
+      <button type="submit" class="login-btn">로그인</button>
+      <div class="login-err" id="loginErr"></div>
+    </form>
+    <div class="login-foot">
+      <div class="login-hint">데모 최종관리자 계정 · 아이디 <b>admin</b> / 비밀번호 <b>ranklab</b><br>로그인 버튼을 누르면 관리자 화면으로 들어갑니다.</div>
+    </div>
+  </div>
+</div>
+<div class="app" inert>
   <!-- ===== sidebar ===== -->
   <aside class="sidebar">
     <div class="brand">
@@ -368,7 +418,7 @@ tr.child .p-name{font-weight:500}
       </div>
       <div class="acct-tree">총판 › <b>대행사 sm6974</b> › 광고주 <span id="acctAdvCnt">5</span></div>
     </div>
-    <div class="logout">로그아웃</div>
+    <div class="logout" id="logout">로그아웃</div>
   </aside>
 
   <!-- ===== main ===== -->
@@ -473,6 +523,7 @@ tr.child .p-name{font-weight:500}
               <tbody id="tbody"></tbody>
             </table>
           </div>
+          <div class="tbl-pager" id="pagerBar"></div>
           <div class="tbl-foot"><span id="tblFoot"></span><span id="tblNote"></span></div>
         </section>
       </section>
@@ -644,7 +695,7 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v17';
+window.BUILD='v18';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="data.js?v=17"></script>
@@ -731,7 +782,7 @@ function renderKPI(){
   $('#kpi').innerHTML=c.map(([f,v,l,cls])=>`<div class="kpi clickable ${filter===f?'sel':''}" data-f="${f}"><div class="k-v ${cls}">${v}</div><div class="k-l">${l}</div></div>`).join('');
 }
 $('#kpi').addEventListener('click',e=>{const k=e.target.closest('.kpi');if(!k)return;setFilter(k.dataset.f);});
-function setFilter(f){filter=f;$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f===f));renderAd();}
+function setFilter(f){filter=f;$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f===f));PAGE=1;renderAd();}
 function statusHTML(p){
   const st=stateOf(p);
   const label={ok:'정상',err:'오류',soon:'종료예정',wait:'수집대기',live:'조회중'}[st];
@@ -773,6 +824,28 @@ function rowHTML(p,idx,g){
     <td><button class="gear" type="button" aria-label="상세"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></td>
   </tr>`;
 }
+let PAGE=1,PAGESIZE=20;
+function pageList(cur,total){
+  const set=new Set([1,2,total-1,total,cur-1,cur,cur+1]);
+  const arr=[...set].filter(n=>n>=1&&n<=total).sort((a,b)=>a-b);
+  const out=[];let prev=0;
+  arr.forEach(n=>{if(n-prev>1)out.push('…');out.push(n);prev=n;});
+  return out;
+}
+function renderPager(pages,totalGroups){
+  const bar=$('#pagerBar');if(!bar)return;
+  if(!totalGroups||totalGroups<=10){bar.classList.remove('on');bar.innerHTML='';return;}
+  bar.classList.add('on');
+  const sz=`<div class="pgsize">페이지당 <select id="pgSize">${[10,20,50].map(n=>`<option value="${n}"${n===PAGESIZE?' selected':''}>${n}개</option>`).join('')}</select> 상품</div>`;
+  let nav='';
+  if(pages>1){
+    let b=`<button data-pg="prev"${PAGE<=1?' disabled':''} aria-label="이전 페이지">‹</button>`;
+    pageList(PAGE,pages).forEach(n=>{b+=n==='…'?`<span class="dots">…</span>`:`<button data-pg="${n}"${n===PAGE?' class="on"':''}>${n}</button>`;});
+    b+=`<button data-pg="next"${PAGE>=pages?' disabled':''} aria-label="다음 페이지">›</button>`;
+    nav=`<div class="pager">${b}</div>`;
+  }
+  bar.innerHTML=sz+nav;
+}
 function renderAd(){
   renderKPI();
   const rows=SLOTS.map((p,i)=>({p,i})).filter(({p})=>{
@@ -782,28 +855,34 @@ function renderAd(){
     if(filter==='live'){if(!(p.live&&p.jobId))return false;}else if(filter!=='all'&&stateOf(p)!==filter)return false;
     return true;
   });
-  if(!SLOTS.length)$('#tbody').innerHTML=`<tr><td colspan="13" class="empty">등록된 광고가 없습니다. 위에서 상품을 등록해 보세요.</td></tr>`;
-  else if(!rows.length)$('#tbody').innerHTML=`<tr><td colspan="13" class="empty">조건에 맞는 광고가 없습니다.</td></tr>`;
+  if(!SLOTS.length){$('#tbody').innerHTML=`<tr><td colspan="13" class="empty">등록된 광고가 없습니다. 위에서 상품을 등록해 보세요.</td></tr>`;PAGE=1;renderPager(0,0);}
+  else if(!rows.length){$('#tbody').innerHTML=`<tr><td colspan="13" class="empty">조건에 맞는 광고가 없습니다.</td></tr>`;PAGE=1;renderPager(0,0);}
   else{
     const groups=new Map();
     rows.forEach(r=>{const k=groupKey(r.p);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r);});
+    const entries=[...groups.entries()];
+    const totalGroups=entries.length;
+    const pages=Math.max(1,Math.ceil(totalGroups/PAGESIZE));
+    if(PAGE>pages)PAGE=pages;if(PAGE<1)PAGE=1;
+    const start=(PAGE-1)*PAGESIZE;
     let html='';
-    groups.forEach((list,key)=>{
+    entries.slice(start,start+PAGESIZE).forEach(([key,list])=>{
       const n=list.length;
       html+=rowHTML(list[0].p,list[0].i,{key,n,child:false,i:0,nos:list.map(r=>r.p.no)});
       if(n>1&&OPEN.has(key))list.slice(1).forEach((r,j)=>{html+=rowHTML(r.p,r.i,{key,n,child:true,i:j+1,nos:[r.p.no]});});
     });
     $('#tbody').innerHTML=html;
-    $('#count').textContent=`${SEL.size?`${SEL.size}개 선택 · `:''}${rows.length} / ${SLOTS.filter(x=>!HIDDEN.has(x.no)).length}건 · 상품 ${groups.size}개`;
+    $('#count').textContent=`${SEL.size?`${SEL.size}개 선택 · `:''}상품 ${totalGroups.toLocaleString('ko-KR')}개 · 슬롯 ${rows.length.toLocaleString('ko-KR')}건${pages>1?` · ${PAGE}/${pages}페이지`:''}`;
+    renderPager(pages,totalGroups);
   }
   if(!rows.length||!SLOTS.length)$('#count').textContent=`${SEL.size?`${SEL.size}개 선택 · `:''}${rows.length} / ${SLOTS.length}건`;
-  const all=$('#chkAll');if(all){const vis=rows.map(r=>r.p.no);all.checked=vis.length>0&&vis.every(n=>SEL.has(n));all.indeterminate=!all.checked&&vis.some(n=>SEL.has(n));}
+  const all=$('#chkAll');if(all){const vis=[...$('#tbody').querySelectorAll('input.rowchk')].flatMap(c=>c.dataset.nos.split(',').map(Number));all.checked=vis.length>0&&vis.every(n=>SEL.has(n));all.indeterminate=!all.checked&&vis.some(n=>SEL.has(n));}
   $('#tblFoot').innerHTML=`행(상품명 제외) 또는 관리 버튼을 누르면 상세 순위와 검색 결과 상위 10개를 확인할 수 있습니다.${SLOTS.some(x=>x.user)?` · 등록된 ${SLOTS.filter(x=>x.user).length}건은 공용 저장(모든 화면 동일, 10초마다 동기화) <a href="#" onclick="resetUser();return false" style="color:var(--ink-3)">[초기화]</a>`:''}`;
   $('#tblNote').textContent=`순위 기준: 네이버쇼핑 통합검색 · 광고(파워링크·AD) 제외 · ${RANGE_MAX.toLocaleString('ko-KR')}위까지 조회 · 상품명을 누르면 스마트스토어(가격비교는 카탈로그)로 이동`;
   $('#navCntAd').textContent=SLOTS.filter(x=>!HIDDEN.has(x.no)).length;
 }
-$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();renderAd();});
-$('#ownerFilter').addEventListener('change',e=>{owner=e.target.value;renderAd();});
+$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();PAGE=1;renderAd();});
+$('#ownerFilter').addEventListener('change',e=>{owner=e.target.value;PAGE=1;renderAd();});
 $('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setFilter(b.dataset.f);});
 function fillOwners(){
   const opts=OWNERS.map(o=>`<option value="${o.id}">${o.id} · ${o.name}</option>`).join('');
@@ -976,7 +1055,7 @@ $('#regForm').addEventListener('submit',async e=>{
     await loadShared(true);
     st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · ${qty>1?`수량 ${qty} · `:''}${days}일 · ${how}`;
     $('#regUrl').value='';$('#regKw').value='';$('#regMid').value='';$('#regPid').value='';$('#regQty').value='1';$('#regDays').value='30';$('#regAuto').className='reg-auto';regFound=null;
-    filter='all';query='';owner='';$('#q').value='';$('#ownerFilter').value='';renderAd();
+    PAGE=1;filter='all';query='';owner='';$('#q').value='';$('#ownerFilter').value='';renderAd();
     const tr=$('#tbody tr');if(tr)tr.classList.add('flash');
   }catch(err){
     st.innerHTML=`<span style="color:var(--bad)">등록 실패: ${esc(err.message)}</span>`;
@@ -1027,6 +1106,8 @@ overlay.addEventListener('click',closeDrawer);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
 $('#tbody').addEventListener('change',e=>{const c=e.target.closest('input.rowchk');if(!c)return;c.dataset.nos.split(',').map(Number).forEach(n=>c.checked?SEL.add(n):SEL.delete(n));renderAd();});
 $('#chkAll')?.addEventListener('change',e=>{const vis=[...document.querySelectorAll('#tbody input.rowchk')].flatMap(c=>c.dataset.nos.split(',').map(Number));vis.forEach(n=>e.target.checked?SEL.add(n):SEL.delete(n));renderAd();});
+$('#pagerBar').addEventListener('click',e=>{const b=e.target.closest('button[data-pg]');if(!b||b.disabled)return;const v=b.dataset.pg;if(v==='prev')PAGE--;else if(v==='next')PAGE++;else PAGE=+v;renderAd();const tc=$('#page-ad .tbl-card');if(tc)tc.scrollIntoView({behavior:'smooth',block:'start'});});
+$('#pagerBar').addEventListener('change',e=>{if(e.target.id==='pgSize'){PAGESIZE=+e.target.value;PAGE=1;renderAd();}});
 $('#tbody').addEventListener('click',e=>{if(e.target.closest('td.chk'))return;const tg=e.target.closest('button.tg');if(tg){const k=tg.dataset.g;OPEN.has(k)?OPEN.delete(k):OPEN.add(k);renderAd();return;}const tr=e.target.closest('tr[data-i]');if(!tr)return;openDrawer(SLOTS[+tr.dataset.i]);});
 
 function drawChart(p){
@@ -1120,7 +1201,7 @@ function renderAccount(){
   $('#acctCount').textContent=`${L.length} / ${ACCOUNTS.length}건`;
   $('#navCntAcct').textContent=ACCOUNTS.length;
 }
-function viewAds(id){owner=id;$('#ownerFilter').value=id;filter='all';$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));renderAd();location.hash='ad';}
+function viewAds(id){owner=id;$('#ownerFilter').value=id;filter='all';$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));PAGE=1;renderAd();location.hash='ad';}
 $('#acctRole').addEventListener('change',renderAccount);
 $('#acctQ').addEventListener('input',renderAccount);
 
@@ -1246,7 +1327,37 @@ fillOwners();
 renderAd();renderNotice();renderFAQ();renderAccount();renderSettle();renderEdit();renderDaily();
 $('#acctAdvCnt').textContent=OWNERS.length;
 go(location.hash.slice(1)||'ad');
-startSharedSync();
+
+/* ===== 로그인 게이트 (데모 · 최종관리자) ===== */
+const AUTH_KEY='rl_auth',DEMO_ID='admin',DEMO_PW='ranklab';
+function isAuthed(){try{return sessionStorage.getItem(AUTH_KEY)==='1';}catch{return false;}}
+function applyAdminIdentity(){
+  const n=$('.acct-name'),r=$('.acct-role'),b=$('.acct-badge'),t=$('.acct-tree');
+  if(n)n.textContent='admin';
+  if(r)r.textContent='최종관리자 (Super Admin)';
+  if(b)b.textContent='관리';
+  if(t)t.innerHTML='시스템 관리자 · 전체 총판·대행사·광고주 관리';
+}
+function enterApp(){
+  $('#login').classList.add('hide');
+  const app=document.querySelector('.app');if(app)app.removeAttribute('inert');
+  applyAdminIdentity();startSharedSync();
+  const f=document.querySelector('.nav a.active');if(f)f.focus();
+}
+$('#loginForm')?.addEventListener('submit',e=>{
+  e.preventDefault();
+  const id=$('#loginId').value.trim(),pw=$('#loginPw').value,err=$('#loginErr');
+  if(id===DEMO_ID&&pw===DEMO_PW){
+    try{sessionStorage.setItem(AUTH_KEY,'1');}catch{}
+    err.classList.remove('show');
+    enterApp();
+  }else{
+    err.textContent='아이디 또는 비밀번호가 올바르지 않습니다.';err.classList.add('show');
+    $('#loginPw').value='';$('#loginPw').focus();
+  }
+});
+$('#logout')?.addEventListener('click',()=>{try{sessionStorage.removeItem(AUTH_KEY);}catch{}location.reload();});
+if(isAuthed())enterApp();
 </script>
 </body>
 </html>
