@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>정산 이체 파일 만들기 | jisoar</title>
 <style>
 :root{--ink:#111;--ink2:#444;--ink3:#8a8f98;--line:#e3e5e9;--line2:#c9cdd4;--bg:#fff;--panel:#fafafa;--ok:#0a7f3a;--warn:#b7791f;--bad:#c62828;--info:#2a5bd7}
@@ -177,7 +177,12 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="vendor/xlsx.full.min.js"></script>
+<script>
+/* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 새로고침 (GitHub Pages 10분 캐시 대응) */
+window.BUILD='p2';
+(async()=>{try{if(sessionStorage.getItem('pay_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('pay_reloaded',m[1]);location.reload();}}catch{}})();
+</script>
+<script src="vendor/xlsx.full.min.js?v=p2"></script>
 <script>
 /* ===================== 은행 사전 (KB 대량이체 코드표) ===================== */
 const BANKS=[
