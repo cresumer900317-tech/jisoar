@@ -364,13 +364,13 @@ function buildRows(grid,srcName){
     const amountRaw=get('amount');
     const amt=parseAmount(amountRaw);
     if(!raw&&!(amt>0)){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외
-    const amtMissing=!Number.isFinite(amt);if(amtMissing)noAmt++;   // 금액이 비어 있는 행: 오류가 아니라 '아직 보낼 수 없는 행'으로 체크 해제
+    const amtMissing=!Number.isFinite(amt);const rawMissing=!raw;if(amtMissing||rawMissing)noAmt++;   // 금액·계좌가 비어 있는 행: '아직 보낼 수 없는 행'으로 체크 해제
     const p=parseAccount(raw);
     ROWS.push({i,srcRow:row.src,src:srcName,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:String(get('memo')??'').replace(/[\r\n]+/g,' '),
-      amountRaw,amount:amt,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,phard:p.hard,acctCellType:row.t||'',paid,include:!amtMissing,edited:false});
+      amountRaw,amount:amt,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,phard:p.hard,acctCellType:row.t||'',paid,include:!(amtMissing||rawMissing),edited:false});
   });
   validateAll();
-  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이 비어 있는 행 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 금액을 채우면 다음에 포함됩니다).`:'');
+  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이나 계좌가 비어 있는 행 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 채우고 다시 올리면 포함됩니다).`:'');
   $('#sec2').hidden=false;$('#sec3').hidden=false;setStep(2);
   $('#fname').value=`대량이체_${ymd(new Date()).replace(/-/g,'')}`;
   FILTER=ROWS.some(r=>r.level==='bad'&&r.include)?'bad':'all';document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));
