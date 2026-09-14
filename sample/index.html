@@ -633,10 +633,10 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v9';
+window.BUILD='v10';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
-<script src="data.js?v=9"></script>
+<script src="data.js?v=10"></script>
 <script>
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
@@ -880,6 +880,18 @@ function loadUser(){
   SLOTS.sort((a,b)=>b.no-a.no);
   (Array.isArray(logs)?logs:[]).forEach(l=>{l.user=true;l.slot=l.slot!=null?(byNo[l.slot]||SLOTS.find(x=>x.no===l.slot)||null):null;if(!LOGS.some(x=>x.user&&x.created===l.created&&x.desc===l.desc))LOGS.unshift(l);});
   LOGS.sort((a,b)=>a.created<b.created?1:-1);
+  // 조회 서버 연동 전에 등록돼 '수집대기'로 남은 항목은 자동으로 조회를 걸어 준다
+  const stale=slots.filter(x=>x.status==='wait'&&!x.jobId&&!x.live&&x.url&&isNaverProductLink(x.url));
+  const seenStale=new Set();
+  stale.forEach(np=>{
+    const key=np.kw+'|'+np.url; if(seenStale.has(key))return; seenStale.add(key);
+    const group=slots.filter(y=>y.status==='wait'&&!y.jobId&&!y.live&&y.kw===np.kw&&y.url===np.url);
+    createLookup(np.url,np.kw).then(jobId=>{
+      group.forEach(y=>{y.live=true;y.jobId=jobId;y.name=`조회 중… ${y.pid?`스마트스토어 상품 ${y.pid}`:`가격비교 상품 ${y.nvMid}`}`;y.mall='조회 중';});saveUser();renderAd();
+      return pollJob(jobId,(step)=>{group.forEach(y=>{y.name=`조회 중… ${step}`;y.note=step;});renderAd();})
+        .then(res=>{group.forEach(y=>applyLiveResult(y,res,y.kw));}).catch(err=>{group.forEach(y=>applyLiveFail(y,err.message));});
+    }).catch(()=>{}).finally(()=>{saveUser();renderAd();renderSettle();renderDaily();});
+  });
   // 새로고침 전에 조회 중이던 건은 이어서 폴링
   slots.filter(x=>x.live&&x.jobId).forEach(np=>{
     const group=SLOTS.filter(y=>y.user&&y.jobId===np.jobId);
@@ -908,6 +920,24 @@ $('#regForm').addEventListener('submit',async e=>{
     np=Object.assign(base,{status:'ok',rank:t.rank,nvMid:t.nvMid,pid:t.pid||'',name:t.title||`스마트스토어 상품 ${t.pid}`,mall:t.mall||'-',catalog:!!t.catalog,price:t.price,review:t.review,url:t.url||'',color:colorOf(t.title||url),history:[{d:TODAY,r:t.rank}]});
     how=`현재 <b>${t.rank}위</b> (${TODAY} 수집 기준)`;
     await new Promise(r=>setTimeout(r,600));
+  }else if((pid||nvMid)&&isNaverProductLink(url)&&SLOTS.some(x=>x.user&&x.kw===kw&&((pid&&x.pid===pid)||(!pid&&x.nvMid===nvMid))&&(x.status==='ok'||x.status==='err'||(x.live&&x.jobId)))){
+    // 이미 오늘 조회한(또는 조회 중인) 같은 상품·키워드 → 새 조회 없이 결과 공유
+    const ex=SLOTS.find(x=>x.user&&x.kw===kw&&((pid&&x.pid===pid)||(!pid&&x.nvMid===nvMid))&&(x.status==='ok'||x.status==='err'))||SLOTS.find(x=>x.user&&x.kw===kw&&((pid&&x.pid===pid)||(!pid&&x.nvMid===nvMid))&&x.live&&x.jobId);
+    np=Object.assign(base,{status:ex.status,rank:ex.rank,nvMid:ex.nvMid,pid:ex.pid,name:ex.name,mall:ex.mall,catalog:ex.catalog,price:ex.price,review:ex.review,url:ex.url,color:ex.color,note:ex.note,live:!!ex.live,jobId:ex.jobId||null,history:(ex.history||[]).slice(),user:true});
+    if(ex.live&&ex.jobId){
+      const group=[];for(let q=qty-1;q>=0;q--){const c=Object.assign({},np,{no:no+q,history:[]});group.push(c);SLOTS.unshift(c);}
+      LOGS.unshift({no:LOGS.length?LOGS[0].no+1:1,kind:'new',agency:'sm6974',owner:own,qty,days,created:TODAY+' '+new Date().toTimeString().slice(0,5),start:np.start,desc:`신규 등록 · ${kw} · ${np.name}${qty>1?` × ${qty}`:''}`,slot:group[group.length-1],user:true});
+      saveUser();renderAd();renderSettle();renderDaily();
+      st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · 같은 상품이 조회 중이라 그 결과를 함께 받습니다.`;
+      $('#regUrl').value='';$('#regKw').value='';$('#regMid').value='';$('#regPid').value='';$('#regQty').value='1';$('#regDays').value='30';$('#regAuto').className='reg-auto';regFound=null;
+      btn.disabled=false;lb.textContent='등록';
+      pollJob(ex.jobId,(step)=>{group.forEach(y=>{y.name=`조회 중… ${step}`;y.note=step;});renderAd();})
+        .then(res=>{group.forEach(y=>applyLiveResult(y,res,kw));}).catch(err=>{group.forEach(y=>applyLiveFail(y,err.message));})
+        .finally(()=>{saveUser();renderAd();renderSettle();renderDaily();});
+      return;
+    }
+    how=np.status==='ok'?`현재 <b>${np.rank}위</b> (오늘 조회한 같은 상품 결과 사용)`:`<span style="color:var(--bad)">1,000위 안에 없음</span> (오늘 조회한 같은 상품 결과 사용)`;
+    await new Promise(r=>setTimeout(r,500));
   }else if((pid||nvMid)&&isNaverProductLink(url)){
     // 2) 라이브 조회: 임시 행을 먼저 넣고 진행 상태를 갱신
     np=Object.assign(base,{status:'wait',rank:null,nvMid:nvMid||'-',pid:pid||'',name:pid?`조회 중… 스마트스토어 상품 ${pid}`:`조회 중… 가격비교 상품 ${nvMid}`,mall:'조회 중',catalog:!pid&&!!nvMid,price:null,review:null,url:cleanLink(url),color:colorOf(url),live:true,jobId:null,user:true});
