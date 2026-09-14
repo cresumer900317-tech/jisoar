@@ -633,10 +633,10 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v10';
+window.BUILD='v11';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
-<script src="data.js?v=10"></script>
+<script src="data.js?v=11"></script>
 <script>
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
@@ -881,6 +881,8 @@ function loadUser(){
   (Array.isArray(logs)?logs:[]).forEach(l=>{l.user=true;l.slot=l.slot!=null?(byNo[l.slot]||SLOTS.find(x=>x.no===l.slot)||null):null;if(!LOGS.some(x=>x.user&&x.created===l.created&&x.desc===l.desc))LOGS.unshift(l);});
   LOGS.sort((a,b)=>a.created<b.created?1:-1);
   // 조회 서버 연동 전에 등록돼 '수집대기'로 남은 항목은 자동으로 조회를 걸어 준다
+  // 예전 등록은 url 이 비어 있을 수 있어 상품ID/묶음MID 로 링크를 복원
+  slots.forEach(x=>{if(!x.url){const u=productUrl(x);if(u)x.url=u;}});
   const stale=slots.filter(x=>x.status==='wait'&&!x.jobId&&!x.live&&x.url&&isNaverProductLink(x.url));
   const seenStale=new Set();
   stale.forEach(np=>{
