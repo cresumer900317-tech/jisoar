@@ -115,6 +115,11 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
   <section class="card" id="sec2" hidden>
     <h2>2. 검토·수정</h2>
     <div class="body">
+      <div class="note" style="margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);background:var(--panel)">
+        <b>읽는 법</b> · <span class="tag bad">오류</span> 이 상태로는 파일에 들어가지 않습니다. 표의 은행·계좌·예금주·입금명 칸을 고치면 바로 정상으로 바뀝니다. 고칠 수 없으면 맨 앞 체크를 해제해 이번엔 빼세요.
+        · <span class="tag warn">확인</span> 파일에는 들어가지만 한 번 보시라는 뜻입니다. 각 행의 "확인 사항"에 무엇을 보면 되는지 적혀 있습니다.
+        · <span class="tag info">참고</span> 정보만 표시하는 것이라 조치는 필요 없습니다.
+      </div>
       <div class="kpis">
         <div class="kpi"><div class="v" id="kTotal">0</div><div class="l">대상 행</div></div>
         <div class="kpi ok"><div class="v" id="kInc">0</div><div class="l">포함(이체 파일에 들어감)</div></div>
@@ -139,7 +144,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
         </table>
       </div>
       <div class="note" id="skipInfo"></div>
-      <div class="note">오류 행은 이체 파일에 들어가지 않습니다. 은행·계좌·예금주·입금명은 표에서 바로 고칠 수 있고, 고치면 즉시 다시 검사합니다. 예금주는 띄어쓰기 없이 은행에 등록된 이름 그대로여야 합니다.</div>
+      <div class="note">같은 사람에게 여러 건이면 행마다 따로 송금됩니다(건별 지급). 예금주는 띄어쓰기 없이 은행에 등록된 이름 그대로여야 하고, 국민은행은 예금주가 달라도 이체가 실행되므로 업로드 후 "예금주조회"로 한 번 확인하는 것이 안전합니다.</div>
     </div>
   </section>
 
@@ -227,7 +232,7 @@ function parseAccount(raw){
   const bankSet=[...new Set(uniq.map(c=>c.b))];
   let bank=null;
   if(bankSet.length===1)bank=bankSet[0];
-  else if(bankSet.length>1)hard.push('은행 후보가 여러 개: '+bankSet.map(b=>b.name).join(', ')+' → 직접 선택');
+  else if(bankSet.length>1)hard.push('은행이 둘 이상 보임('+bankSet.map(b=>b.name).join(', ')+') → 은행 칸에서 고르세요');
   let rest=s;
   uniq.forEach(c=>{const pat=c.a.split('').map(ch=>ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('\\s*');rest=rest.replace(new RegExp(pat+'(\\s*(은행|뱅크))?','i'),' | ');});
   rest=rest.replace(/(은행|뱅크)/g,' | ').replace(/\s+/g,' ').trim();
@@ -239,7 +244,7 @@ function parseAccount(raw){
   else{
     const names=[...rest.matchAll(/[가-힣]{2,6}/g)].map(m=>m[0]).filter(n=>!STOP.has(n));
     if(names.length===1)holder=names[0];
-    else if(names.length>1){holder=names[names.length-1];hard.push('이름 후보가 여러 개: '+names.join(', ')+' → 예금주 확인');}
+    else if(names.length>1){holder=names[names.length-1];hard.push('이름이 둘 이상 보임('+names.join(', ')+') → 예금주 칸에 맞는 이름만 남기세요');}
     if(holder)rest=rest.replace(holder,' | ');
   }
   rest=rest.replace(/[가-힣a-zA-Z]+/g,' | ');   // 남은 글자는 숫자 구간 구분자로
@@ -247,9 +252,9 @@ function parseAccount(raw){
   const segs=(rest.match(/\d[\d\- ]*\d|\d/g)||[]).map(x=>x.replace(/[^\d]/g,'')).filter(x=>x.length);
   segs.sort((x,y)=>y.length-x.length);
   const acct=segs[0]||'';
-  if(segs.length>1&&segs[1].length>=4)hard.push('숫자 구간이 둘 이상: '+segs.map(x=>x.replace(/\d(?=\d{2})/g,'*')).join(' / ')+' → 계좌 확인');
+  if(segs.length>1&&segs[1].length>=4)hard.push('숫자가 두 덩어리 이상 → 계좌 칸에 계좌번호만 남기세요');
   const leftover=rest.replace(/[\d\- |]/g,'').trim();
-  if(leftover)notes.push('해석 안 된 글자: '+leftover);
+  if(leftover)notes.push('원문에 남는 글자("'+leftover.slice(0,12)+'") → 은행·계좌·예금주가 맞게 들어갔는지 확인');
   return {bank,acct,holder,notes,hard};
 }
 
@@ -383,32 +388,32 @@ function validateAll(){
   const seen=new Map();
   ROWS.forEach(r=>{
     const issues=[];
-    if(!r.bank)issues.push(['bad','은행 미식별']);
-    if(!r.acct)issues.push(['bad','계좌번호 없음']);
-    else if(r.acct.length<10||r.acct.length>16)issues.push(['warn',`계좌 자릿수 ${r.acct.length} (보통 10~16)`]);
-    if(!r.holder)issues.push(['bad','예금주 없음']);
-    else if(/\s/.test(r.holder))issues.push(['bad','예금주에 공백']);
-    else if(r.holder.length>20)issues.push(['bad','예금주 20자 초과']);
-    if(!Number.isFinite(r.amount))issues.push(['bad','금액 없음']);
-    else if(r.amount<=0)issues.push(['bad','금액 0 이하']);
-    else if(!Number.isInteger(r.amount))issues.push(['bad','금액에 소수점']);
-    if(!r.memo)issues.push(['warn','입금명 비어 있음']);
-    else if(r.memo.length>10)issues.push(['bad',`입금명 ${r.memo.length}자 (10자 이내)`]);
-    if(r.acctCellType==='n')issues.push(['warn','원본 셀이 숫자 형식 (앞자리 0 손실 가능)']);
-    if(r.holder&&r.orderer&&r.holder!==r.orderer.replace(/\s+/g,''))issues.push(['info',`주문자명 "${r.orderer}"과 다름`]);
+    if(!r.bank)issues.push(['bad','은행을 못 찾음 → 은행 칸에서 고르세요']);
+    if(!r.acct)issues.push(['bad','계좌번호 없음 → 계좌 칸에 숫자만 입력']);
+    else if(r.acct.length<10||r.acct.length>16)issues.push(['warn',`계좌가 ${r.acct.length}자리 → 원문과 대조(보통 10~16자리)`]);
+    if(!r.holder)issues.push(['bad','예금주 없음 → 예금주 칸에 이름 입력']);
+    else if(/\s/.test(r.holder))issues.push(['bad','예금주에 띄어쓰기 → 붙여서 입력']);
+    else if(r.holder.length>20)issues.push(['bad','예금주 20자 초과 → 줄이기']);
+    if(!Number.isFinite(r.amount))issues.push(['bad','금액 없음 → 시트 최종금액 확인 후 제외하거나 채우기']);
+    else if(r.amount<=0)issues.push(['bad','금액이 0 → 시트 최종금액 확인']);
+    else if(!Number.isInteger(r.amount))issues.push(['bad','금액에 소수점 → 정수로']);
+    if(!r.memo)issues.push(['warn','입금명 비어 있음 → 통장에 아무 표시도 안 됨 (괜찮으면 그대로)']);
+    else if(r.memo.length>10)issues.push(['bad',`입금명 ${r.memo.length}자 → 10자 이내로 줄이기`]);
+    if(r.acctCellType==='n')issues.push(['warn','원본 셀이 숫자 형식 → 앞자리 0이 빠졌을 수 있음, 카톡 원문과 대조']);
+    if(r.holder&&r.orderer&&r.holder!==r.orderer.replace(/\s+/g,''))issues.push(['info',`주문자명(${r.orderer})과 예금주가 다름 · 가족 계좌 등이면 정상`]);
     if(r.paid)issues.push(['info','이미 입금완료 표시']);
     (r.phard||[]).forEach(n=>issues.push(['bad',n]));
     r.pnotes.forEach(n=>issues.push(['warn',n]));
-    if(r.noDate)issues.push(['warn','날짜 없음 (기간 필터와 무관하게 포함됨)']);
-    if(Number.isFinite(r.amount)&&r.amount>5000000)issues.push(['warn','금액이 500만원 초과']);
+    if(r.noDate)issues.push(['warn','날짜 없음 → 기간과 상관없이 포함됨, 보낼 건이 맞는지 확인']);
+    if(Number.isFinite(r.amount)&&r.amount>5000000)issues.push(['warn','금액이 500만원 초과 → 금액 확인']);
     const key=`${r.acct}|${r.amount}|${r.memo}`;
-    if(r.acct&&seen.has(key))issues.push(['warn',`같은 계좌·금액·입금명이 또 있음 (건별 지급이면 정상, 실수 중복이면 제외)`]);else seen.set(key,r.i);
+    if(r.acct&&seen.has(key))issues.push(['info',`같은 계좌·금액·입금명 건이 또 있음 · 건별로 여러 번 보내는 경우면 정상`]);else seen.set(key,r.i);
     r.key=key;r.issues=issues;
     r.level=issues.some(x=>x[0]==='bad')?'bad':issues.some(x=>x[0]==='warn')?'warn':'ok';
   });
   // 이력 대조 (비동기) — 세대 번호가 바뀌었으면 오래된 결과는 버린다
   const gen=++VALIDATE_GEN;const snap=ROWS;
-  Promise.all(snap.map(r=>fp(r.key))).then(fps=>{if(gen!==VALIDATE_GEN||snap!==ROWS)return;snap.forEach((r,i)=>{r.fp=fps[i];if(HIST_FPS.has(r.fp)&&!r.issues.some(x=>x[1]==='이전에 만든 파일에 있음')){r.issues.push(['warn','이전에 만든 파일에 있음']);if(r.level==='ok')r.level='warn';}});renderTable();});
+  Promise.all(snap.map(r=>fp(r.key))).then(fps=>{if(gen!==VALIDATE_GEN||snap!==ROWS)return;snap.forEach((r,i)=>{r.fp=fps[i];if(HIST_FPS.has(r.fp)&&!r.issues.some(x=>x[1]==='이전에 만든 파일에 있음')){r.issues.push(['warn','이전에 만든 파일에 같은 건이 있음 → 이미 보낸 건이면 체크 해제']);if(r.level==='ok')r.level='warn';}});renderTable();});
 }
 function renderTable(){
   const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
