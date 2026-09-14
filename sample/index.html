@@ -695,7 +695,7 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v19';
+window.BUILD='v20';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="data.js?v=17"></script>
@@ -1031,7 +1031,9 @@ $('#regForm').addEventListener('submit',async e=>{
   const body={owner:own,kw,url:cleanLink(url),days,qty,pid:pid||'',nvMid:nvMid||'',start,end,status:'wait',name:'',mall:'',catalog:!pid&&!!nvMid};
   let how='';
   try{
-    const local=lookupProduct({pid,nvMid}).find(h=>h.kw===kw)||null;
+    // 수집 스냅샷에 '상품명까지' 있을 때만 즉시 정상 처리. 순위만 있고 상품명이 없으면(깊은 idx) 라이브 조회로 보내 실제 상품명을 가져온다.
+    const localHit=lookupProduct({pid,nvMid}).find(h=>h.kw===kw)||null;
+    const local=(localHit&&localHit.t&&localHit.t.title)?localHit:null;
     const done=SLOTS.find(x=>same(x)&&(x.status==='ok'||x.status==='err'));
     const running=SLOTS.find(x=>same(x)&&x.live&&x.jobId);
     if(done){   // 오늘 이미 조회한 같은 상품·키워드 → 결과 재사용
