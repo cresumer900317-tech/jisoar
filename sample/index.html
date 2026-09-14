@@ -644,10 +644,10 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v16';
+window.BUILD='v17';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
-<script src="data.js?v=16"></script>
+<script src="data.js?v=17"></script>
 <script>
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
@@ -743,7 +743,7 @@ function rankHTML(p){
   if(p.live&&p.jobId&&p.rank==null)return `<span class="rank live">조회 중</span>`;
   if(p.rank==null)return `<span style="color:var(--ink-3)">-</span>`;
   const d=delta(p);
-  let dl=d==null?`<span class="delta flat">신규</span>`:(d>0?`<span class="delta up">▲${d}</span>`:(d<0?`<span class="delta down">▼${Math.abs(d)}</span>`:`<span class="delta flat">0</span>`));
+  let dl=d==null?'':(d>0?`<span class="delta up">▲${d}</span>`:(d<0?`<span class="delta down">▼${Math.abs(d)}</span>`:`<span class="delta flat">0</span>`));
   return `<span class="rank">${p.rank}<small>위</small></span>${dl}`;
 }
 function groupKey(p){return p.owner+'|'+p.kw+'|'+p.nvMid+'|'+(p.pid||'')}
@@ -994,7 +994,7 @@ function openDrawer(p){
   const rankV=p.status==='err'?`<div class="v bad">순위없음</div>`:(p.rank==null?`<div class="v">-</div>`:`<div class="v">${p.rank}위</div>`);
   $('#dStats').innerHTML=`
     <div class="d-stat"><div class="l">현재 순위</div>${rankV}</div>
-    <div class="d-stat"><div class="l">전일 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?(p.rank!=null?'신규':'-'):(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
+    <div class="d-stat"><div class="l">전일 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?'-':(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
     <div class="d-stat"><div class="l">검색 결과</div><div class="v">${kwd&&kwd.total!=null?kwd.total.toLocaleString('ko-KR')+'건':'-'}</div></div>`;
   $('#chartSub').textContent=p.history.filter(h=>h.r!=null).length<2?`${TODAY} 첫 수집 · 내일 11:00 수집부터 추이가 그려집니다`:`매일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위`;
   $('#dInfo').innerHTML=`
