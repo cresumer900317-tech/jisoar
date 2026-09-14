@@ -209,6 +209,8 @@ const BANKS=[
 // 별칭을 길이순으로 (긴 것 먼저 매칭)
 const ALIASES=[];BANKS.forEach(b=>b.aliases.forEach(a=>ALIASES.push({a:a.toLowerCase().replace(/\s+/g,''),b})));ALIASES.sort((x,y)=>y.a.length-x.a.length);
 const bankByCode=c=>BANKS.find(b=>b.code===c);
+// 은행별로 흔한 계좌 덩어리 형태(하이픈·띄어쓰기 기준). 이 형태와 맞으면 나뉜 숫자를 합쳐도 확인 표시를 내지 않는다
+const BANK_PATTERNS={'092':['4-4-4'],'089':['3-3-6'],'090':['4-2-7'],'004':['6-2-6','4-2-4-3','2-4-4-3','6-2-5'],'020':['4-3-6','4-4-6'],'088':['3-3-6','3-2-6'],'011':['3-4-4-2','3-2-6-4','6-2-6','3-4-4-3'],'003':['3-6-2-3','3-6-2-2'],'081':['3-6-5','3-5-5','3-6-6'],'045':['4-2-6-1','4-3-4-3'],'071':['6-2-6'],'023':['3-2-6','3-3-6'],'031':['3-2-6','3-3-6'],'032':['3-4-4-2','3-4-4-3']};
 
 /* ===================== 계좌 텍스트 파서 ===================== */
 // 입력: "국민 123456-01-123456 홍길동" / "123401-04-123456 국민 홍길동" / "카카오뱅크3333012345678홍길동" 등
@@ -260,7 +262,9 @@ function parseAccount(raw){
   if(long.length===1&&short.every(g=>g.length<4)){acct=long[0];if(short.length)notes.push('계좌 옆의 짧은 숫자('+short.join(', ')+')는 무시함 → 맞는지 확인');}
   else if(long.length===1&&short.some(g=>g.length>=4)){acct=long[0];hard.push({code:'ACCT',msg:'숫자가 두 덩어리 이상('+groups.map(g=>g.replace(/\d(?=\d{2})/g,'*')).join(' / ')+') → 계좌 칸에 계좌번호만 남기세요'});}
   else if(long.length>=2){acct=long[0];hard.push({code:'ACCT',msg:'긴 숫자가 둘 이상('+long.map(g=>g.replace(/\d(?=\d{2})/g,'*')).join(' / ')+') → 계좌 칸에 계좌번호만 남기세요'});}
-  else if(short.length){const joined=short.join('');if(joined.length>=10&&joined.length<=16){acct=joined;notes.push('공백으로 나뉜 숫자를 하나의 계좌로 합침('+short.join(' ')+') → 맞는지 확인');}else{acct=joined;}}
+  else if(short.length){const joined=short.join('');acct=joined;
+    const shape=short.map(g=>g.length).join('-');const known=bank&&(BANK_PATTERNS[bank.code]||[]).includes(shape);
+    if(!known&&short.length>1&&joined.length>=10&&joined.length<=16)notes.push('띄어쓰기로 나뉜 숫자를 한 계좌로 합침('+short.join(' ')+') → 맞는지 확인');}
   const leftover=rest.replace(/[\d\- |]/g,'').trim();
   if(leftover)notes.push('원문에 남는 글자("'+leftover.slice(0,12)+'") → 은행·계좌·예금주가 맞게 들어갔는지 확인');
   return {bank,acct,holder,notes,hard};
