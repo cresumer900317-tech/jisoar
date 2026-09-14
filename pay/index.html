@@ -197,7 +197,7 @@ const BANKS=[
   {code:'007',name:'수협',aliases:['수협','수협은행','수협중앙회']},
   {code:'048',name:'신협',aliases:['신협','신용협동조합','신협중앙회']},
   {code:'031',name:'아이엠뱅크',aliases:['아이엠뱅크','im뱅크','im','대구','대구은행','아이엠','imbank']},
-  {code:'032',name:'부산',aliases:['부산','부산은행','bnk부산','bnk']},
+  {code:'032',name:'부산',aliases:['부산','부산은행','bnk부산']},
   {code:'039',name:'경남',aliases:['경남','경남은행','bnk경남']},
   {code:'034',name:'광주',aliases:['광주','광주은행']},
   {code:'037',name:'전북',aliases:['전북','전북은행']},
@@ -216,7 +216,7 @@ const bankByCode=c=>BANKS.find(b=>b.code===c);
 function parseAccount(raw){
   const notes=[],hard=[];   // notes=참고, hard=확정 불가(차단)
   let s=String(raw||'').replace(/[（）()\[\]【】,，.:：;/|]/g,' ').replace(/\s+/g,' ').trim();
-  if(!s)return {bank:null,acct:'',holder:'',notes:[],hard:['계좌 원문이 비어 있음 → 시트 입금계좌번호 칸을 채워 주세요']};
+  if(!s)return {bank:null,acct:'',holder:'',notes:[],hard:[]};
   // 1) 은행 후보: 별칭이 '독립된 단어'로 나타날 때만 인정 (앞뒤가 한글이면 다른 단어의 일부로 보고 제외 — 예: 기업행사, 이우리)
   const low=s.toLowerCase();   // 원문 띄어쓰기 유지: 앞뒤가 한글/영문이면 다른 단어의 일부(기업행사, 이우리)로 보고 제외
   const cands=[];
@@ -234,27 +234,33 @@ function parseAccount(raw){
   const bankSet=[...new Set(uniq.map(c=>c.b))];
   let bank=null;
   if(bankSet.length===1)bank=bankSet[0];
-  else if(bankSet.length>1)hard.push('은행이 둘 이상 보임('+bankSet.map(b=>b.name).join(', ')+') → 은행 칸에서 고르세요');
+  else if(bankSet.length>1)hard.push({code:'BANK',msg:'은행이 둘 이상 보임('+bankSet.map(b=>b.name).join(', ')+') → 은행 칸에서 고르세요'});
   let rest=s;
   uniq.forEach(c=>{const pat=c.a.split('').map(ch=>ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('\\s*');rest=rest.replace(new RegExp(pat+'(\\s*(은행|뱅크))?','i'),' | ');});
   rest=rest.replace(/(은행|뱅크)/g,' | ').replace(/\s+/g,' ').trim();
-  // 2) 예금주: "예금주 홍길동" 명시 우선, 없으면 한글 덩어리 중 마지막. 이름이 아닌 흔한 단어는 제외
+  // 2) 예금주: "예금주 홍길동" 명시 우선, 없으면 한글 덩어리 중 마지막. 이름이 아닌 흔한 단어는 제외. 후보가 둘 이상이면 확정하지 않음
   const STOP=new Set(['예금주','환불','입금','계좌','통장','송금','이체','원고료','물품','대금','확인','완료','본인','명의','계좌번호','번호']);
   let holder='';
-  const exp=/예금주\s*[:：]?\s*([가-힣]{2,6})/.exec(rest);
+  const exp=/예금주\s*[:：]?\s*([가-힣]{2,6})(?![가-힣])/.exec(rest);
   if(exp){holder=exp[1];rest=rest.replace(exp[0],' | ');}
-  else{
-    const names=[...rest.matchAll(/[가-힣]{2,6}/g)].map(m=>m[0]).filter(n=>!STOP.has(n));
-    if(names.length===1)holder=names[0];
-    else if(names.length>1){holder=names[names.length-1];hard.push('이름이 둘 이상 보임('+names.join(', ')+') → 예금주 칸에 맞는 이름만 남기세요');}
-    if(holder)rest=rest.replace(holder,' | ');
-  }
+  const names=[...rest.matchAll(/[가-힣]+/g)].map(m=>m[0]).filter(n=>!STOP.has(n));
+  if(!holder){
+    if(names.length===1&&names[0].length<=6)holder=names[0];
+    else if(names.length>=1){holder=names[names.length-1].slice(0,6);hard.push({code:'HOLDER',msg:'이름이 둘 이상 보임('+names.join(', ')+') → 예금주 칸에 맞는 이름만 남기세요'});}
+  }else if(names.length){hard.push({code:'HOLDER',msg:'예금주 외에 다른 이름이 더 있음('+names.join(', ')+') → 예금주 칸 확인'});}
+  if(holder)rest=rest.replace(holder,' | ');
   rest=rest.replace(/[가-힣a-zA-Z]+/g,' | ');   // 남은 글자는 숫자 구간 구분자로
-  // 3) 계좌: 숫자 구간(숫자·하이픈·공백으로만 이어진 덩어리) 중 하나를 선택. 4자리 이상 구간이 둘이면 확정 불가
-  const segs=(rest.match(/\d[\d\- ]*\d|\d/g)||[]).map(x=>x.replace(/[^\d]/g,'')).filter(x=>x.length);
-  segs.sort((x,y)=>y.length-x.length);
-  const acct=segs[0]||'';
-  if(segs.length>1&&segs[1].length>=4)hard.push('숫자가 두 덩어리 이상 → 계좌 칸에 계좌번호만 남기세요');
+  // 3) 계좌: '|' 로 나뉜 구간마다 숫자 덩어리(공백으로 나뉜 것도 별개)를 본다.
+  //    - 8자리 이상 덩어리가 하나면 그것이 계좌(다른 4자리 이상 덩어리가 있으면 차단)
+  //    - 짧은 덩어리(8자리 미만)만 여러 개면 케이뱅크 '100 194 123456' 처럼 공백 구분 계좌로 보고 합치되 확인 표시
+  const parts=rest.split('|').map(x=>x.trim()).filter(Boolean);
+  const groups=[];parts.forEach(pt=>{(pt.match(/\d[\d\-]*/g)||[]).forEach(g=>{const d=g.replace(/[^\d]/g,'');if(d)groups.push(d);});});
+  let acct='';
+  const long=groups.filter(g=>g.length>=8), short=groups.filter(g=>g.length<8);
+  if(long.length===1&&short.every(g=>g.length<4)){acct=long[0];if(short.length)notes.push('계좌 옆의 짧은 숫자('+short.join(', ')+')는 무시함 → 맞는지 확인');}
+  else if(long.length===1&&short.some(g=>g.length>=4)){acct=long[0];hard.push({code:'ACCT',msg:'숫자가 두 덩어리 이상('+groups.map(g=>g.replace(/\d(?=\d{2})/g,'*')).join(' / ')+') → 계좌 칸에 계좌번호만 남기세요'});}
+  else if(long.length>=2){acct=long[0];hard.push({code:'ACCT',msg:'긴 숫자가 둘 이상('+long.map(g=>g.replace(/\d(?=\d{2})/g,'*')).join(' / ')+') → 계좌 칸에 계좌번호만 남기세요'});}
+  else if(short.length){const joined=short.join('');if(joined.length>=10&&joined.length<=16){acct=joined;notes.push('공백으로 나뉜 숫자를 하나의 계좌로 합침('+short.join(' ')+') → 맞는지 확인');}else{acct=joined;}}
   const leftover=rest.replace(/[\d\- |]/g,'').trim();
   if(leftover)notes.push('원문에 남는 글자("'+leftover.slice(0,12)+'") → 은행·계좌·예금주가 맞게 들어갔는지 확인');
   return {bank,acct,holder,notes,hard};
@@ -284,7 +290,7 @@ function loadFile(f){
     catch(err){toast('파일을 읽지 못했습니다: '+err.message);return;}
     const sel=$('#sheetSel');sel.innerHTML='';
     let best=null;
-    WB.SheetNames.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);const h=findHeader(XLSX.utils.sheet_to_json(WB.Sheets[n],{header:1,raw:false,defval:''}));if(h&&(!best||/카톡/.test(n)&&!/카톡/.test(best)))best=n;});
+    WB.SheetNames.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);const w=WB.Sheets[n];if(!w||!w['!ref'])return;const h=findHeader(XLSX.utils.sheet_to_json(w,{header:1,raw:false,defval:'',range:{s:{r:0,c:0},e:XLSX.utils.decode_range(w['!ref']).e}}));if(h!=null&&(!best||/카톡/.test(n)&&!/카톡/.test(best)))best=n;});
     if(best)sel.value=best;
     $('#sheetRow').hidden=false;
     $('#inputInfo').textContent=`${f.name} · 시트 ${WB.SheetNames.length}개 · 계좌 열이 있는 시트를 자동으로 골랐습니다. 기간을 확인하고 "검토 화면으로"를 누르세요.`;
@@ -296,7 +302,7 @@ $('#sheetSel').addEventListener('change',onSheetChange);
 function onSheetChange(){
   const grid=currentGrid(); if(!grid)return;
   const {hi,map}=grid;
-  const owners=new Set();grid.rows.forEach(r=>{const o=(r[map.owner]||'').toString().trim();if(o)owners.add(o);});
+  const owners=new Set();if(map.owner!=null&&map.owner>=0)grid.rows.forEach(r=>{const o=(r.v[map.owner]||'').toString().trim();if(o)owners.add(o);});
   const os=$('#ownerSel');os.innerHTML='<option value="">전체</option>';[...owners].sort().forEach(o=>{const e=document.createElement('option');e.value=o;e.textContent=o;os.appendChild(e);});
   const missing=missingRequired(map);
   const info=document.createElement('div');info.textContent=`시트 ${$('#sheetSel').value}: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행 · `+(missing.length?`찾지 못한 필수 열: ${missing.join(', ')} — 이 시트로는 진행할 수 없습니다`:'필요한 열을 모두 찾았습니다');
@@ -321,7 +327,7 @@ function mapColumns(hdr){
   const H=hdr.map(v=>String(v||'').replace(/\s+/g,''));const map={};
   for(const [k,names] of Object.entries(COLS)){
     let idx=null;
-    for(const n of names){const hits=H.map((h,j)=>h===n.replace(/\s+/g,'')?j:-1).filter(j=>j>=0);if(hits.length===1){idx=hits[0];break;}if(hits.length>1){idx=-2;break;}}
+    for(const n of names){const hits=H.map((h,j)=>h===n.replace(/\s+/g,'')?j:-1).filter(j=>j>=0);if(hits.length===1){idx=hits[0];break;}if(hits.length>1){idx=EXACT_ONLY.has(k)?-2:hits[0];break;}}   // 같은 이름 열이 둘이면: 송금 직결 열은 차단, 그 외(진행자 등)는 첫 번째 사용
     if(idx==null&&!EXACT_ONLY.has(k)){for(const n of names){const j=H.findIndex(h=>h.includes(n.replace(/\s+/g,'')));if(j>=0){idx=j;break;}}}
     map[k]=idx;
   }
@@ -329,9 +335,10 @@ function mapColumns(hdr){
 }
 function missingRequired(map){return REQUIRED.filter(k=>map[k]==null||map[k]<0).map(k=>({acct:'입금계좌번호',amount:'최종금액',paid:'입금완료여부',memo:'입금명'}[k]));}
 function currentGrid(){
-  if(!WB)return null;const ws=WB.Sheets[$('#sheetSel').value];if(!ws)return null;
-  const aoa=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
-  const hi=findHeader(XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:''}));if(hi==null){toast('헤더 행(입금계좌번호·최종금액)을 찾지 못했습니다');return null;}
+  if(!WB)return null;const ws=WB.Sheets[$('#sheetSel').value];if(!ws||!ws['!ref'])return null;
+  const full={s:{r:0,c:0},e:XLSX.utils.decode_range(ws['!ref']).e};   // 사용 범위가 A1에서 시작하지 않아도 배열 인덱스 = 실제 행/열이 되게
+  const aoa=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:'',range:full});
+  const hi=findHeader(XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:'',range:full}));if(hi==null){toast('헤더 행(입금계좌번호·최종금액)을 찾지 못했습니다');return null;}
   const map=mapColumns(aoa[hi]);
   // 행마다 원본 엑셀 행 번호와 계좌 셀 타입(숫자면 0 손실 가능)을 함께 보관 (빈 행 제거 후에도 어긋나지 않게)
   const rows=aoa.slice(hi+1).map((r,i)=>{const c=map.acct!=null&&map.acct>=0?ws[XLSX.utils.encode_cell({r:hi+1+i,c:map.acct})]:null;return {src:hi+2+i,v:r,t:c?c.t:''};}).filter(x=>x.v.some(v=>v!==''&&v!=null));
@@ -400,7 +407,7 @@ function validateAll(){
     else if(!Number.isInteger(r.amount))issues.push(['bad','금액에 소수점 → 정수로']);
     if(r.memo.length>10)issues.push(['bad',`입금명 ${r.memo.length}자 → 10자 이내로 줄이기`]);
     if(r.acctCellType==='n')issues.push(['warn','원본 셀이 숫자 형식 → 앞자리 0이 빠졌을 수 있음, 카톡 원문과 대조']);
-    if(r.raw)(r.phard||[]).forEach(n=>issues.push(['bad',n]));
+    if(r.raw)(r.phard||[]).forEach(h=>issues.push(['bad',h.msg]));
     r.pnotes.forEach(n=>issues.push(['warn',n]));
     if(Number.isFinite(r.amount)&&r.amount>5000000)issues.push(['warn','금액이 500만원 초과 → 금액 확인']);
     const key=`${r.acct}|${r.amount}|${r.memo}`;
@@ -454,9 +461,9 @@ function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt
 $('#tbody').addEventListener('change',e=>{
   const tr=e.target.closest('tr[data-i]');if(!tr)return;const r=ROWS.find(x=>x.i===+tr.dataset.i);if(!r)return;
   if(e.target.classList.contains('inc'))r.include=e.target.checked;
-  if(e.target.classList.contains('bank')){r.bank=e.target.value;r.phard=(r.phard||[]).filter(x=>!x.startsWith('은행 후보'));}
-  if(e.target.classList.contains('acct')){r.acct=e.target.value.replace(/[^\d]/g,'');r.phard=(r.phard||[]).filter(x=>!x.startsWith('숫자 구간'));}
-  if(e.target.classList.contains('holder')){r.holder=e.target.value.replace(/\s+/g,'');r.phard=(r.phard||[]).filter(x=>!x.startsWith('이름 후보'));}
+  if(e.target.classList.contains('bank')){r.bank=e.target.value;r.phard=(r.phard||[]).filter(x=>x.code!=='BANK');}
+  if(e.target.classList.contains('acct')){r.acct=e.target.value.replace(/[^\d]/g,'');r.phard=(r.phard||[]).filter(x=>x.code!=='ACCT');r.pnotes=(r.pnotes||[]).filter(n=>!/계좌|숫자/.test(n));}
+  if(e.target.classList.contains('holder')){r.holder=e.target.value.replace(/\s+/g,'');r.phard=(r.phard||[]).filter(x=>x.code!=='HOLDER');}
   if(e.target.classList.contains('memo'))r.memo=e.target.value.replace(/[\r\n]+/g,' ');
   r.edited=true;validateAll();renderTable();
 });
@@ -473,7 +480,7 @@ $('#btnDown').addEventListener('click',async()=>{
   if(stillBad){toast(`오류 ${stillBad}행이 아직 포함돼 있습니다. 고치거나 체크를 해제해 제외한 뒤 만들어 주세요`);FILTER='bad';document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f==='bad'));renderTable();return;}
   const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
   if(!inc.length){toast('포함할 행이 없습니다');return;}
-  const mode=$('#bankMode').value,fmt=$('#fmt').value;
+  const mode=$('#bankMode').value,fmt='xls';   // 국민은행은 .xls 만 수용
   const name=($('#fname').value.trim()||`대량이체_${ymd(new Date()).replace(/-/g,'')}`)+'.'+fmt;
   const aoa=inc.map(r=>{const b=bankByCode(r.bank);return [
     {v:mode==='code'?b.code:b.name,t:'s',z:'@'},
