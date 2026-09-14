@@ -633,10 +633,10 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v11';
+window.BUILD='v12';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
-<script src="data.js?v=11"></script>
+<script src="data.js?v=12"></script>
 <script>
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
@@ -866,7 +866,7 @@ async function pollJob(jobId,onStep){
     if(j.status==='failed')throw new Error(j.error||'조회 실패');
     const sec=Math.round((Date.now()-t0)/1000);
     onStep(j.status==='queued'?`조회 대기 중${j.queue_position>1?` (앞에 ${j.queue_position-1}건)`:''}${j.worker_seen?'':' · 조회 서버 연결 확인 중'}`:j.step,sec);
-    if(sec>420)throw new Error('조회 시간 초과(7분)');
+    if(sec>1500)throw new Error('조회 시간 초과(25분)');
   }
 }
 function loadUser(){
