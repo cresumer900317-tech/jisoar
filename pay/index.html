@@ -50,9 +50,11 @@ textarea{width:100%;min-height:120px;font:12.5px/1.5 ui-monospace,Consolas,monos
 .seg button{font:inherit;font-size:12.5px;font-weight:700;padding:7px 12px;border:none;border-left:1px solid var(--line2);background:#fff;cursor:pointer;color:var(--ink2)}
 .seg button:first-child{border-left:none}.seg button.on{background:var(--ink);color:#fff}
 .tblwrap{overflow:auto;border:1px solid var(--line2);max-height:70vh}
-table{border-collapse:collapse;width:100%;min-width:1180px;font-size:12.5px}
+table{border-collapse:collapse;width:100%;min-width:1240px;font-size:12.5px}
 th{position:sticky;top:0;background:#f4f5f7;border-bottom:1px solid var(--line2);padding:9px 8px;text-align:left;font-size:12px;white-space:nowrap;z-index:1}
 td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:middle;white-space:nowrap}
+td.issues{white-space:normal;max-width:340px;min-width:220px;line-height:1.6}
+td.issues .tag{margin:1px 4px 1px 0}
 td input[type=text],td select{font:inherit;font-size:12.5px;padding:5px 7px;border:1px solid var(--line2);background:#fff}
 td input.acct{width:170px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.3px}
 td input.holder{width:90px}td input.memo{width:120px}td select{width:120px}
@@ -97,8 +99,6 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       <div class="row" id="sheetRow" hidden>
         <div class="f">시트<select id="sheetSel"></select></div>
         <div class="f">대상<input type="text" value="미입금 행만 (입금완료 표시된 행은 제외)" readonly style="background:#f4f5f7;color:var(--ink2);min-width:230px"></div>
-        <div class="f">날짜 시작<input type="date" id="dateFrom"></div>
-        <div class="f">날짜 끝<input type="date" id="dateTo"></div>
         <div class="f">진행자<select id="ownerSel"><option value="">전체</option></select></div>
         <button class="btn" id="btnParse">검토 화면으로</button>
       </div>
@@ -120,11 +120,15 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
         · <span class="tag warn">확인</span> 파일에는 들어가지만 한 번 보시라는 뜻입니다. 각 행의 "확인 사항"에 무엇을 보면 되는지 적혀 있습니다.
         · <span class="tag info">참고</span> 정보만 표시하는 것이라 조치는 필요 없습니다.
       </div>
+      <div id="errPanel" class="note" hidden style="margin:0 0 12px;padding:12px 14px;border:1px solid #efb8b8;background:#fff8f8">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><b id="errTitle"></b><button class="btn light sm" type="button" id="btnCopyErr">오류 목록 복사 (카톡·메모에 붙여넣기)</button></div>
+        <ol id="errList" style="margin:8px 0 0 18px;line-height:1.7"></ol>
+      </div>
       <div class="kpis">
-        <div class="kpi"><div class="v" id="kTotal">0</div><div class="l">대상 행</div></div>
-        <div class="kpi ok"><div class="v" id="kInc">0</div><div class="l">포함(이체 파일에 들어감)</div></div>
-        <div class="kpi bad"><div class="v" id="kErr">0</div><div class="l">오류 (수정 필요)</div></div>
-        <div class="kpi warn"><div class="v" id="kWarn">0</div><div class="l">확인 권장</div></div>
+        <div class="kpi" data-f="all" style="cursor:pointer"><div class="v" id="kTotal">0</div><div class="l">대상 행</div></div>
+        <div class="kpi ok" data-f="ok" style="cursor:pointer"><div class="v" id="kInc">0</div><div class="l">포함(이체 파일에 들어감)</div></div>
+        <div class="kpi bad" data-f="bad" style="cursor:pointer"><div class="v" id="kErr">0</div><div class="l">오류 (누르면 목록만 보기)</div></div>
+        <div class="kpi warn" data-f="warn" style="cursor:pointer"><div class="v" id="kWarn">0</div><div class="l">확인 권장 (누르면 목록만 보기)</div></div>
         <div class="kpi"><div class="v" id="kSum">0</div><div class="l">포함 합계(원)</div></div>
       </div>
       <div class="tools">
@@ -138,7 +142,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       <div class="tblwrap">
         <table>
           <thead><tr>
-            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>행</th><th>날짜</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th><th>확인 사항</th>
+            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>확인 사항 · 할 일</th><th>행</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
@@ -214,7 +218,7 @@ const bankByCode=c=>BANKS.find(b=>b.code===c);
 function parseAccount(raw){
   const notes=[],hard=[];   // notes=참고, hard=확정 불가(차단)
   let s=String(raw||'').replace(/[（）()\[\]【】,，.:：;/|]/g,' ').replace(/\s+/g,' ').trim();
-  if(!s)return {bank:null,acct:'',holder:'',notes:['원문 없음'],hard:['원문 없음']};
+  if(!s)return {bank:null,acct:'',holder:'',notes:[],hard:['계좌 원문이 비어 있음 → 시트 입금계좌번호 칸을 채워 주세요']};
   // 1) 은행 후보: 별칭이 '독립된 단어'로 나타날 때만 인정 (앞뒤가 한글이면 다른 단어의 일부로 보고 제외 — 예: 기업행사, 이우리)
   const low=s.toLowerCase();   // 원문 띄어쓰기 유지: 앞뒤가 한글/영문이면 다른 단어의 일부(기업행사, 이우리)로 보고 제외
   const cands=[];
@@ -296,8 +300,6 @@ function onSheetChange(){
   const {hi,map}=grid;
   const owners=new Set();grid.rows.forEach(r=>{const o=(r[map.owner]||'').toString().trim();if(o)owners.add(o);});
   const os=$('#ownerSel');os.innerHTML='<option value="">전체</option>';[...owners].sort().forEach(o=>{const e=document.createElement('option');e.value=o;e.textContent=o;os.appendChild(e);});
-  const dates=grid.rows.map(r=>excelDate(r[map.date])).filter(Boolean).map(ymd).sort();
-  $('#dateFrom').value=dates[0]||'';$('#dateTo').value=dates[dates.length-1]||'';
   const missing=missingRequired(map);
   const info=document.createElement('div');info.textContent=`시트 ${$('#sheetSel').value}: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행 · `+(missing.length?`찾지 못한 필수 열: ${missing.join(', ')} — 이 시트로는 진행할 수 없습니다`:'필요한 열을 모두 찾았습니다');
   if(missing.length)info.style.color='var(--bad)';
@@ -352,28 +354,28 @@ $('#btnParse').addEventListener('click',()=>{const g=currentGrid();if(g)buildRow
 function buildRows(grid,srcName){
   const {map,rows}=grid;
   const miss=missingRequired(map);if(miss.length){toast('찾지 못한 필수 열: '+miss.join(', '));return;}
-  const from=$('#dateFrom').value,to=$('#dateTo').value,owner=$('#ownerSel').value;
-  ROWS=[];let skipped=0,undated=0;
+  const owner=$('#ownerSel').value;
+  ROWS=[];let skipped=0,noAmt=0;
   rows.forEach((row,i)=>{const r=row.v;
     const get=k=>(map[k]==null||map[k]<0)?'':r[map[k]];
     const paid=String(get('paid')||'').trim();
     const d=excelDate(get('date'));const ds=ymd(d);
     if(paid)return;   // 입금완료 표시된 행은 항상 제외 (값이 무엇이든 비어 있지 않으면 제외)
-    if((from||to)&&!ds)undated++;   // 기간이 지정됐는데 날짜가 없는 행: 제외하지 않고 경고
-    if(from&&ds&&ds<from)return;if(to&&ds&&ds>to)return;
     if(owner&&String(get('owner')||'').trim()!==owner)return;
     const raw=String(get('acct')||'').trim();
     const amountRaw=get('amount');
     const amt=parseAmount(amountRaw);
     if(!raw&&!(amt>0)){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외
+    const amtMissing=!Number.isFinite(amt);if(amtMissing)noAmt++;   // 금액이 비어 있는 행: 오류가 아니라 '아직 보낼 수 없는 행'으로 체크 해제
     const p=parseAccount(raw);
-    ROWS.push({i,srcRow:row.src,src:srcName,date:ds,noDate:(from||to)&&!ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:String(get('memo')??'').replace(/[\r\n]+/g,' '),
-      amountRaw,amount:amt,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,phard:p.hard,acctCellType:row.t||'',paid,include:true,edited:false});
+    ROWS.push({i,srcRow:row.src,src:srcName,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:String(get('memo')??'').replace(/[\r\n]+/g,' '),
+      amountRaw,amount:amt,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,phard:p.hard,acctCellType:row.t||'',paid,include:!amtMissing,edited:false});
   });
   validateAll();
-  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(undated?`날짜가 없는 행 ${undated}개는 기간과 무관하게 포함했습니다(확인 표시).`:'');
+  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이 비어 있는 행 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 금액을 채우면 다음에 포함됩니다).`:'');
   $('#sec2').hidden=false;$('#sec3').hidden=false;setStep(2);
   $('#fname').value=`대량이체_${ymd(new Date()).replace(/-/g,'')}`;
+  FILTER=ROWS.some(r=>r.level==='bad'&&r.include)?'bad':'all';document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));
   renderTable();
   window.scrollTo({top:$('#sec2').offsetTop-10,behavior:'smooth'});
 }
@@ -388,13 +390,14 @@ function validateAll(){
   const seen=new Map();
   ROWS.forEach(r=>{
     const issues=[];
-    if(!r.bank)issues.push(['bad','은행을 못 찾음 → 은행 칸에서 고르세요']);
-    if(!r.acct)issues.push(['bad','계좌번호 없음 → 계좌 칸에 숫자만 입력']);
+    if(!r.raw){issues.push(['bad','계좌 원문이 비어 있음 → 시트 입금계좌번호 칸을 채워 주세요']);}
+    else if(!r.bank)issues.push(['bad','은행을 못 찾음 → 은행 칸에서 고르세요']);
+    if(r.raw&&!r.acct)issues.push(['bad','계좌번호 없음 → 계좌 칸에 숫자만 입력']);
     else if(r.acct.length<10||r.acct.length>16)issues.push(['warn',`계좌가 ${r.acct.length}자리 → 원문과 대조(보통 10~16자리)`]);
-    if(!r.holder)issues.push(['bad','예금주 없음 → 예금주 칸에 이름 입력']);
+    if(r.raw&&!r.holder)issues.push(['bad','예금주 없음 → 예금주 칸에 이름 입력']);
     else if(/\s/.test(r.holder))issues.push(['bad','예금주에 띄어쓰기 → 붙여서 입력']);
     else if(r.holder.length>20)issues.push(['bad','예금주 20자 초과 → 줄이기']);
-    if(!Number.isFinite(r.amount))issues.push(['bad','금액 없음 → 시트 최종금액 확인 후 제외하거나 채우기']);
+    if(!Number.isFinite(r.amount))issues.push(['bad','금액이 비어 있음 → 시트에서 최종금액을 채운 뒤 다시 올리면 포함됩니다']);
     else if(r.amount<=0)issues.push(['bad','금액이 0 → 시트 최종금액 확인']);
     else if(!Number.isInteger(r.amount))issues.push(['bad','금액에 소수점 → 정수로']);
     if(!r.memo)issues.push(['warn','입금명 비어 있음 → 통장에 아무 표시도 안 됨 (괜찮으면 그대로)']);
@@ -402,20 +405,31 @@ function validateAll(){
     if(r.acctCellType==='n')issues.push(['warn','원본 셀이 숫자 형식 → 앞자리 0이 빠졌을 수 있음, 카톡 원문과 대조']);
     if(r.holder&&r.orderer&&r.holder!==r.orderer.replace(/\s+/g,''))issues.push(['info',`주문자명(${r.orderer})과 예금주가 다름 · 가족 계좌 등이면 정상`]);
     if(r.paid)issues.push(['info','이미 입금완료 표시']);
-    (r.phard||[]).forEach(n=>issues.push(['bad',n]));
+    if(r.raw)(r.phard||[]).forEach(n=>issues.push(['bad',n]));
     r.pnotes.forEach(n=>issues.push(['warn',n]));
-    if(r.noDate)issues.push(['warn','날짜 없음 → 기간과 상관없이 포함됨, 보낼 건이 맞는지 확인']);
     if(Number.isFinite(r.amount)&&r.amount>5000000)issues.push(['warn','금액이 500만원 초과 → 금액 확인']);
     const key=`${r.acct}|${r.amount}|${r.memo}`;
     if(r.acct&&seen.has(key))issues.push(['info',`같은 계좌·금액·입금명 건이 또 있음 · 건별로 여러 번 보내는 경우면 정상`]);else seen.set(key,r.i);
-    r.key=key;r.issues=issues;
+    // 같은 메시지 중복 제거
+    const seenMsg=new Set();r.key=key;r.issues=issues.filter(([lv,t])=>{const k=lv+t;if(seenMsg.has(k))return false;seenMsg.add(k);return true;});
     r.level=issues.some(x=>x[0]==='bad')?'bad':issues.some(x=>x[0]==='warn')?'warn':'ok';
   });
   // 이력 대조 (비동기) — 세대 번호가 바뀌었으면 오래된 결과는 버린다
   const gen=++VALIDATE_GEN;const snap=ROWS;
   Promise.all(snap.map(r=>fp(r.key))).then(fps=>{if(gen!==VALIDATE_GEN||snap!==ROWS)return;snap.forEach((r,i)=>{r.fp=fps[i];if(HIST_FPS.has(r.fp)&&!r.issues.some(x=>x[1]==='이전에 만든 파일에 있음')){r.issues.push(['warn','이전에 만든 파일에 같은 건이 있음 → 이미 보낸 건이면 체크 해제']);if(r.level==='ok')r.level='warn';}});renderTable();});
 }
+function sheetLabel(){const n=$('#sheetSel').value;return n?`${n} 시트`:'시트';}
+function renderErrPanel(){
+  const bad=ROWS.filter(r=>r.level==='bad').sort((a,b)=>(a.srcRow||0)-(b.srcRow||0));
+  const panel=$('#errPanel');panel.hidden=!bad.length;if(!bad.length)return;
+  const lines=bad.map(r=>`${sheetLabel()} ${r.srcRow||'?'}행 · ${r.orderer||r.holder||'이름 없음'}${r.include?'':' (이번엔 제외됨)'}: ${r.issues.filter(x=>x[0]==='bad').map(x=>x[1]).join(' / ')}`);
+  $('#errTitle').textContent=`오류 ${bad.length}건 — 구글 스프레드시트에서 아래 행을 확인해 주세요`;
+  $('#errList').innerHTML=lines.map(l=>`<li>${esc(l)}</li>`).join('');
+  panel.dataset.text=lines.join('\n');
+}
+$('#btnCopyErr').addEventListener('click',()=>{const t=$('#errPanel').dataset.text||'';if(!t)return;navigator.clipboard.writeText(`[정산 이체 오류 ${ROWS.filter(r=>r.level==='bad').length}건]\n`+t).then(()=>toast('오류 목록을 복사했습니다')).catch(()=>toast('복사 실패: 브라우저 권한을 확인해 주세요'));});
 function renderTable(){
+  renderErrPanel();
   const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
   $('#kTotal').textContent=ROWS.length;$('#kInc').textContent=inc.length;
   $('#kErr').textContent=ROWS.filter(r=>r.level==='bad').length;$('#kWarn').textContent=ROWS.filter(r=>r.level==='warn').length;
@@ -432,8 +446,8 @@ function renderTable(){
   $('#tbody').innerHTML=list.map(r=>`<tr class="${r.level} ${r.include?'':'off'}" data-i="${r.i}">
     <td><input type="checkbox" class="inc" ${r.include?'checked':''}></td>
     <td>${r.level==='bad'?'<span class="tag bad">오류</span>':r.level==='warn'?'<span class="tag warn">확인</span>':'<span class="tag ok">정상</span>'}</td>
+    <td class="issues">${r.issues.length?`<div style="font-weight:700;margin-bottom:2px">${esc(sheetLabel())} ${r.srcRow||'?'}행 · ${esc(r.orderer||r.holder||'이름 없음')}</div>`:''}${r.issues.length?r.issues.map(([lv,t])=>`<span class="tag ${lv}">${esc(t)}</span>`).join(''):'<span class="muted">-</span>'}</td>
     <td class="muted">${r.srcRow||''}</td>
-    <td>${r.date||''}</td>
     <td>${esc(r.orderer)}</td>
     <td class="raw" title="${esc(r.raw)}">${esc(r.raw)}</td>
     <td><select class="bank"><option value="">(선택)</option>${BANKS.map(b=>`<option value="${b.code}" ${b.code===r.bank?'selected':''}>${b.name} ${b.code}</option>`).join('')}</select></td>
@@ -441,8 +455,7 @@ function renderTable(){
     <td><input type="text" class="holder" value="${esc(r.holder)}"></td>
     <td class="amt">${Number.isFinite(r.amount)?fmtWon(r.amount):'<span class="tag bad">?</span>'}</td>
     <td><input type="text" class="memo" value="${esc(r.memo)}" maxlength="20"></td>
-    <td>${r.issues.map(([lv,t])=>`<span class="tag ${lv}">${esc(t)}</span>`).join('')}</td>
-  </tr>`).join('')||`<tr><td colspan="12" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
+  </tr>`).join('')||`<tr><td colspan="11" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
   $('#cnt').textContent=`${list.length} / ${ROWS.length}행 표시`;
 }
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -457,6 +470,7 @@ $('#tbody').addEventListener('change',e=>{
 });
 $('#chkAll').addEventListener('change',e=>{document.querySelectorAll('#tbody tr[data-i]').forEach(tr=>{const r=ROWS.find(x=>x.i===+tr.dataset.i);if(r)r.include=e.target.checked;});renderTable();});
 $('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;FILTER=b.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));renderTable();});
+document.querySelector('.kpis').addEventListener('click',e=>{const k=e.target.closest('.kpi[data-f]');if(!k)return;FILTER=k.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));renderTable();});
 $('#q').addEventListener('input',e=>{QUERY=e.target.value.trim();renderTable();});
 $('#btnExcludeBad').addEventListener('click',()=>{ROWS.forEach(r=>{if(r.level==='bad')r.include=false;});renderTable();toast('오류 행을 제외했습니다');});
 $('#btnReparse').addEventListener('click',()=>{const n=ROWS.filter(r=>r.edited).length;if(n&&!window.confirm(`직접 고친 ${n}행의 수정이 사라집니다. 계속할까요?`))return;ROWS.forEach(r=>{const p=parseAccount(r.raw);r.bank=p.bank?p.bank.code:'';r.acct=p.acct;r.holder=p.holder;r.pnotes=p.notes;r.phard=p.hard;r.edited=false;});validateAll();renderTable();});
