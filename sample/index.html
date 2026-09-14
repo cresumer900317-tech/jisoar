@@ -695,7 +695,7 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v18';
+window.BUILD='v19';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="data.js?v=17"></script>
@@ -847,6 +847,7 @@ function renderPager(pages,totalGroups){
   bar.innerHTML=sz+nav;
 }
 function renderAd(){
+  if(!SHARED_READY){$('#tbody').innerHTML=`<tr><td colspan="13" class="empty">불러오는 중…</td></tr>`;renderPager(0,0);const c=$('#count');if(c)c.textContent='';return;}
   renderKPI();
   const rows=SLOTS.map((p,i)=>({p,i})).filter(({p})=>{
     if(HIDDEN.has(p.no))return false;
@@ -941,7 +942,7 @@ async function createLookup(url,kw){
   return (await r.json()).id;
 }
 /* 공용 등록 목록: 서버(/api/ranklab/state)에 저장 → 누가 어디서 등록하든 모두 같은 화면. 10초마다 동기화 */
-let SHARED_VERSION=-1,sharedTimer=null;
+let SHARED_VERSION=-1,sharedTimer=null,SHARED_READY=false;
 function normSlot(x){
   x.user=true;x.history=Array.isArray(x.history)?x.history.filter(h=>h&&h.r!=null):[];x.color=colorOf(x.name||x.url||String(x.no));
   x.pid=x.pid||'';x.nvMid=x.nvMid||'-';x.mall=x.mall||'-';x.note=x.note||'';x.status=x.status||'wait';
@@ -950,7 +951,7 @@ function normSlot(x){
 async function loadShared(force){
   let st;
   try{const r=await fetch(LIVE_API+'/state',{cache:'no-store'});if(!r.ok)throw new Error(r.status);st=await r.json();}
-  catch(e){if(force)toast('공용 목록을 불러오지 못했습니다: '+e.message);return false;}
+  catch(e){if(force)toast('공용 목록을 불러오지 못했습니다: '+e.message);if(!SHARED_READY){SHARED_READY=true;renderAd();}return false;}
   if(!force&&st.version===SHARED_VERSION)return false;
   SHARED_VERSION=st.version;
   HIDDEN.clear();(st.hidden||[]).forEach(n=>HIDDEN.add(Number(n)));
@@ -963,7 +964,7 @@ async function loadShared(force){
   SLOTS.sort((a,b)=>b.no-a.no);
   (st.logs||[]).forEach(l=>{l.user=true;l.slot=byNo[l.slot]||null;LOGS.unshift(l);});
   LOGS.sort((a,b)=>a.created<b.created?1:-1);
-  renderAd();renderAccount();renderSettle();renderDaily();
+  SHARED_READY=true;renderAd();renderAccount();renderSettle();renderDaily();
   // 조회 중인 건은 진행 상태 폴링 (완료되면 서버가 슬롯을 갱신하므로 다시 불러온다)
   const jobs=new Set(SLOTS.filter(x=>x.user&&x.live&&x.jobId).map(x=>x.jobId));
   jobs.forEach(jobId=>{if(WATCHING.has(jobId))return;WATCHING.add(jobId);watchJob(jobId);});
