@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>정산 이체 파일 만들기 | jisoar</title>
 <style>
 :root{--ink:#111;--ink2:#444;--ink3:#8a8f98;--line:#e3e5e9;--line2:#c9cdd4;--bg:#fff;--panel:#fafafa;--ok:#0a7f3a;--warn:#b7791f;--bad:#c62828;--info:#2a5bd7}
@@ -132,7 +133,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       <div class="tblwrap">
         <table>
           <thead><tr>
-            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>날짜</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th><th>확인 사항</th>
+            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>행</th><th>날짜</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th><th>확인 사항</th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
@@ -206,38 +207,55 @@ const bankByCode=c=>BANKS.find(b=>b.code===c);
 // 입력: "국민 123456-01-123456 홍길동" / "123401-04-123456 국민 홍길동" / "카카오뱅크3333012345678홍길동" 등
 // 출력: {bank, acct(숫자만), holder, notes[]}  — 애매하면 notes 에 남기고 확정하지 않음
 function parseAccount(raw){
-  const notes=[]; let s=String(raw||'').replace(/[（）()\[\]【】,，.:：;/|]/g,' ').replace(/\s+/g,' ').trim();
-  if(!s)return {bank:null,acct:'',holder:'',notes:['원문 없음']};
-  // 1) 은행 찾기 (공백 무시, 긴 별칭 우선)
-  const flat=s.toLowerCase().replace(/\s+/g,'');
-  let bank=null,alias=null;
-  for(const {a,b} of ALIASES){ if(flat.includes(a)){bank=b;alias=a;break;} }
+  const notes=[],hard=[];   // notes=참고, hard=확정 불가(차단)
+  let s=String(raw||'').replace(/[（）()\[\]【】,，.:：;/|]/g,' ').replace(/\s+/g,' ').trim();
+  if(!s)return {bank:null,acct:'',holder:'',notes:['원문 없음'],hard:['원문 없음']};
+  // 1) 은행 후보: 별칭이 '독립된 단어'로 나타날 때만 인정 (앞뒤가 한글이면 다른 단어의 일부로 보고 제외 — 예: 기업행사, 이우리)
+  const low=s.toLowerCase();   // 원문 띄어쓰기 유지: 앞뒤가 한글/영문이면 다른 단어의 일부(기업행사, 이우리)로 보고 제외
+  const cands=[];
+  for(const {a,b} of ALIASES){
+    let idx=low.indexOf(a);
+    while(idx>=0){
+      const before=low[idx-1]||'', after=low[idx+a.length]||'';
+      const okB=!/[가-힣a-z]/.test(before), okA=!/[가-힣a-z]/.test(after)||/^(은행|뱅크)/.test(low.slice(idx+a.length));
+      if(okB&&okA&&!cands.some(c=>c.b===b))cands.push({a,b,idx});
+      idx=low.indexOf(a,idx+1);
+    }
+  }
+  // 더 긴 별칭이 같은 위치를 덮으면 짧은 것 제거 (예: '카카오뱅크' vs '카카오')
+  const uniq=cands.filter(c=>!cands.some(o=>o!==c&&o.b===c.b&&o.a.length>c.a.length));
+  const bankSet=[...new Set(uniq.map(c=>c.b))];
+  let bank=null;
+  if(bankSet.length===1)bank=bankSet[0];
+  else if(bankSet.length>1)hard.push('은행 후보가 여러 개: '+bankSet.map(b=>b.name).join(', ')+' → 직접 선택');
   let rest=s;
-  if(alias){
-    // 원문에서 별칭(공백 섞여도)을 제거
-    const pat=alias.split('').map(ch=>ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('\\s*');
-    rest=rest.replace(new RegExp(pat+'(은행|뱅크)?','i'),' ').replace(/\s+/g,' ').trim();
-  }
-  // 2) 예금주: 한글 2~6자 덩어리 (숫자와 붙어 있어도 분리)
-  const names=[...rest.matchAll(/[가-힣]{2,6}/g)].map(m=>m[0]);
+  uniq.forEach(c=>{const pat=c.a.split('').map(ch=>ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('\\s*');rest=rest.replace(new RegExp(pat+'(\\s*(은행|뱅크))?','i'),' | ');});
+  rest=rest.replace(/(은행|뱅크)/g,' | ').replace(/\s+/g,' ').trim();
+  // 2) 예금주: "예금주 홍길동" 명시 우선, 없으면 한글 덩어리 중 마지막. 이름이 아닌 흔한 단어는 제외
+  const STOP=new Set(['예금주','환불','입금','계좌','통장','송금','이체','원고료','물품','대금','확인','완료','본인','명의','계좌번호','번호']);
   let holder='';
-  if(names.length){
-    holder=names[names.length-1];            // 보통 끝에 이름
-    if(names.length>1){notes.push('이름 후보가 여러 개: '+names.join(', '));}
+  const exp=/예금주\s*[:：]?\s*([가-힣]{2,6})/.exec(rest);
+  if(exp){holder=exp[1];rest=rest.replace(exp[0],' | ');}
+  else{
+    const names=[...rest.matchAll(/[가-힣]{2,6}/g)].map(m=>m[0]).filter(n=>!STOP.has(n));
+    if(names.length===1)holder=names[0];
+    else if(names.length>1){holder=names[names.length-1];hard.push('이름 후보가 여러 개: '+names.join(', ')+' → 예금주 확인');}
+    if(holder)rest=rest.replace(holder,' | ');
   }
-  if(holder)rest=rest.replace(holder,' ');
-  // 3) 계좌: 남은 숫자/하이픈/공백 → 숫자만
-  const digitsGroups=rest.match(/[\d][\d\- ]*[\d]|\d/g)||[];
-  const joined=digitsGroups.join('');
-  const acct=joined.replace(/[^\d]/g,'');
-  const leftover=rest.replace(/[\d\- ]/g,'').replace(/(은행|뱅크)/g,'').trim();
+  rest=rest.replace(/[가-힣a-zA-Z]+/g,' | ');   // 남은 글자는 숫자 구간 구분자로
+  // 3) 계좌: 숫자 구간(숫자·하이픈·공백으로만 이어진 덩어리) 중 하나를 선택. 4자리 이상 구간이 둘이면 확정 불가
+  const segs=(rest.match(/\d[\d\- ]*\d|\d/g)||[]).map(x=>x.replace(/[^\d]/g,'')).filter(x=>x.length);
+  segs.sort((x,y)=>y.length-x.length);
+  const acct=segs[0]||'';
+  if(segs.length>1&&segs[1].length>=4)hard.push('숫자 구간이 둘 이상: '+segs.map(x=>x.replace(/\d(?=\d{2})/g,'*')).join(' / ')+' → 계좌 확인');
+  const leftover=rest.replace(/[\d\- |]/g,'').trim();
   if(leftover)notes.push('해석 안 된 글자: '+leftover);
-  return {bank,acct,holder,notes};
+  return {bank,acct,holder,notes,hard};
 }
 
 /* ===================== 상태 ===================== */
 const $=s=>document.querySelector(s);
-let WB=null, ROWS=[], FILTER='all', QUERY='', HIST=[];
+let WB=null, ROWS=[], FILTER='all', QUERY='', HIST=[], VALIDATE_GEN=0;
 const COLS={date:['날짜','진행시작일'],owner:['진행자'],client:['의뢰업체명'],memo:['입금명'],orderer:['주문자명'],amount:['최종금액'],paid:['입금완료여부'],acct:['입금계좌번호','계좌','계좌번호','입금계좌']};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
 function fmtWon(n){return (n||0).toLocaleString('ko-KR')}
@@ -262,7 +280,7 @@ function loadFile(f){
     WB.SheetNames.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);const h=findHeader(XLSX.utils.sheet_to_json(WB.Sheets[n],{header:1,raw:false,defval:''}));if(h&&(!best||/카톡/.test(n)&&!/카톡/.test(best)))best=n;});
     if(best)sel.value=best;
     $('#sheetRow').hidden=false;
-    $('#inputInfo').innerHTML=`<b>${f.name}</b> · 시트 ${WB.SheetNames.length}개 · 계좌 열이 있는 시트를 자동으로 골랐습니다. 대상·기간을 확인하고 <b>검토 화면으로</b>를 누르세요.`;
+    $('#inputInfo').textContent=`${f.name} · 시트 ${WB.SheetNames.length}개 · 계좌 열이 있는 시트를 자동으로 골랐습니다. 기간을 확인하고 "검토 화면으로"를 누르세요.`;
     onSheetChange();
   };
   r.readAsArrayBuffer(f);
@@ -275,8 +293,10 @@ function onSheetChange(){
   const os=$('#ownerSel');os.innerHTML='<option value="">전체</option>';[...owners].sort().forEach(o=>{const e=document.createElement('option');e.value=o;e.textContent=o;os.appendChild(e);});
   const dates=grid.rows.map(r=>excelDate(r[map.date])).filter(Boolean).map(ymd).sort();
   $('#dateFrom').value=dates[0]||'';$('#dateTo').value=dates[dates.length-1]||'';
-  const missing=Object.keys(COLS).filter(k=>map[k]==null&&k!=='client');
-  $('#inputInfo').innerHTML+=`<br>시트 <b>${$('#sheetSel').value}</b>: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행` + (missing.length?` · <span style="color:var(--bad)">찾지 못한 열: ${missing.join(', ')}</span>`:' · 필요한 열을 모두 찾았습니다');
+  const missing=missingRequired(map);
+  const info=document.createElement('div');info.textContent=`시트 ${$('#sheetSel').value}: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행 · `+(missing.length?`찾지 못한 필수 열: ${missing.join(', ')} — 이 시트로는 진행할 수 없습니다`:'필요한 열을 모두 찾았습니다');
+  if(missing.length)info.style.color='var(--bad)';
+  $('#inputInfo').appendChild(info);$('#btnParse').disabled=!!missing.length;
 }
 function findHeader(aoa){
   // 헤더 행 = 셀 값이 정확히 열 이름인 행 (안내 문구 "은행/계좌번호/예금주순서로 작성" 같은 문장은 제외)
@@ -290,42 +310,51 @@ function findHeader(aoa){
   }
   return null;
 }
+const EXACT_ONLY=new Set(['acct','amount','paid','memo']);   // 송금에 직결되는 열은 정확히 같은 이름만 인정
+const REQUIRED=['acct','amount','paid','memo'];
 function mapColumns(hdr){
   const H=hdr.map(v=>String(v||'').replace(/\s+/g,''));const map={};
-  for(const [k,names] of Object.entries(COLS)){let idx=null;for(const n of names){const j=H.findIndex(h=>h===n.replace(/\s+/g,''));if(j>=0){idx=j;break;}}if(idx==null){for(const n of names){const j=H.findIndex(h=>h.includes(n.replace(/\s+/g,'')));if(j>=0){idx=j;break;}}}map[k]=idx;}
+  for(const [k,names] of Object.entries(COLS)){
+    let idx=null;
+    for(const n of names){const hits=H.map((h,j)=>h===n.replace(/\s+/g,'')?j:-1).filter(j=>j>=0);if(hits.length===1){idx=hits[0];break;}if(hits.length>1){idx=-2;break;}}
+    if(idx==null&&!EXACT_ONLY.has(k)){for(const n of names){const j=H.findIndex(h=>h.includes(n.replace(/\s+/g,'')));if(j>=0){idx=j;break;}}}
+    map[k]=idx;
+  }
   return map;
 }
+function missingRequired(map){return REQUIRED.filter(k=>map[k]==null||map[k]<0).map(k=>({acct:'입금계좌번호',amount:'최종금액',paid:'입금완료여부',memo:'입금명'}[k]));}
 function currentGrid(){
   if(!WB)return null;const ws=WB.Sheets[$('#sheetSel').value];if(!ws)return null;
   const aoa=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
   const hi=findHeader(XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:''}));if(hi==null){toast('헤더 행(입금계좌번호·최종금액)을 찾지 못했습니다');return null;}
   const map=mapColumns(aoa[hi]);
-  // 계좌 셀 타입(숫자면 0 손실 가능) 기록
-  const range=XLSX.utils.decode_range(ws['!ref']);const acctTypes={};
-  if(map.acct!=null){for(let r=hi+1;r<=range.e.r;r++){const c=ws[XLSX.utils.encode_cell({r,c:map.acct})];if(c)acctTypes[r-hi-1]=c.t;}}
-  const rows=aoa.slice(hi+1).filter(r=>r.some(v=>v!==''&&v!=null));
-  return {hi,map,rows,acctTypes};
+  // 행마다 원본 엑셀 행 번호와 계좌 셀 타입(숫자면 0 손실 가능)을 함께 보관 (빈 행 제거 후에도 어긋나지 않게)
+  const rows=aoa.slice(hi+1).map((r,i)=>{const c=map.acct!=null&&map.acct>=0?ws[XLSX.utils.encode_cell({r:hi+1+i,c:map.acct})]:null;return {src:hi+2+i,v:r,t:c?c.t:''};}).filter(x=>x.v.some(v=>v!==''&&v!=null));
+  return {hi,map,rows};
 }
 /* ===================== 입력: 붙여넣기 ===================== */
 $('#btnPaste').addEventListener('click',()=>{
   const txt=$('#paste').value;if(!txt.trim()){toast('붙여넣은 내용이 없습니다');return;}
   const aoa=txt.replace(/\r/g,'').split('\n').map(l=>l.split('\t'));
   const hi=findHeader(aoa);if(hi==null){toast('헤더 행(날짜·입금계좌번호·최종금액)이 포함되게 복사해 주세요');return;}
-  const map=mapColumns(aoa[hi]);const rows=aoa.slice(hi+1).filter(r=>r.some(v=>v!==''));
-  buildRows({hi,map,rows,acctTypes:{}},'붙여넣기');
+  const map=mapColumns(aoa[hi]);const miss=missingRequired(map);if(miss.length){toast('찾지 못한 필수 열: '+miss.join(', '));return;}
+  const rows=aoa.slice(hi+1).map((r,i)=>({src:hi+2+i,v:r,t:''})).filter(x=>x.v.some(v=>v!==''));
+  buildRows({hi,map,rows},'붙여넣기');
 });
 $('#btnParse').addEventListener('click',()=>{const g=currentGrid();if(g)buildRows(g,$('#sheetSel').value);});
 
 /* ===================== 행 구성 + 검증 ===================== */
 function buildRows(grid,srcName){
-  const {map,rows,acctTypes}=grid;
+  const {map,rows}=grid;
+  const miss=missingRequired(map);if(miss.length){toast('찾지 못한 필수 열: '+miss.join(', '));return;}
   const from=$('#dateFrom').value,to=$('#dateTo').value,owner=$('#ownerSel').value;
-  ROWS=[];let skipped=0;
-  rows.forEach((r,i)=>{
-    const get=k=>map[k]==null?'':r[map[k]];
+  ROWS=[];let skipped=0,undated=0;
+  rows.forEach((row,i)=>{const r=row.v;
+    const get=k=>(map[k]==null||map[k]<0)?'':r[map[k]];
     const paid=String(get('paid')||'').trim();
     const d=excelDate(get('date'));const ds=ymd(d);
-    if(paid)return;   // 입금완료 표시된 행은 항상 제외
+    if(paid)return;   // 입금완료 표시된 행은 항상 제외 (값이 무엇이든 비어 있지 않으면 제외)
+    if((from||to)&&!ds)undated++;   // 기간이 지정됐는데 날짜가 없는 행: 제외하지 않고 경고
     if(from&&ds&&ds<from)return;if(to&&ds&&ds>to)return;
     if(owner&&String(get('owner')||'').trim()!==owner)return;
     const raw=String(get('acct')||'').trim();
@@ -333,11 +362,11 @@ function buildRows(grid,srcName){
     const amt=parseAmount(amountRaw);
     if(!raw&&!(amt>0)){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외
     const p=parseAccount(raw);
-    ROWS.push({i,src:srcName,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:String(get('memo')||'').trim(),
-      amountRaw,amount:parseAmount(amountRaw),raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,acctCellType:acctTypes[i]||'',paid,include:true,edited:false});
+    ROWS.push({i,srcRow:row.src,src:srcName,date:ds,noDate:(from||to)&&!ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:String(get('memo')??'').replace(/[\r\n]+/g,' '),
+      amountRaw,amount:amt,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,phard:p.hard,acctCellType:row.t||'',paid,include:true,edited:false});
   });
   validateAll();
-  $('#skipInfo').textContent=skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다.`:'';
+  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(undated?`날짜가 없는 행 ${undated}개는 기간과 무관하게 포함했습니다(확인 표시).`:'');
   $('#sec2').hidden=false;$('#sec3').hidden=false;setStep(2);
   $('#fname').value=`대량이체_${ymd(new Date()).replace(/-/g,'')}`;
   renderTable();
@@ -368,14 +397,18 @@ function validateAll(){
     if(r.acctCellType==='n')issues.push(['warn','원본 셀이 숫자 형식 (앞자리 0 손실 가능)']);
     if(r.holder&&r.orderer&&r.holder!==r.orderer.replace(/\s+/g,''))issues.push(['info',`주문자명 "${r.orderer}"과 다름`]);
     if(r.paid)issues.push(['info','이미 입금완료 표시']);
+    (r.phard||[]).forEach(n=>issues.push(['bad',n]));
     r.pnotes.forEach(n=>issues.push(['warn',n]));
+    if(r.noDate)issues.push(['warn','날짜 없음 (기간 필터와 무관하게 포함됨)']);
+    if(Number.isFinite(r.amount)&&r.amount>5000000)issues.push(['warn','금액이 500만원 초과']);
     const key=`${r.acct}|${r.amount}|${r.memo}`;
     if(r.acct&&seen.has(key))issues.push(['warn',`같은 계좌·금액·입금명이 또 있음 (건별 지급이면 정상, 실수 중복이면 제외)`]);else seen.set(key,r.i);
     r.key=key;r.issues=issues;
     r.level=issues.some(x=>x[0]==='bad')?'bad':issues.some(x=>x[0]==='warn')?'warn':'ok';
   });
-  // 이력 대조 (비동기)
-  Promise.all(ROWS.map(r=>fp(r.key))).then(fps=>{ROWS.forEach((r,i)=>{r.fp=fps[i];if(HIST_FPS.has(r.fp)&&!r.issues.some(x=>x[1]==='이전에 만든 파일에 있음')){r.issues.push(['warn','이전에 만든 파일에 있음']);if(r.level==='ok')r.level='warn';}});renderTable();});
+  // 이력 대조 (비동기) — 세대 번호가 바뀌었으면 오래된 결과는 버린다
+  const gen=++VALIDATE_GEN;const snap=ROWS;
+  Promise.all(snap.map(r=>fp(r.key))).then(fps=>{if(gen!==VALIDATE_GEN||snap!==ROWS)return;snap.forEach((r,i)=>{r.fp=fps[i];if(HIST_FPS.has(r.fp)&&!r.issues.some(x=>x[1]==='이전에 만든 파일에 있음')){r.issues.push(['warn','이전에 만든 파일에 있음']);if(r.level==='ok')r.level='warn';}});renderTable();});
 }
 function renderTable(){
   const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
@@ -394,6 +427,7 @@ function renderTable(){
   $('#tbody').innerHTML=list.map(r=>`<tr class="${r.level} ${r.include?'':'off'}" data-i="${r.i}">
     <td><input type="checkbox" class="inc" ${r.include?'checked':''}></td>
     <td>${r.level==='bad'?'<span class="tag bad">오류</span>':r.level==='warn'?'<span class="tag warn">확인</span>':'<span class="tag ok">정상</span>'}</td>
+    <td class="muted">${r.srcRow||''}</td>
     <td>${r.date||''}</td>
     <td>${esc(r.orderer)}</td>
     <td class="raw" title="${esc(r.raw)}">${esc(r.raw)}</td>
@@ -403,30 +437,31 @@ function renderTable(){
     <td class="amt">${Number.isFinite(r.amount)?fmtWon(r.amount):'<span class="tag bad">?</span>'}</td>
     <td><input type="text" class="memo" value="${esc(r.memo)}" maxlength="20"></td>
     <td>${r.issues.map(([lv,t])=>`<span class="tag ${lv}">${esc(t)}</span>`).join('')}</td>
-  </tr>`).join('')||`<tr><td colspan="11" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
+  </tr>`).join('')||`<tr><td colspan="12" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
   $('#cnt').textContent=`${list.length} / ${ROWS.length}행 표시`;
 }
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 $('#tbody').addEventListener('change',e=>{
   const tr=e.target.closest('tr[data-i]');if(!tr)return;const r=ROWS.find(x=>x.i===+tr.dataset.i);if(!r)return;
   if(e.target.classList.contains('inc'))r.include=e.target.checked;
-  if(e.target.classList.contains('bank'))r.bank=e.target.value;
-  if(e.target.classList.contains('acct'))r.acct=e.target.value.replace(/[^\d]/g,'');
-  if(e.target.classList.contains('holder'))r.holder=e.target.value.replace(/\s+/g,'');
-  if(e.target.classList.contains('memo'))r.memo=e.target.value.trim();
+  if(e.target.classList.contains('bank')){r.bank=e.target.value;r.phard=(r.phard||[]).filter(x=>!x.startsWith('은행 후보'));}
+  if(e.target.classList.contains('acct')){r.acct=e.target.value.replace(/[^\d]/g,'');r.phard=(r.phard||[]).filter(x=>!x.startsWith('숫자 구간'));}
+  if(e.target.classList.contains('holder')){r.holder=e.target.value.replace(/\s+/g,'');r.phard=(r.phard||[]).filter(x=>!x.startsWith('이름 후보'));}
+  if(e.target.classList.contains('memo'))r.memo=e.target.value.replace(/[\r\n]+/g,' ');
   r.edited=true;validateAll();renderTable();
 });
 $('#chkAll').addEventListener('change',e=>{document.querySelectorAll('#tbody tr[data-i]').forEach(tr=>{const r=ROWS.find(x=>x.i===+tr.dataset.i);if(r)r.include=e.target.checked;});renderTable();});
 $('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;FILTER=b.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));renderTable();});
 $('#q').addEventListener('input',e=>{QUERY=e.target.value.trim();renderTable();});
 $('#btnExcludeBad').addEventListener('click',()=>{ROWS.forEach(r=>{if(r.level==='bad')r.include=false;});renderTable();toast('오류 행을 제외했습니다');});
-$('#btnReparse').addEventListener('click',()=>{ROWS.forEach(r=>{const p=parseAccount(r.raw);r.bank=p.bank?p.bank.code:'';r.acct=p.acct;r.holder=p.holder;r.pnotes=p.notes;r.edited=false;});validateAll();renderTable();});
+$('#btnReparse').addEventListener('click',()=>{const n=ROWS.filter(r=>r.edited).length;if(n&&!window.confirm(`직접 고친 ${n}행의 수정이 사라집니다. 계속할까요?`))return;ROWS.forEach(r=>{const p=parseAccount(r.raw);r.bank=p.bank?p.bank.code:'';r.acct=p.acct;r.holder=p.holder;r.pnotes=p.notes;r.phard=p.hard;r.edited=false;});validateAll();renderTable();});
 
 /* ===================== 출력 ===================== */
 $('#btnDown').addEventListener('click',async()=>{
+  const stillBad=ROWS.filter(r=>r.include&&r.level==='bad').length;
+  if(stillBad){toast(`오류 ${stillBad}행이 아직 포함돼 있습니다. 고치거나 체크를 해제해 제외한 뒤 만들어 주세요`);FILTER='bad';document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f==='bad'));renderTable();return;}
   const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
   if(!inc.length){toast('포함할 행이 없습니다');return;}
-  const stillBad=ROWS.filter(r=>r.include&&r.level==='bad').length;
   const mode=$('#bankMode').value,fmt=$('#fmt').value;
   const name=($('#fname').value.trim()||`대량이체_${ymd(new Date()).replace(/-/g,'')}`)+'.'+fmt;
   const aoa=inc.map(r=>{const b=bankByCode(r.bank);return [
@@ -441,13 +476,17 @@ $('#btnDown').addEventListener('click',async()=>{
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'대량이체');
   const out=XLSX.write(wb,{bookType:fmt==='xls'?'biff8':'xlsx',type:'array'});
   // 생성 파일 재검증: 다시 읽어 건수·합계·계좌 문자열 대조
-  const chk=XLSX.read(out,{type:'array'});const cs=chk.Sheets[chk.SheetNames[0]];const back=XLSX.utils.sheet_to_json(cs,{header:1,raw:true});
-  const okCount=back.length===inc.length, okSum=back.reduce((a,r)=>a+Number(r[2]||0),0)===inc.reduce((a,r)=>a+r.amount,0), okAcct=back.every((r,i)=>String(r[1])===inc[i].acct);
-  if(!(okCount&&okSum&&okAcct)){toast('생성 파일 검증 실패: 다시 시도해 주세요');return;}
+  // 생성 파일 재검증: 행 수, 시트명, 행별 금액, A/B/D/E/F 문자열 셀 타입·값 대조
+  const chk=XLSX.read(out,{type:'array',cellNF:true});const cs=chk.Sheets[chk.SheetNames[0]];const rng=XLSX.utils.decode_range(cs['!ref']);
+  let ok=chk.SheetNames[0]==='대량이체'&&rng.e.r+1===inc.length;
+  for(let i=0;ok&&i<inc.length;i++){const cell=c=>cs[XLSX.utils.encode_cell({r:i,c})];const [A,B,C,D,E,F]=[0,1,2,3,4,5].map(cell);const b=bankByCode(inc[i].bank);
+    ok=A&&A.t==='s'&&A.v===(mode==='code'?b.code:b.name)&&B&&B.t==='s'&&B.v===inc[i].acct&&C&&C.t==='n'&&C.v===inc[i].amount&&D&&D.t==='s'&&D.v===inc[i].holder&&E&&E.t==='s'&&E.v===inc[i].memo&&F&&F.t==='s'&&F.v===inc[i].memo;}
+  if(!ok){toast('생성 파일 검증 실패: 파일을 내려받지 않았습니다. 다시 시도해 주세요');return;}
   const blob=new Blob([out],{type:fmt==='xls'?'application/vnd.ms-excel':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   const sum=inc.reduce((a,r)=>a+r.amount,0);
-  $('#downInfo').innerHTML=`<b>${esc(name)}</b> 생성 · <b>${inc.length}건</b> · 합계 <b>${fmtWon(sum)}원</b> · 다시 읽어 건수·합계·계좌 문자열이 일치함을 확인했습니다.`+(stillBad?` <span style="color:var(--bad)">오류 ${stillBad}건은 제외되었습니다.</span>`:'')+` 시트 이름 "대량이체", 1행부터 데이터, A·B열 텍스트 서식.`;
+  const excluded=ROWS.filter(r=>!r.include).length;
+  $('#downInfo').innerHTML=`<b>${esc(name)}</b> 생성 · <b>${inc.length}건</b> · 합계 <b>${fmtWon(sum)}원</b> · 다시 읽어 행별 은행·계좌·금액·예금주·입금명이 모두 일치함을 확인했습니다.`+(excluded?` <span style="color:var(--warn)">체크 해제로 제외한 행 ${excluded}건.</span>`:'')+` 시트 이름 "대량이체", 1행부터 데이터, A·B·D·E·F열 텍스트.`;
   setStep(3);
   // 이력 저장 (계좌 원문 대신 지문)
   const fps=await Promise.all(inc.map(r=>fp(r.key)));
@@ -457,12 +496,13 @@ $('#btnDown').addEventListener('click',async()=>{
 });
 
 /* ===================== 이력 ===================== */
-function loadHist(){try{HIST=JSON.parse(localStorage.getItem('pay_history_v1')||'[]');}catch{HIST=[];}HIST_FPS=new Set(HIST.flatMap(h=>h.fps||[]));}
+function loadHist(){try{HIST=cleanHist(JSON.parse(localStorage.getItem('pay_history_v1')||'[]'));}catch{HIST=[];}HIST_FPS=new Set(HIST.flatMap(h=>h.fps||[]));}
 function saveHist(){try{localStorage.setItem('pay_history_v1',JSON.stringify(HIST.slice(0,200)));}catch{}HIST_FPS=new Set(HIST.flatMap(h=>h.fps||[]));}
-function renderHist(){$('#histBody').innerHTML=HIST.map(h=>`<tr><td>${h.at}</td><td>${esc(h.name)}</td><td style="text-align:right">${h.count}</td><td style="text-align:right">${fmtWon(h.sum)}</td><td>${esc(h.note||'')}</td></tr>`).join('')||`<tr><td colspan="5" style="color:var(--ink3);padding:18px">아직 만든 파일이 없습니다.</td></tr>`;}
+function renderHist(){$('#histBody').innerHTML=HIST.map(h=>`<tr><td>${esc(h.at)}</td><td>${esc(h.name)}</td><td style="text-align:right">${Number(h.count)||0}</td><td style="text-align:right">${fmtWon(Number(h.sum)||0)}</td><td>${esc(h.note||'')}</td></tr>`).join('')||`<tr><td colspan="5" style="color:var(--ink3);padding:18px">아직 만든 파일이 없습니다.</td></tr>`;}
+function cleanHist(list){return (Array.isArray(list)?list:[]).filter(h=>h&&typeof h==='object'&&typeof h.id==='string'&&h.id.length<=20).slice(0,500).map(h=>({id:h.id,at:String(h.at||'').slice(0,40),name:String(h.name||'').slice(0,120),count:Number(h.count)||0,sum:Number(h.sum)||0,note:String(h.note||'').slice(0,80),fps:(Array.isArray(h.fps)?h.fps:[]).filter(x=>typeof x==='string'&&/^[0-9a-f]{24}$/.test(x)).slice(0,5000)}));}
 $('#btnHistExport').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),history:HIST},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`이체이력_${ymd(new Date())}.json`;a.click();});
-$('#histImport').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const list=Array.isArray(j)?j:(j.history||[]);const ids=new Set(HIST.map(h=>h.id));list.forEach(h=>{if(h&&h.id&&!ids.has(h.id))HIST.push(h);});HIST.sort((a,b)=>(b.id>a.id?1:-1));saveHist();renderHist();toast('이력을 불러왔습니다');}catch{toast('이력 파일 형식이 아닙니다');}};r.readAsText(f);});
-$('#btnHistClear').addEventListener('click',()=>{if(!HIST.length)return;HIST=[];saveHist();renderHist();toast('이력을 지웠습니다');});
+$('#histImport').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const list=cleanHist(Array.isArray(j)?j:(j.history||[]));const ids=new Set(HIST.map(h=>h.id));list.forEach(h=>{if(!ids.has(h.id))HIST.push(h);});HIST.sort((a,b)=>(b.id>a.id?1:-1));saveHist();renderHist();if(ROWS.length){validateAll();}toast('이력을 불러왔습니다');}catch{toast('이력 파일 형식이 아닙니다');}};r.readAsText(f);});
+$('#btnHistClear').addEventListener('click',()=>{if(!HIST.length)return;if(!window.confirm('만든 파일 이력을 모두 지웁니다. 먼저 "이력 파일로 내보내기"를 해두는 것을 권합니다. 계속할까요?'))return;HIST=[];saveHist();renderHist();if(ROWS.length)validateAll();toast('이력을 지웠습니다');});
 loadHist();renderHist();
 </script>
 </body>
