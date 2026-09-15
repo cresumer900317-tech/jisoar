@@ -695,7 +695,7 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v21';
+window.BUILD='v22';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="data.js?v=17"></script>
@@ -703,6 +703,8 @@ window.BUILD='v21';
 /* ================= constants ================= */
 const S=window.SNAPSHOT||{collectedAt:'2026-09-14',keywords:[],slots:[]};
 const TODAY=S.collectedAt||'2026-09-14';
+const REAL_TODAY=(()=>{const d=new Date(Date.now()+9*3600*1000);return d.toISOString().slice(0,10)})();   // 실제 오늘(KST) — 스냅샷 날짜(TODAY)와 별개
+const AXIS_END=REAL_TODAY>TODAY?REAL_TODAY:TODAY;
 const COLORS=['#3767c4','#c9772e','#2f9c6d','#b7842a','#b3557f','#4a4f96','#5a8fa8','#a2506a','#3f7d5c','#8a6bbf'];
 const ACCOUNTS=[
   {id:'hq-master',role:'hq',name:'RANKLAB 총판',org:'-',memo:'총판 계정 · 대행사 생성/정산 권한'},
@@ -747,7 +749,7 @@ function delta(p){const h=p.history.filter(x=>x.r!=null);return h.length>1?h[h.l
   S.keywords.forEach(k=>{if(k.collectedAt&&k.collectedAt>lastTime)lastTime=k.collectedAt});
   if(lastTime){const t=new Date(lastTime);lastTime=' '+t.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Seoul'});}
   $('#metaLast').textContent=fmtDate(last)+lastTime;
-  $('#metaNext').textContent=fmtDate(addDays(TODAY,1))+' 11:00';
+  $('#metaNext').textContent=fmtDate(addDays(AXIS_END,1))+' 11:00';
 })();
 function showDaily(d){try{if(!d||!d.startedAt)return;const t=String(d.startedAt).slice(5,16).replace('-','/');const q=d.queued||0,n=(d.done||0)+(d.failed||0);const running=q>n;$('#metaLast').textContent=t+(running?` 갱신 중 ${n}/${q}`:` 자동 갱신 ${q}건`);}catch{}}
 
@@ -1053,7 +1055,7 @@ $('#regForm').addEventListener('submit',async e=>{
       how=`<span id="liveStep" data-job="${jobId}">조회 시작…</span> <span style="color:var(--ink-3)">(모든 화면에 공용으로 저장되며 새로고침해도 이어집니다)</span>`;
     }else{
       Object.assign(body,{name:pid?`스마트스토어 상품 ${pid} (수집 대기)`:`가격비교 상품 ${nvMid} (수집 대기)`,mall:'다음 수집 시 자동 조회'});
-      how=`다음 수집(${addDays(TODAY,1)} 11:00)부터 순위가 표시됩니다.`;
+      how=`다음 수집(${addDays(AXIS_END,1)} 11:00)부터 순위가 표시됩니다.`;
     }
     await postSlots(body);
     await loadShared(true);
@@ -1079,7 +1081,7 @@ function openDrawer(p){
     <div class="d-stat"><div class="l">현재 순위</div>${rankV}</div>
     <div class="d-stat"><div class="l">전일 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?'-':(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
     <div class="d-stat"><div class="l">검색 결과</div><div class="v">${kwd&&kwd.total!=null?kwd.total.toLocaleString('ko-KR')+'건':'-'}</div></div>`;
-  $('#chartSub').textContent=p.history.filter(h=>h.r!=null).length<2?`${TODAY} 첫 수집 · 내일 11:00 수집부터 추이가 그려집니다`:`매일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위`;
+  $('#chartSub').textContent=p.history.filter(h=>h.r!=null).length<2?`${(p.history.find(h=>h.r!=null)||{}).d||AXIS_END} 첫 수집 · 다음 11:00 수집부터 추이가 그려집니다`:`매일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위`;
   $('#dInfo').innerHTML=`
     <dt>키워드</dt><dd>${esc(p.kw)}</dd>
     <dt>단품MID</dt><dd>${esc(p.nvMid||'-')}${p.catalog?' <span style="color:var(--ink-3)">(가격비교 묶음 MID)</span>':''}</dd>
@@ -1119,7 +1121,7 @@ function drawChart(p){
   const W=440,H=200,PL=36,PR=14,PT=14,PB=28,NS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('width','100%');svg.style.display='block';
   // 최근 8일 축, 값은 history 에서
-  const days=[];for(let i=7;i>=0;i--)days.push(addDays(TODAY,-i));
+  const days=[];for(let i=7;i>=0;i--)days.push(addDays(AXIS_END,-i));
   const vals=days.map(d=>{const h=p.history.find(x=>x.d===d);return h?h.r:null});
   const nums=vals.filter(v=>v!=null);
   const tx=(s)=>s.slice(5).replace('-','/');
