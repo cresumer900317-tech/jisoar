@@ -695,7 +695,7 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v20';
+window.BUILD='v21';
 (async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="data.js?v=17"></script>
@@ -749,6 +749,7 @@ function delta(p){const h=p.history.filter(x=>x.r!=null);return h.length>1?h[h.l
   $('#metaLast').textContent=fmtDate(last)+lastTime;
   $('#metaNext').textContent=fmtDate(addDays(TODAY,1))+' 11:00';
 })();
+function showDaily(d){try{if(!d||!d.startedAt)return;const t=String(d.startedAt).slice(5,16).replace('-','/');const q=d.queued||0,n=(d.done||0)+(d.failed||0);const running=q>n;$('#metaLast').textContent=t+(running?` 갱신 중 ${n}/${q}`:` 자동 갱신 ${q}건`);}catch{}}
 
 /* ================= routing ================= */
 const PAGES={
@@ -950,7 +951,7 @@ function normSlot(x){
 }
 async function loadShared(force){
   let st;
-  try{const r=await fetch(LIVE_API+'/state',{cache:'no-store'});if(!r.ok)throw new Error(r.status);st=await r.json();}
+  try{const r=await fetch(LIVE_API+'/state',{cache:'no-store'});if(!r.ok)throw new Error(r.status);st=await r.json();showDaily(st.daily);}
   catch(e){if(force)toast('공용 목록을 불러오지 못했습니다: '+e.message);if(!SHARED_READY){SHARED_READY=true;renderAd();}return false;}
   if(!force&&st.version===SHARED_VERSION)return false;
   SHARED_VERSION=st.version;
