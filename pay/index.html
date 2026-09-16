@@ -280,7 +280,7 @@ function parseAccount(raw){
 
 /* ===================== 상태 ===================== */
 const $=s=>document.querySelector(s);
-let WB=null, ROWS=[], FILTER='all', QUERY='', HIST=[], VALIDATE_GEN=0;
+let WB=null, ROWS=[], FILTER='all', QUERY='', HIST=[], VALIDATE_GEN=0, LAST=null;   // LAST = 마지막으로 검토 표를 만든 입력(grid, srcName)과 그때 적용한 원고료 설정
 const COLS={date:['날짜','진행시작일'],owner:['진행자'],client:['의뢰업체명'],memo:['입금명'],orderer:['주문자명'],amount:['최종금액'],fee:['원고료'],paid:['입금완료여부'],acct:['입금계좌번호','계좌','계좌번호','입금계좌']};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
 function fmtWon(n){return (n||0).toLocaleString('ko-KR')}
@@ -312,6 +312,7 @@ function loadFile(f){
 }
 $('#sheetSel').addEventListener('change',onSheetChange);
 function onSheetChange(){
+  LAST=null;   // 새 파일·다른 시트를 고르면 이전 검토 입력은 버림 (설정 변경은 다음 "검토 화면으로"에서 반영)
   const grid=currentGrid(); if(!grid)return;
   const {hi,map}=grid;
   const owners=new Set();if(map.owner!=null&&map.owner>=0)grid.rows.forEach(r=>{const o=(r.v[map.owner]||'').toString().trim();if(o)owners.add(o);});
@@ -366,7 +367,12 @@ $('#btnPaste').addEventListener('click',()=>{
   buildRows({hi,map,rows},'붙여넣기');
 });
 $('#btnParse').addEventListener('click',()=>{const g=currentGrid();if(g)buildRows(g,$('#sheetSel').value);});
-['#feeMode','#feeMemo'].forEach(id=>$(id).addEventListener('change',()=>{if(!ROWS.length||!WB)return;const n=ROWS.filter(r=>r.edited).length;if(n&&!window.confirm(`설정을 바꾸면 표를 다시 만듭니다. 직접 고친 ${n}건의 수정이 사라집니다. 계속할까요?`))return;const g=currentGrid();if(g){buildRows(g,$('#sheetSel').value);toast('원고료 설정을 반영해 표를 다시 만들었습니다');}}));
+['#feeMode','#feeMemo'].forEach(id=>$(id).addEventListener('change',()=>{
+  if(!LAST)return;   // 아직 검토 표를 만들기 전이면 다음 "검토 화면으로"에서 반영
+  const n=ROWS.filter(r=>r.edited).length;
+  if(n&&!window.confirm(`설정을 바꾸면 표를 다시 만듭니다. 직접 고친 ${n}건의 수정이 사라집니다. 계속할까요?`)){$('#feeMode').value=LAST.feeMode;$('#feeMemo').value=LAST.feeMemoMode;return;}   // 취소: 화면 선택값을 적용 중인 설정으로 되돌림
+  buildRows(LAST.grid,LAST.srcName);toast('원고료 설정을 반영해 표를 다시 만들었습니다');   // 붙여넣기 입력이든 파일이든 마지막으로 검토한 그 데이터로 재구성
+}));
 
 /* ===================== 행 구성 + 검증 ===================== */
 function buildRows(grid,srcName){
@@ -376,6 +382,7 @@ function buildRows(grid,srcName){
   ROWS=[];let skipped=0,noAmt=0,feeRows=0,noFee=0;
   const feeMode=$('#feeMode').value,feeMemoMode=$('#feeMemo').value;
   const hasFeeCol=map.fee!=null&&map.fee>=0;
+  LAST={grid,srcName,feeMode,feeMemoMode};
   const feeMemoFor=m=>feeMemoMode==='fixed'?'원고료':m;
   rows.forEach((row,i)=>{const r=row.v;
     const get=k=>(map[k]==null||map[k]<0)?'':r[map[k]];
@@ -389,22 +396,23 @@ function buildRows(grid,srcName){
     const feeRaw=hasFeeCol?get('fee'):'';
     const feeEmpty=feeRaw==null||String(feeRaw).trim()==='';
     const fee=feeEmpty?NaN:parseAmount(feeRaw);
-    if(!raw&&!(amt>0)&&!(fee>0)){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외
     const wantGoods=feeMode!=='fee';
-    const wantFee=feeMode!=='goods'&&hasFeeCol&&!feeEmpty&&fee!==0;   // 원고료 칸이 비어 있거나 0이면 원고료 건 없음. 글자 등 읽을 수 없는 값은 오류 건으로 남겨 보이게 함
+    const wantFee=feeMode!=='goods'&&hasFeeCol&&!feeEmpty&&fee!==0;   // 원고료 칸이 비어 있거나 0이면 원고료 건 없음. 글자·음수 등 잘못된 값은 오류 건으로 남겨 보이게 함
+    if(!raw&&!(amt>0)&&!wantFee){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외 (단, 원고료 건을 만들어야 하면 남김)
     if(!wantGoods&&!wantFee){noFee++;return;}
     const p=parseAccount(raw);
     const memo=String(get('memo')??'').replace(/[\r\n]+/g,' ');
     const mk=(kind,aRaw,a,m)=>{
       const amtMissing=!Number.isFinite(a);const rawMissing=!raw;if(amtMissing||rawMissing)noAmt++;   // 금액·계좌가 비어 있는 건: '아직 보낼 수 없는 건'으로 체크 해제
-      ROWS.push({i:ROWS.length,srcRow:row.src,src:srcName,kind,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:m,
+      ROWS.push({i:ROWS.length,gid:i,srcRow:row.src,src:srcName,kind,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:m,
         amountRaw:aRaw,amount:a,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:[...p.notes],phard:[...(p.hard||[])],acctCellType:row.t||'',paid,include:!(amtMissing||rawMissing),edited:false});
     };
     if(wantGoods)mk('goods',amountRaw,amt,memo);
     if(wantFee){feeRows++;mk('fee',feeRaw,fee,feeMemoFor(memo));}
   });
   validateAll();
-  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이나 계좌가 비어 있는 건 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 채우고 다시 올리면 포함됩니다). `:'')+(feeRows?(feeMode==='fee'?`원고료가 적힌 행 ${feeRows}개의 원고료 건만 만들었습니다. `:`원고료가 적힌 행 ${feeRows}개는 원고료 건을 따로 추가했습니다. `):'')+(noFee?`원고료가 없는 행 ${noFee}개는 "원고료만" 설정이라 뺐습니다. `:'')+(!hasFeeCol&&feeMode!=='goods'?'이 시트에는 원고료 열이 없어 물품대금만 만들었습니다. ':'');
+  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이나 계좌가 비어 있는 건 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 채우고 다시 올리면 포함됩니다). `:'')+(feeRows?(feeMode==='fee'?`원고료가 적힌 행 ${feeRows}개의 원고료 건만 만들었습니다. `:`원고료가 적힌 행 ${feeRows}개는 원고료 건을 따로 추가했습니다. `):'')+(noFee?`원고료가 없는 행 ${noFee}개는 "원고료만" 설정이라 뺐습니다. `:'')+(!hasFeeCol&&feeMode==='both'?'이 시트에는 원고료 열이 없어 물품대금만 만들었습니다. ':'')+(!hasFeeCol&&feeMode==='fee'?'이 시트에는 원고료 열이 없어 만들 건이 없습니다. 원고료 설정을 "물품대금 1건 + 원고료 1건"이나 "물품대금만"으로 바꿔 주세요. ':'');
+  if(!hasFeeCol&&feeMode==='fee')toast('이 시트에는 원고료 열이 없습니다. 원고료 설정을 바꿔 주세요');
   $('#sec2').hidden=false;$('#sec3').hidden=false;setStep(2);
   $('#fname').value=`대량이체_${ymd(new Date()).replace(/-/g,'')}`;
   FILTER=ROWS.some(r=>r.level==='bad'&&r.include)?'bad':'all';document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));
@@ -491,7 +499,7 @@ function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt
 $('#tbody').addEventListener('change',e=>{
   const tr=e.target.closest('tr[data-i]');if(!tr)return;const r=ROWS.find(x=>x.i===+tr.dataset.i);if(!r)return;
   if(e.target.classList.contains('inc'))r.include=e.target.checked;
-  const shared=ROWS.filter(x=>x.src===r.src&&x.srcRow===r.srcRow);   // 같은 시트 행에서 나온 물품대금·원고료 건: 은행·계좌·예금주는 함께 수정
+  const shared=ROWS.filter(x=>x.gid===r.gid);   // 같은 시트 행에서 나온 물품대금·원고료 건: 은행·계좌·예금주는 함께 수정
   if(e.target.classList.contains('bank')){const v=e.target.value;shared.forEach(x=>{x.bank=v;x.phard=(x.phard||[]).filter(y=>y.code!=='BANK');x.edited=true;});}
   if(e.target.classList.contains('acct')){const v=e.target.value.replace(/[^\d]/g,'');shared.forEach(x=>{x.acct=v;x.phard=(x.phard||[]).filter(y=>y.code!=='ACCT');x.pnotes=(x.pnotes||[]).filter(n=>!/계좌|숫자/.test(n));x.edited=true;});}
   if(e.target.classList.contains('holder')){const v=e.target.value.replace(/\s+/g,'');shared.forEach(x=>{x.holder=v;x.phard=(x.phard||[]).filter(y=>y.code!=='HOLDER');x.edited=true;});}
