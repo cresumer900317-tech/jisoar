@@ -100,6 +100,8 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
         <div class="f">시트<select id="sheetSel"></select></div>
         <div class="f">대상<input type="text" value="미입금 행만 (입금완료 표시된 행은 제외)" readonly style="background:#f4f5f7;color:var(--ink2);min-width:230px"></div>
         <div class="f">진행자<select id="ownerSel"><option value="">전체</option></select></div>
+        <div class="f">원고료<select id="feeMode"><option value="both">물품대금 1건 + 원고료 1건 (기본)</option><option value="goods">물품대금만</option><option value="fee">원고료만</option></select></div>
+        <div class="f">원고료 입금명<select id="feeMemo"><option value="same">입금명 그대로 (물품대금 건과 같게)</option><option value="fixed">"원고료"로 고정</option></select></div>
         <button class="btn" id="btnParse">검토 화면으로</button>
       </div>
       <details style="margin-top:16px">
@@ -123,7 +125,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
         <ol id="errList" style="margin:8px 0 0 18px;line-height:1.7"></ol>
       </div>
       <div class="kpis">
-        <div class="kpi" data-f="all" style="cursor:pointer"><div class="v" id="kTotal">0</div><div class="l">대상 행</div></div>
+        <div class="kpi" data-f="all" style="cursor:pointer"><div class="v" id="kTotal">0</div><div class="l" id="kTotalL">대상 건</div></div>
         <div class="kpi ok" data-f="ok" style="cursor:pointer"><div class="v" id="kInc">0</div><div class="l">포함(이체 파일에 들어감)</div></div>
         <div class="kpi bad" data-f="bad" style="cursor:pointer"><div class="v" id="kErr">0</div><div class="l">오류 (누르면 목록만 보기)</div></div>
         <div class="kpi warn" data-f="warn" style="cursor:pointer"><div class="v" id="kWarn">0</div><div class="l">확인 권장 (누르면 목록만 보기)</div></div>
@@ -131,7 +133,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       </div>
       <div class="tools">
         <div class="seg" id="seg"><button data-f="all" class="on">전체</button><button data-f="bad">오류</button><button data-f="warn">확인 권장</button><button data-f="ok">정상</button><button data-f="off">제외됨</button></div>
-        <input type="text" id="q" placeholder="이름 · 계좌 · 입금명 검색" style="font:inherit;font-size:12.5px;padding:7px 10px;border:1px solid var(--line2);min-width:220px">
+        <input type="text" id="q" placeholder="이름 · 계좌 · 입금명 · 원고료 검색" style="font:inherit;font-size:12.5px;padding:7px 10px;border:1px solid var(--line2);min-width:220px">
         <span class="muted" id="cnt"></span>
         <span style="flex:1"></span>
         <button class="btn light sm" id="btnExcludeBad">오류 행 모두 제외</button>
@@ -140,13 +142,13 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       <div class="tblwrap">
         <table>
           <thead><tr>
-            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>확인 사항 · 할 일</th><th>행</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th>
+            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>종류</th><th>확인 사항 · 할 일</th><th>행</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
       </div>
       <div class="note" id="skipInfo"></div>
-      <div class="note">같은 사람에게 여러 건이면 행마다 따로 송금됩니다. 예금주가 주문자명과 달라도(가족 계좌 등) 그대로 보냅니다. 국민은행은 예금주가 실제와 달라도 이체가 실행되므로, 업로드 후 은행 화면의 "예금주조회"로 한 번 확인하면 안전합니다.</div>
+      <div class="note"><b>원고료</b>가 적힌 행은 물품대금 1건과 원고료 1건, 두 줄로 나뉘어 각각 이체됩니다(최종금액 = 물품대금). 은행·계좌·예금주를 한쪽에서 고치면 다른 쪽도 같이 바뀝니다. 같은 사람에게 여러 건이면 행마다 따로 송금됩니다. 예금주가 주문자명과 달라도(가족 계좌 등) 그대로 보냅니다. 국민은행은 예금주가 실제와 달라도 이체가 실행되므로, 업로드 후 은행 화면의 "예금주조회"로 한 번 확인하면 안전합니다.</div>
     </div>
   </section>
 
@@ -162,7 +164,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       </div>
       <div class="note" id="downInfo"></div>
       <div class="note"><b>다음 순서</b>: 내려받은 파일을 KB스타기업뱅킹 › 대량이체 › 파일 등록에 올리고, 은행 화면의 건수·합계가 위 숫자와 같은지 확인한 뒤 이체를 실행하세요. 예금주 조회 불일치가 나오는 건은 이 화면에서 예금주를 고쳐 다시 만들면 됩니다.</div>
-      <div class="note" style="color:var(--ink3)">이 도구는 국민은행 업로드용 파일을 만들 뿐 실제 이체는 수행하지 않습니다. 이체 실행 전 은행 화면에서 계좌·예금주·건별 금액·총액을 확인하세요. 지원 입력: 헤더에 날짜·주문자명·입금명·최종금액·입금완료여부·입금계좌번호 열이 있는 정산 시트(구글 스프레드시트 xlsx 내려받기).</div>
+      <div class="note" style="color:var(--ink3)">이 도구는 국민은행 업로드용 파일을 만들 뿐 실제 이체는 수행하지 않습니다. 이체 실행 전 은행 화면에서 계좌·예금주·건별 금액·총액을 확인하세요. 지원 입력: 헤더에 날짜·주문자명·입금명·최종금액·입금완료여부·입금계좌번호 열(원고료 열은 선택)이 있는 정산 시트(구글 스프레드시트 xlsx 내려받기).</div>
     </div>
   </section>
 
@@ -180,7 +182,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 새로고침 (GitHub Pages 10분 캐시 대응) */
-window.BUILD='p3';
+window.BUILD='p4';
 (async()=>{try{if(sessionStorage.getItem('pay_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('pay_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="vendor/xlsx.full.min.js?v=p2"></script>
@@ -279,7 +281,7 @@ function parseAccount(raw){
 /* ===================== 상태 ===================== */
 const $=s=>document.querySelector(s);
 let WB=null, ROWS=[], FILTER='all', QUERY='', HIST=[], VALIDATE_GEN=0;
-const COLS={date:['날짜','진행시작일'],owner:['진행자'],client:['의뢰업체명'],memo:['입금명'],orderer:['주문자명'],amount:['최종금액'],paid:['입금완료여부'],acct:['입금계좌번호','계좌','계좌번호','입금계좌']};
+const COLS={date:['날짜','진행시작일'],owner:['진행자'],client:['의뢰업체명'],memo:['입금명'],orderer:['주문자명'],amount:['최종금액'],fee:['원고료'],paid:['입금완료여부'],acct:['입금계좌번호','계좌','계좌번호','입금계좌']};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
 function fmtWon(n){return (n||0).toLocaleString('ko-KR')}
 function setStep(n){[1,2,3].forEach(i=>$('#st'+i).classList.toggle('on',i<=n));}
@@ -315,7 +317,7 @@ function onSheetChange(){
   const owners=new Set();if(map.owner!=null&&map.owner>=0)grid.rows.forEach(r=>{const o=(r.v[map.owner]||'').toString().trim();if(o)owners.add(o);});
   const os=$('#ownerSel');os.innerHTML='<option value="">전체</option>';[...owners].sort().forEach(o=>{const e=document.createElement('option');e.value=o;e.textContent=o;os.appendChild(e);});
   const missing=missingRequired(map);
-  const info=document.createElement('div');info.textContent=`시트 ${$('#sheetSel').value}: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행 · `+(missing.length?`찾지 못한 필수 열: ${missing.join(', ')} — 이 시트로는 진행할 수 없습니다`:'필요한 열을 모두 찾았습니다');
+  const info=document.createElement('div');info.textContent=`시트 ${$('#sheetSel').value}: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행 · `+(missing.length?`찾지 못한 필수 열: ${missing.join(', ')} — 이 시트로는 진행할 수 없습니다`:'필요한 열을 모두 찾았습니다')+(missing.length?'':(map.fee!=null&&map.fee>=0?' · 원고료 열 있음(행마다 원고료 건을 따로 만듭니다)':' · 원고료 열 없음(물품대금만 만듭니다)'));
   if(missing.length)info.style.color='var(--bad)';
   $('#inputInfo').appendChild(info);$('#btnParse').disabled=!!missing.length;
 }
@@ -331,7 +333,7 @@ function findHeader(aoa){
   }
   return null;
 }
-const EXACT_ONLY=new Set(['acct','amount','paid','memo']);   // 송금에 직결되는 열은 정확히 같은 이름만 인정
+const EXACT_ONLY=new Set(['acct','amount','paid','memo','fee']);   // 송금에 직결되는 열은 정확히 같은 이름만 인정
 const REQUIRED=['acct','amount','paid','memo'];
 function mapColumns(hdr){
   const H=hdr.map(v=>String(v||'').replace(/\s+/g,''));const map={};
@@ -364,13 +366,17 @@ $('#btnPaste').addEventListener('click',()=>{
   buildRows({hi,map,rows},'붙여넣기');
 });
 $('#btnParse').addEventListener('click',()=>{const g=currentGrid();if(g)buildRows(g,$('#sheetSel').value);});
+['#feeMode','#feeMemo'].forEach(id=>$(id).addEventListener('change',()=>{if(!ROWS.length||!WB)return;const n=ROWS.filter(r=>r.edited).length;if(n&&!window.confirm(`설정을 바꾸면 표를 다시 만듭니다. 직접 고친 ${n}건의 수정이 사라집니다. 계속할까요?`))return;const g=currentGrid();if(g){buildRows(g,$('#sheetSel').value);toast('원고료 설정을 반영해 표를 다시 만들었습니다');}}));
 
 /* ===================== 행 구성 + 검증 ===================== */
 function buildRows(grid,srcName){
   const {map,rows}=grid;
   const miss=missingRequired(map);if(miss.length){toast('찾지 못한 필수 열: '+miss.join(', '));return;}
   const owner=$('#ownerSel').value;
-  ROWS=[];let skipped=0,noAmt=0;
+  ROWS=[];let skipped=0,noAmt=0,feeRows=0,noFee=0;
+  const feeMode=$('#feeMode').value,feeMemoMode=$('#feeMemo').value;
+  const hasFeeCol=map.fee!=null&&map.fee>=0;
+  const feeMemoFor=m=>feeMemoMode==='fixed'?'원고료':m;
   rows.forEach((row,i)=>{const r=row.v;
     const get=k=>(map[k]==null||map[k]<0)?'':r[map[k]];
     const paid=String(get('paid')||'').trim();
@@ -380,14 +386,25 @@ function buildRows(grid,srcName){
     const raw=String(get('acct')||'').trim();
     const amountRaw=get('amount');
     const amt=parseAmount(amountRaw);
-    if(!raw&&!(amt>0)){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외
-    const amtMissing=!Number.isFinite(amt);const rawMissing=!raw;if(amtMissing||rawMissing)noAmt++;   // 금액·계좌가 비어 있는 행: '아직 보낼 수 없는 행'으로 체크 해제
+    const feeRaw=hasFeeCol?get('fee'):'';
+    const feeEmpty=feeRaw==null||String(feeRaw).trim()==='';
+    const fee=feeEmpty?NaN:parseAmount(feeRaw);
+    if(!raw&&!(amt>0)&&!(fee>0)){skipped++;return;}   // 계좌도 금액도 없는 미완성 행은 제외
+    const wantGoods=feeMode!=='fee';
+    const wantFee=feeMode!=='goods'&&hasFeeCol&&!feeEmpty&&fee!==0;   // 원고료 칸이 비어 있거나 0이면 원고료 건 없음. 글자 등 읽을 수 없는 값은 오류 건으로 남겨 보이게 함
+    if(!wantGoods&&!wantFee){noFee++;return;}
     const p=parseAccount(raw);
-    ROWS.push({i,srcRow:row.src,src:srcName,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:String(get('memo')??'').replace(/[\r\n]+/g,' '),
-      amountRaw,amount:amt,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:p.notes,phard:p.hard,acctCellType:row.t||'',paid,include:!(amtMissing||rawMissing),edited:false});
+    const memo=String(get('memo')??'').replace(/[\r\n]+/g,' ');
+    const mk=(kind,aRaw,a,m)=>{
+      const amtMissing=!Number.isFinite(a);const rawMissing=!raw;if(amtMissing||rawMissing)noAmt++;   // 금액·계좌가 비어 있는 건: '아직 보낼 수 없는 건'으로 체크 해제
+      ROWS.push({i:ROWS.length,srcRow:row.src,src:srcName,kind,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:m,
+        amountRaw:aRaw,amount:a,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:[...p.notes],phard:[...(p.hard||[])],acctCellType:row.t||'',paid,include:!(amtMissing||rawMissing),edited:false});
+    };
+    if(wantGoods)mk('goods',amountRaw,amt,memo);
+    if(wantFee){feeRows++;mk('fee',feeRaw,fee,feeMemoFor(memo));}
   });
   validateAll();
-  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이나 계좌가 비어 있는 행 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 채우고 다시 올리면 포함됩니다).`:'');
+  $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이나 계좌가 비어 있는 건 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 채우고 다시 올리면 포함됩니다). `:'')+(feeRows?(feeMode==='fee'?`원고료가 적힌 행 ${feeRows}개의 원고료 건만 만들었습니다. `:`원고료가 적힌 행 ${feeRows}개는 원고료 건을 따로 추가했습니다. `):'')+(noFee?`원고료가 없는 행 ${noFee}개는 "원고료만" 설정이라 뺐습니다. `:'')+(!hasFeeCol&&feeMode!=='goods'?'이 시트에는 원고료 열이 없어 물품대금만 만들었습니다. ':'');
   $('#sec2').hidden=false;$('#sec3').hidden=false;setStep(2);
   $('#fname').value=`대량이체_${ymd(new Date()).replace(/-/g,'')}`;
   FILTER=ROWS.some(r=>r.level==='bad'&&r.include)?'bad':'all';document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));
@@ -412,15 +429,16 @@ function validateAll(){
     if(r.raw&&!r.holder)issues.push(['bad','예금주 없음 → 예금주 칸에 이름 입력']);
     else if(/\s/.test(r.holder))issues.push(['bad','예금주에 띄어쓰기 → 붙여서 입력']);
     else if(r.holder.length>20)issues.push(['bad','예금주 20자 초과 → 줄이기']);
-    if(!Number.isFinite(r.amount))issues.push(['bad','금액이 비어 있음 → 시트에서 최종금액을 채운 뒤 다시 올리면 포함됩니다']);
-    else if(r.amount<=0)issues.push(['bad','금액이 0 → 시트 최종금액 확인']);
+    const amtCol=r.kind==='fee'?'원고료':'최종금액';
+    if(!Number.isFinite(r.amount))issues.push(['bad',r.kind==='fee'&&r.amountRaw!==''?`원고료 칸을 숫자로 읽을 수 없음("${String(r.amountRaw).slice(0,12)}") → 시트에서 숫자만 남기기`:`금액이 비어 있음 → 시트에서 ${amtCol}을 채운 뒤 다시 올리면 포함됩니다`]);
+    else if(r.amount<=0)issues.push(['bad',`금액이 0 이하 → 시트 ${amtCol} 확인`]);
     else if(!Number.isInteger(r.amount))issues.push(['bad','금액에 소수점 → 정수로']);
     if(r.memo.length>10)issues.push(['bad',`입금명 ${r.memo.length}자 → 10자 이내로 줄이기`]);
     if(r.acctCellType==='n')issues.push(['warn','원본 셀이 숫자 형식 → 앞자리 0이 빠졌을 수 있음, 카톡 원문과 대조']);
     if(r.raw)(r.phard||[]).forEach(h=>issues.push(['bad',h.msg]));
     r.pnotes.forEach(n=>issues.push(['warn',n]));
     if(Number.isFinite(r.amount)&&r.amount>5000000)issues.push(['warn','금액이 500만원 초과 → 금액 확인']);
-    const key=`${r.acct}|${r.amount}|${r.memo}`;
+    const key=`${r.acct}|${r.amount}|${r.memo}|${r.kind}`;
     // 같은 메시지 중복 제거
     const seenMsg=new Set();r.key=key;r.issues=issues.filter(([lv,t])=>{const k=lv+t;if(seenMsg.has(k))return false;seenMsg.add(k);return true;});
     r.level=issues.some(x=>x[0]==='bad')?'bad':issues.some(x=>x[0]==='warn')?'warn':'ok';
@@ -431,7 +449,7 @@ function sheetLabel(){const n=$('#sheetSel').value;return n?`${n} 시트`:'시�
 function renderErrPanel(){
   const bad=ROWS.filter(r=>r.level==='bad').sort((a,b)=>(a.srcRow||0)-(b.srcRow||0));
   const panel=$('#errPanel');panel.hidden=!bad.length;if(!bad.length)return;
-  const lines=bad.map(r=>`${sheetLabel()} ${r.srcRow||'?'}행 · ${r.orderer||r.holder||'이름 없음'}${r.include?'':' (이번엔 제외됨)'}: ${r.issues.filter(x=>x[0]==='bad').map(x=>x[1]).join(' / ')}`);
+  const lines=bad.map(r=>`${sheetLabel()} ${r.srcRow||'?'}행 · ${r.orderer||r.holder||'이름 없음'}${r.kind==='fee'?' · 원고료 건':''}${r.include?'':' (이번엔 제외됨)'}: ${r.issues.filter(x=>x[0]==='bad').map(x=>x[1]).join(' / ')}`);
   $('#errTitle').textContent=`오류 ${bad.length}건 — 구글 스프레드시트에서 아래 행을 확인해 주세요`;
   $('#errList').innerHTML=lines.map(l=>`<li>${esc(l)}</li>`).join('');
   panel.dataset.text=lines.join('\n');
@@ -440,14 +458,15 @@ $('#btnCopyErr').addEventListener('click',()=>{const t=$('#errPanel').dataset.te
 function renderTable(){
   renderErrPanel();
   const inc=ROWS.filter(r=>r.include&&r.level!=='bad');
-  $('#kTotal').textContent=ROWS.length;$('#kInc').textContent=inc.length;
+  const nG=ROWS.filter(r=>r.kind==='goods').length,nF=ROWS.length-nG;
+  $('#kTotal').textContent=ROWS.length;$('#kTotalL').textContent=nF?`대상 건 (물품대금 ${nG} · 원고료 ${nF})`:'대상 건';$('#kInc').textContent=inc.length;
   $('#kErr').textContent=ROWS.filter(r=>r.level==='bad').length;$('#kWarn').textContent=ROWS.filter(r=>r.level==='warn').length;
   $('#kSum').textContent=fmtWon(inc.reduce((a,r)=>a+(r.amount||0),0));
   const q=QUERY.toLowerCase();
   const list=ROWS.filter(r=>{
     if(FILTER==='off')return !r.include;
     if(FILTER!=='all'&&r.level!==FILTER)return false;
-    if(q&&!(r.holder+' '+r.orderer+' '+r.acct+' '+r.memo+' '+r.raw).toLowerCase().includes(q))return false;
+    if(q&&!(r.holder+' '+r.orderer+' '+r.acct+' '+r.memo+' '+r.raw+' '+(r.kind==='fee'?'원고료':'물품대금')).toLowerCase().includes(q))return false;
     return true;
   });
   const order={bad:0,warn:1,ok:2};
@@ -455,6 +474,7 @@ function renderTable(){
   $('#tbody').innerHTML=list.map(r=>`<tr class="${r.level} ${r.include?'':'off'}" data-i="${r.i}">
     <td><input type="checkbox" class="inc" ${r.include?'checked':''}></td>
     <td>${r.level==='bad'?'<span class="tag bad">오류</span>':r.level==='warn'?'<span class="tag warn">확인</span>':'<span class="tag ok">정상</span>'}</td>
+    <td>${r.kind==='fee'?'<span class="tag info">원고료</span>':'<span class="muted">물품대금</span>'}</td>
     <td class="issues">${r.issues.length?`<div style="font-weight:700;margin-bottom:2px">${esc(sheetLabel())} ${r.srcRow||'?'}행 · ${esc(r.orderer||r.holder||'이름 없음')}</div>`:''}${r.issues.length?r.issues.map(([lv,t])=>`<span class="tag ${lv}">${esc(t)}</span>`).join(''):'<span class="muted">-</span>'}</td>
     <td class="muted">${r.srcRow||''}</td>
     <td>${esc(r.orderer)}</td>
@@ -464,16 +484,17 @@ function renderTable(){
     <td><input type="text" class="holder" value="${esc(r.holder)}"></td>
     <td class="amt">${Number.isFinite(r.amount)?fmtWon(r.amount):'<span class="tag bad">?</span>'}</td>
     <td><input type="text" class="memo" value="${esc(r.memo)}" maxlength="20"></td>
-  </tr>`).join('')||`<tr><td colspan="11" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
+  </tr>`).join('')||`<tr><td colspan="12" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
   $('#cnt').textContent=`${list.length} / ${ROWS.length}행 표시`;
 }
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 $('#tbody').addEventListener('change',e=>{
   const tr=e.target.closest('tr[data-i]');if(!tr)return;const r=ROWS.find(x=>x.i===+tr.dataset.i);if(!r)return;
   if(e.target.classList.contains('inc'))r.include=e.target.checked;
-  if(e.target.classList.contains('bank')){r.bank=e.target.value;r.phard=(r.phard||[]).filter(x=>x.code!=='BANK');}
-  if(e.target.classList.contains('acct')){r.acct=e.target.value.replace(/[^\d]/g,'');r.phard=(r.phard||[]).filter(x=>x.code!=='ACCT');r.pnotes=(r.pnotes||[]).filter(n=>!/계좌|숫자/.test(n));}
-  if(e.target.classList.contains('holder')){r.holder=e.target.value.replace(/\s+/g,'');r.phard=(r.phard||[]).filter(x=>x.code!=='HOLDER');}
+  const shared=ROWS.filter(x=>x.src===r.src&&x.srcRow===r.srcRow);   // 같은 시트 행에서 나온 물품대금·원고료 건: 은행·계좌·예금주는 함께 수정
+  if(e.target.classList.contains('bank')){const v=e.target.value;shared.forEach(x=>{x.bank=v;x.phard=(x.phard||[]).filter(y=>y.code!=='BANK');x.edited=true;});}
+  if(e.target.classList.contains('acct')){const v=e.target.value.replace(/[^\d]/g,'');shared.forEach(x=>{x.acct=v;x.phard=(x.phard||[]).filter(y=>y.code!=='ACCT');x.pnotes=(x.pnotes||[]).filter(n=>!/계좌|숫자/.test(n));x.edited=true;});}
+  if(e.target.classList.contains('holder')){const v=e.target.value.replace(/\s+/g,'');shared.forEach(x=>{x.holder=v;x.phard=(x.phard||[]).filter(y=>y.code!=='HOLDER');x.edited=true;});}
   if(e.target.classList.contains('memo'))r.memo=e.target.value.replace(/[\r\n]+/g,' ');
   r.edited=true;validateAll();renderTable();
 });
@@ -514,7 +535,8 @@ $('#btnDown').addEventListener('click',async()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   const sum=inc.reduce((a,r)=>a+r.amount,0);
   const excluded=ROWS.filter(r=>!r.include).length;
-  $('#downInfo').innerHTML=`<b>${esc(name)}</b> 생성 · <b>${inc.length}건</b> · 합계 <b>${fmtWon(sum)}원</b> · 다시 읽어 행별 은행·계좌·금액·예금주·입금명이 모두 일치함을 확인했습니다.`+(excluded?` <span style="color:var(--warn)">체크 해제로 제외한 행 ${excluded}건.</span>`:'')+` 시트 이름 "대량이체", 1행부터 데이터, A·B·D·E·F열 텍스트.`;
+  const incF=inc.filter(r=>r.kind==='fee').length;
+  $('#downInfo').innerHTML=`<b>${esc(name)}</b> 생성 · <b>${inc.length}건</b>${incF?` (물품대금 ${inc.length-incF} · 원고료 ${incF})`:''} · 합계 <b>${fmtWon(sum)}원</b> · 다시 읽어 행별 은행·계좌·금액·예금주·입금명이 모두 일치함을 확인했습니다.`+(excluded?` <span style="color:var(--warn)">체크 해제로 제외한 행 ${excluded}건.</span>`:'')+` 시트 이름 "대량이체", 1행부터 데이터, A·B·D·E·F열 텍스트.`;
   setStep(3);
   // 이력 저장 (계좌 원문 대신 지문)
   const fps=await Promise.all(inc.map(r=>fp(r.key)));
