@@ -142,13 +142,13 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       <div class="tblwrap">
         <table>
           <thead><tr>
-            <th><input type="checkbox" id="chkAll" title="표시된 행 전체 포함/제외"></th><th>상태</th><th>종류</th><th>확인 사항 · 할 일</th><th>행</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th>
+            <th><input type="checkbox" id="chkAll" title="표시된 건 전체 포함/제외"></th><th>상태</th><th>종류</th><th>확인 사항 · 할 일</th><th>행</th><th>주문자명</th><th>원문(입금계좌번호)</th><th>은행</th><th>계좌번호</th><th>예금주</th><th style="text-align:right">금액</th><th>입금명(통장표시)</th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
       </div>
       <div class="note" id="skipInfo"></div>
-      <div class="note"><b>원고료</b>가 적힌 행은 물품대금 1건과 원고료 1건, 두 줄로 나뉘어 각각 이체됩니다(최종금액 = 물품대금). 은행·계좌·예금주를 한쪽에서 고치면 다른 쪽도 같이 바뀝니다. 같은 사람에게 여러 건이면 행마다 따로 송금됩니다. 예금주가 주문자명과 달라도(가족 계좌 등) 그대로 보냅니다. 국민은행은 예금주가 실제와 달라도 이체가 실행되므로, 업로드 후 은행 화면의 "예금주조회"로 한 번 확인하면 안전합니다.</div>
+      <div class="note"><b id="modeNote"></b> 물품대금·원고료 두 건의 은행·계좌·예금주는 한쪽에서 고치면 다른 쪽도 같이 바뀝니다. 같은 사람에게 여러 건이면 행마다 따로 송금됩니다. 예금주가 주문자명과 달라도(가족 계좌 등) 그대로 보냅니다. 국민은행은 예금주가 실제와 달라도 이체가 실행되므로, 업로드 후 은행 화면의 "예금주조회"로 한 번 확인하면 안전합니다.</div>
     </div>
   </section>
 
@@ -182,7 +182,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 새로고침 (GitHub Pages 10분 캐시 대응) */
-window.BUILD='p4';
+window.BUILD='p5';
 (async()=>{try{if(sessionStorage.getItem('pay_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('pay_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="vendor/xlsx.full.min.js?v=p2"></script>
@@ -311,14 +311,16 @@ function loadFile(f){
   r.readAsArrayBuffer(f);
 }
 $('#sheetSel').addEventListener('change',onSheetChange);
+function invalidateReview(){LAST=null;if(!ROWS.length)return;ROWS=[];$('#sec2').hidden=true;$('#sec3').hidden=true;$('#downInfo').textContent='';setStep(1);toast('입력이 바뀌어 이전 검토 표를 지웠습니다. "검토 화면으로"를 다시 눌러 주세요');}   // 다른 파일·시트·진행자를 고르면 이전 결과로 파일을 만들 수 없게
+$('#ownerSel').addEventListener('change',invalidateReview);
 function onSheetChange(){
-  LAST=null;   // 새 파일·다른 시트를 고르면 이전 검토 입력은 버림 (설정 변경은 다음 "검토 화면으로"에서 반영)
+  invalidateReview();
   const grid=currentGrid(); if(!grid)return;
   const {hi,map}=grid;
   const owners=new Set();if(map.owner!=null&&map.owner>=0)grid.rows.forEach(r=>{const o=(r.v[map.owner]||'').toString().trim();if(o)owners.add(o);});
   const os=$('#ownerSel');os.innerHTML='<option value="">전체</option>';[...owners].sort().forEach(o=>{const e=document.createElement('option');e.value=o;e.textContent=o;os.appendChild(e);});
   const missing=missingRequired(map);
-  const info=document.createElement('div');info.textContent=`시트 ${$('#sheetSel').value}: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행 · `+(missing.length?`찾지 못한 필수 열: ${missing.join(', ')} — 이 시트로는 진행할 수 없습니다`:'필요한 열을 모두 찾았습니다')+(missing.length?'':(map.fee!=null&&map.fee>=0?' · 원고료 열 있음(행마다 원고료 건을 따로 만듭니다)':' · 원고료 열 없음(물품대금만 만듭니다)'));
+  const info=document.createElement('div');info.textContent=`시트 ${$('#sheetSel').value}: 헤더 ${hi+1}행, 데이터 ${grid.rows.length}행 · `+(missing.length?`찾지 못한 필수 열: ${missing.join(', ')} — 이 시트로는 진행할 수 없습니다`:'필요한 열을 모두 찾았습니다')+(missing.length?'':(map.fee!=null&&map.fee>=0?' · 원고료 열 있음(행마다 원고료 건을 따로 만듭니다)':' · 원고료 열 없음(원고료 건은 만들 수 없습니다)'));
   if(missing.length)info.style.color='var(--bad)';
   $('#inputInfo').appendChild(info);$('#btnParse').disabled=!!missing.length;
 }
@@ -371,7 +373,8 @@ $('#btnParse').addEventListener('click',()=>{const g=currentGrid();if(g)buildRow
   if(!LAST)return;   // 아직 검토 표를 만들기 전이면 다음 "검토 화면으로"에서 반영
   const n=ROWS.filter(r=>r.edited).length;
   if(n&&!window.confirm(`설정을 바꾸면 표를 다시 만듭니다. 직접 고친 ${n}건의 수정이 사라집니다. 계속할까요?`)){$('#feeMode').value=LAST.feeMode;$('#feeMemo').value=LAST.feeMemoMode;return;}   // 취소: 화면 선택값을 적용 중인 설정으로 되돌림
-  buildRows(LAST.grid,LAST.srcName);toast('원고료 설정을 반영해 표를 다시 만들었습니다');   // 붙여넣기 입력이든 파일이든 마지막으로 검토한 그 데이터로 재구성
+  $('#ownerSel').value=LAST.owner;   // 검토표를 만들 때의 진행자 그대로 (그 사이 바꾼 선택은 다음 "검토 화면으로"에서 적용)
+  const res=buildRows(LAST.grid,LAST.srcName);if(res&&!res.warned)toast('원고료 설정을 반영해 표를 다시 만들었습니다');   // 붙여넣기 입력이든 파일이든 마지막으로 검토한 그 데이터로 재구성
 }));
 
 /* ===================== 행 구성 + 검증 ===================== */
@@ -379,10 +382,10 @@ function buildRows(grid,srcName){
   const {map,rows}=grid;
   const miss=missingRequired(map);if(miss.length){toast('찾지 못한 필수 열: '+miss.join(', '));return;}
   const owner=$('#ownerSel').value;
-  ROWS=[];let skipped=0,noAmt=0,feeRows=0,noFee=0;
+  ROWS=[];let skipped=0,noAmt=0,feeRows=0,noFee=0,feeBad=0;
   const feeMode=$('#feeMode').value,feeMemoMode=$('#feeMemo').value;
   const hasFeeCol=map.fee!=null&&map.fee>=0;
-  LAST={grid,srcName,feeMode,feeMemoMode};
+  LAST={grid,srcName,feeMode,feeMemoMode,owner};
   const feeMemoFor=m=>feeMemoMode==='fixed'?'원고료':m;
   rows.forEach((row,i)=>{const r=row.v;
     const get=k=>(map[k]==null||map[k]<0)?'':r[map[k]];
@@ -403,21 +406,26 @@ function buildRows(grid,srcName){
     const p=parseAccount(raw);
     const memo=String(get('memo')??'').replace(/[\r\n]+/g,' ');
     const mk=(kind,aRaw,a,m)=>{
-      const amtMissing=!Number.isFinite(a);const rawMissing=!raw;if(amtMissing||rawMissing)noAmt++;   // 금액·계좌가 비어 있는 건: '아직 보낼 수 없는 건'으로 체크 해제
+      const amtEmpty=aRaw==null||String(aRaw).trim()==='';const amtBadText=!amtEmpty&&!Number.isFinite(a);   // 빈칸 vs 읽을 수 없는 글자
+      const amtMissing=amtEmpty||amtBadText;const rawMissing=!raw;
+      if(amtBadText)feeBad++;else if(amtEmpty||rawMissing)noAmt++;   // 빈 값은 '아직 보낼 수 없는 건'으로 체크 해제, 글자는 오류로 남겨 고치기 전엔 파일 생성 차단
       ROWS.push({i:ROWS.length,gid:i,srcRow:row.src,src:srcName,kind,date:ds,owner:String(get('owner')||'').trim(),orderer:String(get('orderer')||'').trim(),memo:m,
-        amountRaw:aRaw,amount:a,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:[...p.notes],phard:[...(p.hard||[])],acctCellType:row.t||'',paid,include:!(amtMissing||rawMissing),edited:false});
+        amountRaw:aRaw,amount:a,raw,bank:p.bank?p.bank.code:'',acct:p.acct,holder:p.holder,pnotes:[...p.notes],phard:[...(p.hard||[])],acctCellType:row.t||'',paid,include:amtBadText||!(amtMissing||rawMissing),edited:false});
     };
     if(wantGoods)mk('goods',amountRaw,amt,memo);
     if(wantFee){feeRows++;mk('fee',feeRaw,fee,feeMemoFor(memo));}
   });
   validateAll();
   $('#skipInfo').textContent=(skipped?`계좌와 금액이 모두 없는 미완성 행 ${skipped}개는 대상에서 뺐습니다. `:'')+(noAmt?`금액이나 계좌가 비어 있는 건 ${noAmt}개는 체크를 해제해 두었습니다(시트에서 채우고 다시 올리면 포함됩니다). `:'')+(feeRows?(feeMode==='fee'?`원고료가 적힌 행 ${feeRows}개의 원고료 건만 만들었습니다. `:`원고료가 적힌 행 ${feeRows}개는 원고료 건을 따로 추가했습니다. `):'')+(noFee?`원고료가 없는 행 ${noFee}개는 "원고료만" 설정이라 뺐습니다. `:'')+(!hasFeeCol&&feeMode==='both'?'이 시트에는 원고료 열이 없어 물품대금만 만들었습니다. ':'')+(!hasFeeCol&&feeMode==='fee'?'이 시트에는 원고료 열이 없어 만들 건이 없습니다. 원고료 설정을 "물품대금 1건 + 원고료 1건"이나 "물품대금만"으로 바꿔 주세요. ':'');
-  if(!hasFeeCol&&feeMode==='fee')toast('이 시트에는 원고료 열이 없습니다. 원고료 설정을 바꿔 주세요');
+  $('#skipInfo').textContent+=(feeBad?`금액 칸에 숫자가 아닌 값이 있는 건 ${feeBad}개는 오류로 남겨 두었습니다(시트에서 숫자로 고치거나 체크를 해제해야 파일을 만들 수 있습니다). `:'');
+  const warned=!hasFeeCol&&feeMode==='fee';if(warned)toast('이 시트에는 원고료 열이 없습니다. 원고료 설정을 바꿔 주세요');
+  $('#modeNote').textContent=feeMode==='goods'?'지금 설정은 "물품대금만"입니다. 원고료 건은 만들지 않습니다(원고료는 나중에 "원고료만"으로 따로 만들 수 있습니다).':feeMode==='fee'?'지금 설정은 "원고료만"입니다. 물품대금 건은 만들지 않고, 원고료가 적힌 행만 원고료 1건씩 만듭니다.':'원고료가 적힌 행은 물품대금 1건과 원고료 1건, 두 줄로 나뉘어 각각 이체됩니다(최종금액 = 물품대금). 원고료가 빈칸이거나 0이면 원고료 건은 만들지 않습니다.';
   $('#sec2').hidden=false;$('#sec3').hidden=false;setStep(2);
   $('#fname').value=`대량이체_${ymd(new Date()).replace(/-/g,'')}`;
   FILTER=ROWS.some(r=>r.level==='bad'&&r.include)?'bad':'all';document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));
   renderTable();
   window.scrollTo({top:$('#sec2').offsetTop-10,behavior:'smooth'});
+  return {warned};
 }
 function parseAmount(v){
   if(v===''||v==null)return NaN;
@@ -542,9 +550,9 @@ $('#btnDown').addEventListener('click',async()=>{
   const blob=new Blob([out],{type:fmt==='xls'?'application/vnd.ms-excel':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   const sum=inc.reduce((a,r)=>a+r.amount,0);
-  const excluded=ROWS.filter(r=>!r.include).length;
+  const excluded=ROWS.filter(r=>!r.include).length,excludedFee=ROWS.filter(r=>!r.include&&r.kind==='fee').length;
   const incF=inc.filter(r=>r.kind==='fee').length;
-  $('#downInfo').innerHTML=`<b>${esc(name)}</b> 생성 · <b>${inc.length}건</b>${incF?` (물품대금 ${inc.length-incF} · 원고료 ${incF})`:''} · 합계 <b>${fmtWon(sum)}원</b> · 다시 읽어 행별 은행·계좌·금액·예금주·입금명이 모두 일치함을 확인했습니다.`+(excluded?` <span style="color:var(--warn)">체크 해제로 제외한 행 ${excluded}건.</span>`:'')+` 시트 이름 "대량이체", 1행부터 데이터, A·B·D·E·F열 텍스트.`;
+  $('#downInfo').innerHTML=`<b>${esc(name)}</b> 생성 · <b>${inc.length}건</b>${incF?` (물품대금 ${inc.length-incF} · 원고료 ${incF})`:''} · 합계 <b>${fmtWon(sum)}원</b> · 다시 읽어 행별 은행·계좌·금액·예금주·입금명이 모두 일치함을 확인했습니다.`+(excluded?` <span style="color:var(--warn)">체크 해제로 제외한 ${excluded}건${excludedFee?`(그중 원고료 건 ${excludedFee})`:''}은 이 파일에 없습니다.</span>`:'')+` 시트 이름 "대량이체", 1행부터 데이터, A·B·D·E·F열 텍스트.`;
   setStep(3);
   // 이력 저장 (계좌 원문 대신 지문)
   const fps=await Promise.all(inc.map(r=>fp(r.key)));
