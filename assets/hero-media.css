@@ -5,3 +5,18 @@
 #hero-video-toggle{position:absolute;right:24px;bottom:20px;z-index:2;border:1px solid #c6d8eb;border-radius:6px;background:#10243ae6;color:white;padding:10px 14px;font:inherit;font-size:13px;cursor:pointer;min-height:44px}
 #hero-video-toggle:focus-visible{outline:3px solid white;outline-offset:4px}
 @media(max-width:720px){.hero-with-media::before{background:linear-gradient(90deg,rgba(8,28,58,.9),rgba(8,28,58,.55))}}
+
+/* v2: 라이트 히어로 — 파스텔 하늘 영상이 보이도록 네이비 오버레이를 걷어내고 잉크 타이포로 전환 (studio.css 다크 규칙보다 높은 특이도) */
+.hero-v2.hero-with-media.studio-hero{background-color:#f4f8fd;color:#16222e}
+.hero-v2.hero-with-media.studio-hero::before{background:linear-gradient(90deg,rgba(244,248,253,.86) 0%,rgba(244,248,253,.66) 48%,rgba(244,248,253,.14) 100%)}
+.hero-v2.hero-with-media.studio-hero h1,.hero-v2.hero-with-media.studio-hero h1 span{color:#16222e}
+.hero-v2.hero-with-media.studio-hero .hero-kicker{color:#c9523c}.hero-v2.hero-with-media.studio-hero .hero-kicker:before{background:#c9523c}
+.hero-v2.hero-with-media.studio-hero .hero-copy{color:#3a4a5c}.hero-v2.hero-with-media.studio-hero .hero-note{color:#5a6b7e}
+.hero-v2.hero-with-media.studio-hero .action{color:#16222e;border-color:#16222e}
+.hero-v2.hero-with-media.studio-hero .action.primary{background:#ff947f;color:#122235;border-color:#ff947f}
+.hero-v2.hero-with-media.studio-hero a:focus-visible{outline-color:#16222e}
+.hero-v2.hero-with-media.studio-hero .showcase-caption{color:#16222e}.hero-v2.hero-with-media.studio-hero .showcase-caption span:last-child{color:#5a6b7e}
+.hero-v2.hero-with-media.studio-hero .showcase-window{border-color:#dde7f1;box-shadow:0 24px 60px rgba(22,34,46,.16)}
+.hero-v2.hero-with-media.studio-hero .showcase-foot{color:#3a4a5c}.hero-v2.hero-with-media.studio-hero .showcase-foot strong{color:#16222e}
+.hero-v2.hero-with-media.studio-hero #hero-video-toggle{border-color:#16222e;background:#16222e;color:#fff}
+@media(max-width:720px){.hero-v2.hero-with-media.studio-hero::before{background:linear-gradient(180deg,rgba(244,248,253,.84),rgba(244,248,253,.7))}}
