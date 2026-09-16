@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23142334'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>정산 이체 파일 만들기 | jisoar</title>
 <style>
-:root{--bg:#f7f8fa;--paper:#fff;--ink:#142334;--ink2:#526174;--ink3:#7d8a9b;--line:#e1e6ec;--line2:#cdd6e0;--panel:#f2f5f9;--accent:#174eca;--accent-soft:#e9effc;--coral:#ff745c;
+:root{--bg:#f7f8fa;--paper:#fff;--ink:#142334;--ink2:#526174;--ink3:#5f6e84;--line:#e1e6ec;--line2:#cdd6e0;--panel:#f2f5f9;--accent:#174eca;--accent-soft:#e9effc;--coral:#ff745c;
   --ok:#0f7a3d;--ok-soft:#e4f4ea;--warn:#a26a0e;--warn-soft:#fbf1dc;--bad:#c0392b;--bad-soft:#fdecea;--info:#174eca;--info-soft:#e9effc;
   --r:22px;--r2:14px;--sans:'Pretendard Variable',Pretendard,-apple-system,'Segoe UI','Malgun Gothic',system-ui,sans-serif;--disp:'Clash Display','Pretendard Variable',Pretendard,sans-serif;--ease:cubic-bezier(.2,.7,.2,1)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -24,18 +24,18 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1
 .brand .dot{color:var(--coral)}
 .bar-tag{font-size:13px;font-weight:600;color:var(--ink2);border:1px solid var(--line2);border-radius:999px;padding:6px 14px;background:var(--paper)}
 /* 히어로 */
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center;padding:34px 0 10px}
+.hero{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:center;padding:26px 0 6px}
+.hero:has(.hero-art[hidden]){grid-template-columns:1fr}
 .eyebrow{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
 .eyebrow i{display:block;width:26px;height:2px;background:var(--coral)}
 h1{font-size:clamp(34px,4.2vw,54px);font-weight:800;letter-spacing:-.04em;line-height:1.14;margin-top:16px}
-.lead{color:var(--ink2);margin-top:16px;font-size:16px;line-height:1.7;max-width:520px}
-.privacy{display:inline-flex;gap:9px;align-items:center;margin-top:22px;font-size:13px;font-weight:700;color:var(--ink);border:1px solid var(--line2);border-radius:999px;padding:9px 16px;background:var(--paper)}
-.privacy .dot{width:9px;height:9px;background:var(--ok);border-radius:99px;flex:none}
-.hero-art{position:relative;border-radius:var(--r);overflow:hidden;background:#e6eef8;aspect-ratio:4/3;box-shadow:0 1px 0 var(--line)}
-.hero-art img{width:100%;height:100%;object-fit:cover;display:block}
-.hero-art figcaption{position:absolute;left:18px;bottom:16px;font-size:13px;font-weight:700;color:#fff;background:rgba(20,35,52,.72);padding:7px 12px;border-radius:999px}
-.hero-art.empty{display:grid;place-items:center;background:#e6eef8}
-.hero-art.empty figcaption{position:static;background:none;color:var(--ink2);font-weight:600}
+.lead{color:var(--ink2);margin-top:14px;font-size:16px;line-height:1.7;max-width:560px}
+.privacy{display:flex;gap:8px;align-items:center;margin-top:18px;font-size:13.5px;font-weight:600;color:var(--ink2)}
+.privacy svg{width:16px;height:16px;flex:none;color:var(--ink)}
+.hero-art{width:100%;max-width:360px;justify-self:end}
+.hero-art img{border-radius:var(--r);aspect-ratio:4/3}
+.hero-art img{width:100%;object-fit:cover;display:block}
+.hero-art figcaption{font-size:13px;color:var(--ink3);margin-top:10px}
 /* 단계 */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:30px 0 0}
 .step{padding:13px 16px;border:1px solid var(--line);border-radius:var(--r2);background:var(--paper);font-size:13.5px;font-weight:700;color:var(--ink3);display:flex;gap:11px;align-items:center;transition:all .25s var(--ease)}
@@ -67,7 +67,9 @@ details summary::before{content:"+";display:inline-block;width:18px;font-weight:
 .muted{color:var(--ink3);font-size:12.5px}
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:4px}
 .kpi{padding:16px 14px;border:1px solid var(--line);border-radius:var(--r2);background:var(--paper);text-align:center;transition:border-color .2s}
-.kpi[data-f]:hover{border-color:var(--ink)}
+.kpi[data-f]{cursor:pointer}
+.kpi[data-f]:hover,.kpi[data-f]:focus-visible{border-color:var(--ink);outline:none}
+.kpi.sel{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .kpi .v{font-family:var(--disp);font-size:30px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
 .kpi .l{font-size:12px;color:var(--ink3);font-weight:700;margin-top:6px}
 .kpi.bad .v{color:var(--bad)}.kpi.warn .v{color:var(--warn)}.kpi.ok .v{color:var(--ok)}
@@ -77,17 +79,17 @@ details summary::before{content:"+";display:inline-block;width:18px;font-weight:
 .seg button.on{background:var(--ink);color:#fff}
 #q{font:inherit;font-size:12.5px;padding:8px 12px;border:1px solid var(--line2);border-radius:999px;min-width:220px;background:#fff}
 .tblwrap{overflow:auto;border:1px solid var(--line);border-radius:var(--r2);max-height:70vh}
-table{border-collapse:collapse;width:100%;min-width:1240px;font-size:12.5px}
+table{border-collapse:collapse;width:100%;min-width:1240px;font-size:13px}
 th{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line2);padding:10px 10px;text-align:left;font-size:12px;color:var(--ink2);white-space:nowrap;z-index:1}
 td{border-bottom:1px solid var(--line);padding:7px 10px;vertical-align:middle;white-space:nowrap}
 tr:last-child td{border-bottom:none}
 td.issues{white-space:normal;max-width:340px;min-width:220px;line-height:1.6}
 td.issues .tag{margin:1px 4px 1px 0}
-td input[type=text],td select{font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--line2);border-radius:8px;background:#fff}
+td input[type=text],td select{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--line2);border-radius:8px;background:#fff}
 td input.acct{width:170px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.3px}
 td input.holder{width:90px}td input.memo{width:120px}td select{width:120px}
-tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45}
-.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:7px;margin-right:4px;white-space:nowrap;border:1px solid transparent}
+tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{background:#f4f6f9;color:var(--ink3)}tr.off .tag,tr.off .amt{opacity:.55}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:7px;margin-right:4px;white-space:nowrap;border:1px solid transparent}
 .tag.bad{color:var(--bad);background:var(--bad-soft)}.tag.warn{color:var(--warn);background:var(--warn-soft)}.tag.info{color:var(--info);background:var(--info-soft)}.tag.ok{color:var(--ok);background:var(--ok-soft)}
 .raw{color:var(--ink3);max-width:260px;overflow:hidden;text-overflow:ellipsis}
 .amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
@@ -98,12 +100,14 @@ tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
 .note.box{padding:13px 16px;border-radius:var(--r2);background:var(--panel);border:1px solid var(--line)}
 #errPanel{border-radius:var(--r2)!important;border-color:#f3c9c4!important;background:var(--bad-soft)!important}
 .hist{font-size:12.5px}
-.hist table{min-width:0}
+.hist .tw{overflow:auto}.hist table{min-width:520px}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;font-weight:700;padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;max-width:calc(100vw - 32px);text-align:center}
 .toast.show{opacity:1}
 [hidden]{display:none!important}
-@media (max-width:900px){.hero{grid-template-columns:1fr;gap:22px}.hero-art{aspect-ratio:16/9}}
-@media (max-width:760px){.steps{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.bar{height:60px}.brand{font-size:22px}.card h2,.card .body{padding-left:16px;padding-right:16px}}
+@media (max-width:900px){.hero{grid-template-columns:1fr;gap:22px}.hero-art{display:none}}
+@media (max-width:760px){.steps{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.kpi:last-child{grid-column:span 2}.bar{height:60px}.brand{font-size:22px}.card h2,.card .body{padding-left:16px;padding-right:16px}
+  .seg{flex-wrap:wrap;border-radius:14px;max-width:100%}.seg button{min-height:44px;padding:8px 14px;font-size:14px}
+  .f select,.f input[type=text],td input[type=text],td select,#q,textarea{font-size:16px}#q{min-width:0;width:100%}.btn.sm{min-height:44px}}
 </style>
 </head>
 <body>
@@ -113,10 +117,10 @@ tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
     <div class="hero-txt">
       <div class="eyebrow"><i></i>Payout file builder</div>
       <h1>시트를 넣으면,<br>이체 파일이 나옵니다.</h1>
-      <p class="lead">리뷰체험단 정산 시트(구글 스프레드시트)를 올리면 국민은행 대량이체 업로드 파일을 만들어 드립니다. 계좌번호는 처음부터 끝까지 글자로만 다루어 앞자리 0이 사라지지 않습니다.</p>
-      <div class="privacy"><span class="dot"></span>모든 처리는 이 브라우저 안에서만. 파일도, 계좌 정보도 서버로 보내지 않습니다.</div>
+      <p class="lead">리뷰체험단 정산 시트(구글 스프레드시트)를 올리면 국민은행 대량이체 업로드 파일이 만들어집니다.</p>
+      <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>모든 처리는 이 브라우저 안에서만 이루어집니다. 파일도, 계좌 정보도 서버로 보내지 않습니다.</div>
     </div>
-    <figure class="hero-art"><img src="hero.jpg?v=1" alt="" onerror="this.parentNode.classList.add('empty');this.remove()"><figcaption>매주 반복되는 정산, 타이핑 없이.</figcaption></figure>
+    <figure class="hero-art"><img src="hero.jpg?v=1" alt="" onerror="this.parentNode.hidden=true"><figcaption>매주 반복되는 정산, 타이핑 없이.</figcaption></figure>
   </section>
 
   <div class="steps">
@@ -132,7 +136,7 @@ tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       <div class="drop" id="drop">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
         <b>구글 스프레드시트에서 내려받은 엑셀 파일(.xlsx)을 여기에 끌어다 놓거나 클릭해서 선택</b>
-        <div class="sub">구글시트 메뉴 파일 › 다운로드 › Microsoft Excel(.xlsx). 월 시트가 여러 개면 아래에서 고릅니다.</div>
+        <div class="sub">구글시트 메뉴 파일 › 다운로드 › Microsoft Excel(.xlsx). 월 시트가 여러 개면 아래에서 고릅니다. 계좌번호는 처음부터 끝까지 글자로만 다루어 앞자리 0이 사라지지 않습니다.</div>
         <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
       </div>
       <div class="row" id="sheetRow" hidden>
@@ -164,10 +168,10 @@ tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
         <ol id="errList" style="margin:8px 0 0 18px;line-height:1.7"></ol>
       </div>
       <div class="kpis">
-        <div class="kpi" data-f="all" style="cursor:pointer"><div class="v" id="kTotal">0</div><div class="l" id="kTotalL">대상 건</div></div>
-        <div class="kpi ok" data-f="ok" style="cursor:pointer"><div class="v" id="kInc">0</div><div class="l">포함(이체 파일에 들어감)</div></div>
-        <div class="kpi bad" data-f="bad" style="cursor:pointer"><div class="v" id="kErr">0</div><div class="l">오류 (누르면 목록만 보기)</div></div>
-        <div class="kpi warn" data-f="warn" style="cursor:pointer"><div class="v" id="kWarn">0</div><div class="l">확인 권장 (누르면 목록만 보기)</div></div>
+        <div class="kpi" data-f="all" role="button" tabindex="0"><div class="v" id="kTotal">0</div><div class="l" id="kTotalL">대상 건</div></div>
+        <div class="kpi ok" data-f="ok" role="button" tabindex="0"><div class="v" id="kInc">0</div><div class="l">포함(이체 파일에 들어감)</div></div>
+        <div class="kpi bad" data-f="bad" role="button" tabindex="0"><div class="v" id="kErr">0</div><div class="l">오류 (누르면 목록만 보기)</div></div>
+        <div class="kpi warn" data-f="warn" role="button" tabindex="0"><div class="v" id="kWarn">0</div><div class="l">확인 권장 (누르면 목록만 보기)</div></div>
         <div class="kpi"><div class="v" id="kSum">0</div><div class="l">포함 합계(원)</div></div>
       </div>
       <div class="tools">
@@ -213,7 +217,7 @@ tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
     <div class="body hist">
       <div class="muted">언제 몇 건·얼마짜리 파일을 만들었는지 기록만 남깁니다. 이미 보낸 건인지는 시트의 입금완료(O열)로만 판단합니다. 계좌번호 원문은 저장하지 않습니다.</div>
       <div class="tools"><button class="btn light sm" id="btnHistExport">이력 파일로 내보내기</button><label class="btn light sm" style="display:inline-block">이력 불러오기<input type="file" id="histImport" accept=".json" hidden></label><button class="btn light sm" id="btnHistClear">이력 지우기</button></div>
-      <table><thead><tr><th>만든 시각</th><th>파일 이름</th><th style="text-align:right">건수</th><th style="text-align:right">합계</th><th>메모</th></tr></thead><tbody id="histBody"></tbody></table>
+      <div class="tw"><table><thead><tr><th>만든 시각</th><th>파일 이름</th><th style="text-align:right">건수</th><th style="text-align:right">합계</th><th>메모</th></tr></thead><tbody id="histBody"></tbody></table></div>
     </div>
   </section>
 </div>
@@ -221,7 +225,7 @@ tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 새로고침 (GitHub Pages 10분 캐시 대응) */
-window.BUILD='p6';
+window.BUILD='p7';
 (async()=>{try{if(sessionStorage.getItem('pay_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('pay_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="vendor/xlsx.full.min.js?v=p2"></script>
@@ -540,7 +544,8 @@ function renderTable(){
     <td class="amt">${Number.isFinite(r.amount)?fmtWon(r.amount):'<span class="tag bad">?</span>'}</td>
     <td><input type="text" class="memo" value="${esc(r.memo)}" maxlength="20"></td>
   </tr>`).join('')||`<tr><td colspan="12" style="padding:28px;color:var(--ink3)">표시할 행이 없습니다.</td></tr>`;
-  $('#cnt').textContent=`${list.length} / ${ROWS.length}행 표시`;
+  $('#cnt').textContent=`${list.length} / ${ROWS.length}건 표시`;
+  document.querySelectorAll('.kpi[data-f]').forEach(k=>k.classList.toggle('sel',k.dataset.f===FILTER));
 }
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 $('#tbody').addEventListener('change',e=>{
@@ -555,7 +560,9 @@ $('#tbody').addEventListener('change',e=>{
 });
 $('#chkAll').addEventListener('change',e=>{document.querySelectorAll('#tbody tr[data-i]').forEach(tr=>{const r=ROWS.find(x=>x.i===+tr.dataset.i);if(r)r.include=e.target.checked;});renderTable();});
 $('#seg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;FILTER=b.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));renderTable();});
-document.querySelector('.kpis').addEventListener('click',e=>{const k=e.target.closest('.kpi[data-f]');if(!k)return;FILTER=k.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));renderTable();});
+function kpiPick(k){FILTER=k.dataset.f;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x.dataset.f===FILTER));renderTable();}
+document.querySelector('.kpis').addEventListener('click',e=>{const k=e.target.closest('.kpi[data-f]');if(k)kpiPick(k);});
+document.querySelector('.kpis').addEventListener('keydown',e=>{const k=e.target.closest('.kpi[data-f]');if(!k||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();kpiPick(k);});
 $('#q').addEventListener('input',e=>{QUERY=e.target.value.trim();renderTable();});
 $('#btnExcludeBad').addEventListener('click',()=>{ROWS.forEach(r=>{if(r.level==='bad')r.include=false;});renderTable();toast('오류 행을 제외했습니다');});
 $('#btnReparse').addEventListener('click',()=>{const n=ROWS.filter(r=>r.edited).length;if(n&&!window.confirm(`직접 고친 ${n}행의 수정이 사라집니다. 계속할까요?`))return;ROWS.forEach(r=>{const p=parseAccount(r.raw);r.bank=p.bank?p.bank.code:'';r.acct=p.acct;r.holder=p.holder;r.pnotes=p.notes;r.phard=p.hard;r.edited=false;});validateAll();renderTable();});
