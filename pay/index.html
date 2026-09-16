@@ -5,81 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://api.fontshare.com; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' https://cdn.jsdelivr.net https://api.fontshare.com https://cdn.fontshare.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23142334'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>정산 이체 파일 만들기 | jisoar</title>
 <style>
-:root{--ink:#111;--ink2:#444;--ink3:#8a8f98;--line:#e3e5e9;--line2:#c9cdd4;--bg:#fff;--panel:#fafafa;--ok:#0a7f3a;--warn:#b7791f;--bad:#c62828;--info:#2a5bd7}
+:root{--bg:#f7f8fa;--paper:#fff;--ink:#142334;--ink2:#526174;--ink3:#7d8a9b;--line:#e1e6ec;--line2:#cdd6e0;--panel:#f2f5f9;--accent:#174eca;--accent-soft:#e9effc;--coral:#ff745c;
+  --ok:#0f7a3d;--ok-soft:#e4f4ea;--warn:#a26a0e;--warn-soft:#fbf1dc;--bad:#c0392b;--bad-soft:#fdecea;--info:#174eca;--info-soft:#e9effc;
+  --r:22px;--r2:14px;--sans:'Pretendard Variable',Pretendard,-apple-system,'Segoe UI','Malgun Gothic',system-ui,sans-serif;--disp:'Clash Display','Pretendard Variable',Pretendard,sans-serif;--ease:cubic-bezier(.2,.7,.2,1)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{font-size:15px}
-body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Segoe UI","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1240px;margin:0 auto;padding:36px 20px 80px}
-h1{font-size:30px;font-weight:800;letter-spacing:-.8px}
-.lead{color:var(--ink2);margin-top:6px}
-.privacy{display:inline-flex;gap:8px;align-items:center;margin-top:14px;font-size:12.5px;font-weight:700;border:1px solid var(--line2);padding:6px 10px}
-.privacy .dot{width:8px;height:8px;background:var(--ok);border-radius:99px}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:28px 0 0;border:1px solid var(--line2)}
-.step{padding:12px 16px;border-left:1px solid var(--line2);font-size:13px;font-weight:700;color:var(--ink3);display:flex;gap:10px;align-items:center}
-.step:first-child{border-left:none}
-.step b{display:inline-grid;place-items:center;width:22px;height:22px;border:1px solid var(--line2);font-size:12px}
-.step.on{color:var(--ink);background:var(--panel)}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px 90px}
+/* 상단 바 */
+.bar{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:-.05em;color:var(--ink);text-decoration:none}
+.brand .dot{color:var(--coral)}
+.bar-tag{font-size:13px;font-weight:600;color:var(--ink2);border:1px solid var(--line2);border-radius:999px;padding:6px 14px;background:var(--paper)}
+/* 히어로 */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center;padding:34px 0 10px}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+.eyebrow i{display:block;width:26px;height:2px;background:var(--coral)}
+h1{font-size:clamp(34px,4.2vw,54px);font-weight:800;letter-spacing:-.04em;line-height:1.14;margin-top:16px}
+.lead{color:var(--ink2);margin-top:16px;font-size:16px;line-height:1.7;max-width:520px}
+.privacy{display:inline-flex;gap:9px;align-items:center;margin-top:22px;font-size:13px;font-weight:700;color:var(--ink);border:1px solid var(--line2);border-radius:999px;padding:9px 16px;background:var(--paper)}
+.privacy .dot{width:9px;height:9px;background:var(--ok);border-radius:99px;flex:none}
+.hero-art{position:relative;border-radius:var(--r);overflow:hidden;background:#e6eef8;aspect-ratio:4/3;box-shadow:0 1px 0 var(--line)}
+.hero-art img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-art figcaption{position:absolute;left:18px;bottom:16px;font-size:13px;font-weight:700;color:#fff;background:rgba(20,35,52,.72);padding:7px 12px;border-radius:999px}
+.hero-art.empty{display:grid;place-items:center;background:#e6eef8}
+.hero-art.empty figcaption{position:static;background:none;color:var(--ink2);font-weight:600}
+/* 단계 */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:30px 0 0}
+.step{padding:13px 16px;border:1px solid var(--line);border-radius:var(--r2);background:var(--paper);font-size:13.5px;font-weight:700;color:var(--ink3);display:flex;gap:11px;align-items:center;transition:all .25s var(--ease)}
+.step b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:99px;border:1px solid var(--line2);font-size:12.5px;font-family:var(--disp);flex:none}
+.step.on{color:var(--ink);border-color:var(--ink);background:var(--paper)}
 .step.on b{background:var(--ink);color:#fff;border-color:var(--ink)}
-section.card{border:1px solid var(--line2);margin-top:22px}
-.card h2{font-size:16px;font-weight:800;padding:14px 18px;border-bottom:1px solid var(--line)}
-.card .body{padding:18px}
-.drop{border:2px dashed var(--line2);padding:34px 18px;text-align:center;cursor:pointer;background:var(--panel)}
-.drop.over{border-color:var(--ink);background:#f1f3f6}
-.drop b{font-size:15px}
-.drop .sub{font-size:12.5px;color:var(--ink3);margin-top:6px}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:14px}
-.f{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;color:var(--ink2)}
-.f select,.f input[type=date],.f input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line2);background:#fff;min-width:150px}
-textarea{width:100%;min-height:120px;font:12.5px/1.5 ui-monospace,Consolas,monospace;padding:10px;border:1px solid var(--line2);resize:vertical}
-.btn{font:inherit;font-weight:700;padding:10px 18px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
-.btn.light{background:#fff;color:var(--ink)}
-.btn.sm{padding:7px 12px;font-size:12.5px}
-.btn:disabled{opacity:.45;cursor:default}
+/* 카드 */
+section.card{border:1px solid var(--line);border-radius:var(--r);background:var(--paper);margin-top:18px;overflow:hidden}
+.card h2{font-size:17px;font-weight:800;letter-spacing:-.02em;padding:18px 24px;border-bottom:1px solid var(--line)}
+.card .body{padding:22px 24px 24px}
+.drop{border:1.5px dashed var(--line2);border-radius:var(--r2);padding:34px 18px;text-align:center;cursor:pointer;background:var(--panel);transition:all .2s var(--ease)}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop svg{width:38px;height:38px;color:var(--accent);margin-bottom:10px}
+.drop b{font-size:15px;display:block}
+.drop .sub{font-size:13px;color:var(--ink3);margin-top:6px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:16px}
+.f{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--ink2)}
+.f select,.f input[type=date],.f input[type=text]{font:inherit;font-weight:500;color:var(--ink);padding:9px 12px;border:1px solid var(--line2);border-radius:10px;background:#fff;min-width:150px}
+.f select:focus,.f input:focus,td input:focus,td select:focus,#q:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+textarea{width:100%;min-height:120px;font:12.5px/1.5 ui-monospace,Consolas,monospace;padding:12px;border:1px solid var(--line2);border-radius:var(--r2);resize:vertical}
+details summary{list-style:none}details summary::-webkit-details-marker{display:none}
+details summary::before{content:"+";display:inline-block;width:18px;font-weight:800;color:var(--accent)}details[open] summary::before{content:"–"}
+.btn{font:inherit;font-weight:700;padding:11px 20px;border:1px solid var(--ink);border-radius:999px;background:var(--ink);color:#fff;cursor:pointer;transition:transform .2s var(--ease),background .2s}
+.btn:hover{transform:translateY(-1px);background:#1d2f45}
+.btn.light{background:#fff;color:var(--ink);border-color:var(--line2)}
+.btn.light:hover{background:var(--panel)}
+.btn.sm{padding:7px 14px;font-size:12.5px}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
 .muted{color:var(--ink3);font-size:12.5px}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line2);margin-top:4px}
-.kpi{padding:14px;border-left:1px solid var(--line);text-align:center}
-.kpi:first-child{border-left:none}
-.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
-.kpi .l{font-size:12px;color:var(--ink3);font-weight:700;margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:4px}
+.kpi{padding:16px 14px;border:1px solid var(--line);border-radius:var(--r2);background:var(--paper);text-align:center;transition:border-color .2s}
+.kpi[data-f]:hover{border-color:var(--ink)}
+.kpi .v{font-family:var(--disp);font-size:30px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .l{font-size:12px;color:var(--ink3);font-weight:700;margin-top:6px}
 .kpi.bad .v{color:var(--bad)}.kpi.warn .v{color:var(--warn)}.kpi.ok .v{color:var(--ok)}
-.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 10px}
-.seg{display:flex;border:1px solid var(--line2)}
-.seg button{font:inherit;font-size:12.5px;font-weight:700;padding:7px 12px;border:none;border-left:1px solid var(--line2);background:#fff;cursor:pointer;color:var(--ink2)}
-.seg button:first-child{border-left:none}.seg button.on{background:var(--ink);color:#fff}
-.tblwrap{overflow:auto;border:1px solid var(--line2);max-height:70vh}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:18px 0 12px}
+.seg{display:flex;border:1px solid var(--line2);border-radius:999px;padding:3px;background:var(--paper)}
+.seg button{font:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;border:none;border-radius:999px;background:transparent;cursor:pointer;color:var(--ink2)}
+.seg button.on{background:var(--ink);color:#fff}
+#q{font:inherit;font-size:12.5px;padding:8px 12px;border:1px solid var(--line2);border-radius:999px;min-width:220px;background:#fff}
+.tblwrap{overflow:auto;border:1px solid var(--line);border-radius:var(--r2);max-height:70vh}
 table{border-collapse:collapse;width:100%;min-width:1240px;font-size:12.5px}
-th{position:sticky;top:0;background:#f4f5f7;border-bottom:1px solid var(--line2);padding:9px 8px;text-align:left;font-size:12px;white-space:nowrap;z-index:1}
-td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:middle;white-space:nowrap}
+th{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line2);padding:10px 10px;text-align:left;font-size:12px;color:var(--ink2);white-space:nowrap;z-index:1}
+td{border-bottom:1px solid var(--line);padding:7px 10px;vertical-align:middle;white-space:nowrap}
+tr:last-child td{border-bottom:none}
 td.issues{white-space:normal;max-width:340px;min-width:220px;line-height:1.6}
 td.issues .tag{margin:1px 4px 1px 0}
-td input[type=text],td select{font:inherit;font-size:12.5px;padding:5px 7px;border:1px solid var(--line2);background:#fff}
+td input[type=text],td select{font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--line2);border-radius:8px;background:#fff}
 td input.acct{width:170px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.3px}
 td input.holder{width:90px}td input.memo{width:120px}td select{width:120px}
-tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45}
-.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border:1px solid;margin-right:4px;white-space:nowrap}
-.tag.bad{color:var(--bad);border-color:#efb8b8}.tag.warn{color:var(--warn);border-color:#ead4a8}.tag.info{color:var(--info);border-color:#bccdf2}.tag.ok{color:var(--ok);border-color:#b7dcc4}
+tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{opacity:.45}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:7px;margin-right:4px;white-space:nowrap;border:1px solid transparent}
+.tag.bad{color:var(--bad);background:var(--bad-soft)}.tag.warn{color:var(--warn);background:var(--warn-soft)}.tag.info{color:var(--info);background:var(--info-soft)}.tag.ok{color:var(--ok);background:var(--ok-soft)}
 .raw{color:var(--ink3);max-width:260px;overflow:hidden;text-overflow:ellipsis}
 .amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
 .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-top:14px;font-size:12.5px;color:var(--ink2)}
 .dl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.note{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:10px}
+.note{font-size:13px;color:var(--ink2);line-height:1.7;margin-top:12px}
 .note b{color:var(--ink)}
+.note.box{padding:13px 16px;border-radius:var(--r2);background:var(--panel);border:1px solid var(--line)}
+#errPanel{border-radius:var(--r2)!important;border-color:#f3c9c4!important;background:var(--bad-soft)!important}
 .hist{font-size:12.5px}
 .hist table{min-width:0}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;font-weight:700;padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;font-weight:700;padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;max-width:calc(100vw - 32px);text-align:center}
 .toast.show{opacity:1}
 [hidden]{display:none!important}
-@media (max-width:760px){.steps{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}h1{font-size:24px}}
+@media (max-width:900px){.hero{grid-template-columns:1fr;gap:22px}.hero-art{aspect-ratio:16/9}}
+@media (max-width:760px){.steps{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.bar{height:60px}.brand{font-size:22px}.card h2,.card .body{padding-left:16px;padding-right:16px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>정산 이체 파일 만들기</h1>
-  <div class="lead">리뷰체험단 시트(구글 스프레드시트)를 넣으면 국민은행 대량이체 업로드 파일을 만들어 드립니다. 계좌번호는 처음부터 끝까지 글자로만 다루어 앞자리 0이 사라지지 않습니다.</div>
-  <div class="privacy"><span class="dot"></span>모든 처리는 이 브라우저 안에서만 이루어집니다. 파일도, 계좌 정보도 서버로 보내지 않습니다.</div>
+  <header class="bar"><a class="brand" href="/">jisoar<span class="dot">.</span></a><span class="bar-tag">정산 이체 파일 도구</span></header>
+  <section class="hero">
+    <div class="hero-txt">
+      <div class="eyebrow"><i></i>Payout file builder</div>
+      <h1>시트를 넣으면,<br>이체 파일이 나옵니다.</h1>
+      <p class="lead">리뷰체험단 정산 시트(구글 스프레드시트)를 올리면 국민은행 대량이체 업로드 파일을 만들어 드립니다. 계좌번호는 처음부터 끝까지 글자로만 다루어 앞자리 0이 사라지지 않습니다.</p>
+      <div class="privacy"><span class="dot"></span>모든 처리는 이 브라우저 안에서만. 파일도, 계좌 정보도 서버로 보내지 않습니다.</div>
+    </div>
+    <figure class="hero-art"><img src="hero.jpg?v=1" alt="" onerror="this.parentNode.classList.add('empty');this.remove()"><figcaption>매주 반복되는 정산, 타이핑 없이.</figcaption></figure>
+  </section>
 
   <div class="steps">
     <div class="step on" id="st1"><b>1</b>시트 넣기</div>
@@ -92,13 +130,14 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
     <h2>1. 시트 넣기</h2>
     <div class="body">
       <div class="drop" id="drop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
         <b>구글 스프레드시트에서 내려받은 엑셀 파일(.xlsx)을 여기에 끌어다 놓거나 클릭해서 선택</b>
         <div class="sub">구글시트 메뉴 파일 › 다운로드 › Microsoft Excel(.xlsx). 월 시트가 여러 개면 아래에서 고릅니다.</div>
         <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
       </div>
       <div class="row" id="sheetRow" hidden>
         <div class="f">시트<select id="sheetSel"></select></div>
-        <div class="f">대상<input type="text" value="미입금 행만 (입금완료 표시된 행은 제외)" readonly style="background:#f4f5f7;color:var(--ink2);min-width:230px"></div>
+        <div class="f">대상<input type="text" value="미입금 행만 (입금완료 표시된 행은 제외)" readonly style="background:var(--panel);color:var(--ink2);min-width:230px"></div>
         <div class="f">진행자<select id="ownerSel"><option value="">전체</option></select></div>
         <div class="f">원고료<select id="feeMode"><option value="both">물품대금 1건 + 원고료 1건 (기본)</option><option value="goods">물품대금만</option><option value="fee">원고료만</option></select></div>
         <div class="f">원고료 입금명<select id="feeMemo"><option value="same">입금명 그대로 (물품대금 건과 같게)</option><option value="fixed">"원고료"로 고정</option></select></div>
@@ -117,10 +156,10 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
   <section class="card" id="sec2" hidden>
     <h2>2. 검토·수정</h2>
     <div class="body">
-      <div class="note" style="margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);background:var(--panel)">
+      <div class="note box" style="margin:0 0 14px">
         <span class="tag bad">오류</span> 파일에 안 들어갑니다. 표에서 고치거나(은행·계좌·예금주·입금명 칸), 시트에서 채운 뒤 다시 올리세요. &nbsp; <span class="tag warn">확인</span> 파일에는 들어가지만 한 번 보세요(계좌 자릿수·앞자리 0 의심). 그 외 행은 그대로 보내면 됩니다.
       </div>
-      <div id="errPanel" class="note" hidden style="margin:0 0 12px;padding:12px 14px;border:1px solid #efb8b8;background:#fff8f8">
+      <div id="errPanel" class="note box" hidden style="margin:0 0 14px">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><b id="errTitle"></b><button class="btn light sm" type="button" id="btnCopyErr">오류 목록 복사 (카톡·메모에 붙여넣기)</button></div>
         <ol id="errList" style="margin:8px 0 0 18px;line-height:1.7"></ol>
       </div>
@@ -133,7 +172,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
       </div>
       <div class="tools">
         <div class="seg" id="seg"><button data-f="all" class="on">전체</button><button data-f="bad">오류</button><button data-f="warn">확인 권장</button><button data-f="ok">정상</button><button data-f="off">제외됨</button></div>
-        <input type="text" id="q" placeholder="이름 · 계좌 · 입금명 · 원고료 검색" style="font:inherit;font-size:12.5px;padding:7px 10px;border:1px solid var(--line2);min-width:220px">
+        <input type="text" id="q" placeholder="이름 · 계좌 · 입금명 · 원고료 검색">
         <span class="muted" id="cnt"></span>
         <span style="flex:1"></span>
         <button class="btn light sm" id="btnExcludeBad">오류 행 모두 제외</button>
@@ -158,7 +197,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
     <div class="body">
       <div class="row">
         <div class="f">은행 표기<select id="bankMode"><option value="code">은행코드 3자리 (예: 004)</option><option value="name">한글 은행명 (예: 국민)</option></select></div>
-        <div class="f">파일 형식<input type="text" value=".xls (국민은행 업로드 형식)" readonly style="background:#f4f5f7;color:var(--ink2);min-width:200px"><input type="hidden" id="fmt" value="xls"></div>
+        <div class="f">파일 형식<input type="text" value=".xls (국민은행 업로드 형식)" readonly style="background:var(--panel);color:var(--ink2);min-width:200px"><input type="hidden" id="fmt" value="xls"></div>
         <div class="f">파일 이름<input type="text" id="fname" placeholder="대량이체_날짜"></div>
         <button class="btn" id="btnDown">이체 파일 내려받기</button>
       </div>
@@ -182,7 +221,7 @@ tr.bad td{background:#fff5f5}tr.warn td{background:#fffaf0}tr.off td{opacity:.45
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 새로고침 (GitHub Pages 10분 캐시 대응) */
-window.BUILD='p5';
+window.BUILD='p6';
 (async()=>{try{if(sessionStorage.getItem('pay_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('pay_reloaded',m[1]);location.reload();}}catch{}})();
 </script>
 <script src="vendor/xlsx.full.min.js?v=p2"></script>
