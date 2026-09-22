@@ -26,7 +26,7 @@ function live() {
     itemTypes: () => q(sb.from('item_types').select('*').order('sort')),
     clients: () => q(sb.from('clients').select('*').order('name')),
     requests: (filter = {}) => {
-      let b = sb.from('requests').select('*').order('updated_at', { ascending: false }).limit(500);
+      let b = sb.from('requests').select('*').order('updated_at', { ascending: false }).limit(2000); // 함 카운트 정확도: 2,000건 넘으면 집계 RPC 로 전환 (decisions-4)
       if (filter.statuses) b = b.in('status', filter.statuses);
       if (filter.client_id) b = b.eq('client_id', filter.client_id);
       return q(b);

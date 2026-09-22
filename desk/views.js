@@ -1,5 +1,5 @@
 // 화면 v3 (전자결재 스타일). ctx = { api, me, profiles, itemTypes, clients, reqs, reload, render }
-import { STATUS, PRIO, PRIO_RANK, ROLE, ROLE_DESC, ACTION_KO, FORMATS, POLICY, esc, fmtD, fmtDT, fmtSize, chip, statusText, prioTag, dueText, go, back, safeUrl, toast, errText, $, $$, on, v, dialog, confirmDialog, field } from './ui.js?v=3';
+import { STATUS, PRIO, PRIO_RANK, ROLE, ROLE_DESC, ACTION_KO, FORMATS, POLICY, esc, fmtD, fmtDT, fmtSize, chip, statusText, prioTag, dueText, go, back, safeUrl, toast, errText, $, $$, on, v, dialog, confirmDialog, field } from './ui.js?v=4';
 
 const OPEN = ['draft', 'submitted', 'revision', 'approved', 'in_progress'];
 const pname = (ctx, id) => ctx.profiles.find((p) => p.id === id)?.name || (id ? '(알 수 없음)' : '');
@@ -109,22 +109,29 @@ export async function createDraft(ctx) {
 
 // ---------------------------------------------------------------- 문서 (작성·조회·결재 한 화면)
 const docTab = {};
-export async function doc(main, ctx, id) {
+export async function doc(main, ctx, id, params) {
   const { me } = ctx;
+  const printMode = params?.get('print') === '1'; // 작성자가 인쇄할 때 읽기 전용 표현으로 출력
   const r = await ctx.api.request(id);
   let [files, comments, events] = await Promise.all([ctx.api.files(id), ctx.api.comments(id), ctx.api.events(id)]);
+  events.sort((a, b) => (a.created_at > b.created_at ? 1 : a.created_at < b.created_at ? -1 : a.id - b.id));
   const mine = r.requester_id === me.id;
-  const editable = mine && ['draft', 'revision'].includes(r.status);
+  const editable = mine && ['draft', 'revision'].includes(r.status) && !printMode;
   const cl = clientOf(ctx, r);
-  const otherId = ctx.itemTypes.find((t) => t.code === 'other')?.id;
+  const otherId = Number(ctx.itemTypes.find((t) => t.code === 'other')?.id);
   const items = ctx.itemTypes.filter((t) => t.is_active || t.id === r.item_type_id);
-  const lastNote = (a) => [...events].reverse().find((e) => e.action === a)?.note;
+  const isOther = Number(r.item_type_id) === otherId;
+  // 결재선용: 마지막 제출 이후의 결정 이벤트만 사용 (과거 수정 요청 사유가 승인 의견으로 섞이지 않게)
+  const lastSubmitIdx = events.reduce((acc, e, i) => (['submit', 'resubmit'].includes(e.action) ? i : acc), -1);
+  const after = events.slice(lastSubmitIdx + 1);
+  const lastEv = (...acts) => [...after].reverse().find((e) => acts.includes(e.action));
+  const lastNote = (a) => lastEv(a)?.note;
   const refs = files.filter((f) => f.kind === 'reference'), dels = files.filter((f) => f.kind === 'deliverable');
   const A = (a, label, cls = 'btn') => `<button class="${cls}" data-a="${a}" type="button">${label}</button>`;
   const ro = !editable;
-  const inp = (idn, val, ph = '', type = 'text') => ro ? `<span>${esc(val) || '<span class="muted">-</span>'}</span>` : `<input type="${type}" id="${idn}" value="${esc(val ?? '')}" placeholder="${esc(ph)}">`;
-  const ta = (idn, val, ph = '') => ro ? `<div class="pre">${esc(val) || '<span class="muted">-</span>'}</div>` : `<textarea id="${idn}" placeholder="${esc(ph)}">${esc(val ?? '')}</textarea>`;
-  const L = (t, req = false) => `<div class="l">${req ? '<span class="req">*</span>' : ''}${t}</div>`;
+  const inp = (idn, val, ph = '', type = 'text') => ro ? `<span>${esc(val) || '<span class="muted">-</span>'}</span>` : `<input type="${type}" id="${idn}" value="${esc(val ?? '')}" placeholder="${esc(ph)}" aria-labelledby="l_${idn}">`;
+  const ta = (idn, val, ph = '') => ro ? `<div class="pre">${esc(val) || '<span class="muted">-</span>'}</div>` : `<textarea id="${idn}" placeholder="${esc(ph)}" aria-labelledby="l_${idn}">${esc(val ?? '')}</textarea>`;
+  const L = (t, req = false, forId = '') => `<div class="l" ${forId ? `id="l_${forId}"` : ''}>${req ? '<span class="req">*</span>' : ''}${t}</div>`;
 
   // 툴바·다음 단계
   let tools = [], next = '';
@@ -132,7 +139,7 @@ export async function doc(main, ctx, id) {
   else if (r.status === 'submitted') { if (me.role === 'approver') { tools.push(A('approve', '승인', 'btn ok'), A('request_revision', '수정 요청'), A('reject', '반려', 'btn dan')); next = '<div class="next warn"><b>결재 대기</b><span>내용을 확인하고 승인·수정 요청·반려 중 하나를 선택하세요. 승인 시 우선순위와 확정 납기를 정합니다.</span></div>'; } else { if (mine) tools.push(A('cancel', '의뢰 취소', 'btn dan')); next = '<div class="next"><b>승인 대기</b><span>대표 결재를 기다리는 중입니다. 승인되면 이메일로 알립니다.</span></div>'; } }
   else if (r.status === 'revision') next = `<div class="next warn"><b>수정 요청</b><span>${esc(lastNote('request_revision') || '')} (신청자가 수정 중)</span></div>`;
   else if (r.status === 'approved') { if (me.role === 'designer') tools.push(A('start', '작업 시작', 'btn pri')); if (me.role === 'approver') tools.push(A('update_terms', '우선순위·납기 조정')); next = `<div class="next"><b>승인 완료</b><span>확정 납기 ${fmtD(r.confirmed_due)} · 디자이너 작업 시작 대기</span></div>`; }
-  else if (r.status === 'in_progress') { if (me.role === 'designer') tools.push('<label class="btn"><input type="file" id="upDel" multiple hidden>결과물 업로드</label>', A('complete', '완료 처리', 'btn pri')); if (me.role === 'approver') tools.push(A('update_terms', '우선순위·납기 조정')); next = `<div class="next"><b>작업중</b><span>담당 ${esc(pname(ctx, r.designer_id))} · 확정 납기 ${fmtD(r.confirmed_due)}${me.role === 'designer' ? ' · 결과물을 올리고 완료 처리하세요' : ' · 전달 사항은 진행기록 탭의 코멘트로'}</span></div>`; }
+  else if (r.status === 'in_progress') { if (me.role === 'designer') tools.push('<button class="btn" type="button" data-up="upDel">결과물 업로드</button><input type="file" id="upDel" multiple hidden>', A('complete', '완료 처리', 'btn pri')); if (me.role === 'approver') tools.push(A('update_terms', '우선순위·납기 조정')); next = `<div class="next"><b>작업중</b><span>담당 ${esc(pname(ctx, r.designer_id))} · 확정 납기 ${fmtD(r.confirmed_due)}${me.role === 'designer' ? ' · 결과물을 올리고 완료 처리하세요' : ' · 전달 사항은 진행기록 탭의 코멘트로'}</span></div>`; }
   else if (r.status === 'done') next = `<div class="next ok"><b>완료</b><span>${fmtD(r.completed_at)} 완료 · 결과물은 첨부파일 탭에서 내려받습니다.</span></div>`;
   else if (r.status === 'rejected') next = `<div class="next gray"><b>반려</b><span>${esc(lastNote('reject') || '')}</span></div>`;
   else if (r.status === 'cancelled') next = '<div class="next gray"><b>취소</b><span>신청자가 취소한 의뢰입니다.</span></div>';
@@ -140,15 +147,18 @@ export async function doc(main, ctx, id) {
 
   const clientOpts = ctx.clients.map((c) => `<option value="${c.id}" ${r.client_id == c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
   const itemOpts = items.map((t) => `<option value="${t.id}" ${r.item_type_id == t.id ? 'selected' : ''}>${esc(t.label)}</option>`).join('');
+  // 결재선: 실제 이벤트(마지막 제출 이후)를 기준으로 처리자·상태·일시·의견을 한 줄씩
   const aline = () => {
     const rows = [];
-    rows.push(['001', '상신', pname(ctx, r.requester_id), ppos(ctx, r.requester_id), r.status === 'draft' ? '작성중' : '상신', r.submitted_at, '']);
-    const ap = r.approver_id ? pname(ctx, r.approver_id) : ctx.profiles.filter((p) => p.role === 'approver' && p.is_active).map((p) => p.name).join(', ');
-    const apSt = { submitted: '결재 대기', revision: '수정 요청', approved: '승인', in_progress: '승인', done: '승인', rejected: '반려', cancelled: r.decided_at ? '승인' : '-', draft: '-' }[r.status];
-    rows.push(['002', '결재', ap, r.approver_id ? ppos(ctx, r.approver_id) : '대표', apSt, r.decided_at, lastNote('reject') || lastNote('request_revision') || lastNote('approve') || '']);
-    const ds = r.designer_id ? pname(ctx, r.designer_id) : ctx.profiles.filter((p) => p.role === 'designer' && p.is_active).map((p) => p.name).join(', ');
-    const dsSt = { approved: '작업 대기', in_progress: '작업중', done: '완료' }[r.status] || '-';
-    rows.push(['003', '작업', ds, r.designer_id ? ppos(ctx, r.designer_id) : '디자이너', dsSt, r.completed_at || r.started_at, lastNote('complete') || lastNote('start') || '']);
+    const sub = lastSubmitIdx >= 0 ? events[lastSubmitIdx] : null;
+    const cancelEv = lastEv('cancel');
+    rows.push(['001', '상신', pname(ctx, r.requester_id), ppos(ctx, r.requester_id), cancelEv && !sub ? '취소(미제출)' : sub ? (sub.action === 'resubmit' ? '재상신' : '상신') : '작성중', sub?.created_at, sub?.note || '']);
+    const dec = lastEv('approve', 'request_revision', 'reject');
+    const decSt = dec ? { approve: '승인', request_revision: '수정 요청', reject: '반려' }[dec.action] : (cancelEv ? '취소됨' : sub ? '결재 대기' : '-');
+    rows.push(['002', '결재', dec ? pname(ctx, dec.actor_id) : '미지정', dec ? ppos(ctx, dec.actor_id) : '대표 결재 대기', decSt, dec?.created_at, dec?.note || '']);
+    const work = lastEv('complete') || lastEv('start');
+    const wSt = { approved: '작업 대기', in_progress: '작업중', done: '완료' }[r.status] || (cancelEv ? '취소됨' : '-');
+    rows.push(['003', '작업', work ? pname(ctx, work.actor_id) : (r.designer_id ? pname(ctx, r.designer_id) : '미지정'), work ? ppos(ctx, work.actor_id) : '디자이너', wSt, work?.created_at, work?.note || '']);
     return `<table class="plain"><thead><tr><th>순번</th><th>구분</th><th>이름</th><th>직급</th><th>처리 상태</th><th>처리 일시</th><th>의견</th></tr></thead><tbody>${rows.map((x) => `<tr><td class="mono">${x[0]}</td><td>${x[1]}</td><td><b>${esc(x[2] || '-')}</b></td><td>${esc(x[3] || '-')}</td><td>${esc(x[4])}</td><td class="mono">${fmtDT(x[5]) || '-'}</td><td>${esc(x[6])}</td></tr>`).join('')}</tbody></table>`;
   };
 
@@ -156,9 +166,9 @@ export async function doc(main, ctx, id) {
     <div class="toolbar" id="tools">${tools.join('')}</div>
     <div class="doc-title"><span class="l"><span class="req">*</span>제목</span>${ro ? `<span class="txt">${esc(r.title || '(제목 없음)')}${prioTag(r.priority)}</span>` : `<input type="text" id="title" value="${esc(r.title)}" placeholder="예: 그린라이프 대나무 칫솔 상세페이지">`}</div>
     ${next}
-    <div class="tabs" id="tabs"><button data-t="1" type="button">의뢰 상세 정보</button><button data-t="2" type="button">결재정보</button><button data-t="3" type="button">첨부파일<em id="fcnt">${files.length}</em></button><button data-t="4" type="button">진행기록·코멘트<em>${comments.length}</em></button></div>
+    <div class="tabs" id="tabs" role="tablist"><button data-t="1" type="button" role="tab" aria-controls="pane1">의뢰 상세 정보</button><button data-t="2" type="button" role="tab" aria-controls="pane2">결재정보</button><button data-t="3" type="button" role="tab" aria-controls="pane3">첨부파일<em id="fcnt">${files.length}</em></button><button data-t="4" type="button" role="tab" aria-controls="pane4">진행기록·코멘트<em>${comments.length}</em></button></div>
 
-    <div class="tabpane ${ro ? 'ro' : ''}" data-t="1">
+    <div class="tabpane ${ro ? 'ro' : ''}" data-t="1" id="pane1" role="tabpanel">
       <div class="sec-title">의뢰 정보</div>
       <div class="fg">${L('의뢰번호')}<div class="v mono">${esc(r.no || '제출 시 발급')}</div>${L('진행 상태')}<div class="v">${statusText(r.status)}</div>
         ${L('신청자')}<div class="v">${esc(pname(ctx, r.requester_id))}${ppos(ctx, r.requester_id) ? ` <span class="muted">${esc(ppos(ctx, r.requester_id))}</span>` : ''}</div>${L('요청일')}<div class="v mono">${r.submitted_at ? fmtDT(r.submitted_at) : '<span class="muted">미제출</span>'}</div>
@@ -167,88 +177,109 @@ export async function doc(main, ctx, id) {
 
       <div class="sec"><div class="sec-title">1. 기본정보 <small>고객사와 의뢰 품목</small></div>
       <div class="fg">${L('의뢰 구분', true)}<div class="v">${ro ? (r.kind === 'internal' ? '내부 의뢰' : '고객사 의뢰') : `<label class="rd"><input type="radio" name="kind" value="client" ${r.kind === 'client' ? 'checked' : ''}>고객사 의뢰</label><label class="rd"><input type="radio" name="kind" value="internal" ${r.kind === 'internal' ? 'checked' : ''}>내부 의뢰</label>`}</div>
-        ${L('디자인 의뢰품목', true)}<div class="v">${ro ? esc(itemLabel(ctx, r)) + (r.item_type_other ? ` (${esc(r.item_type_other)})` : '') : `<select id="item_type_id" style="width:170px"><option value="">선택</option>${itemOpts}</select><label class="rd"><input type="checkbox" id="needs_photo" ${r.needs_photo ? 'checked' : ''}>촬영 포함</label>`}</div>
-        <div class="l" id="cl_l">기업명${r.kind === 'client' ? '<span class="req"> *</span>' : ''}</div><div class="v wide" id="cl_v">${ro ? esc(cl?.name || (r.kind === 'internal' ? '내부' : '-')) : `<select id="client_id" style="width:260px"><option value="">고객사 선택</option>${clientOpts}</select><button class="btn sm" id="newClient" type="button">＋ 새 고객사</button>${ctx.me.is_admin && cl ? `<a class="btn sm lnk" href="#/clients/${cl.id}">고객사 정보 수정</a>` : ''}`}</div>
-        ${L('대표자 성함')}<div class="v" id="c_ceo">${esc(cl?.ceo_name || '-')}</div>${L('담당자명 / 직급')}<div class="v" id="c_contact">${esc(cl ? [cl.contact_name, cl.contact_position].filter(Boolean).join(' / ') || '-' : '-')}</div>
-        ${L('담당자 직통 연락처')}<div class="v mono" id="c_phone">${esc(cl?.contact_phone || '-')}</div>${L('E-MAIL')}<div class="v" id="c_email">${esc(cl?.contact_email || '-')}</div>
-        ${!ro || r.item_type_id == otherId ? `<div class="l" id="oth_l" style="${r.item_type_id == otherId ? '' : 'display:none'}">기타 품목 설명</div><div class="v wide" id="oth_v" style="${r.item_type_id == otherId ? '' : 'display:none'}">${inp('item_type_other', r.item_type_other, '예: 의류 프린팅, 전시 부스 그래픽')}</div>` : ''}</div></div>
+        ${L('디자인 의뢰품목', true, 'item_type_id')}<div class="v">${ro ? `${esc(ctx.itemTypes.find((t) => t.id === r.item_type_id)?.label || '미정')}${isOther && r.item_type_other ? ` (${esc(r.item_type_other)})` : ''} · ${r.needs_photo ? '<b>촬영 포함</b>' : '촬영 없음'}` : `<select id="item_type_id" style="width:170px" aria-labelledby="l_item_type_id"><option value="">선택</option>${itemOpts}</select><label class="rd"><input type="checkbox" id="needs_photo" ${r.needs_photo ? 'checked' : ''}>촬영 포함</label>`}</div>
+        <div class="l cl-row" id="cl_l">기업명${r.kind === 'client' ? '<span class="req"> *</span>' : ''}</div><div class="v wide cl-row" id="cl_v">${ro ? esc(cl?.name || (r.kind === 'internal' ? '해당 없음(내부 의뢰)' : '-')) : `<select id="client_id" style="width:260px;max-width:100%" aria-label="기업명"><option value="">고객사 선택</option>${clientOpts}</select><button class="btn sm" id="newClient" type="button">＋ 새 고객사</button>${ctx.me.is_admin && cl ? `<a class="btn sm lnk" href="#/clients/${cl.id}">고객사 정보 수정</a>` : ''}`}</div>
+        <div class="l cl-row">대표자 성함</div><div class="v cl-row" id="c_ceo">${esc(cl?.ceo_name || '-')}</div><div class="l cl-row">담당자명 / 직급</div><div class="v cl-row" id="c_contact">${esc(cl ? [cl.contact_name, cl.contact_position].filter(Boolean).join(' / ') || '-' : '-')}</div>
+        <div class="l cl-row">담당자 직통 연락처</div><div class="v mono cl-row" id="c_phone">${esc(cl?.contact_phone || '-')}</div><div class="l cl-row">E-MAIL</div><div class="v cl-row" id="c_email">${esc(cl?.contact_email || '-')}</div>
+        ${!ro || isOther ? `<div class="l" id="oth_l" style="${isOther ? '' : 'display:none'}">기타 품목 설명</div><div class="v wide" id="oth_v" style="${isOther ? '' : 'display:none'}">${inp('item_type_other', isOther ? r.item_type_other : '', '예: 의류 프린팅, 전시 부스 그래픽')}</div>` : ''}</div></div>
 
       <div class="sec"><div class="sec-title">2. 제품정보 <small>무엇을, 어디에 쓰는 디자인인지</small></div>
-      <div class="fg one">${L('상품명')}<div class="v">${inp('product_name', r.product_name, '예: 대나무 칫솔 4입')}</div>
-        ${L('사용 용도', true)}<div class="v col">${ta('purpose', r.purpose, '예: 스마트스토어 메인화면 배너 / 자사몰 상품 상세페이지')}</div>
-        ${L('제작 사이즈')}<div class="v col">${inp('size_spec', r.size_spec, '예: 가로 1000px 세로 7000px, A4')}${ro ? '' : '<div class="chips" id="sizes"></div><div class="hint">상세페이지는 세로 사이즈에 오차가 생길 수 있습니다. 정확한 규격을 모르면 비워두세요.</div>'}</div>
-        ${L('상품의 특장점')}<div class="v col">${ta('product_features', r.product_features, '①\n②\n③\n④\n⑤')}</div>
-        ${L('필수 기입 멘트')}<div class="v col">${ta('required_copy', r.required_copy, '반드시 들어가야 하는 문구·숫자·법적 표기')}</div>
-        ${L('참고자료')}<div class="v">${refs.length ? `${refs.length}개 첨부` : '<span class="muted">없음</span>'} <button class="btn sm lnk" type="button" data-tab="3">첨부파일 탭에서 ${ro ? '보기' : '추가'}</button><span class="hint">참고자료는 비율을 훼손하지 말고 jpg·png 파일 등으로 별도 첨부해 주세요.</span></div>
-        ${L('참고사항')}<div class="v col">${ta('notes', r.notes, '예: 경쟁사 A 톤 참고, 브랜드 컬러 #0F5C46, 핑크 계열 금지')}</div></div></div>
+      <div class="fg one">${L('상품명', false, 'product_name')}<div class="v">${inp('product_name', r.product_name, '예: 대나무 칫솔 4입')}</div>
+        ${L('사용 용도', true, 'purpose')}<div class="v col">${ta('purpose', r.purpose, '예: 스마트스토어 메인화면 배너 / 자사몰 상품 상세페이지')}</div>
+        ${L('제작 사이즈', false, 'size_spec')}<div class="v col">${inp('size_spec', r.size_spec, '예: 가로 1000px 세로 7000px, A4')}${ro ? '' : '<div class="chips" id="sizes"></div><div class="hint">상세페이지는 세로 사이즈에 오차가 생길 수 있습니다. 정확한 규격을 모르면 비워두세요.</div>'}</div>
+        ${L('상품의 특장점', false, 'product_features')}<div class="v col">${ta('product_features', r.product_features, '①\n②\n③\n④\n⑤')}</div>
+        ${L('필수 기입 멘트', false, 'required_copy')}<div class="v col">${ta('required_copy', r.required_copy, '반드시 들어가야 하는 문구·숫자·법적 표기')}</div>
+        ${L('참고자료')}<div class="v">${refs.length ? `${refs.length}개 첨부` : '<span class="muted">없음</span>'} <button class="btn sm lnk noprint" type="button" data-tab="3">첨부파일 탭에서 ${ro ? '보기' : '추가'}</button><span class="hint">참고자료는 비율을 훼손하지 말고 jpg·png 파일 등으로 별도 첨부해 주세요.</span></div>
+        ${L('참고사항', false, 'notes')}<div class="v col">${ta('notes', r.notes, '예: 경쟁사 A 톤 참고, 브랜드 컬러 #0F5C46, 핑크 계열 금지')}</div></div></div>
 
       <div class="sec"><div class="sec-title">3. 제작 방향 <small>디자이너가 방향을 잡는 브리프</small></div>
-      <div class="fg one">${L('제작 목표·배경')}<div class="v col">${ta('objective', r.objective, '예: 기존 상세페이지 전환율 개선, 신제품 런칭 알림')}</div>
-        ${L('타깃 고객')}<div class="v col">${ta('target_audience', r.target_audience, '예: 30대 여성, 친환경 생활용품 관심층')}</div>
-        ${L('톤앤매너·스타일')}<div class="v col">${ta('tone_style', r.tone_style, '예: 밝고 자연스러운 톤, 베이지·그린 계열, 사진 위주')}</div>
-        ${L('납품 파일 형식')}<div class="v col">${inp('deliverable_format', r.deliverable_format, '예: JPG, PSD')}${ro ? '' : `<div class="chips" id="fmts">${FORMATS.map((x) => `<button type="button">${x}</button>`).join('')}</div>`}</div>
-        ${L('희망 납기')}<div class="v">${ro ? fmtD(r.requested_due) : `<input type="date" id="requested_due" value="${esc(r.requested_due || '')}" style="width:170px">`}<span class="hint">확정 납기는 대표가 승인하면서 정합니다.</span></div></div></div>
+      <div class="fg one">${L('제작 목표·배경', false, 'objective')}<div class="v col">${ta('objective', r.objective, '예: 기존 상세페이지 전환율 개선, 신제품 런칭 알림')}</div>
+        ${L('타깃 고객', false, 'target_audience')}<div class="v col">${ta('target_audience', r.target_audience, '예: 30대 여성, 친환경 생활용품 관심층')}</div>
+        ${L('톤앤매너·스타일', false, 'tone_style')}<div class="v col">${ta('tone_style', r.tone_style, '예: 밝고 자연스러운 톤, 베이지·그린 계열, 사진 위주')}</div>
+        ${L('납품 파일 형식', false, 'deliverable_format')}<div class="v col">${inp('deliverable_format', r.deliverable_format, '예: JPG, PSD')}${ro ? '' : `<div class="chips" id="fmts">${FORMATS.map((x) => `<button type="button">${x}</button>`).join('')}</div>`}</div>
+        ${L('희망 납기', false, 'requested_due')}<div class="v">${ro ? fmtD(r.requested_due) : `<input type="date" id="requested_due" value="${esc(r.requested_due || '')}" style="width:170px" aria-labelledby="l_requested_due">`}<span class="hint">확정 납기는 대표가 승인하면서 정합니다.</span></div></div></div>
 
       <div class="sec policy"><b>참고사항 (수정 정책)</b><ol>${POLICY.map((p) => `<li>${esc(p)}</li>`).join('')}</ol></div>
-      ${editable ? '<div class="toolbar mt noprint"><ul class="check" id="check"></ul><span class="sp"></span><span class="st" id="savest"></span><button class="btn" id="saveNow2" type="button">임시저장</button><button class="btn pri" id="submitBtn2" type="button">' + (r.status === 'revision' ? '재제출' : '결재 요청(제출)') + '</button></div>' : ''}
+      ${editable ? '<div class="toolbar mt noprint"><ul class="check" id="check"></ul><span class="sp"></span><span class="st" id="savest" role="status"></span><button class="btn" id="saveNow2" type="button">임시저장</button><button class="btn pri" id="submitBtn2" type="button">' + (r.status === 'revision' ? '재제출' : '결재 요청(제출)') + '</button></div>' : ''}
     </div>
 
-    <div class="tabpane" data-t="2"><div class="sec-title">결재선</div>${aline()}<div class="hint mt">상신 → 대표 결재(승인·수정 요청·반려) → 디자이너 작업 → 완료 순으로 처리됩니다. 승인 시 우선순위와 확정 납기가 정해집니다.</div></div>
+    <div class="tabpane" data-t="2" id="pane2" role="tabpanel"><div class="sec-title">결재선</div>${aline()}<div class="hint mt">상신 → 대표 결재(승인·수정 요청·반려) → 디자이너 작업 → 완료 순으로 처리됩니다. 결재·작업은 지정 담당자가 아니라 해당 역할의 누구나 처리할 수 있으며, 처리한 사람이 결재선에 기록됩니다.</div></div>
 
-    <div class="tabpane" data-t="3">
-      <div class="sec-title">참고자료 <small>신청자 첨부</small>${editable ? '<label class="btn sm"><input type="file" id="upRef" multiple hidden>＋ 파일 추가</label>' : ''}</div><div id="refs"></div>
-      <div class="sec"><div class="sec-title">결과물 <small>디자이너 첨부</small>${me.role === 'designer' && ['approved', 'in_progress'].includes(r.status) ? '<label class="btn sm"><input type="file" id="upDel2" multiple hidden>＋ 결과물 업로드</label>' : ''}</div>
+    <div class="tabpane" data-t="3" id="pane3" role="tabpanel">
+      <div class="sec-title">참고자료 <small>신청자 첨부</small>${editable ? '<span class="noprint"><button class="btn sm" type="button" data-up="upRef">＋ 파일 추가</button><input type="file" id="upRef" multiple hidden></span>' : ''}</div><div id="refs"></div>
+      <div class="sec"><div class="sec-title">결과물 <small>디자이너 첨부</small>${me.role === 'designer' && ['approved', 'in_progress'].includes(r.status) ? '<span class="noprint"><button class="btn sm" type="button" data-up="upDel2">＋ 결과물 업로드</button><input type="file" id="upDel2" multiple hidden></span>' : ''}</div>
         ${r.deliverable_url ? (safeUrl(r.deliverable_url) ? `<p class="mb">결과물 URL: <a href="${esc(safeUrl(r.deliverable_url))}" target="_blank" rel="noopener noreferrer">${esc(r.deliverable_url)}</a></p>` : `<p class="mb muted">결과물 URL 형식이 올바르지 않습니다: ${esc(r.deliverable_url)}</p>`) : ''}<div id="dels"></div></div>
       <div class="hint mt">참고자료 50MB, 결과물 300MB까지. 실행 파일은 올릴 수 없습니다. 내려받기 링크는 60초 동안 유효합니다.</div>
     </div>
 
-    <div class="tabpane" data-t="4">
+    <div class="tabpane" data-t="4" id="pane4" role="tabpanel">
       <div class="sec-title">진행 기록</div>
       <table class="plain"><thead><tr><th>일시</th><th>처리</th><th>처리자</th><th>내용</th></tr></thead><tbody>${[...events].reverse().map((e) => `<tr><td class="mono">${fmtDT(e.created_at)}</td><td><b>${esc(ACTION_KO[e.action] || e.action)}</b></td><td>${esc(pname(ctx, e.actor_id))}</td><td>${esc(e.note || '')}${termsText(e)}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">기록 없음</td></tr>'}</tbody></table>
-      <div class="sec"><div class="sec-title">코멘트 <small>${comments.length}건 · 관련자에게 이메일로 전달됩니다</small></div>
-        ${comments.map((c) => `<div class="cm"><div class="a"><b>${esc(pname(ctx, c.author_id))}</b> · ${fmtDT(c.created_at)}</div><div class="b">${esc(c.body)}</div></div>`).join('') || '<p class="muted small">아직 코멘트가 없습니다.</p>'}
-        <form id="cf" class="mt"><textarea id="cbody" placeholder="질문, 추가 자료 링크, 피드백" required></textarea><div class="right mt"><button class="btn pri" type="submit">코멘트 남기기</button></div></form></div>
+      <div class="sec"><div class="sec-title">코멘트 <small><span id="ccnt">${comments.length}</span>건 · 관련자에게 이메일로 전달됩니다</small></div>
+        <div id="clist"></div>
+        <form id="cf" class="mt noprint"><textarea id="cbody" placeholder="질문, 추가 자료 링크, 피드백" required aria-label="코멘트"></textarea><div class="right mt"><button class="btn pri" type="submit">코멘트 남기기</button></div></form></div>
     </div>`;
 
   // ---- 탭
-  const setTab = (t) => { docTab[id] = t; $$('#tabs button', main).forEach((b) => b.classList.toggle('on', b.dataset.t === String(t))); $$('.tabpane', main).forEach((p) => p.classList.toggle('on', p.dataset.t === String(t))); };
+  const setTab = (t) => { docTab[id] = t; $$('#tabs button', main).forEach((b) => { const onb = b.dataset.t === String(t); b.classList.toggle('on', onb); b.setAttribute('aria-selected', onb); }); $$('.tabpane', main).forEach((p) => p.classList.toggle('on', p.dataset.t === String(t))); };
   on('#tabs button', 'click', (e) => setTab(e.currentTarget.dataset.t), main);
+  on('#tabs', 'keydown', (e) => { if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return; const cur = Number(docTab[id] || 1); const nx = e.key === 'ArrowRight' ? Math.min(4, cur + 1) : Math.max(1, cur - 1); setTab(nx); $(`#tabs button[data-t="${nx}"]`, main).focus(); }, main);
   on('[data-tab]', 'click', (e) => setTab(e.currentTarget.dataset.tab), main);
   setTab(docTab[id] || 1);
 
-  // ---- 파일 목록 (부분 갱신)
-  const fileTable = (arr, canDel) => arr.length ? `<table class="plain"><thead><tr><th>파일명</th><th>크기</th><th>첨부자</th><th>등록일</th><th class="noprint"></th></tr></thead><tbody>${arr.map((f) => { const pending = f.upload_state === 'pending'; return `<tr data-id="${f.id}" data-path="${esc(f.storage_path)}"><td class="n"><b>${esc(f.file_name)}</b>${pending ? ' <span class="chip red">업로드 미완료</span>' : ''}</td><td class="mono">${fmtSize(f.size_bytes)}</td><td>${esc(pname(ctx, f.uploaded_by))}</td><td class="mono">${fmtDT(f.created_at)}</td><td class="noprint inline">${pending ? '' : '<button class="btn sm dl" type="button">내려받기</button>'}${canDel || pending ? '<button class="btn sm dan del" type="button">삭제</button>' : ''}</td></tr>`; }).join('')}</tbody></table>` : '<div class="files-empty">첨부 없음</div>';
+  // ---- 코멘트 목록 (부분 갱신)
+  const renderComments = () => { $('#clist', main).innerHTML = comments.map((c) => `<div class="cm"><div class="a"><b>${esc(pname(ctx, c.author_id))}</b> · ${fmtDT(c.created_at)}</div><div class="b">${esc(c.body)}</div></div>`).join('') || '<p class="muted small">아직 코멘트가 없습니다.</p>'; $('#ccnt', main).textContent = comments.length; $('#tabs button[data-t="4"] em', main).textContent = comments.length; };
+  renderComments();
+
+  // ---- 파일 목록 (부분 갱신). 삭제 권한 = 서버 규칙과 동일(참고자료: 작성자+draft/revision, 결과물: 디자이너+in_progress). 미완료 파일은 올린 본인만.
+  const canDelFile = (f) => (f.kind === 'reference' ? editable : me.role === 'designer' && r.status === 'in_progress') && (f.upload_state === 'ready' || f.uploaded_by === me.id);
+  const fileTable = (arr) => arr.length ? `<table class="plain"><thead><tr><th>파일명</th><th>크기</th><th>첨부자</th><th>등록일</th><th class="noprint"></th></tr></thead><tbody>${arr.map((f) => { const pending = f.upload_state === 'pending'; return `<tr data-id="${f.id}" data-path="${esc(f.storage_path)}"><td class="n"><b>${esc(f.file_name)}</b>${pending ? ' <span class="chip red">업로드 미완료</span>' : ''}</td><td class="mono">${fmtSize(f.size_bytes)}</td><td>${esc(pname(ctx, f.uploaded_by))}</td><td class="mono">${fmtDT(f.created_at)}</td><td class="noprint inline">${pending ? '' : '<button class="btn sm dl" type="button">내려받기</button>'}${canDelFile(f) ? '<button class="btn sm dan del" type="button">삭제</button>' : ''}</td></tr>`; }).join('')}</tbody></table>` : '<div class="files-empty">첨부 없음</div>';
   const renderFiles = () => {
-    const rf = files.filter((f) => f.kind === 'reference'), d = files.filter((f) => f.kind === 'deliverable');
-    $('#refs', main).innerHTML = fileTable(rf, editable); $('#dels', main).innerHTML = fileTable(d, me.role === 'designer' && r.status === 'in_progress');
+    $('#refs', main).innerHTML = fileTable(files.filter((f) => f.kind === 'reference')); $('#dels', main).innerHTML = fileTable(files.filter((f) => f.kind === 'deliverable'));
     $('#fcnt', main).textContent = files.length;
     bindFiles(ctx, $('#refs', main), refreshFiles); bindFiles(ctx, $('#dels', main), refreshFiles);
   };
   const refreshFiles = async () => { files = await ctx.api.files(id); renderFiles(); };
   renderFiles();
-  let uploading = 0;
-  const uploadHandler = (kind) => async (e) => { const fs = [...e.target.files]; e.target.value = ''; uploading += fs.length; setStatus?.(); for (const f of fs) { await uploadOne(ctx, id, kind, f); uploading--; setStatus?.(); } await refreshFiles(); setTab(3); };
-  const upRef = $('#upRef', main); if (upRef) upRef.onchange = uploadHandler('reference');
-  for (const sel of ['#upDel', '#upDel2']) { const el = $(sel, main); if (el) el.onchange = uploadHandler('deliverable'); }
+  // 업로드 상태는 조회 화면(디자이너 결과물)에서도 필요하므로 편집 여부와 무관하게 여기서 정의
+  let uploading = 0, submitting = false;
+  let setStatus = () => {};
+  const uploadHandler = (kind, gotoTab) => async (e) => {
+    const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
+    uploading += fs.length; setStatus();
+    try { for (const f of fs) { try { await uploadOne(ctx, id, kind, f); } finally { uploading--; setStatus(); } } }
+    finally { uploading = Math.max(0, uploading); setStatus(); }
+    await refreshFiles(); if (gotoTab) setTab(3);
+  };
+  on('button[data-up]', 'click', (e) => $('#' + e.currentTarget.dataset.up, main)?.click(), main);
+  const upRef = $('#upRef', main); if (upRef) upRef.onchange = uploadHandler('reference', false);
+  const upDel = $('#upDel', main); if (upDel) upDel.onchange = uploadHandler('deliverable', true);
+  const upDel2 = $('#upDel2', main); if (upDel2) upDel2.onchange = uploadHandler('deliverable', false);
 
   // ---- 공통 버튼
   $('#back', main).onclick = () => back('#/');
-  $('#print', main).onclick = () => { setTab(1); window.print(); };
-  $('#cf', main).onsubmit = async (ev) => { ev.preventDefault(); const b = $('#cf button', main); b.disabled = true; try { await ctx.api.comment(id, v('cbody', main)); toast('코멘트를 남겼습니다.'); docTab[id] = 4; ctx.render(); } catch (e) { toast(errText(e), true); b.disabled = false; } };
+  $('#print', main).onclick = () => {
+    if (editable) { go(`#/doc/${id}?print=1`); return; } // 작성 중이면 읽기 전용 표현으로 출력(입력창 대신 본문 텍스트)
+    const prev = docTab[id]; setTab(1); const restore = () => { setTab(prev); window.removeEventListener('afterprint', restore); }; window.addEventListener('afterprint', restore); window.print();
+  };
+  if (printMode) { setTab(1); setTimeout(() => { const backAfter = () => { window.removeEventListener('afterprint', backAfter); history.back(); }; window.addEventListener('afterprint', backAfter); window.print(); }, 300); }
+  $('#cf', main).onsubmit = async (ev) => { ev.preventDefault(); const b = $('#cf button', main); b.disabled = true; try { await ctx.api.comment(id, v('cbody', main)); toast('코멘트를 남겼습니다.'); $('#cbody', main).value = ''; comments = await ctx.api.comments(id); renderComments(); } catch (e) { toast(errText(e), true); } finally { b.disabled = false; } };
   on('#tools button[data-a]', 'click', (e) => actionDialog(ctx, r, e.currentTarget.dataset.a), main);
 
   if (!editable) return;
 
   // ---- 편집: 자동저장 + 검증
   let dirty = false, saving = null, queued = false, lastSaved = null, inputVer = 0, timer = null;
-  let kind = r.kind, itemId = r.item_type_id;
-  const setStatus = () => {
+  let kind = r.kind, itemId = Number(r.item_type_id) || null, keptClient = r.client_id ? String(r.client_id) : '';
+  setStatus = () => {
     const el = $('#savest', main); if (!el) return;
-    el.textContent = uploading ? '파일 올리는 중…' : saving ? '저장 중…' : dirty ? '저장되지 않은 변경 있음' : lastSaved ? `임시저장됨 ${lastSaved.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}` : '변경 없음';
-    for (const s of ['#submitBtn', '#submitBtn2']) { const b = $(s, main); if (b) b.disabled = uploading > 0; }
+    el.textContent = submitting ? '제출 중…' : uploading ? '파일 올리는 중…' : saving ? '저장 중…' : dirty ? '저장되지 않은 변경 있음' : lastSaved ? `임시저장됨 ${lastSaved.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}` : '변경 없음';
+    const lock = submitting || uploading > 0;
+    for (const s of ['#submitBtn', '#submitBtn2', '#saveNow', '#saveNow2']) { const b = $(s, main); if (b) b.disabled = lock; }
+    $$('#pane1 input, #pane1 select, #pane1 textarea, #title', main).forEach((i) => { i.disabled = submitting; });
   };
   const collect = () => ({
-    kind, client_id: kind === 'client' && v('client_id', main) ? Number(v('client_id', main)) : null, title: v('title', main), item_type_id: itemId || null, item_type_other: v('item_type_other', main) || null,
+    kind, client_id: kind === 'client' && v('client_id', main) ? Number(v('client_id', main)) : null, title: v('title', main), item_type_id: itemId || null, item_type_other: itemId === otherId ? v('item_type_other', main) || null : null,
     needs_photo: !!$('#needs_photo', main)?.checked, product_name: v('product_name', main) || null, purpose: v('purpose', main) || null, size_spec: v('size_spec', main) || null,
     product_features: v('product_features', main) || null, required_copy: v('required_copy', main) || null, notes: v('notes', main) || null, requested_due: v('requested_due', main) || null,
     objective: v('objective', main) || null, target_audience: v('target_audience', main) || null, tone_style: v('tone_style', main) || null, deliverable_format: v('deliverable_format', main) || null,
@@ -261,38 +292,53 @@ export async function doc(main, ctx, id) {
       .finally(() => { saving = null; setStatus(); if (queued) { queued = false; doSave().catch(() => {}); } });
     setStatus(); return saving;
   };
-  const flush = async () => { clearTimeout(timer); if (dirty || queued) await doSave(); else if (saving) await saving; };
+  // 큐가 모두 비워질 때까지 기다림(진행 중 저장 → 대기 중 저장 순). 실패하면 dirty 가 남고 false 반환.
+  const flush = async () => {
+    clearTimeout(timer);
+    for (let i = 0; i < 4; i++) {
+      if (saving) { try { await saving; } catch {} continue; }
+      if (dirty || queued) { try { await doSave(); } catch { return false; } continue; }
+      return true;
+    }
+    return !dirty && !saving && !queued;
+  };
   const touched = () => { dirty = true; inputVer++; setStatus(); clearTimeout(timer); timer = setTimeout(() => doSave().catch(() => {}), 1500); };
-  ctx.flush = () => { if (dirty) doSave().catch(() => {}); };
-  ctx.unloadGuard = () => dirty || !!saving || uploading > 0;
+  ctx.flush = flush;
+  ctx.unloadGuard = () => dirty || !!saving || uploading > 0 || submitting;
 
-  const REQ = [['제목', () => !!v('title', main), 'title'], ['의뢰품목', () => !!itemId && (itemId != otherId || !!v('item_type_other', main)), itemId == otherId ? 'item_type_other' : 'item_type_id'], ['기업명', () => kind === 'internal' || !!v('client_id', main), 'client_id'], ['사용 용도', () => !!v('purpose', main), 'purpose']];
+  // 필수 항목: 포커스 대상은 검사 시점에 계산(품목 변경을 따라감)
+  const REQ = [['제목', () => !!v('title', main), () => 'title'], ['의뢰품목', () => !!itemId && (itemId !== otherId || !!v('item_type_other', main)), () => (itemId === otherId ? 'item_type_other' : 'item_type_id')], ['기업명', () => kind === 'internal' || !!v('client_id', main), () => 'client_id'], ['사용 용도', () => !!v('purpose', main), () => 'purpose']];
   const check = () => {
-    const rows = REQ.filter(([k]) => k !== '기업명' || kind === 'client').map(([k, f, el]) => [k, f(), el]);
+    const rows = REQ.filter(([k]) => k !== '기업명' || kind === 'client').map(([k, f, el]) => [k, f(), el()]);
     const el = $('#check', main); if (el) el.innerHTML = rows.map(([k, o]) => `<li class="${o ? 'ok' : ''}">${k}</li>`).join('');
-    return rows.find(([, o]) => !o)?.[2] || null;
+    return rows.find(([, o]) => !o) || null;
   };
   const showClient = () => { const c = clientOf(ctx, { client_id: Number(v('client_id', main)) }); $('#c_ceo', main).textContent = c?.ceo_name || '-'; $('#c_contact', main).textContent = c ? [c.contact_name, c.contact_position].filter(Boolean).join(' / ') || '-' : '-'; $('#c_phone', main).textContent = c?.contact_phone || '-'; $('#c_email', main).textContent = c?.contact_email || '-'; };
-  const applyKind = () => { const isC = kind === 'client'; for (const s of ['#cl_l', '#cl_v', '#c_ceo', '#c_contact', '#c_phone', '#c_email']) { const el = $(s, main); if (el) el.style.opacity = isC ? '' : '.45'; } $('#cl_l', main).innerHTML = '기업명' + (isC ? '<span class="req"> *</span>' : ''); $('#client_id', main).disabled = !isC; };
-  const renderSizes = () => { const t = ctx.itemTypes.find((x) => x.id == itemId); const box = $('#sizes', main); box.innerHTML = (t?.default_sizes || []).map((s) => `<button type="button">${esc(s)}</button>`).join(''); on('button', 'click', (e) => { $('#size_spec', main).value = e.currentTarget.textContent; touched(); check(); }, box); };
+  // 내부 의뢰: 고객사 행 자체를 숨기고 선택값은 keptClient 에 보관(다시 고객사 의뢰로 바꾸면 복원)
+  const applyKind = () => { const isC = kind === 'client'; const sel = $('#client_id', main); if (!isC) { keptClient = sel.value || keptClient; sel.value = ''; } else if (!sel.value && keptClient) sel.value = keptClient; $$('.cl-row', main).forEach((el) => { el.style.display = isC ? '' : 'none'; }); showClient(); };
+  const renderSizes = () => { const t = ctx.itemTypes.find((x) => Number(x.id) === itemId); const box = $('#sizes', main); box.innerHTML = (t?.default_sizes || []).map((s) => `<button type="button">${esc(s)}</button>`).join(''); on('button', 'click', (e) => { $('#size_spec', main).value = e.currentTarget.textContent; touched(); check(); }, box); };
   on('input[name=kind]', 'change', (e) => { kind = e.currentTarget.value; applyKind(); touched(); check(); }, main);
   $('#item_type_id', main).onchange = (e) => { itemId = Number(e.target.value) || null; const oth = itemId === otherId; $('#oth_l', main).style.display = oth ? '' : 'none'; $('#oth_v', main).style.display = oth ? '' : 'none'; renderSizes(); touched(); check(); };
   $('#client_id', main).onchange = () => { showClient(); touched(); check(); };
   on('#fmts button', 'click', (e) => { const i = $('#deliverable_format', main); const cur = i.value.split(',').map((s) => s.trim()).filter(Boolean); const x = e.currentTarget.textContent; i.value = (cur.includes(x) ? cur.filter((y) => y !== x) : [...cur, x]).join(', '); touched(); }, main);
-  on('.tabpane input:not([type=file]), .tabpane textarea, .tabpane select, #title', 'input', () => { touched(); check(); }, main);
+  on('#pane1 input:not([type=file]), #pane1 textarea, #pane1 select, #title', 'input', () => { touched(); check(); }, main); // 코멘트 입력은 제외
   $('#newClient', main).onclick = () => clientDialog(ctx, null, async (c) => { ctx.clients.push(c); ctx.clients.sort((a, b) => a.name.localeCompare(b.name)); const sel = $('#client_id', main); sel.insertAdjacentHTML('beforeend', `<option value="${c.id}">${esc(c.name)}</option>`); sel.value = c.id; showClient(); touched(); check(); });
   const submit = async () => {
+    if (submitting) return;
     if (uploading) return toast('파일 업로드가 끝난 뒤 제출하세요.', true);
-    const missing = check();
-    if (missing) { toast('필수 항목을 채워주세요: ' + REQ.find((x) => x[2] === missing)?.[0], true); setTab(1); const el = $('#' + missing, main); el?.scrollIntoView({ block: 'center', behavior: 'smooth' }); el?.focus?.(); return; }
+    const focusMissing = (m) => { toast('필수 항목을 채워주세요: ' + m[0], true); setTab(1); const el = $('#' + m[2], main); el?.scrollIntoView({ block: 'center', behavior: 'smooth' }); el?.focus?.(); };
+    let missing = check(); if (missing) return focusMissing(missing);
     if (files.some((f) => f.upload_state === 'pending')) return toast('업로드가 끝나지 않은 파일이 있습니다. 첨부파일 탭에서 삭제하거나 다시 올린 뒤 제출하세요.', true);
-    const btns = $$('#tools button, #saveNow2, #submitBtn2', main); btns.forEach((b) => (b.disabled = true));
+    submitting = true; setStatus();
     try {
-      await flush(); if (dirty) throw new Error('save failed');
+      const ok = await flush();
+      if (!ok) { toast('임시저장에 실패해 제출할 수 없습니다. 네트워크를 확인하고 다시 시도하세요.', true); return; }
+      missing = check(); if (missing) { focusMissing(missing); return; }
       await ctx.api.transition(id, r.status === 'revision' ? 'resubmit' : 'submit');
       ctx.flush = null; ctx.unloadGuard = null; docTab[id] = 2;
-      toast(r.status === 'revision' ? '재제출했습니다.' : '결재 요청했습니다. 대표에게 알림이 갑니다.'); ctx.render();
-    } catch (e) { if (e?.message !== 'save failed') toast(errText(e), true); btns.forEach((b) => (b.disabled = false)); setStatus(); }
+      toast(r.status === 'revision' ? '재제출했습니다.' : '결재 요청했습니다. 대표에게 알림이 갑니다.'); submitting = false; ctx.render();
+    } catch (e) { toast(errText(e), true); }
+    finally { submitting = false; setStatus(); }
   };
   for (const s of ['#saveNow', '#saveNow2']) { const b = $(s, main); if (b) b.onclick = async () => { try { await flush(); if (!dirty) toast('임시저장했습니다.'); } catch {} }; }
   for (const s of ['#submitBtn', '#submitBtn2']) { const b = $(s, main); if (b) b.onclick = submit; }
@@ -321,7 +367,7 @@ async function uploadOne(ctx, requestId, kind, file) {
 const dv = (d, id) => $('#' + id, d)?.value?.trim() ?? '';
 function actionDialog(ctx, r, a) {
   const prioSel = (cur) => field('우선순위', `<select id="d_prio">${Object.entries(PRIO).map(([k, x]) => `<option value="${k}" ${cur === k ? 'selected' : ''}>${x}</option>`).join('')}</select>`);
-  const dueIn = (cur, req) => field(`확정 납기${req ? ' <span class="req">*</span>' : ''}`, `<input type="date" id="d_due" value="${cur || r.requested_due || ''}" ${req ? 'required' : ''}>`, { hint: r.requested_due ? `신청자 희망 납기 ${fmtD(r.requested_due)}` : '신청자가 희망 납기를 적지 않았습니다.' });
+  const dueIn = (cur, req) => field(`확정 납기${req ? ' <span class="req">*</span>' : ''}`, `<input type="date" id="d_due" value="${esc(cur || r.requested_due || '')}" ${req ? 'required' : ''}>`, { hint: r.requested_due ? `신청자 희망 납기 ${fmtD(r.requested_due)}` : '신청자가 희망 납기를 적지 않았습니다.' });
   const noteIn = (req, ph) => field(req ? '사유 <span class="req">*</span>' : '의견', `<textarea id="d_note" placeholder="${ph || ''}" ${req ? 'required' : ''}></textarea>`);
   const run = (payload) => ctx.api.transition(r.id, a, payload).then(() => { toast('처리했습니다.'); docTab[r.id] = 2; ctx.render(); });
   switch (a) {

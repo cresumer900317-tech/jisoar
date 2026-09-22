@@ -1,7 +1,7 @@
 // Design Desk SPA v3 — 부팅·인증·라우팅·셸(상단바 + 좌측 트리). 화면은 views.js, 데이터는 api.js
-import { api, isDemo } from './api.js?v=3';
-import * as V from './views.js?v=3';
-import { ROLE, esc, go, toast, errText, $ } from './ui.js?v=3';
+import { api, isDemo } from './api.js?v=4';
+import * as V from './views.js?v=4';
+import { ROLE, esc, go, toast, errText, $ } from './ui.js?v=4';
 
 const app = document.getElementById('app');
 const ctx = { api, me: null, profiles: [], itemTypes: [], clients: [], reqs: [], reload, render };
@@ -36,7 +36,7 @@ async function reload() {
 
 async function render() {
   const my = ++rendering;
-  if (ctx.flush) { const f = ctx.flush; ctx.flush = null; ctx.unloadGuard = null; f(); }
+  if (ctx.flush) { const f = ctx.flush; ctx.flush = null; ctx.unloadGuard = null; try { await f(); } catch {} } // 이전 작성 화면의 저장 큐가 끝난 뒤 이동
   const hash = location.hash.replace(/^#\/?/, '');
   const [path, query] = hash.split('?');
   const [route, arg] = path.split('/');
@@ -69,7 +69,7 @@ async function render() {
     else if (route === 'box') await V.list(main, ctx, params, arg || 'all');
     else if (route === 'list') go('#/box/all');
     else if (route === 'new') await V.createDraft(ctx);
-    else if (['doc', 'r', 'requests', 'edit'].includes(route)) await V.doc(main, ctx, arg);
+    else if (['doc', 'r', 'requests', 'edit'].includes(route)) await V.doc(main, ctx, arg, params);
     else if (route === 'clients') await V.clients(main, ctx, params, arg);
     else if (route === 'settings') await V.settings(main, ctx);
     else if (route === 'me') V.me(main, ctx);
@@ -92,7 +92,7 @@ function shell(route, arg) {
   const tree = V.BOXES[me.role].map((g) => `<li class="grp">${g.grp}</li>${g.items.map(([k, l, s]) => `<li>${item('#/box/' + k, l, on('box', k), V.boxCount(ctx, s))}</li>`).join('')}`).join('');
   app.innerHTML = `
   ${isDemo ? `<div class="demo-bar">데모 모드 · 샘플 데이터 · 역할 보기:${Object.entries(api.roles).map(([k, x]) => `<button data-r="${k}" class="${api.who() === k ? 'on' : ''}">${x}</button>`).join('')}</div>` : ''}
-  <header class="topbar"><button class="btn sm menu-btn" id="menu" type="button">☰</button><a class="brand" href="#/"><span class="lg">D</span>Design Desk</a><div class="sys">디자인 제작 의뢰 관리</div>
+  <header class="topbar"><button class="btn sm menu-btn" id="menu" type="button" aria-label="메뉴 열기" aria-controls="side" aria-expanded="false">☰</button><a class="brand" href="#/"><span class="lg">D</span>Design Desk</a><div class="sys">디자인 제작 의뢰 관리</div>
     <div class="user"><a href="#/me"><b>${esc(me.name || me.email)}</b> · ${ROLE[me.role]}${me.is_admin ? ' · 관리자' : ''}</a><button class="btn sm" id="logout" type="button">로그아웃</button></div></header>
   <div class="layout"><nav class="side" id="side">
     <div class="who"><b>${esc(me.name || '')}</b>${esc(me.position || ROLE[me.role])}</div>
@@ -106,8 +106,11 @@ function shell(route, arg) {
     </ul></nav>
     <main class="content" id="main"><div class="boot">불러오는 중…</div></main></div>`;
   $('#logout', app).onclick = async () => { await api.auth.signOut(); go('#/'); };
-  $('#menu', app).onclick = () => $('#side', app).classList.toggle('open');
-  $('#side', app).addEventListener('click', (e) => { if (e.target.closest('a')) $('#side', app).classList.remove('open'); });
+  const side = $('#side', app), menu = $('#menu', app);
+  const setMenu = (open) => { side.classList.toggle('open', open); menu.setAttribute('aria-expanded', String(open)); if (!open) menu.focus?.(); };
+  menu.onclick = () => setMenu(!side.classList.contains('open'));
+  side.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && side.classList.contains('open')) setMenu(false); }, { once: false });
   if (isDemo) app.querySelectorAll('.demo-bar button').forEach((b) => (b.onclick = () => { ctx.me = null; api.switchRole(b.dataset.r); }));
 }
 
