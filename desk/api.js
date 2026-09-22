@@ -45,7 +45,11 @@ function live() {
       if (error) throw error;
       await rpc('file_confirm', { p_file: res.id });
     },
-    deleteFile: async (f) => { await sb.storage.from('request-files').remove([f.storage_path]); await rpc('file_delete', { p_file: f.id }); },
+    deleteFile: async (f) => {
+      const { error } = await sb.storage.from('request-files').remove([f.storage_path]);
+      if (error) throw error; // 객체 삭제 실패 시 DB 행은 남겨 재시도 가능하게
+      await rpc('file_delete', { p_file: f.id });
+    },
     downloadUrl: async (f) => (await sb.storage.from('request-files').createSignedUrl(f.storage_path, 60, { download: f.file_name }).then(thrower)).signedUrl,
     clientInsert: (row) => q(sb.from('clients').insert(row).select().single()),
     clientUpdate: (id, row) => q(sb.from('clients').update(row).eq('id', id)),

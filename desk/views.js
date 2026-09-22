@@ -1,5 +1,5 @@
 // 화면들. ctx = { api, me, profiles, itemTypes, clients, reload, render }
-import { STATUS, PRIO, ROLE, ROLE_DESC, ACTION_KO, esc, fmtD, fmtDT, fmtSize, chip, prioTag, dueText, go, toast, errText, $, $$, on, v, stepper, dialog, confirmDialog, field } from './ui.js';
+import { STATUS, PRIO, PRIO_RANK, ROLE, ROLE_DESC, ACTION_KO, esc, fmtD, fmtDT, fmtSize, chip, prioTag, dueText, go, back, safeUrl, toast, errText, $, $$, on, v, stepper, dialog, confirmDialog, field } from './ui.js';
 
 const OPEN = ['draft', 'submitted', 'revision', 'approved', 'in_progress'];
 const pname = (ctx, id) => ctx.profiles.find((p) => p.id === id)?.name || (id ? '(알 수 없음)' : '-');
@@ -11,7 +11,7 @@ const first = (s) => (s || '?').trim().slice(0, 1);
 function rrow(ctx, r) {
   return `<li class="rrow" data-id="${r.id}">
     <div class="no">${esc(r.no || '작성중')}</div>
-    <div><div class="ttl">${esc(r.title || '(제목 없음)')}${prioTag(r.priority)}</div><div class="sub">${esc(itemLabel(ctx, r))} · ${esc(clientName(ctx, r))}</div></div>
+    <div><div class="ttl"><a href="#/r/${r.id}">${esc(r.title || '(제목 없음)')}</a>${prioTag(r.priority)}</div><div class="sub">${esc(itemLabel(ctx, r))} · ${esc(clientName(ctx, r))}</div></div>
     <div class="who">${esc(pname(ctx, r.requester_id))}${ctx.me.role !== 'requester' && r.designer_id ? ` → ${esc(pname(ctx, r.designer_id))}` : ''}</div>
     <div class="dd">${dueText(r)}</div>
     <div class="st">${chip(r.status)}</div></li>`;
@@ -19,7 +19,7 @@ function rrow(ctx, r) {
 function rlist(ctx, rows, emptyText = '해당하는 의뢰가 없습니다.') {
   return `<ul class="rlist">${rows.length ? rows.map((r) => rrow(ctx, r)).join('') : `<li class="empty">${emptyText}</li>`}</ul>`;
 }
-const bindRows = (main) => on('.rrow', 'click', (e) => go('#/r/' + e.currentTarget.dataset.id), main);
+const bindRows = (main) => on('.rrow', 'click', (e) => { if (e.target.closest('a')) return; go('#/r/' + e.currentTarget.dataset.id); }, main);
 const flowGuide = () => `<div class="flow">
   <div><b>1 작성·제출</b><p>직원이 의뢰서를 채워 제출합니다. 작성 중엔 임시저장됩니다.</p></div>
   <div><b>2 대표 승인</b><p>대표가 내용을 보고 승인하며 우선순위와 확정 납기를 정합니다.</p></div>
@@ -42,7 +42,7 @@ export async function home(main, ctx) {
     const rev = by('revision'), open = all.filter((r) => OPEN.includes(r.status));
     html = `<div class="head"><div><div class="eyebrow">내 의뢰</div><h1>안녕하세요, ${esc(me.name || '')}님</h1><p class="lead">디자인이 필요하면 의뢰서를 작성해 제출하세요. 대표 승인 뒤 디자이너가 작업하고, 완료되면 이메일로 알려드립니다.</p></div>
       <a class="btn pri lg" href="#/new">+ 새 의뢰 작성</a></div>
-      <div class="grid tiles">${tile(by('draft').length, '작성중')}${tile(by('submitted').length, '승인 대기')}${tile(by('approved', 'in_progress').length, '작업중')}${tile(by('done').length, '완료')}</div>
+      <div class="grid tiles">${tile(by('draft').length, '작성중')}${tile(by('submitted').length, '승인 대기')}${tile(by('approved', 'in_progress').length, '작업 대기·작업중')}${tile(by('done').length, '완료')}</div>
       ${rev.length ? `<div class="next warn mt-l"><div class="ic">!</div><div><h3>대표가 수정을 요청한 의뢰가 ${rev.length}건 있습니다</h3><p>내용을 고친 뒤 재제출해야 다시 검토됩니다.</p></div></div><div class="card">${rlist(ctx, rev)}</div>` : ''}
       ${all.length ? `<div class="mt-l">${sec('진행중인 의뢰', open.filter((r) => r.status !== 'revision'), '#/list?tab=progress', '진행중인 의뢰가 없습니다.')}${sec('최근 완료', by('done').slice(0, 5), '#/list?tab=done', '아직 완료된 의뢰가 없습니다.')}</div>`
         : `<div class="card soft mt-l"><div class="bd"><h3>첫 의뢰를 만들어 보세요</h3><p class="muted mt">의뢰는 이렇게 진행됩니다.</p>${flowGuide()}<div class="mt"><a class="btn pri" href="#/new">새 의뢰 작성</a> <a class="btn" href="#/help">자세한 안내</a></div></div></div>`}`;
@@ -52,14 +52,16 @@ export async function home(main, ctx) {
       <div class="grid tiles">${tile(wait.length, '승인 대기', wait.length ? 'warn' : '')}${tile(prog.length, '작업 대기·작업중')}${tile(by('revision').length, '직원 수정중')}${tile(overdue.length, '납기 지남', overdue.length ? 'danger' : '')}${tile(doneMonth.length, '이번 달 완료')}</div>
       <div class="mt-l">${sec('승인 대기', wait, null, '승인을 기다리는 의뢰가 없습니다.')}${overdue.length ? sec('납기가 지난 의뢰', overdue) : ''}${sec('작업 진행중', prog.sort(byDue), '#/list?tab=progress', '진행중인 작업이 없습니다.')}</div>`;
   } else {
-    const wait = by('approved').sort(byDue), prog = by('in_progress').sort(byDue);
-    html = `<div class="head"><div><div class="eyebrow">디자이너 화면</div><h1>작업중 ${prog.length}건 · 대기 ${wait.length}건</h1><p class="lead">승인된 의뢰를 열어 작업을 시작하세요. 완료할 땐 결과물 파일을 올리거나 URL을 남깁니다.</p></div><a class="btn" href="#/list?tab=all">전체 의뢰</a></div>
+    const wait = by('approved').sort(byPrioDue), prog = by('in_progress').sort(byPrioDue);
+    html = `<div class="head"><div><div class="eyebrow">디자이너 화면</div><h1>작업중 ${prog.length}건 · 대기 ${wait.length}건</h1><p class="lead">승인된 의뢰를 열어 작업을 시작하세요. 목록은 대표가 정한 우선순위 → 납기 순입니다. 완료할 땐 결과물 파일을 올리거나 URL을 남깁니다.</p></div><a class="btn" href="#/list?tab=all">전체 의뢰</a></div>
       <div class="grid tiles">${tile(wait.length, '작업 대기')}${tile(prog.length, '작업중')}${tile(overdue.length, '납기 지남', overdue.length ? 'danger' : '')}${tile(doneMonth.length, '이번 달 완료')}</div>
-      <div class="mt-l">${sec('작업중 (납기순)', prog, null, '작업중인 의뢰가 없습니다.')}${sec('작업 대기', wait, null, '승인된 새 의뢰가 없습니다.')}${sec('최근 완료', by('done').slice(0, 5), '#/list?tab=done', '아직 완료한 의뢰가 없습니다.')}</div>`;
+      <div class="mt-l">${sec('작업중 (우선순위·납기순)', prog, null, '작업중인 의뢰가 없습니다.')}${sec('작업 대기 (우선순위·납기순)', wait, null, '승인된 새 의뢰가 없습니다.')}${sec('최근 완료', by('done').slice(0, 5), '#/list?tab=done', '아직 완료한 의뢰가 없습니다.')}</div>`;
   }
   main.innerHTML = html; bindRows(main);
 }
 const byDue = (a, b) => ((a.confirmed_due || a.requested_due || '9999') > (b.confirmed_due || b.requested_due || '9999') ? 1 : -1);
+const byPrioDue = (a, b) => (PRIO_RANK[a.priority] - PRIO_RANK[b.priority]) || byDue(a, b);
+let creating = false;
 
 // ---------------------------------------------------------------- 전체 목록
 const TABS = {
@@ -75,7 +77,8 @@ export async function list(main, ctx, params) {
   if (f.status) rows = rows.filter((r) => r.status === f.status);
   if (f.item) rows = rows.filter((r) => r.item_type_id == f.item);
   if (f.s) { const k = f.s.toLowerCase(); rows = rows.filter((r) => (r.title || '').toLowerCase().includes(k) || (r.no || '').toLowerCase().includes(k) || (r.product_name || '').toLowerCase().includes(k)); }
-  const link = (t, extra = {}) => `#/list?${new URLSearchParams({ tab: t, ...Object.fromEntries(Object.entries({ ...f, ...extra }).filter(([, x]) => x)) })}`;
+  // 탭을 바꾸면 그 탭과 모순될 수 있는 상태 필터는 버림
+  const link = (t, extra = {}) => `#/list?${new URLSearchParams({ tab: t, ...Object.fromEntries(Object.entries({ ...f, ...(t !== tab[0] ? { status: '' } : {}), ...extra }).filter(([, x]) => x)) })}`;
   const opt = (arr, cur, lab) => arr.map((x) => `<option value="${x.id}" ${cur == x.id ? 'selected' : ''}>${esc(lab(x))}</option>`).join('');
   main.innerHTML = `
     <div class="head"><div><div class="eyebrow">의뢰</div><h1>${ctx.me.role === 'requester' ? '내 의뢰 전체' : '의뢰 전체'}</h1><p class="lead">${ctx.me.role === 'requester' ? '내가 신청한 의뢰만 보입니다.' : '작성중(임시저장) 의뢰는 제출 전이라 보이지 않습니다.'}</p></div><a class="btn pri" href="#/new">+ 새 의뢰</a></div>
@@ -93,15 +96,18 @@ export async function list(main, ctx, params) {
 }
 
 export async function createDraft(ctx) {
-  try { const id = await ctx.api.create('client'); go('#/edit/' + id); }
+  if (creating) return; // 렌더가 겹쳐도 임시 의뢰는 한 번만 생성
+  creating = true;
+  try { const id = await ctx.api.create('client'); if (location.hash.startsWith('#/new')) go('#/edit/' + id); }
   catch (e) { toast(errText(e), true); go('#/'); }
+  finally { creating = false; }
 }
 
 // ---------------------------------------------------------------- 작성 / 수정
 export async function edit(main, ctx, id) {
   const r = await ctx.api.request(id);
   if (r.requester_id !== ctx.me.id || !['draft', 'revision'].includes(r.status)) { go('#/r/' + id); return; }
-  const [files, events] = await Promise.all([ctx.api.files(id), r.status === 'revision' ? ctx.api.events(id) : []]);
+  let [files, events] = await Promise.all([ctx.api.files(id), r.status === 'revision' ? ctx.api.events(id) : []]);
   const revNote = r.status === 'revision' ? [...events].reverse().find((e) => e.action === 'request_revision')?.note : null;
   const otherId = ctx.itemTypes.find((t) => t.code === 'other')?.id;
   const items = ctx.itemTypes.filter((t) => t.is_active || t.id === r.item_type_id);
@@ -110,14 +116,14 @@ export async function edit(main, ctx, id) {
 
   main.innerHTML = `
     <div class="head"><div><div class="eyebrow">${r.no ? esc(r.no) : '새 의뢰'}</div><h1>${r.status === 'revision' ? '의뢰 수정' : '의뢰서 작성'}</h1>
-      <p class="lead">${r.status === 'revision' ? '대표 요청대로 고친 뒤 재제출하세요.' : '필수 항목(*)만 채우면 제출할 수 있습니다. 나머지는 디자이너가 작업할 때 큰 도움이 됩니다.'}</p></div>
-      <div class="actions"><a class="btn" href="#/r/${id}">미리보기</a></div></div>
+      <p class="lead">${r.status === 'revision' ? '대표 요청대로 고친 뒤 재제출하세요.' : '필수 항목(*)만 채우면 제출할 수 있습니다. 나머지는 디자이너가 작업할 때 큰 도움이 됩니다. 입력하면 잠시 후 자동으로 임시저장됩니다.'}</p></div>
+      <div class="actions"><button class="btn" id="preview" type="button">저장하고 미리보기</button></div></div>
     ${revNote ? `<div class="next warn"><div class="ic">!</div><div><h3>대표의 수정 요청</h3><p>${esc(revNote)}</p></div></div>` : ''}
-    <form class="card" id="f">
+    <form class="card" id="f" novalidate>
       <section class="fsec"><div class="sh"><span class="num">1</span><div><h3>어떤 의뢰인가요</h3><p>고객사 납품용이면 고객사를, 회사 내부용이면 내부 의뢰를 고르세요.</p></div></div>
         <div class="field"><div class="seg" id="kind"><button type="button" data-k="client" class="${kind === 'client' ? 'on' : ''}">고객사 의뢰</button><button type="button" data-k="internal" class="${kind === 'internal' ? 'on' : ''}">내부 의뢰</button></div></div>
         <div id="clientBox" style="${kind === 'internal' ? 'display:none' : ''}">
-          ${field('고객사', `<div class="inline"><select id="client_id" style="flex:1;min-width:200px"><option value="">고객사를 선택하세요</option>${clientOpts}</select><button type="button" class="btn" id="newClient">+ 새 고객사</button></div>`, { req: true, hint: '목록에 없으면 "새 고객사"로 바로 등록할 수 있습니다.' })}
+          ${field('고객사', `<div class="inline"><select id="client_id" style="flex:1 1 180px;min-width:0"><option value="">고객사를 선택하세요</option>${clientOpts}</select><button type="button" class="btn" id="newClient">+ 새 고객사</button></div>`, { req: true, hint: '목록에 없으면 "새 고객사"로 바로 등록할 수 있습니다.' })}
           <div id="ncBox" class="card soft" style="display:none;margin-bottom:16px"><div class="bd">
             <div class="row">${field('기업명', '<input type="text" id="nc_name">', { req: true })}${field('대표자', '<input type="text" id="nc_ceo">')}${field('담당자', '<input type="text" id="nc_contact">')}${field('담당자 직급', '<input type="text" id="nc_pos">')}${field('담당자 이메일', '<input type="email" id="nc_email">')}</div>
             <div class="inline"><button type="button" class="btn pri sm" id="nc_save">등록하고 선택</button><button type="button" class="btn sm" id="nc_cancel">닫기</button></div></div></div>
@@ -138,24 +144,58 @@ export async function edit(main, ctx, id) {
       </section>
       <section class="fsec"><div class="sh"><span class="num">4</span><div><h3>자료와 일정</h3><p>제품 사진, 로고, 기존 디자인, 레퍼런스를 올려주세요. 제출 후에는 코멘트로 추가 자료를 전달합니다.</p></div></div>
         <div class="grid main">
-          <div class="field"><label>참고자료</label><ul class="files" id="files">${files.length ? files.map(fileLi(true)).join('') : '<li class="muted small">아직 첨부한 파일이 없습니다.</li>'}</ul>
+          <div class="field"><label>참고자료</label><ul class="files" id="files"></ul>
             <div class="inline mt"><label class="btn">+ 파일 추가<input type="file" id="up" multiple hidden></label><span class="hint">파일당 50MB까지. 이미지·PDF·AI·PSD·ZIP 등</span></div></div>
           ${field('희망 납기', `<input type="date" id="requested_due" value="${esc(r.requested_due || '')}">`, { hint: '대표가 승인하면서 확정 납기를 정합니다.' })}
         </div>
       </section>
-      <div class="stick"><ul class="check" id="check"></ul><div class="actions"><button class="btn dan ghost sm" type="button" id="cancelReq">의뢰 취소</button><button class="btn" type="submit" data-act="save">임시저장</button><button class="btn pri" type="submit" data-act="submit">${r.status === 'revision' ? '재제출' : '제출하기'}</button></div></div>
+      <div class="stick"><div><ul class="check" id="check"></ul><div class="st" id="savest"></div></div><div class="actions"><button class="btn dan ghost sm" type="button" id="cancelReq">의뢰 취소</button><button class="btn" type="button" id="saveNow">지금 저장</button><button class="btn pri" type="submit" id="submitBtn">${r.status === 'revision' ? '재제출' : '제출하기'}</button></div></div>
     </form>`;
 
-  const sizesBox = $('#sizes', main);
-  const renderSizes = () => { const t = ctx.itemTypes.find((x) => x.id == itemId); sizesBox.innerHTML = (t?.default_sizes || []).map((s) => `<button type="button">${esc(s)}</button>`).join(''); on('button', 'click', (e) => { $('#size_spec', main).value = e.currentTarget.textContent; check(); }, sizesBox); };
-  const check = () => {
-    const ok = { 고객사: kind === 'internal' || !!v('client_id', main), 품목: !!itemId && (itemId != otherId || !!v('item_type_other', main)), 제목: !!v('title', main), '사용 용도': !!v('purpose', main) };
-    $('#check', main).innerHTML = Object.entries(ok).filter(([k]) => k !== '고객사' || kind === 'client').map(([k, o]) => `<li class="${o ? 'ok' : ''}">${k}</li>`).join('');
-    return Object.values(ok).every(Boolean);
+  // ---- 저장 상태 (자동저장: 입력 1.5초 후, 화면 이탈 시 즉시)
+  let dirty = false, saving = null, queued = false, lastSaved = null, uploading = 0, inputVer = 0, timer = null;
+  const setStatus = () => {
+    const el = $('#savest', main); if (!el) return;
+    el.textContent = uploading ? '파일 올리는 중…' : saving ? '저장 중…' : dirty ? '저장되지 않은 변경 있음' : lastSaved ? `임시저장됨 ${lastSaved.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}` : '변경 없음';
+    $('#submitBtn', main).disabled = uploading > 0;
   };
-  on('#kind button', 'click', (e) => { kind = e.currentTarget.dataset.k; $$('#kind button', main).forEach((b) => b.classList.toggle('on', b.dataset.k === kind)); $('#clientBox', main).style.display = kind === 'internal' ? 'none' : ''; check(); }, main);
-  on('#picker button', 'click', (e) => { itemId = Number(e.currentTarget.dataset.id); $$('#picker button', main).forEach((b) => b.classList.toggle('on', Number(b.dataset.id) === itemId)); $('#otherBox', main).style.display = itemId === otherId ? '' : 'none'; renderSizes(); check(); }, main);
-  on('input,textarea,select', 'input', check, main);
+  const collect = () => ({
+    kind, client_id: kind === 'client' && v('client_id', main) ? Number(v('client_id', main)) : null, title: v('title', main), item_type_id: itemId || null, item_type_other: v('item_type_other', main) || null,
+    product_name: v('product_name', main) || null, purpose: v('purpose', main) || null, size_spec: v('size_spec', main) || null, product_features: v('product_features', main) || null,
+    required_copy: v('required_copy', main) || null, notes: v('notes', main) || null, requested_due: v('requested_due', main) || null,
+  });
+  const doSave = () => {
+    if (saving) { queued = true; return saving; }
+    const ver = inputVer, data = collect();
+    saving = ctx.api.save(id, data).then(() => { lastSaved = new Date(); if (inputVer === ver) dirty = false; })
+      .catch((e) => { dirty = true; toast('임시저장 실패: ' + errText(e), true); throw e; })
+      .finally(() => { saving = null; setStatus(); if (queued) { queued = false; doSave().catch(() => {}); } });
+    setStatus();
+    return saving;
+  };
+  const flush = async () => { clearTimeout(timer); if (dirty || queued) await doSave(); else if (saving) await saving; };
+  const touched = () => { dirty = true; inputVer++; setStatus(); clearTimeout(timer); timer = setTimeout(() => doSave().catch(() => {}), 1500); };
+  ctx.flush = () => { if (dirty) doSave().catch(() => {}); };
+  ctx.unloadGuard = () => dirty || !!saving || uploading > 0;
+
+  // ---- 파일 목록 (부분 갱신: 폼 입력을 건드리지 않음)
+  const renderFiles = () => {
+    $('#files', main).innerHTML = files.length ? files.map(fileLi(true)).join('') : '<li class="muted small">아직 첨부한 파일이 없습니다.</li>';
+    bindFiles(ctx, $('#files', main), async () => { files = await ctx.api.files(id); renderFiles(); });
+  };
+  renderFiles();
+
+  const sizesBox = $('#sizes', main);
+  const renderSizes = () => { const t = ctx.itemTypes.find((x) => x.id == itemId); sizesBox.innerHTML = (t?.default_sizes || []).map((s) => `<button type="button">${esc(s)}</button>`).join(''); on('button', 'click', (e) => { $('#size_spec', main).value = e.currentTarget.textContent; touched(); check(); }, sizesBox); };
+  const REQ = [['고객사', () => kind === 'internal' || !!v('client_id', main), 'client_id'], ['품목', () => !!itemId && (itemId != otherId || !!v('item_type_other', main)), itemId == otherId ? 'item_type_other' : 'picker'], ['제목', () => !!v('title', main), 'title'], ['사용 용도', () => !!v('purpose', main), 'purpose']];
+  const check = () => {
+    const rows = REQ.filter(([k]) => k !== '고객사' || kind === 'client').map(([k, f, el]) => [k, f(), el]);
+    $('#check', main).innerHTML = rows.map(([k, o]) => `<li class="${o ? 'ok' : ''}">${k}</li>`).join('');
+    return rows.find(([, o]) => !o)?.[2] || null; // 첫 누락 항목의 요소 id
+  };
+  on('#kind button', 'click', (e) => { kind = e.currentTarget.dataset.k; $$('#kind button', main).forEach((b) => b.classList.toggle('on', b.dataset.k === kind)); $('#clientBox', main).style.display = kind === 'internal' ? 'none' : ''; touched(); check(); }, main);
+  on('#picker button', 'click', (e) => { itemId = Number(e.currentTarget.dataset.id); $$('#picker button', main).forEach((b) => b.classList.toggle('on', Number(b.dataset.id) === itemId)); $('#otherBox', main).style.display = itemId === otherId ? '' : 'none'; renderSizes(); touched(); check(); }, main);
+  on('#f input:not([type=file]),#f textarea,#f select', 'input', () => { touched(); check(); }, main);
   $('#newClient', main).onclick = () => { $('#ncBox', main).style.display = ''; $('#nc_name', main).focus(); };
   $('#nc_cancel', main).onclick = () => { $('#ncBox', main).style.display = 'none'; };
   $('#nc_save', main).onclick = async () => {
@@ -164,43 +204,56 @@ export async function edit(main, ctx, id) {
       const c = await ctx.api.clientInsert({ name: v('nc_name', main), ceo_name: v('nc_ceo', main) || null, contact_name: v('nc_contact', main) || null, contact_position: v('nc_pos', main) || null, contact_email: v('nc_email', main) || null, created_by: ctx.me.id });
       ctx.clients.push(c); ctx.clients.sort((a, b) => a.name.localeCompare(b.name));
       const sel = $('#client_id', main); sel.insertAdjacentHTML('beforeend', `<option value="${c.id}">${esc(c.name)}</option>`); sel.value = c.id;
-      $('#ncBox', main).style.display = 'none'; toast('고객사를 등록했습니다.'); check();
+      $('#ncBox', main).style.display = 'none'; toast('고객사를 등록했습니다.'); touched(); check();
     } catch (e) { toast(errText(e), true); }
   };
-  const collect = () => ({
-    kind, client_id: kind === 'client' && v('client_id', main) ? Number(v('client_id', main)) : null, title: v('title', main), item_type_id: itemId || null, item_type_other: v('item_type_other', main) || null,
-    product_name: v('product_name', main) || null, purpose: v('purpose', main) || null, size_spec: v('size_spec', main) || null, product_features: v('product_features', main) || null,
-    required_copy: v('required_copy', main) || null, notes: v('notes', main) || null, requested_due: v('requested_due', main) || null,
-  });
+  $('#saveNow', main).onclick = async () => { try { await flush(); if (!dirty) toast('임시저장했습니다.'); } catch {} };
+  $('#preview', main).onclick = async () => { try { await flush(); if (!dirty) go('#/r/' + id); } catch {} };
   $('#f', main).onsubmit = async (ev) => {
     ev.preventDefault();
-    const act = ev.submitter?.dataset.act || 'save';
-    if (act === 'submit' && !check()) return toast('필수 항목을 채워주세요. 하단에 남은 항목이 표시됩니다.', true);
+    if (uploading) return toast('파일 업로드가 끝난 뒤 제출하세요.', true);
+    const missing = check();
+    if (missing) { toast('필수 항목을 채워주세요. 하단에 남은 항목이 표시됩니다.', true); const el = $('#' + missing, main); el?.scrollIntoView({ block: 'center', behavior: 'smooth' }); if (el?.focus) el.focus(); return; }
+    if (files.some((f) => f.upload_state === 'pending')) return toast('업로드가 끝나지 않은 파일이 있습니다. 삭제하거나 다시 올린 뒤 제출하세요.', true);
     const btns = $$('.stick button', main); btns.forEach((b) => (b.disabled = true));
     try {
-      await ctx.api.save(id, collect());
-      if (act === 'submit') { await ctx.api.transition(id, r.status === 'revision' ? 'resubmit' : 'submit'); toast(r.status === 'revision' ? '재제출했습니다.' : '제출했습니다. 대표에게 알림이 갑니다.'); go('#/r/' + id); }
-      else toast('임시저장했습니다.');
-    } catch (e) { toast(errText(e), true); }
-    finally { btns.forEach((b) => (b.disabled = false)); }
+      await flush();
+      if (dirty) throw new Error('save failed');
+      await ctx.api.transition(id, r.status === 'revision' ? 'resubmit' : 'submit');
+      ctx.flush = null; ctx.unloadGuard = null;
+      toast(r.status === 'revision' ? '재제출했습니다.' : '제출했습니다. 대표에게 알림이 갑니다.'); go('#/r/' + id);
+    } catch (e) { if (e?.message !== 'save failed') toast(errText(e), true); }
+    finally { btns.forEach((b) => (b.disabled = false)); setStatus(); }
   };
-  $('#cancelReq', main).onclick = () => confirmDialog('의뢰 취소', r.status === 'draft' ? '작성중인 의뢰를 취소할까요? 내용은 사라지지 않지만 목록에서 취소로 표시됩니다.' : '이 의뢰를 취소할까요? 취소하면 되돌릴 수 없습니다.', async () => { await ctx.api.transition(id, 'cancel'); toast('취소했습니다.'); go('#/'); });
-  $('#up', main).onchange = async (e) => { const fs = [...e.target.files]; e.target.value = ''; for (const f of fs) await uploadOne(ctx, id, 'reference', f); const cur = collect(); try { await ctx.api.save(id, cur); } catch {} ctx.render(); };
-  bindFiles(ctx, main);
-  renderSizes(); check();
+  $('#cancelReq', main).onclick = () => confirmDialog('의뢰 취소', r.status === 'draft' ? '작성중인 의뢰를 취소할까요? 목록에서 취소로 표시됩니다.' : '이 의뢰를 취소할까요? 취소하면 되돌릴 수 없습니다.', async () => { await ctx.api.transition(id, 'cancel'); ctx.flush = null; ctx.unloadGuard = null; dirty = false; toast('취소했습니다.'); go('#/'); });
+  $('#up', main).onchange = async (e) => {
+    const fs = [...e.target.files]; e.target.value = '';
+    uploading += fs.length; setStatus();
+    for (const f of fs) { await uploadOne(ctx, id, 'reference', f); uploading--; setStatus(); }
+    files = await ctx.api.files(id); renderFiles();
+  };
+  renderSizes(); check(); setStatus();
 }
 
 function fileLi(canDelete) {
-  return (f) => `<li data-id="${f.id}" data-path="${esc(f.storage_path)}"><span class="n">${esc(f.file_name)}</span><span class="s">${fmtSize(f.size_bytes)}${f.upload_state === 'pending' ? ' · 업로드 미완료' : ''}</span>
-    <button class="btn sm dl" type="button">내려받기</button>${canDelete ? '<button class="btn sm dan ghost del" type="button">삭제</button>' : ''}</li>`;
+  return (f) => {
+    const pending = f.upload_state === 'pending';
+    return `<li data-id="${f.id}" data-path="${esc(f.storage_path)}"><span class="n">${esc(f.file_name)}</span><span class="s">${fmtSize(f.size_bytes)}${pending ? ' · <b class="due over">업로드 미완료</b>' : ''}</span>
+    ${pending ? '' : '<button class="btn sm dl" type="button">내려받기</button>'}${canDelete || pending ? '<button class="btn sm dan ghost del" type="button">삭제</button>' : ''}</li>`;
+  };
 }
-function bindFiles(ctx, main) {
-  on('.files .dl', 'click', async (e) => { const li = e.currentTarget.closest('li'); try { const url = await ctx.api.downloadUrl({ storage_path: li.dataset.path, file_name: $('.n', li).textContent }); window.open(url, '_blank'); } catch (err) { toast('내려받기 실패: ' + errText(err), true); } }, main);
-  on('.files .del', 'click', (e) => { const li = e.currentTarget.closest('li'); confirmDialog('파일 삭제', `${$('.n', li).textContent} 파일을 삭제할까요?`, async () => { await ctx.api.deleteFile({ id: li.dataset.id, storage_path: li.dataset.path }); li.remove(); toast('삭제했습니다.'); }); }, main);
+// 내려받기: 팝업 차단을 피하려고 클릭 시 탭을 먼저 열고 서명 URL 발급 후 이동
+function bindFiles(ctx, root, onDeleted) {
+  on('.files .dl', 'click', async (e) => {
+    const li = e.currentTarget.closest('li'); const w = window.open('', '_blank');
+    try { const url = await ctx.api.downloadUrl({ storage_path: li.dataset.path, file_name: $('.n', li).textContent }); if (w) w.location = url; else location.href = url; }
+    catch (err) { w?.close(); toast('내려받기 실패: ' + errText(err), true); }
+  }, root);
+  on('.files .del', 'click', (e) => { const li = e.currentTarget.closest('li'); confirmDialog('파일 삭제', `${$('.n', li).textContent} 파일을 삭제할까요?`, async () => { await ctx.api.deleteFile({ id: li.dataset.id, storage_path: li.dataset.path }); toast('삭제했습니다.'); if (onDeleted) await onDeleted(); else li.remove(); }); }, root);
 }
 async function uploadOne(ctx, requestId, kind, file) {
-  try { toast(`${file.name} 올리는 중…`); await ctx.api.upload(requestId, kind, file); toast(`${file.name} 업로드 완료`); }
-  catch (e) { toast(`${file.name}: ${errText(e)}`, true); }
+  try { toast(`${file.name} 올리는 중…`); await ctx.api.upload(requestId, kind, file); toast(`${file.name} 업로드 완료`); return true; }
+  catch (e) { toast(`${file.name}: ${errText(e)}`, true); return false; }
 }
 
 // ---------------------------------------------------------------- 상세
@@ -230,7 +283,7 @@ export async function detail(main, ctx, id) {
   main.innerHTML = `
     <div class="head"><div><div class="eyebrow">${esc(r.no || '작성중')} · ${esc(itemLabel(ctx, r))}${prioTag(r.priority)}</div><h1>${esc(r.title || '(제목 없음)')}</h1>
       <p class="lead">${esc(clientName(ctx, r))} · 신청 ${esc(pname(ctx, r.requester_id))}${r.designer_id ? ` · 디자인 ${esc(pname(ctx, r.designer_id))}` : ''}</p></div>
-      <div class="actions"><a class="btn ghost" href="#/">← 목록</a></div></div>
+      <div class="actions"><button class="btn ghost" id="back" type="button">← 뒤로</button></div></div>
     ${stepper(r.status)}
     <div class="next ${nx.cls}"><div class="ic">${nx.icon}</div><div><h3>${nx.h}</h3><p>${esc(nx.p)}</p></div>${nx.acts ? `<div class="actions" id="acts">${nx.acts}</div>` : ''}</div>
     <div class="grid main"><div>
@@ -249,22 +302,32 @@ export async function detail(main, ctx, id) {
       </div></div>
     </div><div>
       ${dels.length || r.deliverable_url || r.status === 'in_progress' ? `<div class="card"><div class="hd"><h3>결과물</h3></div><div class="bd">
-        ${r.deliverable_url ? `<p class="mb"><a href="${esc(r.deliverable_url)}" target="_blank" rel="noopener" style="text-decoration:underline;word-break:break-all">${esc(r.deliverable_url)}</a></p>` : ''}
-        <ul class="files">${dels.length ? dels.map(fileLi(me.role === 'designer' && r.status === 'in_progress')).join('') : '<li class="muted small">아직 올린 파일이 없습니다.</li>'}</ul></div></div>` : ''}
-      <div class="card"><div class="hd"><h3>참고자료 <span class="muted small">${refs.length}</span></h3></div><div class="bd"><ul class="files">${refs.length ? refs.map(fileLi(mine && ['draft', 'revision'].includes(r.status))).join('') : '<li class="muted small">첨부 없음</li>'}</ul></div></div>
-      <div class="card"><div class="hd"><h3>진행 기록</h3></div><div class="bd"><ul class="tl">${[...events].reverse().map((e) => `<li><span class="d">${fmtDT(e.created_at)}</span><div><b>${ACTION_KO[e.action] || e.action}</b> <span class="muted small">${esc(pname(ctx, e.actor_id))}</span>${termsText(e)}${e.note && e.action !== 'comment' ? `<div class="m">${esc(e.note)}</div>` : ''}</div></li>`).join('')}</ul></div></div>
+        ${r.deliverable_url ? (safeUrl(r.deliverable_url) ? `<p class="mb"><a href="${esc(safeUrl(r.deliverable_url))}" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;word-break:break-all">${esc(r.deliverable_url)}</a></p>` : `<p class="muted small">결과물 URL 형식이 올바르지 않습니다: ${esc(r.deliverable_url)}</p>`) : ''}
+        <ul class="files" id="dels"></ul></div></div>` : ''}
+      <div class="card"><div class="hd"><h3>참고자료 <span class="muted small" id="refcnt">${refs.length}</span></h3></div><div class="bd"><ul class="files" id="refs"></ul></div></div>
+      <div class="card"><div class="hd"><h3>진행 기록</h3></div><div class="bd"><ul class="tl">${[...events].reverse().map((e) => `<li><span class="d">${fmtDT(e.created_at)}</span><div><b>${esc(ACTION_KO[e.action] || e.action)}</b> <span class="muted small">${esc(pname(ctx, e.actor_id))}</span>${termsText(e)}${e.note && e.action !== 'comment' ? `<div class="m">${esc(e.note)}</div>` : ''}</div></li>`).join('')}</ul></div></div>
     </div></div>`;
 
-  bindFiles(ctx, main);
-  const up = $('#upDel', main); if (up) up.onchange = async (e) => { const fs = [...e.target.files]; e.target.value = ''; for (const f of fs) await uploadOne(ctx, id, 'deliverable', f); ctx.render(); };
+  // 파일 목록은 부분 갱신 (코멘트 입력 중인 내용을 지키기 위해 화면 전체를 다시 그리지 않음)
+  let allFiles = files;
+  const renderFiles = () => {
+    const d = allFiles.filter((f) => f.kind === 'deliverable'), rf = allFiles.filter((f) => f.kind === 'reference');
+    const dl = $('#dels', main); if (dl) { dl.innerHTML = d.length ? d.map(fileLi(me.role === 'designer' && r.status === 'in_progress')).join('') : '<li class="muted small">아직 올린 파일이 없습니다.</li>'; bindFiles(ctx, dl, refresh); }
+    const rl = $('#refs', main); rl.innerHTML = rf.length ? rf.map(fileLi(mine && ['draft', 'revision'].includes(r.status))).join('') : '<li class="muted small">첨부 없음</li>'; bindFiles(ctx, rl, refresh);
+    $('#refcnt', main).textContent = rf.length;
+  };
+  const refresh = async () => { allFiles = await ctx.api.files(id); renderFiles(); };
+  renderFiles();
+  $('#back', main).onclick = () => back('#/');
+  const up = $('#upDel', main); if (up) up.onchange = async (e) => { const fs = [...e.target.files]; e.target.value = ''; for (const f of fs) await uploadOne(ctx, id, 'deliverable', f); await refresh(); };
   $('#cf', main).onsubmit = async (ev) => { ev.preventDefault(); const b = $('#cf button', main); b.disabled = true; try { await ctx.api.comment(id, v('cbody', main)); toast('코멘트를 남겼습니다.'); ctx.render(); } catch (e) { toast(errText(e), true); b.disabled = false; } };
   on('#acts button', 'click', (e) => actionDialog(ctx, r, e.currentTarget.dataset.a), main);
 }
 function termsText(e) {
-  const p = e.payload; if (!p || !p.priority) return '';
+  const p = e.payload; if (!p || (!p.priority && !p.confirmed_due)) return '';
   const a = [];
-  if (p.priority.to && p.priority.from !== p.priority.to) a.push(`우선순위 ${p.priority.from ? PRIO[p.priority.from] + ' → ' : ''}${PRIO[p.priority.to]}`);
-  if (p.confirmed_due?.to && p.confirmed_due.from !== p.confirmed_due.to) a.push(`납기 ${p.confirmed_due.from ? fmtD(p.confirmed_due.from) + ' → ' : ''}${fmtD(p.confirmed_due.to)}`);
+  if (p.priority && p.priority.from !== p.priority.to) a.push(`우선순위 ${p.priority.from ? PRIO[p.priority.from] + ' → ' : ''}${PRIO[p.priority.to] || '없음'}`);
+  if (p.confirmed_due && p.confirmed_due.from !== p.confirmed_due.to) a.push(`납기 ${p.confirmed_due.from ? fmtD(p.confirmed_due.from) + ' → ' : ''}${p.confirmed_due.to ? fmtD(p.confirmed_due.to) : '없음'}`);
   return a.length ? `<div class="m">${esc(a.join(', '))}</div>` : '';
 }
 const dv = (d, id) => $('#' + id, d)?.value?.trim() ?? '';

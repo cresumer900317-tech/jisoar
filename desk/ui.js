@@ -47,6 +47,10 @@ export function dueText(r) {
   return `<span class="due ${cls}">${label}${fmtD(d)}${rel ? ` · ${rel}` : ''}</span>`;
 }
 export const go = (h) => { location.hash = h; };
+export const back = (fallback = '#/') => { if (history.length > 1) history.back(); else go(fallback); };
+// http(s) 만 링크로 허용 (javascript: 등 차단)
+export function safeUrl(u) { try { const x = new URL(String(u || '')); return ['http:', 'https:'].includes(x.protocol) ? x.href : null; } catch { return null; } }
+export const PRIO_RANK = { urgent: 0, high: 1, normal: 2, low: 3 };
 export function toast(msg, err) {
   const t = document.getElementById('toast'); const d = document.createElement('div');
   d.textContent = msg; if (err) d.className = 'err'; t.appendChild(d); setTimeout(() => d.remove(), err ? 6000 : 3200);

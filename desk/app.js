@@ -9,14 +9,18 @@ let session = null;
 let rendering = 0;
 let needsPassword = /type=(invite|recovery)/.test(location.hash + location.search);
 
+// 인증 이벤트: 토큰 갱신·같은 사용자 재확인은 세션만 갱신(작성 중 입력 보호). 사용자 변경·로그아웃·복구만 화면 재구성.
 api.auth.onChange((event, s) => {
+  if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') { if (s) session = s; return; }
+  if (event === 'SIGNED_IN' && ctx.me && s?.user?.id === ctx.me.id) { session = s; return; }
   if (s !== undefined) session = s;
   if (event === 'PASSWORD_RECOVERY') needsPassword = true;
-  if (event === 'SIGNED_OUT') ctx.me = null;
+  if (event === 'SIGNED_OUT') { ctx.me = null; needsPassword = false; }
   render();
 });
 window.addEventListener('hashchange', render);
-render();
+window.addEventListener('beforeunload', (e) => { if (ctx.unloadGuard?.()) { e.preventDefault(); e.returnValue = ''; } });
+if (isDemo) render(); // live 는 supabase 의 INITIAL_SESSION 이벤트가 첫 렌더를 일으킴
 
 async function reload() {
   ctx.me = await api.profile(session.user.id);
@@ -26,20 +30,32 @@ async function reload() {
 
 async function render() {
   const my = ++rendering;
-  session = await api.auth.session();
+  // 이전 화면(작성 폼)이 남긴 미저장 내용은 화면을 떠나기 전에 저장
+  if (ctx.flush) { const f = ctx.flush; ctx.flush = null; ctx.unloadGuard = null; f(); }
   const hash = location.hash.replace(/^#\/?/, '');
   const [path, query] = hash.split('?');
   const [route, arg] = path.split('/');
   const params = new URLSearchParams(query || '');
-
-  if (!session) return viewLogin(route === 'forgot');
-  if (needsPassword || route === 'set-password') return viewSetPassword();
-  if (!ctx.me || ctx.me.id !== session.user.id) {
-    ctx.me = await api.profile(session.user.id);
-    if (ctx.me?.is_active) [ctx.profiles, ctx.itemTypes, ctx.clients] = await Promise.all([api.profiles(), api.itemTypes(), api.clients()]);
+  try {
+    const s = await api.auth.session();
+    if (my !== rendering) return;
+    session = s;
+    if (!session) return viewLogin(route === 'forgot');
+    if (needsPassword || route === 'set-password') return viewSetPassword();
+    if (!ctx.me || ctx.me.id !== session.user.id) {
+      const me = await api.profile(session.user.id);
+      if (my !== rendering) return;
+      let lists = [[], [], []];
+      if (me?.is_active) { lists = await Promise.all([api.profiles(), api.itemTypes(), api.clients()]); if (my !== rendering) return; }
+      ctx.me = me; [ctx.profiles, ctx.itemTypes, ctx.clients] = lists;
+    }
+    if (!ctx.me || !ctx.me.is_active) return viewInactive();
+  } catch (e) {
+    console.error(e);
+    app.innerHTML = `<div class="auth"><div class="brand"><span class="lg">D</span>Design Desk</div><h1>연결에 문제가 있습니다</h1><p>${esc(errText(e))}</p><button class="btn pri" id="retry">다시 시도</button></div>`;
+    $('#retry', app).onclick = () => render();
+    return;
   }
-  if (my !== rendering) return;
-  if (!ctx.me || !ctx.me.is_active) return viewInactive();
 
   shell(route);
   const main = $('#main', app);
@@ -56,14 +72,17 @@ async function render() {
     else go('#/');
   } catch (e) {
     console.error(e);
-    main.innerHTML = `<div class="notice err">불러오지 못했습니다: ${esc(errText(e))}</div><p class="mt"><a class="btn" href="#/">홈으로</a></p>`;
+    if (my !== rendering) return;
+    const msg = /PGRST116|JSON object requested|not found/i.test(e?.message || '') ? '의뢰가 없거나 볼 권한이 없습니다.' : errText(e);
+    main.innerHTML = `<div class="notice err">불러오지 못했습니다: ${esc(msg)}</div><p class="mt inline"><button class="btn" id="retry">다시 시도</button><a class="btn ghost" href="#/">홈으로</a></p>`;
+    $('#retry', main).onclick = () => render();
   }
-  window.scrollTo(0, 0);
+  if (my === rendering) window.scrollTo(0, 0);
 }
 
 function shell(route) {
   const me = ctx.me;
-  const cur = (r) => (route === r || (r === '' && route === 'list') ? 'on' : '');
+  const cur = (r) => (route === r || (r === 'list' && ['r', 'requests', 'edit', 'new'].includes(route)) ? 'on' : '');
   const tab = (r, label, show = true) => (show ? `<a href="#/${r}" class="${cur(r)}">${label}</a>` : '');
   const btab = (r, icon, label, show = true) => (show ? `<a href="#/${r}" class="${cur(r)}"><span>${icon}</span>${label}</a>` : '');
   app.innerHTML = `
