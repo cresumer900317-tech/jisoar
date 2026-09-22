@@ -24,7 +24,7 @@ const ERR_KO = [
   ['invalid transition', '현재 상태에서는 할 수 없는 처리입니다.'], ['Invalid login credentials', '이메일 또는 비밀번호가 틀렸습니다.'],
   ['blocked file type', '허용되지 않는 파일 형식입니다.'], ['max 50MB', '참고자료는 50MB까지 올릴 수 있습니다.'], ['max 300MB', '결과물은 300MB까지 올릴 수 있습니다.'],
   ['remove storage object first', '파일 삭제에 실패했습니다. 다시 시도하세요.'], ['cannot demote', '본인의 관리자 권한·활성 상태는 바꿀 수 없습니다.'],
-  ['violates foreign key', '연결된 의뢰가 있어 삭제할 수 없습니다.'], ['duplicate key', '이미 있는 값입니다.'], ['Failed to fetch', '네트워크 연결을 확인하세요.'],
+  ['violates foreign key', '연결된 의뢰가 있어 삭제할 수 없습니다.'], ['delete not allowed', '이 상태의 의뢰는 삭제할 수 없습니다. 먼저 취소하세요.'], ['duplicate key', '이미 있는 값입니다.'], ['Failed to fetch', '네트워크 연결을 확인하세요.'],
 ];
 export function errText(e) {
   const m = e?.message || String(e);

@@ -1,7 +1,7 @@
 // Design Desk SPA v3 — 부팅·인증·라우팅·셸(상단바 + 좌측 트리). 화면은 views.js, 데이터는 api.js
-import { api, isDemo } from './api.js?v=4';
-import * as V from './views.js?v=4';
-import { ROLE, esc, go, toast, errText, $ } from './ui.js?v=4';
+import { api, isDemo } from './api.js?v=5';
+import * as V from './views.js?v=5';
+import { ROLE, esc, go, toast, errText, $ } from './ui.js?v=5';
 
 const app = document.getElementById('app');
 const ctx = { api, me: null, profiles: [], itemTypes: [], clients: [], reqs: [], reload, render };

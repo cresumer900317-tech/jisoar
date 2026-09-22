@@ -45,6 +45,12 @@ function live() {
       if (error) throw error;
       await rpc('file_confirm', { p_file: res.id });
     },
+    canDeleteRequest: (id) => rpc('can_delete_request', { rid: id }),
+    deleteRequest: async (id, files) => {
+      const paths = files.map((f) => f.storage_path);
+      if (paths.length) { const { error } = await sb.storage.from('request-files').remove(paths); if (error) throw error; }
+      await rpc('request_delete', { p_id: id });
+    },
     deleteFile: async (f) => {
       const { error } = await sb.storage.from('request-files').remove([f.storage_path]);
       if (error) throw error; // 객체 삭제 실패 시 DB 행은 남겨 재시도 가능하게
@@ -165,6 +171,8 @@ function demo() {
     comment: async (id, body) => { comments.push({ id: cmId++, request_id: id, author_id: meP().id, body, created_at: now() }); ev(id, 'comment', null, null, body.slice(0, 200)); },
     upload: async (rid, kind, file) => { files.push({ id: 'f' + Date.now() + Math.random(), request_id: rid, kind, storage_path: rid + '/x', file_name: file.name, size_bytes: file.size, mime: file.type, upload_state: 'ready', uploaded_by: meP().id, created_at: now() }); },
     deleteFile: async (f) => { files = files.filter((x) => x.id !== f.id); },
+    canDeleteRequest: async (id) => { const r = find(id); const m = meP(); return (r.requester_id === m.id && ['draft', 'cancelled', 'rejected'].includes(r.status)) || (m.is_admin && !['approved', 'in_progress'].includes(r.status)); },
+    deleteRequest: async (id) => { requests = requests.filter((r) => r.id !== id); files = files.filter((f) => f.request_id !== id); comments = comments.filter((c) => c.request_id !== id); events = events.filter((e) => e.request_id !== id); },
     downloadUrl: async () => 'about:blank',
     clientInsert: async (row) => { const c = { id: clients.length + 1, ...row, created_at: now(), updated_at: now() }; clients.push(c); return c; },
     clientUpdate: async (id, row) => Object.assign(clients.find((c) => c.id == id), row),

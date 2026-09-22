@@ -1,5 +1,5 @@
 // 화면 v3 (전자결재 스타일). ctx = { api, me, profiles, itemTypes, clients, reqs, reload, render }
-import { STATUS, PRIO, PRIO_RANK, ROLE, ROLE_DESC, ACTION_KO, FORMATS, POLICY, esc, fmtD, fmtDT, fmtSize, chip, statusText, prioTag, dueText, go, back, safeUrl, toast, errText, $, $$, on, v, dialog, confirmDialog, field } from './ui.js?v=4';
+import { STATUS, PRIO, PRIO_RANK, ROLE, ROLE_DESC, ACTION_KO, FORMATS, POLICY, esc, fmtD, fmtDT, fmtSize, chip, statusText, prioTag, dueText, go, back, safeUrl, toast, errText, $, $$, on, v, dialog, confirmDialog, field } from './ui.js?v=5';
 
 const OPEN = ['draft', 'submitted', 'revision', 'approved', 'in_progress'];
 const pname = (ctx, id) => ctx.profiles.find((p) => p.id === id)?.name || (id ? '(알 수 없음)' : '');
@@ -143,6 +143,9 @@ export async function doc(main, ctx, id, params) {
   else if (r.status === 'done') next = `<div class="next ok"><b>완료</b><span>${fmtD(r.completed_at)} 완료 · 결과물은 첨부파일 탭에서 내려받습니다.</span></div>`;
   else if (r.status === 'rejected') next = `<div class="next gray"><b>반려</b><span>${esc(lastNote('reject') || '')}</span></div>`;
   else if (r.status === 'cancelled') next = '<div class="next gray"><b>취소</b><span>신청자가 취소한 의뢰입니다.</span></div>';
+  // 삭제: 본인(draft·취소·반려) 또는 관리자(진행 중 제외) — 서버 can_delete_request 와 동일 규칙
+  const canDelete = (mine && ['draft', 'cancelled', 'rejected'].includes(r.status)) || (me.is_admin && !['approved', 'in_progress'].includes(r.status));
+  if (canDelete && !printMode) tools.push('<button class="btn dan" id="delReq" type="button">삭제</button>');
   tools.push('<span class="sp"></span>', '<button class="btn" id="print" type="button">인쇄</button>', '<button class="btn" id="back" type="button">목록</button>');
 
   const clientOpts = ctx.clients.map((c) => `<option value="${c.id}" ${r.client_id == c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
@@ -258,6 +261,11 @@ export async function doc(main, ctx, id, params) {
 
   // ---- 공통 버튼
   $('#back', main).onclick = () => back('#/');
+  const delBtn = $('#delReq', main);
+  if (delBtn) delBtn.onclick = () => confirmDialog('의뢰 삭제', `${r.no || '작성중 의뢰'} "${r.title || '(제목 없음)'}" 을(를) 완전히 삭제할까요? 첨부파일·코멘트·진행 기록이 모두 지워지며 되돌릴 수 없습니다.`, async () => {
+    if (ctx.flush) { try { await ctx.flush(); } catch {} }
+    await ctx.api.deleteRequest(id, files); ctx.flush = null; ctx.unloadGuard = null; toast('삭제했습니다.'); go('#/');
+  });
   $('#print', main).onclick = () => {
     if (editable) { go(`#/doc/${id}?print=1`); return; } // 작성 중이면 읽기 전용 표현으로 출력(입력창 대신 본문 텍스트)
     const prev = docTab[id]; setTab(1); const restore = () => { setTab(prev); window.removeEventListener('afterprint', restore); }; window.addEventListener('afterprint', restore); window.print();
