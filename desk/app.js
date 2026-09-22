@@ -1,10 +1,10 @@
-// Design Desk SPA v2 — 부팅·인증·라우팅·공통 셸. 화면은 views.js, 데이터는 api.js
-import { api, isDemo } from './api.js';
-import * as V from './views.js';
-import { ROLE, esc, go, toast, errText, $ } from './ui.js';
+// Design Desk SPA v3 — 부팅·인증·라우팅·셸(상단바 + 좌측 트리). 화면은 views.js, 데이터는 api.js
+import { api, isDemo } from './api.js?v=3';
+import * as V from './views.js?v=3';
+import { ROLE, esc, go, toast, errText, $ } from './ui.js?v=3';
 
 const app = document.getElementById('app');
-const ctx = { api, me: null, profiles: [], itemTypes: [], clients: [], reload, render };
+const ctx = { api, me: null, profiles: [], itemTypes: [], clients: [], reqs: [], reload, render };
 let session = null;
 let rendering = 0;
 let needsPassword = /type=(invite|recovery)/.test(location.hash + location.search);
@@ -22,15 +22,20 @@ window.addEventListener('hashchange', render);
 window.addEventListener('beforeunload', (e) => { if (ctx.unloadGuard?.()) { e.preventDefault(); e.returnValue = ''; } });
 if (isDemo) render(); // live 는 supabase 의 INITIAL_SESSION 이벤트가 첫 렌더를 일으킴
 
+async function loadAll() {
+  const me = await api.profile(session.user.id);
+  let lists = [[], [], [], []];
+  if (me?.is_active) lists = await Promise.all([api.profiles(), api.itemTypes(), api.clients(), api.requests()]);
+  return { me, lists };
+}
 async function reload() {
-  ctx.me = await api.profile(session.user.id);
-  if (ctx.me?.is_active) [ctx.profiles, ctx.itemTypes, ctx.clients] = await Promise.all([api.profiles(), api.itemTypes(), api.clients()]);
+  const { me, lists } = await loadAll();
+  ctx.me = me; [ctx.profiles, ctx.itemTypes, ctx.clients, ctx.reqs] = lists;
   return render();
 }
 
 async function render() {
   const my = ++rendering;
-  // 이전 화면(작성 폼)이 남긴 미저장 내용은 화면을 떠나기 전에 저장
   if (ctx.flush) { const f = ctx.flush; ctx.flush = null; ctx.unloadGuard = null; f(); }
   const hash = location.hash.replace(/^#\/?/, '');
   const [path, query] = hash.split('?');
@@ -42,12 +47,12 @@ async function render() {
     session = s;
     if (!session) return viewLogin(route === 'forgot');
     if (needsPassword || route === 'set-password') return viewSetPassword();
+    // 프로필은 사용자 변경 시, 의뢰 목록은 매 화면 진입 시 갱신(트리 카운트·홈·목록 공용)
     if (!ctx.me || ctx.me.id !== session.user.id) {
-      const me = await api.profile(session.user.id);
-      if (my !== rendering) return;
-      let lists = [[], [], []];
-      if (me?.is_active) { lists = await Promise.all([api.profiles(), api.itemTypes(), api.clients()]); if (my !== rendering) return; }
-      ctx.me = me; [ctx.profiles, ctx.itemTypes, ctx.clients] = lists;
+      const { me, lists } = await loadAll(); if (my !== rendering) return;
+      ctx.me = me; [ctx.profiles, ctx.itemTypes, ctx.clients, ctx.reqs] = lists;
+    } else if (ctx.me.is_active) {
+      const reqs = await api.requests(); if (my !== rendering) return; ctx.reqs = reqs;
     }
     if (!ctx.me || !ctx.me.is_active) return viewInactive();
   } catch (e) {
@@ -57,14 +62,14 @@ async function render() {
     return;
   }
 
-  shell(route);
+  shell(route, arg);
   const main = $('#main', app);
   try {
     if (route === '') await V.home(main, ctx);
-    else if (route === 'list') await V.list(main, ctx, params);
+    else if (route === 'box') await V.list(main, ctx, params, arg || 'all');
+    else if (route === 'list') go('#/box/all');
     else if (route === 'new') await V.createDraft(ctx);
-    else if (route === 'edit') await V.edit(main, ctx, arg);
-    else if (route === 'r' || route === 'requests') await V.detail(main, ctx, arg);
+    else if (['doc', 'r', 'requests', 'edit'].includes(route)) await V.doc(main, ctx, arg);
     else if (route === 'clients') await V.clients(main, ctx, params, arg);
     else if (route === 'settings') await V.settings(main, ctx);
     else if (route === 'me') V.me(main, ctx);
@@ -74,28 +79,35 @@ async function render() {
     console.error(e);
     if (my !== rendering) return;
     const msg = /PGRST116|JSON object requested|not found/i.test(e?.message || '') ? '의뢰가 없거나 볼 권한이 없습니다.' : errText(e);
-    main.innerHTML = `<div class="notice err">불러오지 못했습니다: ${esc(msg)}</div><p class="mt inline"><button class="btn" id="retry">다시 시도</button><a class="btn ghost" href="#/">홈으로</a></p>`;
+    main.innerHTML = `<div class="notice err">불러오지 못했습니다: ${esc(msg)}</div><p class="mt inline"><button class="btn" id="retry">다시 시도</button><a class="btn" href="#/">홈으로</a></p>`;
     $('#retry', main).onclick = () => render();
   }
   if (my === rendering) window.scrollTo(0, 0);
 }
 
-function shell(route) {
+function shell(route, arg) {
   const me = ctx.me;
-  const cur = (r) => (route === r || (r === 'list' && ['r', 'requests', 'edit', 'new'].includes(route)) ? 'on' : '');
-  const tab = (r, label, show = true) => (show ? `<a href="#/${r}" class="${cur(r)}">${label}</a>` : '');
-  const btab = (r, icon, label, show = true) => (show ? `<a href="#/${r}" class="${cur(r)}"><span>${icon}</span>${label}</a>` : '');
+  const on = (r, a) => (route === r && (a === undefined || arg === a) ? 'on' : '');
+  const item = (href, label, cls, cnt) => `<a href="${href}" class="${cls}">${label}${cnt !== undefined ? `<span class="cnt">${cnt}</span>` : ''}</a>`;
+  const tree = V.BOXES[me.role].map((g) => `<li class="grp">${g.grp}</li>${g.items.map(([k, l, s]) => `<li>${item('#/box/' + k, l, on('box', k), V.boxCount(ctx, s))}</li>`).join('')}`).join('');
   app.innerHTML = `
-  ${isDemo ? `<div class="demo-bar">데모 모드 · 샘플 데이터입니다 · 역할 보기:${Object.entries(api.roles).map(([k, x]) => `<button data-r="${k}" class="${api.who() === k ? 'on' : ''}">${x}</button>`).join('')}</div>` : ''}
-  <header class="top"><div class="in">
-    <a class="brand" href="#/"><span class="lg">D</span>Design Desk</a>
-    <nav class="nav">${tab('', '홈')}${tab('list', '의뢰')}${tab('clients', '고객사')}${tab('settings', '설정', me.is_admin)}${tab('help', '안내')}</nav>
-    <div class="who"><a href="#/me" class="inline" style="gap:8px"><span class="av">${esc((me.name || me.email || '?').slice(0, 1))}</span><span class="nm"><b>${esc(me.name || me.email)}</b><span>${ROLE[me.role]}${me.is_admin ? ' · 관리자' : ''}</span></span></a>
-      <button class="btn sm ghost" id="logout">로그아웃</button></div>
-  </div></header>
-  <main class="wrap" id="main"><div class="boot">불러오는 중…</div></main>
-  <nav class="bottom-nav">${btab('', '⌂', '홈')}${btab('list', '≡', '의뢰')}${btab('clients', '◫', '고객사')}${btab('settings', '⚙', '설정', me.is_admin)}${btab('me', '●', '내 정보')}</nav>`;
+  ${isDemo ? `<div class="demo-bar">데모 모드 · 샘플 데이터 · 역할 보기:${Object.entries(api.roles).map(([k, x]) => `<button data-r="${k}" class="${api.who() === k ? 'on' : ''}">${x}</button>`).join('')}</div>` : ''}
+  <header class="topbar"><button class="btn sm menu-btn" id="menu" type="button">☰</button><a class="brand" href="#/"><span class="lg">D</span>Design Desk</a><div class="sys">디자인 제작 의뢰 관리</div>
+    <div class="user"><a href="#/me"><b>${esc(me.name || me.email)}</b> · ${ROLE[me.role]}${me.is_admin ? ' · 관리자' : ''}</a><button class="btn sm" id="logout" type="button">로그아웃</button></div></header>
+  <div class="layout"><nav class="side" id="side">
+    <div class="who"><b>${esc(me.name || '')}</b>${esc(me.position || ROLE[me.role])}</div>
+    <div style="padding:4px 12px 8px"><a class="btn pri" href="#/new" style="width:100%">＋ 새 의뢰 작성</a></div>
+    <ul class="tree">
+      <li>${item('#/', '홈 (함 현황)', on(''))}</li>
+      ${tree}
+      <li class="grp">의뢰 조회</li><li>${item('#/box/all', '전체 의뢰', on('box', 'all'), ctx.reqs.length)}</li>
+      <li class="grp">기준정보</li><li>${item('#/clients', '고객사', on('clients'), ctx.clients.length)}</li>${me.is_admin ? `<li>${item('#/settings', '사용자·품목', on('settings'))}</li>` : ''}
+      <li class="grp">기타</li><li>${item('#/me', '내 정보', on('me'))}</li><li>${item('#/help', '사용 안내', on('help'))}</li>
+    </ul></nav>
+    <main class="content" id="main"><div class="boot">불러오는 중…</div></main></div>`;
   $('#logout', app).onclick = async () => { await api.auth.signOut(); go('#/'); };
+  $('#menu', app).onclick = () => $('#side', app).classList.toggle('open');
+  $('#side', app).addEventListener('click', (e) => { if (e.target.closest('a')) $('#side', app).classList.remove('open'); });
   if (isDemo) app.querySelectorAll('.demo-bar button').forEach((b) => (b.onclick = () => { ctx.me = null; api.switchRole(b.dataset.r); }));
 }
 
@@ -103,12 +115,12 @@ function shell(route) {
 function viewLogin(forgot) {
   app.innerHTML = `<div class="auth">
     <div class="brand"><span class="lg">D</span>Design Desk</div>
-    <h1>${forgot ? '비밀번호 재설정' : '로그인'}</h1><p>${forgot ? '가입한 회사 이메일로 재설정 링크를 보내드립니다.' : '회사 이메일과 비밀번호로 들어오세요.'}</p>
+    <h1>${forgot ? '비밀번호 재설정' : 'LOGIN'}</h1><p>${forgot ? '가입한 회사 이메일로 재설정 링크를 보내드립니다.' : '회사 이메일과 비밀번호로 로그인하세요.'}</p>
     <form id="f">
       <div class="field"><label>이메일</label><input type="email" id="email" required autocomplete="username" inputmode="email"></div>
       ${forgot ? '' : '<div class="field"><label>비밀번호</label><input type="password" id="pw" required autocomplete="current-password"></div>'}
-      <div class="notice err" id="err" style="display:none;margin-bottom:12px"></div>
-      <button class="btn pri" type="submit">${forgot ? '재설정 메일 보내기' : '로그인'}</button>
+      <div class="notice err" id="err" style="display:none;margin-bottom:10px"></div>
+      <button class="btn pri" type="submit">${forgot ? '재설정 메일 보내기' : 'Log on'}</button>
     </form>
     <div class="foot">${forgot ? '<a href="#/">로그인으로 돌아가기</a>' : '<a href="#/forgot">비밀번호를 잊으셨나요?</a><br>계정은 관리자가 이메일로 초대합니다.'}</div>
   </div>`;
@@ -129,7 +141,7 @@ function viewSetPassword() {
     <form id="f">
       <div class="field"><label>새 비밀번호</label><input type="password" id="pw" required minlength="8" autocomplete="new-password"><div class="hint">8자 이상</div></div>
       <div class="field"><label>한 번 더</label><input type="password" id="pw2" required autocomplete="new-password"></div>
-      <div class="notice err" id="err" style="display:none;margin-bottom:12px"></div>
+      <div class="notice err" id="err" style="display:none;margin-bottom:10px"></div>
       <button class="btn pri" type="submit">저장하고 시작하기</button>
     </form></div>`;
   $('#f', app).onsubmit = async (ev) => {
@@ -144,6 +156,6 @@ function viewSetPassword() {
 
 function viewInactive() {
   app.innerHTML = `<div class="auth"><div class="brand"><span class="lg">D</span>Design Desk</div><h1>사용할 수 없는 계정</h1><p>${esc(session.user.email)} 계정이 아직 활성화되지 않았거나 비활성 처리되었습니다. 관리자(대표·디자이너)에게 문의하세요.</p>
-    <button class="btn" id="lo">로그아웃</button></div>`;
+    <button class="btn" id="lo" type="button">로그아웃</button></div>`;
   $('#lo', app).onclick = () => api.auth.signOut();
 }

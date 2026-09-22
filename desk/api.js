@@ -75,6 +75,7 @@ function demo() {
   const profiles = Object.values(P);
   const itemTypes = [
     { id: 1, code: 'detail_page', label: '상세페이지', sort: 10, default_sizes: ['860px 폭', '1000px 폭'], is_active: true },
+    { id: 9, code: 'photo', label: '촬영', sort: 15, default_sizes: [], is_active: true },
     { id: 2, code: 'thumbnail', label: '썸네일', sort: 20, default_sizes: ['1000x1000', '500x500'], is_active: true },
     { id: 3, code: 'banner', label: '배너', sort: 30, default_sizes: ['1920x600', '1200x400'], is_active: true },
     { id: 4, code: 'sns', label: 'SNS 게시물', sort: 40, default_sizes: ['1080x1080', '1080x1350'], is_active: true },
@@ -84,13 +85,13 @@ function demo() {
     { id: 8, code: 'other', label: '기타', sort: 999, default_sizes: [], is_active: true },
   ];
   const clients = [
-    { id: 1, name: '(주)그린라이프', ceo_name: '정수진', contact_name: '한지원', contact_position: '과장', contact_email: 'jw@greenlife.kr', memo: '친환경 생활용품. 톤앤매너 밝고 자연스럽게', created_by: 'u1', created_at: ts(-40), updated_at: ts(-40) },
+    { id: 1, name: '(주)그린라이프', ceo_name: '정수진', contact_name: '한지원', contact_position: '과장', contact_phone: '010-1234-5678', contact_email: 'jw@greenlife.kr', memo: '친환경 생활용품. 톤앤매너 밝고 자연스럽게', created_by: 'u1', created_at: ts(-40), updated_at: ts(-40) },
     { id: 2, name: '모던키친', ceo_name: '오세훈', contact_name: '김나래', contact_position: '팀장', contact_email: 'narae@modernkitchen.co.kr', memo: '', created_by: 'u4', created_at: ts(-30), updated_at: ts(-30) },
     { id: 3, name: '루나코스메틱', ceo_name: '이하늘', contact_name: '박서연', contact_position: '대리', contact_email: 'sy@luna.kr', memo: '핑크 계열 금지(브랜드 가이드)', created_by: 'u1', created_at: ts(-12), updated_at: ts(-12) },
   ];
-  const R = (o) => ({ kind: 'client', client_id: null, item_type_other: null, product_name: null, size_spec: null, product_features: null, required_copy: null, notes: null, requested_due: null, confirmed_due: null, priority: 'normal', approver_id: null, designer_id: null, deliverable_url: null, submitted_at: null, decided_at: null, started_at: null, completed_at: null, ...o });
+  const R = (o) => ({ kind: 'client', client_id: null, item_type_other: null, product_name: null, size_spec: null, product_features: null, required_copy: null, notes: null, requested_due: null, objective: null, target_audience: null, tone_style: null, deliverable_format: null, needs_photo: false, confirmed_due: null, priority: 'normal', approver_id: null, designer_id: null, deliverable_url: null, submitted_at: null, decided_at: null, started_at: null, completed_at: null, ...o });
   let requests = [
-    R({ id: 'r1', no: 'DR-2026-0012', title: '그린라이프 대나무 칫솔 상세페이지', client_id: 1, item_type_id: 1, product_name: '대나무 칫솔 4입', purpose: '자사몰·스마트스토어 상품 상세', size_spec: '860px 폭', product_features: '생분해 손잡이, 미세모, 4개 묶음 구성', required_copy: '"플라스틱 프리" 문구 필수', notes: '기존 상세페이지 톤 참고', requested_due: day(7), status: 'submitted', requester_id: 'u1', submitted_at: ts(-1), created_at: ts(-2), updated_at: ts(-1) }),
+    R({ id: 'r1', no: 'DR-2026-0012', title: '그린라이프 대나무 칫솔 상세페이지', client_id: 1, item_type_id: 1, product_name: '대나무 칫솔 4입', purpose: '자사몰·스마트스토어 상품 상세', size_spec: '860px 폭', product_features: '① 생분해 대나무 손잡이\n② 미세모로 잇몸 보호\n③ 4개 묶음 가성비 구성\n④ 플라스틱 프리 포장', required_copy: '"플라스틱 프리" 문구 필수', notes: '기존 상세페이지 톤 참고', objective: '기존 상세페이지 전환율 개선. 친환경 메시지를 첫 화면에서 전달', target_audience: '30대 여성, 친환경 생활용품에 관심 있는 1인 가구', tone_style: '밝고 자연스러운 톤, 베이지·그린 계열, 사진 위주', deliverable_format: 'JPG, PSD', needs_photo: true, requested_due: day(7), status: 'submitted', requester_id: 'u1', submitted_at: ts(-1), created_at: ts(-2), updated_at: ts(-1) }),
     R({ id: 'r2', no: 'DR-2026-0011', title: '모던키친 가을 프로모션 배너', client_id: 2, item_type_id: 3, product_name: '에어프라이어 7L', purpose: '네이버 브랜드스토어 메인 배너', size_spec: '1920x600', product_features: '20% 할인, 9/30까지', required_copy: '할인 기간 명시', requested_due: day(3), confirmed_due: day(4), priority: 'high', status: 'in_progress', requester_id: 'u4', approver_id: 'u2', designer_id: 'u3', submitted_at: ts(-4), decided_at: ts(-3), started_at: ts(-2), created_at: ts(-5), updated_at: ts(-2) }),
     R({ id: 'r3', no: 'DR-2026-0010', title: '루나 립밤 SNS 런칭 카드뉴스', client_id: 3, item_type_id: 4, product_name: '루나 틴티드 립밤', purpose: '인스타그램 피드 5장', size_spec: '1080x1350', requested_due: day(10), confirmed_due: day(9), priority: 'normal', status: 'approved', requester_id: 'u1', approver_id: 'u2', submitted_at: ts(-3), decided_at: ts(-1, 3), created_at: ts(-3), updated_at: ts(-1, 3) }),
     R({ id: 'r4', no: 'DR-2026-0009', title: '사내 워크숍 안내 포스터', kind: 'internal', item_type_id: 5, purpose: '10월 워크숍 안내, 사무실 게시', size_spec: 'A4', requested_due: day(14), status: 'revision', requester_id: 'u1', approver_id: 'u2', submitted_at: ts(-2), decided_at: ts(-1), created_at: ts(-2), updated_at: ts(-1) }),

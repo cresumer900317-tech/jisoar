@@ -51,6 +51,16 @@ export const back = (fallback = '#/') => { if (history.length > 1) history.back(
 // http(s) 만 링크로 허용 (javascript: 등 차단)
 export function safeUrl(u) { try { const x = new URL(String(u || '')); return ['http:', 'https:'].includes(x.protocol) ? x.href : null; } catch { return null; } }
 export const PRIO_RANK = { urgent: 0, high: 1, normal: 2, low: 3 };
+export const FORMATS = ['JPG', 'PNG', 'PDF', 'AI', 'PSD', '인쇄용 PDF', 'MP4', 'GIF'];
+// 회사 의뢰서 양식의 참고사항(수정 정책) — 의뢰서 하단 고정 안내
+export const POLICY = [
+  '수정 가능 횟수는 2회입니다. 이후 문구·정보의 변경, 오탈자에 대한 간단한 정보수정은 가능합니다.',
+  '수정 횟수는 1회의 수정사항을 모두 합쳐 수정 후 1회 처리합니다.',
+  '수정의 범위는 삽입된 이미지·텍스트·수정(오탈자 등)에 한합니다.',
+  '완전히 새로운 디자인으로 변경 시 수정이 아닌 "재제작"으로 분류되며 비용이 발생할 수 있습니다.',
+  '원본파일(psd)은 라이선스(폰트·이미지 등)로 인해 제공하지 않습니다.',
+];
+export const statusText = (s) => `<span class="status-txt st-${s}">${STATUS[s]?.[0] || s}</span>`;
 export function toast(msg, err) {
   const t = document.getElementById('toast'); const d = document.createElement('div');
   d.textContent = msg; if (err) d.className = 'err'; t.appendChild(d); setTimeout(() => d.remove(), err ? 6000 : 3200);
