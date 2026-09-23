@@ -446,7 +446,7 @@ tr.child .p-name{font-weight:500}
       <!-- ================= 광고관리 ================= -->
       <section class="page on" id="page-ad">
         <section class="panel kpi-card">
-          <div class="kpi-head"><span class="t">전체 현황</span><span class="d"><b id="kpiLive" style="color:var(--accent);margin-right:10px"></b>네이버쇼핑 통합검색 · 광고 제외 순위 · 카드를 누르면 목록이 필터됩니다</span></div>
+          <div class="kpi-head"><span class="t">전체 현황</span><span class="d"><b id="syncState" style="color:var(--bad);margin-right:10px"></b><b id="kpiLive" style="color:var(--accent);margin-right:10px"></b>네이버쇼핑 통합검색 · 광고 제외 순위 · 카드를 누르면 목록이 필터됩니다</span></div>
           <div class="kpi-strip" id="kpi"></div>
         </section>
 
@@ -700,8 +700,8 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v23';
-(async()=>{try{if(sessionStorage.getItem('rl_reloaded')===window.BUILD)return;const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}}catch{}})();
+window.BUILD='v24';
+(async()=>{const chk=async()=>{const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD&&sessionStorage.getItem('rl_reloaded')!==m[1]){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}};try{await chk();}catch{}setInterval(()=>chk().catch(()=>{}),300000);})();
 </script>
 <script src="data.js?v=17"></script>
 <script>
@@ -728,6 +728,7 @@ const ROLE_LABEL={hq:'총판',agency:'대행사',adv:'광고주'};
 
 /* ================= helpers ================= */
 const $=s=>document.querySelector(s);
+function fx(url,opts,ms){return fetch(url,Object.assign({signal:AbortSignal.timeout(ms||15000)},opts||{}))}   // 응답 없는 요청이 버튼·동기화를 영원히 잠그지 않게
 const $$=s=>Array.from(document.querySelectorAll(s));
 function esc(s){return(''+(s??'')).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function hash(s){let h=0;for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))|0;}return h;}
@@ -815,9 +816,9 @@ function rowHTML(p,idx,g){
   const tg=isParent?`<button class="tg" type="button" data-g="${esc(g.key)}" aria-label="펼치기">${OPEN.has(g.key)?'−':'+'}</button>`:`<span class="tg ph"></span>`;
   const badge=isParent?`<span class="qty-badge">×${g.n}</span>`:'';
   const nos=isParent?g.nos:[p.no];
-  const checked=nos.every(n=>SEL.has(n));
+  const checked=nos.every(n=>SEL.has(n)),partial=!checked&&nos.some(n=>SEL.has(n));
   return `<tr class="row ${isChild?'child':''} ${checked?'sel':''}" data-i="${idx}">
-    <td class="chk"><input type="checkbox" class="rowchk" data-nos="${nos.join(',')}" ${checked?'checked':''} aria-label="선택"></td>
+    <td class="chk"><input type="checkbox" class="rowchk" data-nos="${nos.join(',')}" ${checked?'checked':''}${partial?' data-partial="1"':''} aria-label="선택"></td>
     <td><span class="mono">${p.no}</span></td>
     <td><span class="id-tag">${esc(p.owner)}</span></td>
     <td>${statusHTML(p)}</td>
@@ -884,6 +885,7 @@ function renderAd(){
       if(n>1&&OPEN.has(key))list.slice(1).forEach((r,j)=>{html+=rowHTML(r.p,r.i,{key,n,child:true,i:j+1,nos:[r.p.no]});});
     });
     $('#tbody').innerHTML=html;
+    $$('#tbody input.rowchk[data-partial="1"]').forEach(c=>c.indeterminate=true);
     $('#count').textContent=`${SEL.size?`${SEL.size}개 선택 · `:''}상품 ${totalGroups.toLocaleString('ko-KR')}개 · 슬롯 ${rows.length.toLocaleString('ko-KR')}건${pages>1?` · ${PAGE}/${pages}페이지`:''}`;
     renderPager(pages,totalGroups);
   }
@@ -905,7 +907,7 @@ function fillOwners(){
 /* register: 링크 붙여넣기 → 상품ID/단품MID 자동 입력(수집 데이터에 있으면 상품명·몰·현재 순위까지) */
 let regFound=null;
 function parseLink(url){
-  const pid=(/\/products\/(\d+)/.exec(url)||[])[1]||'';
+  const pid=(/\/(?:window-)?products\/(?:[^/?#]+\/)?(\d+)/.exec(url)||[])[1]||'';
   const cat=(/\/catalog\/(\d+)/.exec(url)||[])[1]||'';
   const nv=(/[?&]nvMid=(\d+)/.exec(url)||[])[1]||'';
   return {pid,nvMid:cat||nv};
@@ -944,12 +946,12 @@ $('#regUrl').addEventListener('paste',()=>setTimeout(autoFill,0));
 /* 라이브 조회 서버(큐): 수집 데이터에 없는 상품은 로그인 세션 워커가 상품명·상품ID·단일MID·순위를 조회 */
 const LIVE_API='https://guild-backend-production-75a6.up.railway.app/api/ranklab';
 let liveOnline=null;
-async function liveStatus(){try{const r=await fetch(LIVE_API+'/status',{cache:'no-store'});const j=await r.json();liveOnline=!!j.worker_online;}catch{liveOnline=false;}return liveOnline;}
-liveStatus();setInterval(liveStatus,15000);
+async function liveStatus(){try{const r=await fx(LIVE_API+'/status',{cache:'no-store'});const j=await r.json();liveOnline=!!j.worker_online;}catch{liveOnline=false;}return liveOnline;}
+liveStatus().then(markSync);setInterval(()=>liveStatus().then(markSync),15000);
 function isNaverProductLink(url){try{const u=new URL(url);return /(^|\.)naver\.com$/.test(u.hostname)&&(/\/(?:window-)?products\/(?:[^/?#]+\/)?\d+/.test(u.pathname)||/\/catalog\/\d+/.test(u.pathname));}catch{return false}}
 function rangePages(){const v=+($('#regRange')?.value||1000);return Math.max(1,Math.min(13,Math.ceil(v/80)));}
 async function createLookup(url,kw,pages){
-  const r=await fetch(LIVE_API+'/lookup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url,keyword:kw,pages:pages||13})});
+  const r=await fx(LIVE_API+'/lookup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url,keyword:kw,pages:pages||13})});
   if(!r.ok){let d='';try{d=(await r.json()).detail||'';}catch{}throw new Error(d||('조회 요청 실패 '+r.status));}
   return (await r.json()).id;
 }
@@ -962,8 +964,10 @@ function normSlot(x){
 }
 async function loadShared(force){
   let st;
-  try{const r=await fetch(LIVE_API+'/state',{cache:'no-store'});if(!r.ok)throw new Error(r.status);st=await r.json();showDaily(st.daily);}
-  catch(e){if(force)toast('공용 목록을 불러오지 못했습니다: '+e.message);if(!SHARED_READY){SHARED_READY=true;renderAd();}return false;}
+  try{const r=await fx(LIVE_API+'/state',{cache:'no-store'});if(!r.ok)throw new Error(r.status);st=await r.json();showDaily(st.daily);}
+  catch(e){SYNC_FAIL=true;markSync();if(force)toast('공용 목록을 불러오지 못했습니다: '+e.message);if(!SHARED_READY){SHARED_READY=true;renderAd();}return false;}
+  SYNC_FAIL=false;LAST_SYNC=new Date();markSync();
+  if(typeof st.version==='number'&&st.version<SHARED_VERSION)return false;   // 늦게 도착한 과거 응답은 버린다
   if(!force&&st.version===SHARED_VERSION)return false;
   SHARED_VERSION=st.version;
   HIDDEN.clear();(st.hidden||[]).forEach(n=>HIDDEN.add(Number(n)));
@@ -972,51 +976,59 @@ async function loadShared(force){
   for(let i=SLOTS.length-1;i>=0;i--)if(SLOTS[i].user)SLOTS.splice(i,1);
   for(let i=LOGS.length-1;i>=0;i--)if(LOGS[i].user)LOGS.splice(i,1);
   const byNo={};
-  (st.slots||[]).map(normSlot).sort((a,b)=>b.no-a.no).reverse().forEach(x=>{byNo[x.no]=x;SLOTS.unshift(x);});
+  (st.slots||[]).map(normSlot).sort((a,b)=>b.no-a.no).reverse().forEach(x=>{if(x.jobId&&DEAD.has(x.jobId)){x.live=false;x.note=x.note||'조회가 중단됨 · [재조회]로 다시 시도';}byNo[x.no]=x;SLOTS.unshift(x);});
   SLOTS.sort((a,b)=>b.no-a.no);
+  [...SEL].forEach(n=>{if(!SLOTS.some(x=>x.no===n)||HIDDEN.has(n))SEL.delete(n);});
   (st.logs||[]).forEach(l=>{l.user=true;l.slot=byNo[l.slot]||null;LOGS.unshift(l);});
   LOGS.sort((a,b)=>a.created<b.created?1:-1);
-  SHARED_READY=true;renderAd();renderAccount();renderSettle();renderDaily();
+  SHARED_READY=true;renderAd();renderAccount();renderSettle();renderDaily();refreshDrawer();
   // 조회 중인 건은 진행 상태 폴링 (완료되면 서버가 슬롯을 갱신하므로 다시 불러온다)
   const jobs=new Set(SLOTS.filter(x=>x.user&&x.live&&x.jobId).map(x=>x.jobId));
-  jobs.forEach(jobId=>{if(WATCHING.has(jobId))return;WATCHING.add(jobId);watchJob(jobId);});
+  jobs.forEach(jobId=>{if(WATCHING.has(jobId)||DEAD.has(jobId))return;WATCHING.add(jobId);watchJob(jobId);});
   return true;
 }
-const WATCHING=new Set();
+const WATCHING=new Set(),DEAD=new Set();   // DEAD: 만료(404)·시간 초과로 더 이상 볼 수 없는 작업 — 재감시 루프 방지
+let SYNC_FAIL=false,LAST_SYNC=null;
+function markSync(){const el=$('#syncState');if(!el)return;const t=LAST_SYNC?LAST_SYNC.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}):'없음';el.textContent=SYNC_FAIL?`서버 연결 실패 · 마지막 동기화 ${t} · 자동 재시도 중`:(liveOnline===false?'조회 서버 오프라인 · 등록은 가능하며 서버가 켜지면 자동 조회됩니다':'');}
 function watchJob(jobId){
-  pollJob(jobId,(step)=>{SLOTS.filter(y=>y.user&&y.jobId===jobId&&y.live).forEach(y=>{if(!y.name||/^조회 중/.test(y.name))y.name=`조회 중… ${y.pid?`스마트스토어 상품 ${y.pid}`:`가격비교 상품 ${y.nvMid}`}`;y.note=step;});renderAd();const el=$('#liveStep');if(el&&el.dataset.job===jobId)el.textContent=step;})
-    .catch(()=>{})
+  pollJob(jobId,(step)=>{SLOTS.filter(y=>y.user&&y.jobId===jobId&&y.live).forEach(y=>{if(!y.name||/^조회 중/.test(y.name))y.name=`조회 중… ${y.pid?`스마트스토어 상품 ${y.pid}`:`가격비교 상품 ${y.nvMid}`}`;y.note=step;});renderAd();refreshDrawer();const el=$('#liveStep');if(el&&el.dataset.job===jobId)el.textContent=step;})
+    .catch(e=>{if(e.final)DEAD.add(jobId);SLOTS.filter(y=>y.user&&y.jobId===jobId&&y.live).forEach(y=>{if(e.final){y.live=false;y.note='조회 중단: '+e.message+' · [재조회]로 다시 시도';}});renderAd();refreshDrawer();})
     .finally(async()=>{WATCHING.delete(jobId);await new Promise(r=>setTimeout(r,800));loadShared(true);});
 }
 async function pollJob(jobId,onStep){
-  const t0=Date.now();
+  const t0=Date.now();let fails=0;
   for(;;){
     await new Promise(res=>setTimeout(res,2500));
-    const g=await fetch(LIVE_API+'/lookup/'+jobId,{cache:'no-store'});
-    if(!g.ok)throw new Error(g.status===404?'조회 기록이 만료됨':'조회 상태 확인 실패 '+g.status);
-    const j=await g.json();
+    let j;
+    try{
+      const g=await fx(LIVE_API+'/lookup/'+jobId,{cache:'no-store'});
+      if(g.status===404)throw Object.assign(new Error('조회 기록이 만료됨'),{final:true});
+      if(!g.ok)throw new Error('조회 상태 확인 실패 '+g.status);
+      j=await g.json();fails=0;
+    }catch(e){if(e.final||++fails>=5)throw e;continue;}   // 일시적 네트워크 오류는 5회까지 재시도, 만료·최종 실패만 중단
     if(j.status==='done')return j.result;
-    if(j.status==='failed')throw new Error(j.error||'조회 실패');
+    if(j.status==='failed')throw Object.assign(new Error(j.error||'조회 실패'),{final:false});   // 서버가 슬롯 상태를 이미 정리함 → 동기화로 반영
     const sec=Math.round((Date.now()-t0)/1000);
     onStep(j.status==='queued'?`조회 대기 중${j.queue_position>1?` (앞에 ${j.queue_position-1}건)`:''}${j.worker_seen?'':' · 조회 서버 연결 확인 중'}`:j.step,sec);
-    if(sec>1500)throw new Error('조회 시간 초과(25분)');
+    if(sec>1500)throw Object.assign(new Error('조회 시간 초과(25분)'),{final:true});
   }
 }
 async function postSlots(body){
-  const r=await fetch(LIVE_API+'/slots',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  const r=await fx(LIVE_API+'/slots',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
   if(!r.ok){let d='';try{d=(await r.json()).detail||'';}catch{}throw new Error(d||('등록 실패 '+r.status));}
   return r.json();
 }
 function startSharedSync(){loadShared(true);if(!sharedTimer)sharedTimer=setInterval(()=>loadShared(false),10000);}
-let delArm=null;
+let delArm=null,delArmKey='';
 async function deleteSelected(){
   const btn=$('#btnDel');
   if(!SEL.size){toast('삭제할 항목을 맨 앞 체크박스로 선택해 주세요');return;}
-  if(!delArm){delArm=setTimeout(()=>{delArm=null;btn.textContent='삭제';btn.classList.remove('btn-dark');},4000);btn.textContent=`정말 삭제 (${SEL.size})`;btn.classList.add('btn-dark');return;}
+  const key=[...SEL].sort((a,b)=>a-b).join(',');
+  if(!delArm||delArmKey!==key){clearTimeout(delArm);delArmKey=key;delArm=setTimeout(()=>{delArm=null;btn.textContent='삭제';btn.classList.remove('btn-dark');},4000);btn.textContent=`정말 삭제 (${SEL.size})`;btn.classList.add('btn-dark');return;}
   clearTimeout(delArm);delArm=null;btn.textContent='삭제';btn.classList.remove('btn-dark');
   const nos=[...SEL];
   try{
-    const r=await fetch(LIVE_API+'/slots/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nos})});
+    const r=await fx(LIVE_API+'/slots/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nos})});
     if(!r.ok)throw new Error('삭제 실패 '+r.status);
     SEL.clear();nos.forEach(n=>HIDDEN.add(n));
     for(let i=SLOTS.length-1;i>=0;i--)if(SLOTS[i].user&&nos.includes(SLOTS[i].no))SLOTS.splice(i,1);
@@ -1028,7 +1040,7 @@ async function recheckSlots(nos){
   nos=[...new Set(nos)].filter(n=>{const s=SLOTS.find(x=>x.no===n);return s&&s.user&&s.url&&!(s.live&&s.jobId)});
   if(!nos.length){toast('재조회할 등록 항목을 맨 앞 체크박스로 선택해 주세요 (이미 조회 중인 항목은 제외)');return;}
   try{
-    const r=await fetch(LIVE_API+'/slots/recheck',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nos,pages:rangePages()})});
+    const r=await fx(LIVE_API+'/slots/recheck',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nos,pages:rangePages()})});
     if(!r.ok){let d='';try{d=(await r.json()).detail||'';}catch{}throw new Error(d||('재조회 요청 실패 '+r.status));}
     const j=await r.json();
     toast(`${j.queued||0}건 재조회 시작 · 완료되면 목록에 자동 반영됩니다`);
@@ -1038,7 +1050,7 @@ async function recheckSlots(nos){
 function resetUser(){
   const key=prompt('공용 등록 목록을 모두 지웁니다. 관리 키를 입력하세요.');
   if(!key)return;
-  fetch(LIVE_API+'/reset?key='+encodeURIComponent(key.trim()),{method:'POST'}).then(r=>{if(!r.ok)throw new Error(r.status===401?'관리 키가 틀립니다':'초기화 실패 '+r.status);toast('공용 등록 목록을 초기화했습니다');return loadShared(true);}).catch(e=>toast(e.message));
+  fx(LIVE_API+'/reset?key='+encodeURIComponent(key.trim()),{method:'POST'}).then(r=>{if(!r.ok)throw new Error(r.status===401?'관리 키가 틀립니다':'초기화 실패 '+r.status);toast('공용 등록 목록을 초기화했습니다');return loadShared(true);}).catch(e=>toast(e.message));
 }
 $('#regForm').addEventListener('submit',async e=>{
   e.preventDefault();
@@ -1047,6 +1059,7 @@ $('#regForm').addEventListener('submit',async e=>{
   const {pid,nvMid}=parseLink(url);
   if(!pid&&!nvMid){autoFill();return;}
   const btn=$('#regBtn'),lb=$('#regBtnLabel'),st=$('#regStatus');
+  if(!isNaverProductLink(url)){st.className='reg-status show';st.innerHTML=`<span style="color:var(--bad)">네이버 스마트스토어·브랜드스토어 상품 링크 또는 가격비교 링크만 등록할 수 있습니다.</span>`;return;}
   btn.disabled=true;lb.innerHTML=`<span class="spinner"></span>`;
   st.className='reg-status show';st.innerHTML=`상품 정보를 확인하는 중…`;
   const start=addDays(AXIS_END,1),end=addDays(AXIS_END,1+days);
@@ -1081,25 +1094,27 @@ $('#regForm').addEventListener('submit',async e=>{
     await loadShared(true);
     st.innerHTML=`<span class="ok">✓ 등록 완료</span>&nbsp; ${ownerName(own)}(${own}) · 키워드 "${esc(kw)}" · ${qty>1?`수량 ${qty} · `:''}${days}일 · ${how}`;
     $('#regUrl').value='';$('#regKw').value='';$('#regMid').value='';$('#regPid').value='';$('#regQty').value='1';$('#regDays').value='30';$('#regAuto').className='reg-auto';regFound=null;
-    PAGE=1;filter='all';query='';owner='';$('#q').value='';$('#ownerFilter').value='';renderAd();
+    query='';owner='';$('#q').value='';$('#ownerFilter').value='';setFilter('all');
     const tr=$('#tbody tr');if(tr)tr.classList.add('flash');
   }catch(err){
     st.innerHTML=`<span style="color:var(--bad)">등록 실패: ${esc(err.message)}</span>`;
-  }
-  btn.disabled=false;lb.textContent='등록';
+  }finally{btn.disabled=false;lb.textContent='등록';}
 });
 function cleanLink(url){try{const u=new URL(url);u.search='';u.hash='';return u.toString();}catch{return url}}
 
 /* ================= drawer ================= */
 const drawer=$('#drawer'),overlay=$('#overlay');
+let DRAWER_NO=null;
+function refreshDrawer(){if(DRAWER_NO==null||!drawer.classList.contains('show'))return;const s=SLOTS.find(x=>x.no===DRAWER_NO);if(!s||HIDDEN.has(s.no)){closeDrawer();toast('보고 있던 항목이 삭제되었습니다');return;}openDrawer(s);}
 function openDrawer(p){
+  DRAWER_NO=p.no;
   $('#dName').innerHTML=storeLink(p);
   $('#dMeta').textContent=`No. ${p.no} · ${ownerName(p.owner)}(${p.owner}) · 키워드 "${p.kw}"`;
   const d=delta(p),kwd=S.keywords.find(k=>k.kw===p.kw);
   const rankV=p.status==='err'?`<div class="v bad">순위없음</div>`:(p.rank==null?`<div class="v">-</div>`:`<div class="v">${p.rank}위</div>`);
   $('#dStats').innerHTML=`
     <div class="d-stat"><div class="l">현재 순위</div>${rankV}</div>
-    <div class="d-stat"><div class="l">전일 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?'-':(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
+    <div class="d-stat"><div class="l">직전 수집 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?'-':(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
     <div class="d-stat"><div class="l">검색 결과</div><div class="v">${kwd&&kwd.total!=null?kwd.total.toLocaleString('ko-KR')+'건':'-'}</div></div>`;
   $('#chartSub').textContent=p.history.filter(h=>h.r!=null).length<2?`${(p.history.find(h=>h.r!=null)||{}).d||AXIS_END} 첫 수집 · 다음 11:00 수집부터 추이가 그려집니다`:`매일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위`;
   $('#dInfo').innerHTML=`
@@ -1127,7 +1142,7 @@ function openDrawer(p){
   drawChart(p);
   drawer.classList.add('show');overlay.classList.add('show');drawer.setAttribute('aria-hidden','false');
 }
-function closeDrawer(){drawer.classList.remove('show');overlay.classList.remove('show');drawer.setAttribute('aria-hidden','true');}
+function closeDrawer(){DRAWER_NO=null;drawer.classList.remove('show');overlay.classList.remove('show');drawer.setAttribute('aria-hidden','true');}
 $('#drawerClose').addEventListener('click',closeDrawer);
 overlay.addEventListener('click',closeDrawer);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
@@ -1149,7 +1164,7 @@ function drawChart(p){
   const x=i=>PL+(i/(days.length-1))*(W-PL-PR);
   if(!nums.length){
     const t=document.createElementNS(NS,'text');t.setAttribute('x',W/2);t.setAttribute('y',H/2);t.setAttribute('text-anchor','middle');t.setAttribute('fill','#868c96');t.setAttribute('font-size','13');
-    t.textContent=p.status==='err'?`조회 범위(${RANGE_MAX.toLocaleString('ko-KR')}위) 안에서 상품을 찾지 못했습니다`:'수집된 순위 데이터가 아직 없습니다';svg.appendChild(t);box.appendChild(svg);return;
+    t.textContent=p.status==='err'?(p.user&&p.note?p.note:`조회 범위(${RANGE_MAX.toLocaleString('ko-KR')}위) 안에서 상품을 찾지 못했습니다`):'수집된 순위 데이터가 아직 없습니다';svg.appendChild(t);box.appendChild(svg);return;
   }
   const min=Math.max(1,Math.min(...nums)-3),max=Math.max(...nums)+3;
   const y=v=>PT+((v-min)/(max-min))*(H-PT-PB);
@@ -1228,7 +1243,7 @@ function renderAccount(){
   $('#acctCount').textContent=`${L.length} / ${ACCOUNTS.length}건`;
   $('#navCntAcct').textContent=ACCOUNTS.length;
 }
-function viewAds(id){owner=id;$('#ownerFilter').value=id;filter='all';$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));PAGE=1;renderAd();location.hash='ad';}
+function viewAds(id){owner=id;$('#ownerFilter').value=id;query='';$('#q').value='';filter='all';$$('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));PAGE=1;renderAd();location.hash='ad';}
 $('#acctRole').addEventListener('change',renderAccount);
 $('#acctQ').addEventListener('input',renderAccount);
 
@@ -1284,7 +1299,7 @@ function renderSettle(){
     <td><span class="mono">${l.no}</span></td><td><span class="kind ${l.kind}">${KIND[l.kind]}</span></td>
     <td><span class="id-tag">${l.agency}</span></td><td><span class="id-tag">${esc(l.owner)}</span></td>
     <td><span class="mono">${l.qty}</span></td><td><span class="mono">${Math.abs(l.days)}일</span></td>
-    <td><span class="mono" style="font-weight:700;color:${l.days<0?'var(--bad)':'var(--ink-1)'}">${l.days>0?'+':''}${l.days}</span></td>
+    <td><span class="mono" style="font-weight:700;color:${l.days<0?'var(--bad)':'var(--ink-1)'}">${l.days>0?'+':''}${l.days*l.qty}</span></td>
     <td><span class="mono">${l.created}</span></td><td><span class="mono">${l.start}</span></td>
     <td class="left" style="white-space:normal;max-width:360px;color:var(--ink-2)">${esc(l.desc)}</td>
     <td>${l.slot?`<button class="gear" type="button" onclick="openSlotByNo(${l.slot.no})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>`:'-'}</td>
@@ -1344,9 +1359,10 @@ function renderDaily(){
 /* ================= CSV ================= */
 function exportCSV(key){
   const tbl=$(`#page-${key} table`);
-  const rows=[...tbl.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>'"'+td.textContent.trim().replace(/"/g,'""')+'"').join(','));
+  const cell=td=>{let v=td.textContent.trim();if(/^[=+\-@]/.test(v)&&!/^[+\-]?[\d,.]+(일)?$/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';};
+  const rows=[...tbl.querySelectorAll('tr')].map(tr=>[...tr.children].map(cell).join(','));
   const blob=new Blob(['﻿'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`ranklab_${key}_${RANGE[key][0]}_${RANGE[key][1]}.csv`;a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`ranklab_${key}_${RANGE[key][0]}_${RANGE[key][1]}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
 }
 
 /* ================= init ================= */
