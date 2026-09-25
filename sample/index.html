@@ -436,7 +436,7 @@ tr.child .p-name{font-weight:500}
         </div>
         <div class="topbar-meta">
           최근 수집 <b id="metaLast">-</b><br>
-          다음 수집 <b id="metaNext">-</b> · 매일 11시·17시·23시
+          다음 수집 <b id="metaNext">-</b> · 매일 5시·11시·17시·23시
         </div>
       </div>
     </div>
@@ -707,7 +707,7 @@ tr.child .p-name{font-weight:500}
   <div class="drawer-body">
     <div class="d-stats" id="dStats"></div>
     <div class="chart-title">일별 순위 추이</div>
-    <div class="chart-sub" id="chartSub">매일 11시·17시·23시 수집 · 광고 제외 순위 · 위로 갈수록 상위</div>
+    <div class="chart-sub" id="chartSub">매일 5시·11시·17시·23시 수집 · 광고 제외 순위 · 위로 갈수록 상위</div>
     <div class="chart-box" id="chartBox"><div class="chart-tip" id="chartTip"></div></div>
     <div class="d-info"><dl id="dInfo"></dl></div>
     <div class="d-links" id="dLinks"></div>
@@ -717,7 +717,7 @@ tr.child .p-name{font-weight:500}
 
 <script>
 /* 캐시 자동 갱신: 서버의 최신 페이지와 BUILD 가 다르면 한 번만 강제 새로고침 */
-window.BUILD='v30';
+window.BUILD='v31';
 (async()=>{const chk=async()=>{const r=await fetch(location.pathname,{cache:'no-store'});const t=await r.text();const m=/window\.BUILD='([^']+)'/.exec(t);if(m&&m[1]!==window.BUILD&&sessionStorage.getItem('rl_reloaded')!==m[1]){sessionStorage.setItem('rl_reloaded',m[1]);location.reload();}};try{await chk();}catch{}setInterval(()=>chk().catch(()=>{}),300000);})();
 </script>
 <script src="data.js?v=17"></script>
@@ -728,7 +728,7 @@ const TODAY=S.collectedAt||'2026-09-14';
 const REAL_TODAY=(()=>{const d=new Date(Date.now()+9*3600*1000);return d.toISOString().slice(0,10)})();   // 실제 오늘(KST) — 스냅샷 날짜(TODAY)와 별개
 const AXIS_END=REAL_TODAY>TODAY?REAL_TODAY:TODAY;
 const KST_HOUR=new Date(Date.now()+9*3600*1000).getUTCHours();
-const NEXT_HOUR=KST_HOUR<11?11:(KST_HOUR<17?17:(KST_HOUR<23?23:11));   // 다음 정기 수집 시각(11시·17시·23시)
+const NEXT_HOUR=KST_HOUR<5?5:(KST_HOUR<11?11:(KST_HOUR<17?17:(KST_HOUR<23?23:5)));   // 다음 정기 수집 시각(5·11·17·23시)
 const NEXT_RUN=KST_HOUR<23?AXIS_END:addDays(AXIS_END,1);   // 다음 정기 수집일
 function baseDay(p){return p&&p.user?AXIS_END:TODAY}   // 등록 슬롯은 실제 오늘, 스냅샷 슬롯은 수집일 기준
 const COLORS=['#3767c4','#c9772e','#2f9c6d','#b7842a','#b3557f','#4a4f96','#5a8fa8','#a2506a','#3f7d5c','#8a6bbf'];
@@ -1209,7 +1209,7 @@ function openDrawer(p){
     <div class="d-stat"><div class="l">현재 순위</div>${rankV}</div>
     <div class="d-stat"><div class="l">직전 수집 대비</div><div class="v ${d>0?'up':(d<0?'down':'')}">${d==null?'-':(d>0?'▲'+d:(d<0?'▼'+Math.abs(d):'0'))}</div></div>
     <div class="d-stat"><div class="l">검색 결과</div><div class="v">${kwd&&kwd.total!=null?kwd.total.toLocaleString('ko-KR')+'건':'-'}</div></div>`;
-  $('#chartSub').textContent=p.history.filter(h=>h.r!=null).length<2?`${(p.history.find(h=>h.r!=null)||{}).d||AXIS_END} 첫 수집 · 다음 정기 수집(11시·17시·23시)부터 추이가 그려집니다`:`매일 11:00 수집 · 광고 제외 순위 · 위로 갈수록 상위`;
+  $('#chartSub').textContent=p.history.filter(h=>h.r!=null).length<2?`${(p.history.find(h=>h.r!=null)||{}).d||AXIS_END} 첫 수집 · 다음 정기 수집(5시·11시·17시·23시)부터 추이가 그려집니다`:`매일 05:00·11:00·17:00·23:00 수집 · 광고 제외 순위 · 위로 갈수록 상위`;
   $('#dInfo').innerHTML=`
     <dt>키워드</dt><dd>${esc(p.kw)}</dd>
     <dt>단품MID</dt><dd>${esc(p.nvMid||'-')}${p.catalog?' <span style="color:var(--ink-3)">(가격비교 묶음 MID)</span>':''}</dd>
@@ -1218,7 +1218,7 @@ function openDrawer(p){
     <dt>가격 / 리뷰</dt><dd>${won(p.price)} · 리뷰 ${p.review==null?'-':p.review.toLocaleString('ko-KR')}</dd>
     <dt>광고주</dt><dd>${esc(p.owner)} · ${esc(ownerName(p.owner))}</dd>
     <dt>기간</dt><dd>${p.start} ~ ${p.end} (${p.days}일, 잔여 ${Math.max(0,dayDiff(baseDay(p),p.end))}일${dayDiff(baseDay(p),p.end)<0?' · 기간 종료':''})</dd>
-    <dt>수집 주기</dt><dd>매일 11:00·17:00·23:00 (1일 3회)</dd>
+    <dt>수집 주기</dt><dd>매일 05:00·11:00·17:00·23:00 (1일 4회, 6시간 간격)</dd>
     ${p.screenRank!=null&&p.screenRank!==p.rank?`<dt>화면 순서(참고)</dt><dd>${p.screenRank}번째 <span style="color:var(--ink-3)">(광고 아닌 할인 추천 칸까지 눈으로 세면)</span></dd>`:''}
     ${p.live&&p.jobId?`<dt>진행 상태</dt><dd style="color:var(--accent)">${p.rank!=null?'재확인 중':'조회 중'} · ${esc(p.note||'')}</dd>`:''}
     ${p.note?`<dt>비고</dt><dd style="color:var(--bad)">${esc(p.note)}</dd>`:''}`;
@@ -1286,7 +1286,7 @@ function drawChart(p){
 const NOTICES=[
   {no:4,kind:'공지',date:TODAY,title:'순위 산정 기준 안내',body:`<p>순위는 네이버쇼핑 <b>통합검색 결과에서 광고 상품을 제외한 순번</b>(네이버 순위 번호)입니다. 같은 상품이 여러 번 노출되면 처음 나온 위치만 인정합니다.</p><p>조회 범위는 <b>1,000위</b>까지이며, 범위 밖이면 "순위없음"으로 표시됩니다.</p>`},
   {no:3,kind:'공지',date:TODAY,title:'광고 등록 방법',body:`<p>광고관리에서 <b>스마트스토어 상품 링크</b> 또는 <b>가격비교 링크</b>를 붙여넣고 키워드를 입력하면 상품명·상품ID·단일MID·현재 순위가 자동으로 채워집니다. 보통 30초, 순위가 깊으면 몇 분 걸릴 수 있습니다.</p><p>같은 상품은 수량을 지정해 한 번에 여러 개 등록할 수 있고, 목록에서는 한 줄로 묶여 보입니다.</p>`},
-  {no:2,kind:'업데이트',date:'2026-09-24',title:'수집 주기 변경: 매일 11:00·17:00·23:00 (하루 3회)',body:`<p>순위 수집이 <b>매일 오전 11:00·오후 5:00·밤 11:00, 하루 3회</b>로 변경되었습니다. 전일 대비 변동과 일별 추이 그래프가 함께 제공됩니다.</p>`},
+  {no:2,kind:'업데이트',date:'2026-09-26',title:'수집 주기 변경: 매일 05:00·11:00·17:00·23:00 (하루 4회)',body:`<p>순위 수집이 <b>매일 새벽 5:00·오전 11:00·오후 5:00·밤 11:00, 6시간 간격 하루 4회</b>로 변경되었습니다. 전일 대비 변동과 일별 추이 그래프가 함께 제공됩니다.</p>`},
   {no:1,kind:'공지',date:'2026-08-26',title:'RANKLAB 안내',body:`<p>네이버쇼핑 키워드 순위 모니터링 시스템입니다. 상품 등록 → 매일 순위 수집 → 광고주·대행사별 조회, 정산 로그, 일별 마감까지 한 화면에서 관리합니다.</p><p>권한은 최고관리자 › 총판 › 대행사 › 광고주 4단계입니다.</p>`},
 ];
 function renderNotice(){
@@ -1304,7 +1304,7 @@ $('#noticeBody').addEventListener('click',e=>{const tr=e.target.closest('tr.noti
 const FAQS=[
   ['순위는 어떤 기준으로 계산되나요?','네이버쇼핑 <b>통합검색 결과에서 광고 상품을 제외한 순번</b>(네이버 순위 번호)입니다. 같은 상품이 여러 번 노출되면 처음 나온 위치만 인정합니다.'],
   ['"순위없음"은 무슨 뜻인가요?','조회 범위(1,000위) 안에서 등록한 상품을 찾지 못한 경우입니다. 키워드와 상품이 맞는지, 상품이 품절·삭제되지 않았는지 확인해 주세요.'],
-  ['순위는 언제 갱신되나요?','<b>매일 오전 11:00·오후 5:00·밤 11:00</b>, 하루 3회 수집합니다. 등록 직후에는 현재 순위를 바로 조회해 보여주고, 이후 매일 갱신됩니다.'],
+  ['순위는 언제 갱신되나요?','<b>매일 새벽 5:00·오전 11:00·오후 5:00·밤 11:00</b>, 6시간 간격으로 하루 4회 수집합니다. 등록 직후에는 현재 순위를 바로 조회해 보여주고, 이후 매일 갱신됩니다.'],
   ['링크만 넣으면 상품 정보가 어떻게 채워지나요?','스마트스토어·브랜드스토어 상품 링크에서 상품ID를 읽고, 네이버쇼핑에서 상품명·몰·단일MID를 자동으로 가져옵니다. 가격비교 링크는 묶음 MID 기준으로 추적합니다.'],
   ['같은 상품을 여러 개 등록할 수 있나요?','네. 등록 시 <b>수량</b>을 지정하면 같은 상품·키워드로 수량만큼 등록되고, 목록에는 한 줄로 묶여 <b>×N</b>으로 표시됩니다. 상품명 앞 <b>+</b> 를 누르면 개별 항목이 펼쳐집니다.'],
   ['종료예정은 언제 표시되나요?','종료일까지 <b>3일 이하</b>로 남은 광고입니다. 연장하면 정산로그에 자동 기록됩니다.'],
