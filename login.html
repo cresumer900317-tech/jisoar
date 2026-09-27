@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JISOAR | Sign in</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
   <link rel="stylesheet" href="./assets/css/style.css?v=4" />
   <style>
     .auth-wrap {
@@ -187,48 +185,43 @@
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
-  <!-- JISOAR 다크/새벽 테마 오버라이드 (기능·마크업 불변, 색만 덮어씀) -->
+  <!-- JISOAR 브랜드 라이트 테마 오버라이드 (기능·마크업 불변, 색·서체만 덮어씀) -->
   <style>
-    body{background:#0a0e1a; font-family:'Inter',-apple-system,'Segoe UI',sans-serif; -webkit-font-smoothing:antialiased}
-    .auth-wrap{background:
-      radial-gradient(120% 80% at 50% 115%, rgba(255,157,108,.18), transparent 55%),
-      linear-gradient(180deg,#0a0e1a 0%, #141b33 60%, #1d2547 100%);}
-    .auth-box{background:#141b33; border:1px solid rgba(255,255,255,.08); box-shadow:0 20px 60px rgba(0,0,0,.45)}
+    body{background:#f4f8fd; font-family:'Pretendard Variable',Pretendard,-apple-system,'Segoe UI','Malgun Gothic',sans-serif; -webkit-font-smoothing:antialiased; color:#16222e}
+    .auth-wrap{background:#f4f8fd}
+    .auth-box{background:#fff; border:1px solid #dde7f1; box-shadow:0 18px 48px rgba(22,34,46,.08)}
     .auth-header{background:transparent; padding:34px 32px 18px}
-    .auth-header .logo-icon{background:transparent; box-shadow:none; width:auto; height:auto; margin-bottom:10px}
-    .auth-header h1{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:2rem; color:#f4f6fb; letter-spacing:-.01em}
-    .auth-header h1 .dot{color:#ff9d6c}
-    .auth-header p{color:#9aa6c4; letter-spacing:.18em; text-transform:uppercase; font-size:.7rem; margin-top:8px}
-    .auth-tabs{border-bottom:1px solid rgba(255,255,255,.08)}
-    .auth-tab{color:#9aa6c4}
-    .auth-tab:hover{color:#cdd6f0}
-    .auth-tab.active{color:#ff9d6c}
-    .auth-tab.active::after{background:#ff9d6c}
-    .form-group label{color:#cdd6f0}
-    .form-group input{background:rgba(255,255,255,.04); border:1.5px solid rgba(255,255,255,.12); color:#f4f6fb}
-    .form-group input::placeholder{color:#6e7a98}
-    .form-group input:focus{border-color:#ff9d6c; background:rgba(255,255,255,.06); box-shadow:0 0 0 3px rgba(255,157,108,.15)}
-    .form-group input.invalid{border-color:#ef4444; background:rgba(239,68,68,.08)}
-    .form-group input.valid{border-color:#22c55e; background:rgba(34,197,94,.08)}
-    .form-desc{color:#8a93ad}
-    .submit-btn{background:linear-gradient(135deg,#ff9d6c,#ff7e54); color:#1a0f08}
-    .submit-btn:hover{box-shadow:0 6px 18px rgba(255,126,84,.3)}
-    .submit-btn:disabled{background:rgba(255,255,255,.12); color:#6e7a98}
-    .notice-box{background:rgba(255,157,108,.08); border-left:3px solid #ff9d6c; color:#ffd9a8}
-    .notice-box .notice-title{color:#ffd9a8}
-    .info-box{border:1px dashed rgba(255,255,255,.15); background:transparent; color:#9aa6c4}
-    .info-box strong{color:#cdd6f0}
-    .sub-tabs{background:rgba(255,255,255,.05)}
-    .sub-tab{color:#9aa6c4}
-    .sub-tab.active{background:#1d2547; color:#ff9d6c; box-shadow:none}
-    .link-btn{background:rgba(255,255,255,.03); border:1.5px solid rgba(255,255,255,.12); color:#cdd6f0}
-    .link-btn:hover{border-color:#ff9d6c; color:#ff9d6c; background:rgba(255,157,108,.06)}
-    .text-link{color:#8a93ad}
-    .text-link:hover{color:#ff9d6c}
-    .auth-footer{color:#8a93ad}
-    .auth-footer a{color:#ff9d6c}
-    .auth-msg.error{background:rgba(220,38,38,.12); color:#fca5a5; border:1px solid rgba(220,38,38,.3)}
-    .auth-msg.success{background:rgba(34,197,94,.12); color:#86efac; border:1px solid rgba(34,197,94,.3)}
+    .auth-header .logo-icon{display:none}
+    .auth-header h1{font-weight:700; font-size:2rem; color:#16222e; letter-spacing:-.05em}
+    .auth-header h1 .dot{color:#174eca}
+    .auth-header p{color:#5d6b7a; letter-spacing:.14em; text-transform:uppercase; font-size:.7rem; margin-top:8px}
+    .auth-tabs{border-bottom:1px solid #dde7f1}
+    .auth-tab{color:#5d6b7a}
+    .auth-tab:hover{color:#16222e}
+    .auth-tab.active{color:#174eca}
+    .auth-tab.active::after{background:#174eca}
+    .form-group label{color:#16222e}
+    .form-group input{background:#fff; border:1.5px solid #dde7f1; color:#16222e}
+    .form-group input::placeholder{color:#677585; opacity:1}
+    .form-group input:focus{border-color:#174eca; background:#fff; box-shadow:0 0 0 3px rgba(23,78,202,.12)}
+    .form-desc{color:#5d6b7a}
+    .submit-btn{background:#174eca; color:#fff; border-radius:100px}
+    .submit-btn:hover{background:#123fa6; box-shadow:none}
+    .submit-btn:disabled{background:#dde7f1; color:#8a97a6}
+    .notice-box{background:#eef4ff; border-left:3px solid #174eca; color:#16305f}
+    .notice-box .notice-title{color:#16305f}
+    .info-box{border:1px dashed #c9d6e4; background:transparent; color:#5d6b7a}
+    .info-box strong{color:#16222e}
+    .sub-tabs{background:#eef3f9}
+    .sub-tab{color:#5d6b7a}
+    .sub-tab.active{background:#fff; color:#174eca; box-shadow:0 1px 3px rgba(22,34,46,.08)}
+    .link-btn{background:#fff; border:1.5px solid #dde7f1; color:#16222e; border-radius:100px}
+    .link-btn:hover{border-color:#174eca; color:#174eca; background:#eef4ff}
+    .text-link{color:#5d6b7a}
+    .text-link:hover{color:#174eca}
+    .auth-footer{color:#5d6b7a}
+    .auth-footer a{color:#174eca}
+    :focus-visible{outline:3px solid #174eca; outline-offset:2px}
   </style>
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex,nofollow">
