@@ -2,6 +2,5 @@ User-agent: *
 Disallow: /icp/
 Disallow: /hq/
 Disallow: /wedding/
-Disallow: /sample/
 
 Sitemap: https://jisoar.com/sitemap.xml
