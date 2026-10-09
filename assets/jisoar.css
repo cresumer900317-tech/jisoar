@@ -237,3 +237,28 @@ footer a{text-decoration:none}footer a:hover{color:var(--ink)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 .case .sum p{font-size:17px;line-height:1.85}
 .case .sum .facts{margin-top:16px;font-size:14px}
+
+/* pricing */
+.price{border-top:2px solid var(--ink)}
+.price li{display:grid;grid-template-columns:4fr 5fr 2fr 1.4fr;gap:24px;align-items:baseline;padding:26px 0;border-bottom:1px solid var(--line)}
+.price h3{font-size:20px;letter-spacing:-.03em}
+.price p{font-size:15px;color:var(--mut)}
+.price .won{font-size:15px;color:var(--mut);white-space:nowrap}
+.price .won b{font:600 24px/1 var(--sans);letter-spacing:-.03em;color:var(--ink);margin-right:2px}
+.price .term{font-size:15px;color:var(--mut);text-align:right;white-space:nowrap}
+.price-note{margin-top:22px;font-size:14px;color:var(--mut);max-width:44em}
+.care-won{font-size:16px;color:var(--mut)}
+.care-won b{font:700 clamp(30px,3.4vw,44px)/1.1 var(--sans);letter-spacing:-.04em;color:var(--ink);margin-right:10px}
+.care{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:32px;border-top:2px solid var(--ink);padding-top:24px}
+.care h3{font-size:18px}
+.care ul.inc{margin-top:12px;display:grid;gap:8px;font-size:15px;color:var(--mut)}
+.care ul.inc li::before{content:"– ";color:var(--ink)}
+.svc .from{margin-top:10px;font-size:15px;font-weight:600}
+.sec-head p .more{display:inline-block;margin-top:6px;color:var(--ink)}
+.faq .a .more{color:var(--ink)}
+@media(max-width:720px){
+  .price li{grid-template-columns:1fr auto;gap:6px 16px}
+  .price li h3,.price li p{grid-column:1/-1}
+  .price .term{text-align:right}
+  .care{grid-template-columns:1fr;gap:28px}
+}
