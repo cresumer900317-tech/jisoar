@@ -128,10 +128,6 @@ section{{background:{PAPER};border-radius:12px;padding:14px 18px;margin:0 0 10px
     print("ok", len(rows))
 
 
-if __name__ == "__main__":
-    main()
-
-
 def overview():
     """13종을 2열로 한 화면에 모은 비교판(board_h01_grid.html)."""
     cells = []
@@ -148,4 +144,6 @@ figcaption{{margin-bottom:8px}}figcaption b{{color:#c62828;margin-right:4px}}img
         f.write(html)
 
 
-overview()
+if __name__ == "__main__":
+    main()
+    overview()

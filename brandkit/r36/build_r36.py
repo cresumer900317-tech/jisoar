@@ -56,8 +56,9 @@ def bar(x0, w, y_top_left, t, slope=0.5):
                  (x0 + w, y_top_left - slope * w + t), (x0, y_top_left + t)])
 
 
-def glyph_run(font, text, track, size_cap):
-    """글꼴 윤곽을 y 아래 좌표 path 로. 대문자 높이를 size_cap 으로 맞추고, 기준선 y=0."""
+def glyph_run(font, text, track, size_cap, cuts=None):
+    """글꼴 윤곽을 y 아래 좌표 path 로. 대문자 높이를 size_cap 으로 맞추고, 기준선 y=0.
+    cuts: {글자: [(x0, y0, x1, y1), ...]} 글꼴 단위 사각형을 그 글자에서 잘라 낸다."""
     t = TTFont(font)
     gs, cm = t.getGlyphSet(), t.getBestCmap()
     cap = t["OS/2"].sCapHeight
@@ -65,8 +66,12 @@ def glyph_run(font, text, track, size_cap):
     out, x = pathops.Path(), 0.0
     for ch in text:
         g = gs[cm[ord(ch)]]
+        raw = pathops.Path()
+        g.draw(raw.getPen())
+        for x0, y0, x1, y1 in (cuts or {}).get(ch, []):
+            raw = pathops.op(raw, poly([(x0, y0), (x1, y0), (x1, y1), (x0, y1)]), pathops.PathOp.DIFFERENCE)
         gp = pathops.Path()
-        g.draw(TransformPen(gp.getPen(), (sc, 0, 0, -sc, x, 0)))
+        raw.draw(TransformPen(gp.getPen(), (sc, 0, 0, -sc, x, 0)))
         out = pathops.op(out, gp, pathops.PathOp.UNION)
         x += g.width * sc + track
     return out
