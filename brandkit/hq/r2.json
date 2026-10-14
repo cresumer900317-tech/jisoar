@@ -1,0 +1,23 @@
+[
+  {
+    "created_at": "2026-10-14T06:28:59.157498Z",
+    "display_name": "GPT Image 2",
+    "id": "aae5db5c-af5c-49d9-97c4-1f1d54253b1c",
+    "job_type": "gpt_image_2",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_062859_aae5db5c-af5c-49d9-97c4-1f1d54253b1c_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "height": 1360,
+      "medias": [],
+      "model": "videotape-alpha",
+      "prompt": "Logo design presentation on a plain warm off-white paper background (#F7F5F0), centered, flat vector logo only, no mockup, no shadows, no gradients, no extra words. Brand: JISOAR, a Korean independent software studio that turns what clients imagine into working systems, web services and apps. Name meaning: JI (志, will/intention) + SOAR. Colors: deep navy #101A33 primary, optional single accent sky blue #3366E8. Timeless, crafted, premium, like a logo by a top identity studio, not trendy, perfectly spelled JISOAR. Direction: combination mark. A small abstract symbol to the left of the wordmark: two strokes meeting in an upward chevron, one stroke drawn as a precise dashed construction line (the imagined plan) and the other as a solid stroke (the built result), expressing intention becoming reality. Wordmark JISOAR in a clean, well-spaced geometric sans. Navy with the solid stroke in sky blue.",
+      "quality": "high",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "width": 2048
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_062859_aae5db5c-af5c-49d9-97c4-1f1d54253b1c.png",
+    "status": "completed"
+  }
+]

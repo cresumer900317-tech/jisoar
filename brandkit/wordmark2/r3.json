@@ -1,0 +1,25 @@
+[
+  {
+    "created_at": "2026-10-14T06:17:29.105685Z",
+    "display_name": "Recraft V4.1",
+    "id": "a6da7ff7-4337-4289-aae3-75348575322c",
+    "job_type": "recraft_v4_1",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_061729_a6da7ff7-4337-4289-aae3-75348575322c_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "background_color": "#F7F5F0",
+      "batch_size": 1,
+      "colors": [
+        "#101A33",
+        "#3366E8"
+      ],
+      "height": 756,
+      "model_type": "vector",
+      "prompt": "Custom typographic wordmark spelling exactly JISOAR in six uppercase letters, heavy bespoke sans letterforms with a distinctive ligature where the A and R share one vertical stroke so the right leg of the A becomes the stem of the R, the O is a perfect circle sitting slightly raised above the baseline as if lifting off, all other letters on a shared baseline with tight optical spacing; solid confident friendly register; strictly two colors, all letters in the locked dark tone and only the raised O in the locked primary tone, on the locked background; centered horizontal composition. Flat vector design, clean lines, no shadows, no texture, no other text besides JISOAR. Clean editable vector paths, SVG-friendly, minimal anchor points.",
+      "resolution": "2k",
+      "width": 1344
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_061729_a6da7ff7-4337-4289-aae3-75348575322c.svg",
+    "status": "completed"
+  }
+]

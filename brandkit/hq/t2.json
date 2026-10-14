@@ -1,0 +1,22 @@
+[
+  {
+    "created_at": "2026-10-14T06:32:36.2317Z",
+    "display_name": "Recraft V4.1",
+    "id": "6e95e022-20b7-4e7a-8a66-36d09e17ba86",
+    "job_type": "recraft_v4_1",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_063236_6e95e022-20b7-4e7a-8a66-36d09e17ba86_min.webp",
+    "params": {
+      "aspect_ratio": "3:2",
+      "background_color": null,
+      "batch_size": 1,
+      "colors": [],
+      "height": 683,
+      "model_type": "vector",
+      "prompt": "Logo design presentation on a plain warm off-white paper background (#F7F5F0), centered, flat vector logo only, no mockup, no shadows, no gradients, no extra words. Brand: JISOAR, a Korean independent software studio that turns what clients imagine into working systems, web services and apps. Name meaning: JI (志, will/intention) + SOAR. Colors: deep navy #101A33 primary, optional single accent sky blue #3366E8. Timeless, crafted, premium, like a logo by a top identity studio, not trendy, perfectly spelled JISOAR. Direction: a square seal monogram inspired by Korean personal ink seals (dojang), modernized: a navy square with a single bold J carved in negative space whose hook rises upward at the end, placed beside the wordmark JISOAR set in a calm classic sans with wide letter spacing. Crafted, trustworthy, personal.",
+      "resolution": "1k",
+      "width": 1024
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_063236_6e95e022-20b7-4e7a-8a66-36d09e17ba86.svg",
+    "status": "completed"
+  }
+]

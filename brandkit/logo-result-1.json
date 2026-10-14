@@ -1,0 +1,25 @@
+[
+  {
+    "created_at": "2026-10-14T05:57:00.014931Z",
+    "display_name": "Recraft V4.1",
+    "id": "67d12520-089e-4a32-bd60-0c686112148d",
+    "job_type": "recraft_v4_1",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_055700_67d12520-089e-4a32-bd60-0c686112148d_min.webp",
+    "params": {
+      "aspect_ratio": "1:1",
+      "background_color": "#F7F5F0",
+      "batch_size": 1,
+      "colors": [
+        "#101A33",
+        "#F2A541"
+      ],
+      "height": 1024,
+      "model_type": "vector",
+      "prompt": "Lettermark monogram of the single capital letter J, where the J's bottom hook does not close into a cup but continues as one unbroken stroke that sweeps upward and to the right past the height of the stem like a rising flight path, ending in a clean angled cut with a small solid circle floating just beyond the tip as the only accent; geometric construction with a uniform thick stroke, a vertical stem with flat top, and one smooth tangent curve, intentional asymmetry leaning toward the upper right, generous negative space inside the curve; calm, precise, trustworthy register for a software studio; strictly two colors, the letter in the locked primary tone and the small circle in the locked accent, solid fills only, on the locked background; single centered isolated mark with balanced margins, readable at favicon size. Flat vector design, clean lines, no shadows, no texture, no text beyond the single letter J. Clean editable vector paths, SVG-friendly, minimal anchor points.",
+      "resolution": "2k",
+      "width": 1024
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_055700_67d12520-089e-4a32-bd60-0c686112148d.svg",
+    "status": "completed"
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "created_at": "2026-10-14T05:56:59.823962Z",
+    "display_name": "Recraft V4.1",
+    "id": "00c77a6f-8b42-4201-bc55-3137ffb78188",
+    "job_type": "recraft_v4_1",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_055659_00c77a6f-8b42-4201-bc55-3137ffb78188_min.webp",
+    "params": {
+      "aspect_ratio": "1:1",
+      "background_color": "#F7F5F0",
+      "batch_size": 1,
+      "colors": [
+        "#3366E8",
+        "#F7F5F0"
+      ],
+      "height": 1024,
+      "model_type": "vector",
+      "prompt": "Emblem mark: a solid rounded-square tile like an app icon, inside which a single wing shape is cut out as negative space, the wing formed by three parallel feather-like diagonal strokes of decreasing length rising from a shared base at the lower left toward the upper right corner; geometric construction with straight edges and consistent rounded corners on every stroke, the cut-out strokes reading as one wing silhouette lifting off, ample padding between the wing and the tile edge; confident, friendly, modern register; strictly two colors, the tile in the locked primary tone and the cut-out wing showing the locked background, solid fills only; single centered isolated emblem, balanced inside the square canvas, legible as a tiny app icon. Flat vector design, clean lines, no shadows, no texture, no text. Clean editable vector paths, SVG-friendly, minimal anchor points.",
+      "resolution": "2k",
+      "width": 1024
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_055659_00c77a6f-8b42-4201-bc55-3137ffb78188.svg",
+    "status": "completed"
+  }
+]

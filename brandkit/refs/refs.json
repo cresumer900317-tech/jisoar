@@ -1,0 +1,146 @@
+[
+ [
+  "A 미니멀 워드마크",
+  "Stripe, Inc.",
+  "r00.png",
+  null
+ ],
+ [
+  "A 미니멀 워드마크",
+  "Samsung",
+  "r01.png",
+  null
+ ],
+ [
+  "A 미니멀 워드마크",
+  "Sony",
+  "r02.png",
+  null
+ ],
+ [
+  "A 미니멀 워드마크",
+  "Google",
+  "r03.png",
+  null
+ ],
+ [
+  "B 심볼+워드마크",
+  "Mastercard",
+  "r04.png",
+  null
+ ],
+ [
+  "B 심볼+워드마크",
+  "Airbnb",
+  "r05.png",
+  null
+ ],
+ [
+  "B 심볼+워드마크",
+  "Spotify",
+  "r06.png",
+  null
+ ],
+ [
+  "B 심볼+워드마크",
+  "Slack Technologies",
+  "r07.png",
+  null
+ ],
+ [
+  "C 클래식·세리프",
+  "Tiffany & Co.",
+  "r08.png",
+  null
+ ],
+ [
+  "C 클래식·세리프",
+  "Burberry",
+  "r09.png",
+  null
+ ],
+ [
+  "C 클래식·세리프",
+  "The New York Times",
+  "r10.png",
+  null
+ ],
+ [
+  "C 클래식·세리프",
+  "Vogue (magazine)",
+  "r11.png",
+  null
+ ],
+ [
+  "D 모노그램·엠블럼",
+  "Chanel",
+  "r12.png",
+  null
+ ],
+ [
+  "D 모노그램·엠블럼",
+  "Louis Vuitton",
+  "r13.png",
+  null
+ ],
+ [
+  "D 모노그램·엠블럼",
+  "Volkswagen",
+  "r14.png",
+  null
+ ],
+ [
+  "D 모노그램·엠블럼",
+  "Yves Saint Laurent (brand)",
+  "r15.png",
+  null
+ ],
+ [
+  "E 국내 IT",
+  "Toss (app)",
+  null,
+  "'parse'"
+ ],
+ [
+  "E 국내 IT",
+  "Kakao",
+  "r17.png",
+  null
+ ],
+ [
+  "E 국내 IT",
+  "Baemin",
+  null,
+  "no logo field"
+ ],
+ [
+  "E 국내 IT",
+  "Daangn Market",
+  "r19.jpg",
+  null
+ ],
+ [
+  "F 개발·IT 서비스",
+  "Vercel",
+  "r20.png",
+  null
+ ],
+ [
+  "F 개발·IT 서비스",
+  "Figma (software)",
+  null,
+  null
+ ],
+ [
+  "F 개발·IT 서비스",
+  "Notion (productivity software)",
+  "r22.png",
+  null
+ ],
+ [
+  "F 개발·IT 서비스",
+  "GitHub",
+  "r23.png",
+  null
+ ]
+]

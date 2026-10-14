@@ -1,0 +1,7 @@
+{"approval_summary":"사용자가 2안 Soar Sky 선택(2026-10-14). 주황은 강조 한 점만, 글자색 금지, 버튼·링크는 Sky 파랑.",
+ "palette":{"colors":[
+  {"hex":"#101A33","name":"Night","role":"text"},
+  {"hex":"#F7F5F0","name":"Dawn Paper","role":"background"},
+  {"hex":"#3366E8","name":"Sky","role":"primary"},
+  {"hex":"#F2A541","name":"Sunrise","role":"accent"},
+  {"hex":"#E6ECF7","name":"Haze","role":"support"}],"gradients":[]}}

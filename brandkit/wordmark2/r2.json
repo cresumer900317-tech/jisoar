@@ -1,0 +1,24 @@
+[
+  {
+    "created_at": "2026-10-14T06:17:31.532642Z",
+    "display_name": "Recraft V4.1",
+    "id": "8ebf7347-18c0-4ca0-b788-f5e1c28f574d",
+    "job_type": "recraft_v4_1",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_061731_8ebf7347-18c0-4ca0-b788-f5e1c28f574d_min.webp",
+    "params": {
+      "aspect_ratio": "16:9",
+      "background_color": "#F7F5F0",
+      "batch_size": 1,
+      "colors": [
+        "#101A33"
+      ],
+      "height": 756,
+      "model_type": "vector",
+      "prompt": "Custom typographic wordmark spelling exactly JISOAR in six uppercase letters, bespoke monoline geometric letterforms with one uniform medium stroke weight: the A has no crossbar and its right leg continues upward past the cap height into a short rising tail, the R's leg mirrors that same rising angle, the J hook is a clean quarter circle, the O is a perfect circle; consistent rounded line caps and generous letter spacing; calm modern technical register; strictly one color in the locked dark tone on the locked background; centered horizontal composition. Monoline vector design, uniform stroke weight, rounded line caps, no fills, no shadows, no texture, no other text besides JISOAR. Clean editable vector paths, SVG-friendly, minimal anchor points.",
+      "resolution": "2k",
+      "width": 1344
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3J4ljyHXvZWeVPJaYk7uewNTRHz/hf_20261014_061731_8ebf7347-18c0-4ca0-b788-f5e1c28f574d.svg",
+    "status": "completed"
+  }
+]

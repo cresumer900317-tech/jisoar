@@ -1,0 +1,11 @@
+{"reviews":[
+{"stage":"palette","name":"Blueprint","premise":"지금 쓰는 파랑을 더 깊고 정확하게. 설계도처럼 반듯한 신뢰감, 엔지니어가 만든 시스템이라는 인상.","keywords":["정확함","신뢰","시스템"],
+ "palette":[{"hex":"#0E1726","name":"Ink 글자·로고"},{"hex":"#F6F7F5","name":"Paper 바탕"},{"hex":"#1D4ED8","name":"Blueprint 주색"},{"hex":"#DCE5F5","name":"Mist 보조 면"},{"hex":"#12A37F","name":"Run 가동·완료 표시"}],
+ "logo_ideas":["J와 위로 꺾이는 선이 하나로 이어진 모노그램","격자 위 한 칸이 올라가는 블록 심볼"],"background_color":"#F6F7F5","text_color":"#0E1726"},
+{"stage":"palette","name":"Soar Sky","premise":"이름의 SOAR(날아오름)와 지금 히어로의 하늘 영상을 브랜드로. 새벽 하늘 남색과 햇빛 한 점.","keywords":["상승","차분함","따뜻함"],
+ "palette":[{"hex":"#101A33","name":"Night 글자·로고"},{"hex":"#F7F5F0","name":"Dawn Paper 바탕"},{"hex":"#3366E8","name":"Sky 주색"},{"hex":"#F2A541","name":"Sunrise 강조 한 점"},{"hex":"#E6ECF7","name":"Haze 보조 면"}],
+ "logo_ideas":["수평선 위로 떠오르는 J 곡선","날개처럼 겹친 두 개의 사선"],"background_color":"#F7F5F0","text_color":"#101A33"},
+{"stage":"palette","name":"Graphite Studio","premise":"색을 줄이고 먹색과 종이색 위에 초록 한 가지. 1인 스튜디오의 단단하고 조용한 작업물 느낌.","keywords":["단단함","절제","장인"],
+ "palette":[{"hex":"#16181D","name":"Graphite 글자·로고"},{"hex":"#F3F1EC","name":"Linen 바탕"},{"hex":"#0F7B6C","name":"Pine 주색"},{"hex":"#C9C4B8","name":"Stone 선·보조"},{"hex":"#FFFFFF","name":"White 카드"}],
+ "logo_ideas":["정사각 안에 잘린 J, 도장 같은 심볼","선 두 개가 만나 위로 꺾이는 각진 마크"],"background_color":"#F3F1EC","text_color":"#16181D"}
+]}

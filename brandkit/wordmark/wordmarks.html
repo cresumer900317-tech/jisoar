@@ -1,0 +1,56 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>JISOAR 워드마크 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Manrope:wght@800&family=Outfit:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--night:#101A33;--paper:#F7F5F0;--sky:#3366E8;--sun:#F2A541;--haze:#E6ECF7}
+body{margin:0;background:var(--paper);color:var(--night);font-family:system-ui,"Apple SD Gothic Neo",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 32px}
+h1{font-size:15px;letter-spacing:.12em;font-weight:600;margin:0 0 28px;color:#555}
+.card{background:#fff;border:1px solid #e3e0d8;border-radius:14px;padding:40px 44px;margin-bottom:22px;display:grid;grid-template-columns:1fr 220px;gap:30px;align-items:center}
+.lbl{font-size:14px;color:#666;margin-bottom:18px}.lbl b{color:var(--night);font-size:16px;margin-right:8px}
+.wm{font-size:96px;line-height:1;display:flex;align-items:flex-end}
+.side{display:flex;gap:14px;align-items:center;justify-content:flex-end}
+.ico{width:88px;height:88px;border-radius:20px;display:flex;align-items:center;justify-content:center}
+.dark{background:var(--night);color:#fff}.blue{background:var(--sky);color:#fff}
+.small{font-size:30px;margin-top:22px;display:flex;align-items:flex-end;gap:0}
+/* 1: O = 수평선 위로 떠오르는 해 */
+.w1{font-family:Sora;font-weight:700;letter-spacing:.02em}
+.sunO{display:inline-block;width:.74em;height:.72em;position:relative;margin:0 .04em}
+.sunO i{position:absolute;left:0;right:0;bottom:.12em;height:.6em;border-radius:50% 50% 0 0/100% 100% 0 0;background:var(--sun)}
+.sunO u{position:absolute;left:-.06em;right:-.06em;bottom:0;height:.09em;background:currentColor;border-radius:.05em}
+/* 2: A = 가로획 없이 위에 점 */
+.w2{font-family:Manrope;font-weight:800;letter-spacing:-.01em}
+.aW{position:relative;display:inline-block}
+.aW .cut{position:absolute;left:.18em;right:.18em;top:.47em;height:.13em;background:#fff}
+.aW em{position:absolute;left:50%;top:-.28em;width:.17em;height:.17em;margin-left:-.085em;border-radius:50%;background:var(--sun)}
+/* 3: 소문자, i 점 = 날아오르는 해 */
+.w3{font-family:Outfit;font-weight:600;letter-spacing:-.02em}
+.iW{position:relative;display:inline-block}
+.iW .hide{position:absolute;left:0;right:0;top:0;height:.36em;background:#fff}
+.iW em{position:absolute;left:52%;top:-.12em;width:.2em;height:.2em;border-radius:50%;background:var(--sun);transform:translate(-50%,0)}
+.iW s{position:absolute;left:10%;top:.07em;width:.34em;height:.05em;background:var(--sky);transform:rotate(-28deg);border-radius:.03em;text-decoration:none}
+.note{font-size:14px;color:#444;line-height:1.6;margin-top:18px}
+.dark .aW .cut,.blue .aW .cut{background:var(--sky)}
+.dark .aW .cut{background:var(--night)}
+</style></head><body><div class="wrap">
+<h1>JISOAR 워드마크 시안 (글자 자체가 로고)</h1>
+
+<div class="card"><div>
+<div class="lbl"><b>W1 · 떠오르는 O</b>O 자리에 수평선 위로 떠오르는 해</div>
+<div class="wm w1">JIS<span class="sunO"><i></i><u></u></span>AR</div>
+<div class="note">이름의 SOAR(날아오름)를 가운데 O 하나로 보여 줍니다. 해만 떼면 작은 아이콘(파비콘)이 됩니다.</div>
+</div><div class="side"><div class="ico dark"><span class="sunO" style="font-size:80px;color:#fff"><i></i><u></u></span></div></div></div>
+
+<div class="card"><div>
+<div class="lbl"><b>W2 · 가로획 없는 A</b>A 가로획을 비우고 꼭대기 위에 해 한 점</div>
+<div class="wm w2">JISO<span class="aW">A<span class="cut"></span><em></em></span>R</div>
+<div class="note">A가 위를 가리키는 화살표처럼 읽히고, 그 위에 해가 떠 있습니다. 단단하고 시스템 회사 같은 인상입니다.</div>
+</div><div class="side"><div class="ico blue" style="font-family:Manrope;font-weight:800;font-size:60px"><span class="aW">A<span class="cut" style="background:var(--sky)"></span><em></em></span></div></div></div>
+
+<div class="card"><div>
+<div class="lbl"><b>W3 · 소문자 jisoar</b>i의 점을 해로 바꾸고 위로 비켜 올림</div>
+<div class="wm w3">j<span class="iW">ı<em></em></span>soar</div>
+<div class="note">소문자라 부드럽고 친근합니다. 요즘 스타트업·스튜디오가 많이 쓰는 방식이고, 해 점이 포인트입니다.</div>
+</div><div class="side"><div class="ico dark" style="font-family:Outfit;font-weight:600;font-size:64px">j<span class="iW">ı<em></em></span></div></div></div>
+
+</div></body></html>

@@ -1,0 +1,49 @@
+{
+  "brandbookElements": [],
+  "essentialKitApproved": false,
+  "logo": {
+    "approvalSummary": "사용자가 추천안 선택(2026-10-14): Plus Jakarta Sans 800 워드마크 JISOAR, J 갈고리·A·R 다리 끝을 같은 높이(90)로 들어 올림, 남색 단색. 결정적 생성 build_logo.py.",
+    "asset": {
+      "path": "/Users/gibaek/dev/jisoar-rebrand/brandkit/wordmark/jisoar-wordmark.svg"
+    },
+    "geometryFingerprint": "c92638a96a5e666c99abf9a439b83d8ddf299405cff48e7e2d5be10df56dccbd",
+    "name": "JISOAR lift wordmark",
+    "origin": "brandkit_generated",
+    "paletteRevision": 1,
+    "revision": 1
+  },
+  "palette": {
+    "approvalSummary": "사용자가 2안 Soar Sky 선택(2026-10-14). 주황은 강조 한 점만, 글자색 금지, 버튼·링크는 Sky 파랑.",
+    "colors": [
+      {
+        "hex": "#101a33",
+        "name": "Night",
+        "role": "text"
+      },
+      {
+        "hex": "#f7f5f0",
+        "name": "Dawn Paper",
+        "role": "background"
+      },
+      {
+        "hex": "#3366e8",
+        "name": "Sky",
+        "role": "primary"
+      },
+      {
+        "hex": "#f2a541",
+        "name": "Sunrise",
+        "role": "accent"
+      },
+      {
+        "hex": "#e6ecf7",
+        "name": "Haze",
+        "role": "support"
+      }
+    ],
+    "gradients": [],
+    "origin": "brandkit_generated",
+    "revision": 1
+  },
+  "version": 2
+}
