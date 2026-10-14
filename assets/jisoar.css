@@ -1,7 +1,7 @@
 /* JISOAR — 2026-10. One stylesheet for home, work, services, about, contact. */
 :root{
-  --bg:#ffffff;--soft:#f4f6f9;--ink:#142334;--mut:#56657a;--line:#dfe4ea;
-  --accent:#174eca;--accent-h:#123fa6;
+  --bg:#ffffff;--soft:#f4f6f9;--ink:#101a33;--mut:#56657a;--line:#dfe4ea;
+  --accent:#3366e8;--accent-h:#2453c9;
   --wrap:1280px;--gut:40px;
   --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --display:"Clash Display",var(--sans);
