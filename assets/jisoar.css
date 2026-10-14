@@ -4,7 +4,7 @@
   --accent:#3366e8;--accent-h:#2453c9;
   --wrap:1280px;--gut:40px;
   --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  --display:"Clash Display",var(--sans);
+  --display:"Montserrat",var(--sans);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:96px}
@@ -43,20 +43,16 @@ ol,ul{padding:0;list-style:none}
 .more{font-weight:600;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
 .more:hover{color:var(--accent)}
 
-/* home hero */
-.hero{position:relative;isolation:isolate;overflow:hidden;min-height:calc(100svh - 72px);display:flex;align-items:flex-end;background:#e9f1fb url('/assets/media/jisoar-sky-poster.jpg?v=2') center 55%/cover}
-.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(255,255,255,.86) 0%,rgba(255,255,255,.66) 50%,rgba(255,255,255,.28) 100%)}
-#hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;pointer-events:none}
-#hero-video[hidden],#hero-video-toggle[hidden]{display:none}
-#hero-video-toggle{position:absolute;right:var(--gut);top:20px;z-index:2;border:1px solid rgba(20,35,52,.25);border-radius:6px;background:rgba(255,255,255,.75);color:var(--mut);padding:6px 10px;font:500 12px var(--sans);cursor:pointer;min-height:36px}
-#hero-video-toggle:hover{color:var(--ink);border-color:var(--ink)}
-.hero .wrap{width:100%;padding-top:96px;padding-bottom:56px}
-.hero-who{font-size:16px;font-weight:600;color:var(--mut);margin-bottom:22px}
-.hero h1{font-size:clamp(44px,6.4vw,92px);line-height:1.14;letter-spacing:-.035em;font-weight:700;max-width:12em}
-.hero-copy{max-width:600px;margin:30px 0 36px;font-size:19px;line-height:1.75;color:#33445a}
-.hero-facts{display:grid;grid-template-columns:repeat(3,1fr);margin-top:72px;border-top:1px solid rgba(20,35,52,.25)}
-.hero-facts li{padding:18px 24px 0 0;font-size:15px;color:#33445a}
-.hero-facts b{display:block;color:var(--ink);font-size:16px}
+/* home hero: 흰 바탕 글자 + 오른쪽 남색 사선 패널(로고 윗면 기울기 1:2) */
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:calc(100svh - 72px);display:flex;align-items:center;background:var(--bg)}
+.hero-panel{position:absolute;inset:0 0 0 54%;z-index:-1;background:var(--ink);clip-path:polygon(22% 0,100% 0,100% 100%,0 100%);display:flex;align-items:center;justify-content:center}
+.hero-panel img{width:40%;max-width:300px;margin-left:12%}
+.hero .wrap{width:100%;padding-top:64px;padding-bottom:56px}
+.hero h1{font-size:clamp(42px,5.4vw,80px);line-height:1.14;letter-spacing:-.04em;font-weight:700;max-width:9em}
+.hero-copy{max-width:500px;margin:28px 0 34px;font-size:18px;line-height:1.75;color:#33445a}
+.hero-facts{max-width:46%;margin-top:44px;border-top:2px solid var(--ink)}
+.hero-facts li{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;color:#33445a}
+.hero-facts b{min-width:11em;color:var(--ink)}
 
 /* sections: heading on the left, content on the right */
 .sec{padding:112px 0;border-top:1px solid var(--line)}
@@ -64,6 +60,7 @@ ol,ul{padding:0;list-style:none}
 .sec>.wrap{display:grid;grid-template-columns:minmax(200px,3fr) 9fr;gap:40px}
 .sec-head>div{position:sticky;top:104px}
 .sec-head h2{font-size:26px;line-height:1.35;letter-spacing:-.03em;font-weight:700}
+.sec-head h2::before{content:"";display:block;margin-bottom:14px;width:34px;height:14px;background:var(--accent);clip-path:polygon(0 50%,100% 0,100% 50%,0 100%)}
 .sec-head p{margin-top:12px;color:var(--mut);font-size:15px;max-width:15em}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .sec-body{min-width:0}
@@ -204,6 +201,12 @@ footer nav{display:flex;flex-wrap:wrap;gap:8px 22px}
 footer a{text-decoration:none}footer a:hover{color:var(--ink)}
 
 @media(max-width:1000px){
+  .hero{min-height:auto;flex-direction:column;align-items:stretch}
+  .hero-panel{position:relative;inset:auto;order:2;height:clamp(200px,30vw,280px);clip-path:polygon(0 34%,100% 0,100% 100%,0 100%)}
+  .hero-panel img{width:auto;height:clamp(96px,14vw,130px);margin:clamp(40px,7vw,70px) 0 0}
+  .hero .wrap{padding-top:56px;padding-bottom:40px}
+  .hero h1{max-width:none}
+  .hero-facts{max-width:none;margin-top:36px}
   .sec>.wrap,.close .wrap{grid-template-columns:1fr;gap:28px}
   .sec-head>div{position:static}
   .ops li{grid-template-columns:1fr 1fr;gap:4px 20px}
@@ -218,10 +221,8 @@ footer a{text-decoration:none}footer a:hover{color:var(--ink)}
   .bar nav{gap:16px;font-size:14px}.bar nav .about{display:none}
   .bar nav .btn{min-height:40px;padding:8px 12px}
   html{scroll-padding-top:80px}
-  .hero{min-height:auto}.hero::before{background:rgba(255,255,255,.78)}
-  .hero .wrap{padding-top:88px;padding-bottom:36px}
   .hero-copy{font-size:17px}
-  .hero-facts{grid-template-columns:1fr;margin-top:48px}.hero-facts li{padding:14px 0;border-bottom:1px solid rgba(20,35,52,.15)}
+  .hero-facts li{display:block;padding:12px 0}.hero-facts b{display:block}
   .sec{padding:72px 0}.close{padding:72px 0}
   .case-meta,.svc>li,.svc>section,.principles li,.asks li{grid-template-columns:1fr;gap:14px}
   .case+.case{margin-top:64px}
