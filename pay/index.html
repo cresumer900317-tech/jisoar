@@ -8,8 +8,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://api.fontshare.com; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' https://cdn.jsdelivr.net https://api.fontshare.com https://cdn.fontshare.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23142334'/%3E%3Cpath d='M6 18 L16 8 L26 18' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 24 L16 19.5 L20 24' fill='none' stroke='%23a8a296' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<title>정산 이체 파일 만들기 | jisoar</title>
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
+<title>정산 이체 파일 만들기 | JISOAR</title>
 <style>
 :root{--bg:#f7f8fa;--paper:#fff;--ink:#142334;--ink2:#526174;--ink3:#5f6e84;--line:#e1e6ec;--line2:#cdd6e0;--panel:#f2f5f9;--accent:#174eca;--accent-soft:#e9effc;--coral:#ff745c;
   --ok:#0f7a3d;--ok-soft:#e4f4ea;--warn:#a26a0e;--warn-soft:#fbf1dc;--bad:#c0392b;--bad-soft:#fdecea;--info:#174eca;--info-soft:#e9effc;
@@ -20,7 +21,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1
 .wrap{max-width:1240px;margin:0 auto;padding:0 20px 90px}
 /* 상단 바 */
 .bar{display:flex;align-items:center;justify-content:space-between;height:72px}
-.brand{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:-.05em;color:var(--ink);text-decoration:none}
+.brand{display:block;text-decoration:none}.brand img{display:block;height:28px;width:auto}
 .brand .dot{color:var(--coral)}
 .bar-tag{font-size:13px;font-weight:600;color:var(--ink2);border:1px solid var(--line2);border-radius:999px;padding:6px 14px;background:var(--paper)}
 /* 히어로 */
@@ -105,14 +106,14 @@ tr.bad td{background:#fff7f6}tr.warn td{background:#fffaf0}tr.off td{background:
 .toast.show{opacity:1}
 [hidden]{display:none!important}
 @media (max-width:900px){.hero{grid-template-columns:1fr;gap:22px}.hero-art{display:none}}
-@media (max-width:760px){.steps{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.kpi:last-child{grid-column:span 2}.bar{height:60px}.brand{font-size:22px}.card h2,.card .body{padding-left:16px;padding-right:16px}
+@media (max-width:760px){.steps{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.kpi:last-child{grid-column:span 2}.bar{height:60px}.brand img{height:24px}.card h2,.card .body{padding-left:16px;padding-right:16px}
   .seg{flex-wrap:wrap;border-radius:14px;max-width:100%}.seg button{min-height:44px;padding:8px 14px;font-size:14px}
   .f select,.f input[type=text],td input[type=text],td select,#q,textarea{font-size:16px}#q{min-width:0;width:100%}.btn.sm{min-height:44px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="bar"><a class="brand" href="/">jisoar<span class="dot">.</span></a><span class="bar-tag">정산 이체 파일 도구</span></header>
+  <header class="bar"><a class="brand" href="/" aria-label="JISOAR 홈"><img src="/assets/brand/jisoar-logo.svg" alt="JISOAR" width="107" height="30"></a><span class="bar-tag">정산 이체 파일 도구</span></header>
   <section class="hero">
     <div class="hero-txt">
       <div class="eyebrow"><i></i>Payout file builder</div>
