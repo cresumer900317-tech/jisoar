@@ -304,3 +304,8 @@ fieldset.crow legend{float:left;width:100%;padding:0}
   .calc-sum .note{grid-column:1/-1;margin-top:4px;order:3}
   .calc-sum .btn{width:auto;margin:0}
 }
+/* 문장이 끝나면 다음 문장은 새 줄에서 (문장 사이 간격 0, 문단 간격은 기존 margin) */
+.s{display:block}
+li>.s:first-child{display:inline}
+.nw{white-space:nowrap}
+@media(max-width:380px){.bar nav{gap:12px;font-size:13px}.bar nav .btn{padding:8px 10px}.brand img{width:96px;height:auto}}
