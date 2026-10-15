@@ -44,10 +44,10 @@ ol,ul{padding:0;list-style:none}
 .more:hover{color:var(--accent)}
 
 /* home hero: 흰 바탕 글자 + 오른쪽 남색 사선 패널(로고 윗면 기울기 1:2) */
-.hero{position:relative;isolation:isolate;overflow:hidden;min-height:calc(100svh - 72px);display:flex;align-items:center;background:var(--bg)}
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:min(calc(100svh - 72px),720px);display:flex;align-items:center;background:var(--bg)}
 .hero-panel{position:absolute;inset:0 0 0 54%;z-index:-1;background:var(--ink);clip-path:polygon(22% 0,100% 0,100% 100%,0 100%);display:flex;align-items:center;justify-content:center}
-.hero-panel img{width:40%;max-width:300px;margin-left:12%}
-.hero .wrap{width:100%;padding-top:64px;padding-bottom:56px}
+.hero-panel img{width:30%;max-width:200px;margin-left:12%}
+.hero .wrap{width:100%;padding-top:48px;padding-bottom:48px}
 .hero h1{font-size:clamp(42px,5.4vw,80px);line-height:1.14;letter-spacing:-.04em;font-weight:700;max-width:9em}
 .hero-copy{max-width:500px;margin:28px 0 34px;font-size:18px;line-height:1.75;color:#33445a}
 .hero-facts{max-width:46%;margin-top:44px;border-top:2px solid var(--ink)}
@@ -202,9 +202,9 @@ footer a{text-decoration:none}footer a:hover{color:var(--ink)}
 
 @media(max-width:1000px){
   .hero{min-height:auto;flex-direction:column;align-items:stretch}
-  .hero-panel{position:relative;inset:auto;order:2;height:clamp(200px,30vw,280px);clip-path:polygon(0 34%,100% 0,100% 100%,0 100%)}
-  .hero-panel img{width:auto;height:clamp(96px,14vw,130px);margin:clamp(40px,7vw,70px) 0 0}
-  .hero .wrap{padding-top:56px;padding-bottom:40px}
+  .hero-panel{position:relative;inset:auto;order:2;height:clamp(110px,17vw,160px);clip-path:polygon(0 40%,100% 0,100% 100%,0 100%)}
+  .hero-panel img{width:auto;height:clamp(52px,7vw,72px);margin:clamp(26px,4vw,40px) 0 0}
+  .hero .wrap{padding-top:44px;padding-bottom:32px}
   .hero h1{max-width:none}
   .hero-facts{max-width:none;margin-top:36px}
   .sec>.wrap,.close .wrap{grid-template-columns:1fr;gap:28px}
@@ -309,3 +309,6 @@ fieldset.crow legend{float:left;width:100%;padding:0}
 li>.s:first-child{display:inline}
 .nw{white-space:nowrap}
 @media(max-width:380px){.bar nav{gap:12px;font-size:13px}.bar nav .btn{padding:8px 10px}.brand img{width:96px;height:auto}}
+/* 홈 사례: 제목을 이미지 위에 */
+.case-h{margin-bottom:22px}.case-h h3{max-width:24em}
+.case.top .case-meta{display:block;max-width:46em;margin-top:28px}
