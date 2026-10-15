@@ -252,6 +252,7 @@ footer a{text-decoration:none}footer a:hover{color:var(--ink)}
 .care-won b{font:700 clamp(30px,3.4vw,44px)/1.1 var(--sans);letter-spacing:-.04em;color:var(--ink);margin-right:10px}
 .care{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:32px;border-top:2px solid var(--ink);padding-top:24px}
 .care h3{font-size:18px}
+.care h3 small{display:block;margin-top:4px;font-size:15px;font-weight:600;color:var(--ink)}
 .care ul.inc{margin-top:12px;display:grid;gap:8px;font-size:15px;color:var(--mut)}
 .care ul.inc li::before{content:"– ";color:var(--ink)}
 .svc .from{margin-top:10px;font-size:15px;font-weight:600}
