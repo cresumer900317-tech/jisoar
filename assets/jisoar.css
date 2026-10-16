@@ -312,3 +312,47 @@ li>.s:first-child{display:inline}
 /* 홈 사례: 제목을 이미지 위에 */
 .case-h{margin-bottom:22px}.case-h h3{max-width:24em}
 .case.top .case-meta{display:block;max-width:46em;margin-top:28px}
+/* 홈 '직접 만들고 운영하는 것': 지픽(큰 사례) + RANKLAB·고스란히 2단 */
+.own-lead .actions{align-items:center;gap:12px 24px;margin-top:26px}
+.own-lead .actions .more{margin:0}
+.own2{display:grid;grid-template-columns:1fr 1fr;margin-top:88px;border-top:2px solid var(--ink)}
+.own2 article{padding:28px 40px 4px 0}
+.own2 article+article{padding:28px 0 4px 40px;border-left:1px solid var(--line)}
+.own2 .tag{display:block;margin-bottom:10px;font-size:14px;font-weight:600;color:var(--accent)}
+.own2 h3{font-size:clamp(21px,1.8vw,24px);line-height:1.4;letter-spacing:-.035em}
+.duel{display:flex;flex-wrap:wrap;gap:0;margin-top:26px}
+.duel>div{padding-right:28px}
+.duel>div+div{padding-left:28px;border-left:1px solid var(--line)}
+.duel dt{font-size:14px;font-weight:600;color:var(--mut)}
+.duel dd{margin-top:2px;font:700 clamp(38px,4vw,52px)/1.1 var(--sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.duel .c-claude dd{color:#dd6b1f}.duel .c-codex dd{color:#14897c}
+.own2 .cap{margin-top:14px;font-size:14px;color:var(--mut)}
+.own2 .more{display:inline-block;margin-top:20px}
+@media(max-width:720px){
+  .own2{grid-template-columns:1fr;margin-top:64px}
+  .own2 article,.own2 article+article{padding:24px 0 8px;border-left:0}
+  .own2 article+article{margin-top:32px;border-top:1px solid var(--line)}
+  .duel>div{padding-right:20px}.duel>div+div{padding-left:20px}
+}
+/* RANKLAB 연재 */
+.wk{border-top:2px solid var(--ink);font-variant-numeric:tabular-nums}
+.wk table{width:100%;border-collapse:collapse;font-size:16px}
+.wk th,.wk td{padding:16px 12px 16px 0;border-bottom:1px solid var(--line);text-align:left}
+.wk th{font-size:13px;font-weight:700;color:var(--mut)}
+.wk td.n,.wk th.n{text-align:right}
+.wk .lead-c{color:#dd6b1f;font-weight:700}.wk .lead-x{color:#14897c;font-weight:700}
+.note-small{margin-top:16px;font-size:14px;color:var(--mut);max-width:44em}
+.essay p+p{margin-top:18px}
+.essay p{font-size:17px;line-height:1.85;max-width:40em}
+.essay h3{margin:40px 0 12px;font-size:20px;letter-spacing:-.03em}
+.essay h3:first-child{margin-top:0}
+.rules{margin-top:8px;border-top:2px solid var(--ink)}
+.rules li{display:grid;grid-template-columns:180px 1fr;gap:24px;padding:18px 0;border-bottom:1px solid var(--line);font-size:16px}
+.rules b{font-weight:700}
+@media(max-width:720px){.rules li{grid-template-columns:1fr;gap:4px}}
+nav .ext::after{content:"↗";margin-left:2px;font-size:.85em}
+.duel.big dd{font-size:clamp(36px,9vw,80px)}
+.own2 .duel dd{font-size:clamp(32px,3.2vw,44px)}
+.own2 .duel>div{padding-right:22px}.own2 .duel>div+div{padding-left:22px}
+@media(max-width:440px){.bar nav a[href="/services/"]{display:none}}
+.wk th:last-child,.wk td:last-child{padding-left:28px}
