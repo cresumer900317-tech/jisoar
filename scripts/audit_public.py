@@ -5,8 +5,10 @@ from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 ROUTES = ['', 'about', 'work', 'services', 'contact', 'products/friends',
-          'products/wedding', 'products/guild-lounge', 'products/hq']
-EXPECTED = ['/about/', '/work/', '/services/', '/contact/']
+          'products/wedding', 'products/guild-lounge', 'products/hq', 'ranklab']
+JIPICK = 'https://jipick.pages.dev/'
+EXPECTED = {'주요 메뉴': ['/work/', '/services/', JIPICK, '/about/', '/contact/'],
+            '하단 메뉴': ['/work/', '/services/', '/ranklab/', JIPICK, '/about/', '/contact/']}
 
 class Page(HTMLParser):
     def __init__(self, text):
@@ -30,7 +32,7 @@ def main():
     for route in ROUTES:
         path=ROOT/route/'index.html'; page=Page(path.read_text(encoding='utf-8'))
         for label in ('주요 메뉴','하단 메뉴'):
-            if page.navs.get(label)!=EXPECTED: errors.append(f'{route}: inconsistent {label}')
+            if page.navs.get(label)!=EXPECTED[label]: errors.append(f'{route}: inconsistent {label}')
         if page.h1!=1: errors.append(f'{route}: expected one H1')
         if len(page.ids)!=len(set(page.ids)): errors.append(f'{route}: duplicate IDs')
         for url in page.urls:
@@ -40,7 +42,7 @@ def main():
             elif parsed.fragment and target.suffix=='.html':
                 if parsed.fragment not in Page(target.read_text(encoding='utf-8')).ids:
                     errors.append(f'{route}: missing anchor {url}')
-    print('\n'.join(errors) if errors else 'PASS: 9 public pages, navigation parity, H1, IDs, local links and anchors')
+    print('\n'.join(errors) if errors else 'PASS: 10 public pages, navigation parity, H1, IDs, local links and anchors')
     return bool(errors)
 
 if __name__=='__main__': raise SystemExit(main())
