@@ -1,7 +1,7 @@
 """RANKLAB 성적을 홈과 /ranklab/ 에 넣는다. 주 1회 실행: python -X utf8 scripts/ranklab_week.py
 
 msim-dash KV 'dash' 를 wrangler 로 읽어(이 PC wrangler 로그인 필요) Claude·Codex 계좌 3개씩의
-합계 수익률(시작 금액이 같아 평균)을 구한다. 둘이 함께 판단하는 team 계좌는 넣지 않는다.
+평가액 합계를 시작 금액 합계와 비교한 수익률을 구한다. 둘이 함께 판단하는 team 계좌는 넣지 않는다.
 보유 종목·매매 내역은 쓰지 않는다. 주간 기록은 scripts/ranklab_weeks.json 에 쌓인다.
 """
 import json, re, subprocess, sys
@@ -25,9 +25,9 @@ def load_state():
 def totals(d):
     res = {}
     for side in SIDES:
-        rets = [a['ret'] for k, a in d['accounts'].items() if k.startswith(side + '_') and a.get('ret') is not None]
-        if len(rets) != 3: raise SystemExit(f'{side} 계좌가 3개가 아님: {len(rets)}')
-        res[side] = round(sum(rets) / len(rets) * 100, 2)
+        eq = [a['equity'] for k, a in d['accounts'].items() if k.startswith(side + '_') and a.get('equity') is not None]
+        if len(eq) != 3: raise SystemExit(f'{side} 계좌가 3개가 아님: {len(eq)}')
+        res[side] = round((sum(eq) / (d['capital'] * len(eq)) - 1) * 100, 2)   # 평가액 합 ÷ 시작 금액 합
     return res
 
 def pct(v): return f'{v:+.2f}%'.replace('+0.00%', '0.00%')
