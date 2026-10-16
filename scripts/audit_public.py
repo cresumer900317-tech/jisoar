@@ -6,7 +6,7 @@ from urllib.parse import urlsplit, unquote
 ROOT = Path(__file__).resolve().parents[1]
 ROUTES = ['', 'about', 'work', 'services', 'contact', 'products/friends',
           'products/wedding', 'products/guild-lounge', 'products/hq', 'ranklab']
-JIPICK = 'https://jipick.pages.dev/'
+JIPICK = 'https://jipick.com/'
 EXPECTED = {'주요 메뉴': ['/work/', '/services/', JIPICK, '/about/', '/contact/'],
             '하단 메뉴': ['/work/', '/services/', '/ranklab/', JIPICK, '/about/', '/contact/']}
 
