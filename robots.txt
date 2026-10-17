@@ -1,6 +1,3 @@
 User-agent: *
-Disallow: /icp/
-Disallow: /hq/
-Disallow: /wedding/
 
 Sitemap: https://jisoar.com/sitemap.xml
