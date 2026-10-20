@@ -34,7 +34,7 @@ def pct(v): return f'{v:+.2f}%'.replace('+0.00%', '0.00%')
 
 def put(text, key, value):
     pat = re.compile(rf'(<!--rl:{key}-->).*?(<!--/rl:{key}-->)', re.S)
-    if not pat.search(text): raise SystemExit(f'표시 자리 없음: {key}')
+    if len(pat.findall(text)) != 1: raise SystemExit(f'표시 자리가 1개가 아님: {key}')
     return pat.sub(lambda m: m.group(1) + value + m.group(2), text)
 
 def main():
@@ -55,12 +55,11 @@ def main():
         lead = ('<span class="lead-c">Claude</span>' if w['claude'] > w['codex'] else
                 '<span class="lead-x">Codex</span>' if w['codex'] > w['claude'] else '같음')
         rows.append(f'<tr><td>{w["week"]}주차</td><td>{a.month}월 {a.day}일</td><td class="n">{pct(w["claude"])}</td><td class="n">{pct(w["codex"])}</td><td>{lead}</td></tr>')
-    for rel in ('index.html', 'ranklab/index.html'):
-        p = ROOT / rel; s = p.read_text(encoding='utf-8')
-        vals = {'claude': pct(t['claude']), 'codex': pct(t['codex']), 'asof': label, 'weeks': '\n' + '\n'.join(rows) + '\n'}
-        for key, v in vals.items():   # 홈은 10/20 부터 숫자 없이 연재 링크만 둔다
-            if f'<!--rl:{key}-->' in s: s = put(s, key, v)
-        p.write_text(s, encoding='utf-8')
+    p = ROOT / 'ranklab' / 'index.html'   # 홈은 10/20 부터 숫자 없이 연재 링크만 둔다
+    s = p.read_text(encoding='utf-8')
+    vals = {'claude': pct(t['claude']), 'codex': pct(t['codex']), 'asof': label, 'weeks': '\n' + '\n'.join(rows) + '\n'}
+    for key, v in vals.items(): s = put(s, key, v)   # 표시 자리가 하나라도 없으면 쓰기 전에 멈춘다
+    p.write_text(s, encoding='utf-8')
     print(f'{n}주차 {asof}: Claude {pct(t["claude"])} / Codex {pct(t["codex"])}')
 
 if __name__ == '__main__': main()
