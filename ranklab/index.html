@@ -26,19 +26,19 @@
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
-<header class="bar" id="bar"><div class="wrap"><a class="brand" href="/" aria-label="JISOAR 홈"><img src="/assets/brand/jisoar-logo.svg" alt="JISOAR" width="107" height="30"></a><nav aria-label="주요 메뉴"><a href="/work/">작업 사례</a><a href="/services/">서비스</a><a href="https://jipick.com/" class="ext" target="_blank" rel="noopener">지픽</a><a href="/about/" class=about>소개</a><a class="btn" href="/contact/">문의하기</a></nav></div></header>
+<header class="bar" id="bar"><div class="wrap"><a class="brand" href="/" aria-label="JISOAR 홈"><img src="/assets/brand/jisoar-logo.svg" alt="JISOAR" width="107" height="30"></a><nav aria-label="주요 메뉴"><a href="/work/">작업 사례</a><a href="/services/">서비스</a><a href="https://jipick.com/" class="ext" target="_blank" rel="noopener">지픽</a><a href="/about/" class=about>소개</a></nav><a class="btn" href="/contact/">문의하기</a></div></header>
 <main id="main">
-<header class="phead"><div class="wrap"><span class="tag">RANKLAB · 연재</span><h1>Claude와 Codex,<br>누가 더 잘 굴릴까</h1><p><span class="s">두 AI가 같은 금액과 같은 규칙으로 코인과 국내·미국 주식의 매매를 판단합니다.</span><span class="s">시세 수집과 수수료 정산, 성적 기록은 JISOAR가 직접 만든 시스템이 매일 맡습니다.</span><span class="s">성적은 매주 여기에 올립니다.</span></p></div></header>
+<header class="phead"><div class="wrap"><span class="tag">RANKLAB · 연재</span><h1>Claude와 Codex,<br>누가 더 잘 굴릴까</h1><p><span class="s">두 AI가 같은 금액과 같은 규칙으로 코인과 국내·미국 주식의 매매를 판단합니다.</span><span class="s">실제 돈은 쓰지 않는 가상 계좌입니다.</span><span class="s">시세 수집과 수수료 정산, 성적 기록은 JISOAR가 직접 만든 시스템이 매일 맡습니다.</span><span class="s">성적은 매주 여기에 올립니다.</span></p></div></header>
 
 <section class="sec" aria-labelledby="score-h"><div class="wrap">
 <div class="sec-head"><div><h2 id="score-h">지금 성적</h2><p><span class="s">AI별 계좌 3개의 평가액을 합쳐 시작 금액과 비교한 수익률입니다.</span></p></div></div>
 <div class="sec-body">
-<dl class="duel big"><div class="c-claude"><dt>Claude</dt><dd><!--rl:claude-->-0.59%<!--/rl:claude--></dd></div><div class="c-codex"><dt>Codex</dt><dd><!--rl:codex-->-0.43%<!--/rl:codex--></dd></div></dl>
-<p class="note-small"><!--rl:asof-->계좌당 1,000만 원 · 2026년 10월 14일 시작 · 10월 17일 기준<!--/rl:asof--></p>
+<dl class="duel big"><div class="c-claude"><dt>Claude</dt><dd><!--rl:claude-->-1.70%<!--/rl:claude--></dd></div><div class="c-codex"><dt>Codex</dt><dd><!--rl:codex-->-2.33%<!--/rl:codex--></dd></div></dl>
+<p class="note-small"><!--rl:asof-->계좌당 1,000만 원 · 2026년 10월 14일 시작 · 10월 20일 기준<!--/rl:asof--></p>
 <h3 class="price-h">주간 기록</h3>
 <div class="wk"><table><thead><tr><th scope="col">주차</th><th scope="col">기준일</th><th scope="col" class="n">Claude</th><th scope="col" class="n">Codex</th><th scope="col">앞선 쪽</th></tr></thead><tbody>
 <!--rl:weeks-->
-<tr><td>1주차</td><td>10월 17일</td><td class="n">-0.59%</td><td class="n">-0.43%</td><td><span class="lead-x">Codex</span></td></tr>
+<tr><td>1주차</td><td>10월 20일</td><td class="n">-1.70%</td><td class="n">-2.33%</td><td><span class="lead-c">Claude</span></td></tr>
 <!--/rl:weeks-->
 </tbody></table></div>
 <p class="note-small"><span class="s">수익률은 시작 금액 대비 누적입니다.</span><span class="s">수수료와 세금을 빼고 계산합니다.</span><span class="s">보유 종목과 매매 내역은 공개하지 않으며, 이 기록은 투자 권유가 아닙니다.</span></p>
@@ -50,9 +50,9 @@
 <div class="sec-body"><ul class="rules">
 <li><b>계좌</b><span><span class="s">Claude, Codex, 둘이 함께 판단하는 계좌를 코인·국내 주식·미국 주식마다 하나씩, 모두 9개 둡니다.</span><span class="s">합계 성적에는 둘이 함께 판단하는 계좌를 넣지 않습니다.</span></span></li>
 <li><b>시작 금액</b><span>계좌마다 1,000만 원</span></li>
-<li><b>비용</b><span>매수·매도 때마다 수수료 0.1%를 빼고 기록합니다.</span></li>
+<li><b>비용</b><span><span class="s">수수료, 세금, 체결 차이를 시장별로 빼고 기록합니다.</span><span class="s">매수와 매도 때마다 각각 코인 0.1%, 국내 주식 살 때 0.065%·팔 때 0.265%, 미국 주식 0.25%(환전 포함)를 뺍니다.</span></span></li>
 <li><b>손실 한도</b><span>계좌마다 하루 -3%, 한 달 -8%</span></li>
-<li><b>판단 시간</b><span><span class="s">하루 단위 계좌는 아침 8시에 그날 계획을 정해 잠그고 9시에 들어갑니다.</span><span class="s">24시간 계좌는 1분마다 시세를 보고, 4시간마다 또는 시세가 급하게 움직이면 다시 판단합니다.</span></span></li>
+<li><b>판단 시간</b><span><span class="s">코인 계좌는 24시간 1분마다 시세를 보고, 4시간마다 또는 시세가 급하게 움직이면 다시 판단합니다.</span><span class="s">주식 계좌는 장이 열린 동안 같은 방식으로 정해진 시각과 급변 때 판단합니다.</span></span></li>
 <li><b>기록</b><span>판단 이유, 매수·매도, 손익을 모두 남깁니다.</span></li>
 </ul></div>
 </div></section>
