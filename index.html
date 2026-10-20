@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@5.2.8/latin-600.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@5.2.8/latin-700.css">
 <link rel="stylesheet" href="/assets/jisoar.css?v=20261017c">
-<link rel="stylesheet" href="/assets/home.css?v=20261021a">
+<link rel="stylesheet" href="/assets/home.css?v=20261021b">
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -59,6 +59,7 @@
 <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><em>Toprise · 광고관리</em></div>
 <div class="view"><img src="/assets/work/live/isis-ad-long.jpg" width="1686" height="3640" alt="Toprise 광고관리 화면: 전체 31, 정상 30, 오류 0, 종료예정 1과 키워드별 순위 목록" decoding="async" fetchpriority="high"></div>
 </div></div>
+<button type="button" class="motion" id="motion-toggle" aria-pressed="false" hidden>움직임 멈추기</button>
 <div class="belt" aria-label="운영 중인 서비스"><ul>
 <li>Toprise<small>리워드 광고 관리</small></li><li>Paylist<small>정산 도구</small></li><li>JIPICK<small>영업 DB</small></li><li>RANKLAB<small>AI 매매 연재</small></li><li>Guild Lounge<small>웹·iOS 앱</small></li><li>Snapwed<small>결혼식 사진 공유</small></li>
 <li aria-hidden="true">Toprise<small>리워드 광고 관리</small></li><li aria-hidden="true">Paylist<small>정산 도구</small></li><li aria-hidden="true">JIPICK<small>영업 DB</small></li><li aria-hidden="true">RANKLAB<small>AI 매매 연재</small></li><li aria-hidden="true">Guild Lounge<small>웹·iOS 앱</small></li><li aria-hidden="true">Snapwed<small>결혼식 사진 공유</small></li>
@@ -81,13 +82,13 @@
 <p class="lead"><span class="s">리워드 마케팅 슬롯을 총판·대행사·광고주 단계로 나눠 관리하는 플랫폼입니다.</span><span class="s">상품 링크를 넣으면 정보를 불러와 등록하고, 정해진 시간마다 키워드 순위를 수집합니다.</span></p>
 <div class="tabs" id="tp-tabs" role="tablist" aria-label="Toprise 화면">
 <button type="button" role="tab" id="tp-ad" aria-selected="true" aria-controls="tp-screens" data-cap="광고마다 키워드, 현재 순위, 작업 기간을 한 줄로 봅니다."><i></i>광고관리</button>
-<button type="button" role="tab" id="tp-stats" aria-selected="false" aria-controls="tp-screens" data-cap="기간별 순위 변화와 순위 분포를 한눈에 봅니다."><i></i>통계관리</button>
-<button type="button" role="tab" id="tp-settle" aria-selected="false" aria-controls="tp-screens" data-cap="등록·연장·환불 일수가 자동으로 쌓여 정산 근거가 됩니다."><i></i>정산로그</button>
+<button type="button" role="tab" id="tp-stats" aria-selected="false" tabindex="-1" aria-controls="tp-screens" data-cap="기간별 순위 변화와 순위 분포를 한눈에 봅니다."><i></i>통계관리</button>
+<button type="button" role="tab" id="tp-settle" aria-selected="false" tabindex="-1" aria-controls="tp-screens" data-cap="등록·연장·환불 일수가 자동으로 쌓여 정산 근거가 됩니다."><i></i>정산로그</button>
 </div>
-<div class="screens" id="tp-screens" role="tabpanel">
+<div class="screens" id="tp-screens" role="tabpanel" aria-labelledby="tp-ad">
 <img class="on" src="/assets/work/live/isis-ad.jpg" width="1686" height="1260" alt="Toprise 광고관리 화면" loading="lazy" decoding="async">
-<img src="/assets/work/live/isis-stats.jpg" width="1686" height="1260" alt="Toprise 통계관리 화면: 순위 변화와 순위 분포" loading="lazy" decoding="async">
-<img src="/assets/work/live/isis-settle.jpg" width="1686" height="1260" alt="Toprise 정산로그 화면: 발주·연장·환불 일수" loading="lazy" decoding="async">
+<img aria-hidden="true" src="/assets/work/live/isis-stats.jpg" width="1686" height="1260" alt="Toprise 통계관리 화면: 순위 변화와 순위 분포" loading="lazy" decoding="async">
+<img aria-hidden="true" src="/assets/work/live/isis-settle.jpg" width="1686" height="1260" alt="Toprise 정산로그 화면: 발주·연장·환불 일수" loading="lazy" decoding="async">
 </div>
 <p class="tabcap" id="tp-cap">광고마다 키워드, 현재 순위, 작업 기간을 한 줄로 봅니다.</p>
 <p class="when">Toprise 실제 시스템을 예시 데이터로 띄워 찍은 2026년 10월 화면입니다. 계정·상품·순위는 모두 예시입니다.</p>
@@ -161,6 +162,6 @@
 </main>
 <footer><div class="wrap"><span>© 2026 JISOAR · 지소어 · 사업자등록번호 294-03-01774</span><nav aria-label="하단 메뉴"><a href="/work/">작업 사례</a><a href="/services/">서비스</a><a href="/ranklab/">RANKLAB</a><a href="https://jipick.com/" class="ext" target="_blank" rel="noopener">지픽</a><a href="/about/">소개</a><a href="/contact/">문의</a></nav><a href="mailto:hello@jisoar.com">hello@jisoar.com</a></div></footer>
 <script src="/assets/marketing.js?v=20260911b" defer></script>
-<script src="/assets/home.js?v=20261021a" defer></script>
+<script src="/assets/home.js?v=20261021b" defer></script>
 </body>
 </html>
