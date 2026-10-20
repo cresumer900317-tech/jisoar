@@ -1,0 +1,132 @@
+/* JISOAR 홈 2026-10-21: 토스식 한 화면 한 메시지 + 플렉스식 제품 화면 주인공.
+   움직임은 실제 캡처(assets/work/live, scripts/capture 로 다시 찍음) 위에서만. jisoar.css 위에 얹는다. */
+
+/* 큰 펼침 메뉴(마우스를 올리면 열림, JS 없으면 그냥 링크) */
+.bar .wrap{position:relative}
+.mega{position:absolute;left:0;right:0;top:72px;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 28px 40px -28px rgba(16,26,51,.28)}
+.mega .wrap{display:grid;grid-template-columns:220px repeat(3,minmax(0,1fr));gap:32px;padding-top:30px;padding-bottom:36px}
+.mega h2{font-size:26px;line-height:1.25;letter-spacing:-.03em}
+.mega h2 small{display:block;margin-top:10px;font-size:14px;font-weight:400;color:var(--mut);letter-spacing:0}
+.mi{display:grid;gap:10px;text-decoration:none;align-content:start}
+.mi .th{aspect-ratio:16/10;background:var(--soft) center top/cover no-repeat;border:1px solid var(--line);transition:transform .3s}
+.mi:hover .th{transform:translateY(-3px)}
+.mi b{font-size:16px}
+.mi span{font-size:14px;color:var(--mut);line-height:1.5}
+.mi:hover b{color:var(--accent)}
+
+/* 첫 화면 */
+.h-hero{padding:96px 0 0;text-align:center;overflow:hidden}
+.h-hero h1{margin:0 auto;font-size:clamp(40px,7vw,92px);line-height:1.12;font-weight:800;letter-spacing:-.045em}
+.h-hero h1 .ln{display:block}
+.h-hero .copy{margin:28px auto 0;max-width:34em;color:#33445a;font-size:clamp(16px,1.5vw,19px)}
+.h-hero .actions{justify-content:center;margin-top:34px}
+.h-hero .facts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 28px;margin-top:30px;font-size:14px;color:var(--mut)}
+.h-hero .facts b{color:var(--ink);font-weight:600;margin-right:6px}
+.anim .h-hero h1 .ln,.anim .h-hero .copy,.anim .h-hero .actions,.anim .h-hero .facts{animation:h-rise .9s cubic-bezier(.2,.7,.2,1) both}
+.anim .h-hero h1 .ln:nth-child(2){animation-delay:.1s}
+.anim .h-hero .copy{animation-delay:.2s}.anim .h-hero .actions{animation-delay:.3s}.anim .h-hero .facts{animation-delay:.4s}
+@keyframes h-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+.stage{perspective:1600px;margin-top:64px;padding:0 var(--gut)}
+.win{max-width:1200px;margin:0 auto;background:#fff;border:1px solid var(--line);box-shadow:0 40px 80px -40px rgba(16,26,51,.45);transform-origin:50% 0}
+.anim .win{transform:rotateX(var(--tilt,0deg)) scale(var(--sc,1))}
+.chrome{display:flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--soft)}
+.chrome i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.chrome em{margin-left:12px;font-size:12px;font-style:normal;color:var(--mut)}
+.view{position:relative;height:min(56vw,620px);overflow:hidden;background:#eef0f4}
+.view img{width:100%}
+.anim .view img{animation:h-scrollv 30s ease-in-out infinite alternate}
+@keyframes h-scrollv{0%,8%{transform:translateY(0)}92%,100%{transform:translateY(calc(-100% + min(56vw,620px)))}}
+.when{display:block;margin-top:14px;font-size:13px;color:var(--mut)}
+.motion{display:block;margin:14px auto 0;font:500 13px var(--sans);color:var(--mut);background:none;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+.motion:hover{color:var(--ink);border-color:var(--ink)}
+.h-hero .when{padding:0 var(--gut)}
+
+/* 서비스 이름 흐르는 띠 */
+.belt{margin-top:56px;background:var(--ink);color:#fff;overflow:hidden;padding:22px 0}
+.belt ul{display:flex;gap:56px;width:max-content;font:600 22px/1.2 var(--display);letter-spacing:-.01em;white-space:nowrap;padding-left:40px}
+.belt li small{font:400 15px var(--sans);opacity:.62;margin-left:10px;letter-spacing:0}
+.anim .belt ul{animation:h-belt 34s linear infinite}
+@keyframes h-belt{to{transform:translateX(-50%)}}
+
+/* 공통 구역 */
+.h-sec{padding:128px 0}
+.h-sec.soft{background:var(--soft)}
+.tag{display:block;font-size:15px;font-weight:700;color:var(--accent);letter-spacing:0}
+.h2{margin-top:12px;font-size:clamp(32px,4.4vw,56px);line-height:1.18;font-weight:800;letter-spacing:-.04em}
+.h2 .s,.lead .s{display:block}
+.lead{margin-top:22px;max-width:36em;color:#33445a;font-size:18px}
+.center{text-align:center}.center .lead{margin-left:auto;margin-right:auto}
+.h-sec .actions{margin-top:28px}
+.center .actions{justify-content:center}
+.facts2{margin-top:28px;border-top:1px solid var(--ink)}
+.facts2 li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
+.facts2 b{font-weight:600}
+
+/* 한 화면에 사례 하나 */
+.case2{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;align-items:center}
+.case2+.case2{margin-top:150px}
+.case2.rev{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+.case2.rev .txt{order:2}
+.pan{position:relative;aspect-ratio:16/10;overflow:hidden;border:1px solid var(--line);background:var(--soft);box-shadow:0 30px 60px -36px rgba(16,26,51,.4)}
+.pan img{width:100%;height:100%;object-fit:cover;object-position:left top}
+.anim .pan img{position:absolute;left:0;top:0;width:118%;max-width:none;height:auto;object-fit:initial;animation:h-pan 20s ease-in-out infinite alternate}
+@keyframes h-pan{from{transform:translate(0,0)}to{transform:translate(-15%,-10%)}}
+.pan.wide{aspect-ratio:1552/744}
+.anim .pan.wide img{width:112%}
+
+/* Toprise 탭 */
+.tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:40px}
+.tabs button{position:relative;font:600 16px var(--sans);color:var(--mut);background:#fff;border:1px solid var(--line);padding:12px 20px;cursor:pointer;overflow:hidden;border-radius:6px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--ink)}
+.tabs button i{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--accent)}
+.anim .tabs button[aria-selected="true"] i{animation:h-fill 5s linear forwards}
+.tabs.stopped button i{animation:none!important;width:0}
+@keyframes h-fill{to{width:100%}}
+.screens{position:relative;max-width:1100px;margin:36px auto 0;aspect-ratio:1686/1260;border:1px solid var(--line);background:#eef0f4;overflow:hidden;box-shadow:0 30px 60px -36px rgba(16,26,51,.4)}
+.screens img{position:absolute;inset:0;width:100%;height:auto;opacity:0}
+.screens img.on{opacity:1}
+.anim .screens img{transition:opacity .7s,transform 5.5s ease-out;transform:scale(1.03)}
+.anim .screens img.on{transform:none}
+.tabcap{margin:18px auto 0;color:var(--mut);font-size:15px;min-height:1.7em}
+
+/* 폰 */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}
+.phone{justify-self:center;width:300px;max-width:100%;aspect-ratio:300/620;border:10px solid #111;border-radius:44px;background:#111;position:relative;box-shadow:0 40px 70px -36px rgba(16,26,51,.55)}
+.phone .scr{position:absolute;inset:0;border-radius:34px;overflow:hidden;background:#f4f5f7}
+.phone .scr img{width:100%}
+.anim .phone .scr img{animation:h-scrollp 24s ease-in-out infinite alternate}
+@keyframes h-scrollp{0%,10%{transform:translateY(0)}90%,100%{transform:translateY(-62%)}}
+
+/* 앱 두 개 */
+.apps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px;margin-top:56px}
+.apps article{display:grid;grid-template-columns:200px minmax(0,1fr);gap:28px;align-items:start}
+.apps .ph{border:8px solid #111;border-radius:32px;overflow:hidden;background:#111}
+.apps h3{font-size:24px;letter-spacing:-.03em}
+.apps .kind{display:block;margin-top:4px;font-size:14px;color:var(--mut)}
+.apps p{margin-top:14px;font-size:16px;color:#33445a}
+.apps p .s{display:block}
+.apps .links{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;font-size:15px}
+.apps small{display:block;margin-top:10px;color:var(--mut);font-size:13px}
+
+/* 고스란히 숫자 */
+.pledge{display:flex;flex-wrap:wrap;gap:16px 56px;margin-top:30px}
+.pledge dt{font-size:14px;color:var(--mut)}
+.pledge dd{font:800 clamp(44px,6vw,72px)/1.1 var(--sans);letter-spacing:-.04em}
+
+@media(max-width:1000px){
+  .mega{display:none!important}
+  .case2,.case2.rev,.split{grid-template-columns:1fr;gap:36px}
+  .case2.rev .txt{order:0}
+  .apps{grid-template-columns:1fr;gap:48px}
+  .h-sec{padding:88px 0}
+  .h-hero{padding-top:60px}
+  .stage{margin-top:44px}
+}
+@media(max-width:720px){
+  .apps article{grid-template-columns:130px minmax(0,1fr);gap:18px}
+  .facts2 li{grid-template-columns:110px minmax(0,1fr)}
+  .belt ul{font-size:18px;gap:40px}
+  .h-hero .facts{flex-direction:column;align-items:center}
+}
+@media(prefers-reduced-motion:reduce){.mi .th,.screens img{transition:none}.mi:hover .th{transform:none}}
