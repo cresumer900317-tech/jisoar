@@ -57,8 +57,9 @@ def main():
         rows.append(f'<tr><td>{w["week"]}주차</td><td>{a.month}월 {a.day}일</td><td class="n">{pct(w["claude"])}</td><td class="n">{pct(w["codex"])}</td><td>{lead}</td></tr>')
     for rel in ('index.html', 'ranklab/index.html'):
         p = ROOT / rel; s = p.read_text(encoding='utf-8')
-        s = put(s, 'claude', pct(t['claude'])); s = put(s, 'codex', pct(t['codex'])); s = put(s, 'asof', label)
-        if '<!--rl:weeks-->' in s: s = put(s, 'weeks', '\n' + '\n'.join(rows) + '\n')
+        vals = {'claude': pct(t['claude']), 'codex': pct(t['codex']), 'asof': label, 'weeks': '\n' + '\n'.join(rows) + '\n'}
+        for key, v in vals.items():   # 홈은 10/20 부터 숫자 없이 연재 링크만 둔다
+            if f'<!--rl:{key}-->' in s: s = put(s, key, v)
         p.write_text(s, encoding='utf-8')
     print(f'{n}주차 {asof}: Claude {pct(t["claude"])} / Codex {pct(t["codex"])}')
 

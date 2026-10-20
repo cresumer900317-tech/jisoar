@@ -217,10 +217,14 @@ footer a{text-decoration:none}footer a:hover{color:var(--ink)}
 }
 @media(max-width:720px){
   :root{--gut:20px}
-  .bar .wrap{height:64px}.brand{font-size:24px}
-  .bar nav{gap:16px;font-size:14px}.bar nav .about{display:none}
+  .brand{font-size:24px}
+  .bar .wrap{height:auto;flex-wrap:wrap;justify-content:flex-start;padding-top:10px}
+  .bar nav{display:contents;font-size:14px}
+  .bar nav .btn{order:1;margin-left:auto}
+  .bar .wrap::after{content:"";order:1;flex-basis:100%}
+  .bar nav a:not(.btn){order:2;padding:12px 18px 12px 0}
   .bar nav .btn{min-height:40px;padding:8px 12px}
-  html{scroll-padding-top:80px}
+  html{scroll-padding-top:116px}
   .hero-copy{font-size:17px}
   .hero-facts li{display:block;padding:12px 0}.hero-facts b{display:block}
   .sec{padding:72px 0}.close{padding:72px 0}
@@ -354,5 +358,4 @@ nav .ext::after{content:"↗";margin-left:2px;font-size:.85em}
 .duel.big dd{font-size:clamp(36px,9vw,80px)}
 .own2 .duel dd{font-size:clamp(32px,3.2vw,44px)}
 .own2 .duel>div{padding-right:22px}.own2 .duel>div+div{padding-left:22px}
-@media(max-width:440px){.bar nav a[href="/services/"]{display:none}}
 .wk th:last-child,.wk td:last-child{padding-left:28px}
