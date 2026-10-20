@@ -1,7 +1,6 @@
-// 사이트용 제품 화면을 한 번에 다시 찍는다. 결과: assets/work/live/<이름>.png
+// 사이트용 제품 화면을 한 번에 다시 찍는다. 결과: assets/work/live/<이름>.jpg
 //
 //   node scripts/capture/capture.mjs isis       (로컬 이시스 가짜 데이터 화면)
-//   node scripts/capture/capture.mjs ranklab    (로컬 RANKLAB 미리보기 화면)
 //
 // 준비는 scripts/capture/README.md 참고. 브라우저는 설치된 Edge 를 쓴다.
 // playwright 는 수집기 저장소(../ranklab-collector) 것을 빌려 쓴다(PW_DIR 로 바꿀 수 있음).
@@ -17,8 +16,8 @@ const { chromium } = createRequire(path.join(pwDir, 'package.json'))('playwright
 const out = path.join(root, 'assets/work/live');
 mkdirSync(out, { recursive: true });
 
-const DESK = { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 };
-const PHONE = { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
+const DESK = { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1.4 };   // 본문 폭 약 1700px
+const PHONE = { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 
 const TARGETS = {
   isis: {
@@ -35,16 +34,7 @@ const TARGETS = {
       { name: 'isis-ad-long', hash: '#ad', dev: DESK, sel: 'main.main', tall: 2600 },
       { name: 'isis-stats', hash: '#stats', dev: DESK, sel: 'main.main' },
       { name: 'isis-settle', hash: '#settle', dev: DESK, sel: 'main.main' },
-      { name: 'isis-daily', hash: '#daily', dev: DESK, sel: 'main.main' },
       { name: 'isis-ad-m', hash: '#ad', dev: PHONE, tall: 2400 },
-    ],
-  },
-  ranklab: {
-    base: process.env.RANKLAB_WEB || 'http://localhost:8788',
-    async login() {},
-    shots: [
-      { name: 'ranklab-dash', hash: '', dev: DESK },
-      { name: 'ranklab-dash-m', hash: '', dev: PHONE },
     ],
   },
 };
@@ -66,12 +56,12 @@ try {
       await page.goto(t.base + '/' + s.hash, { waitUntil: 'networkidle' });
       await page.waitForTimeout(1200);
       if (t.rename) await page.evaluate(([sel, name]) => document.querySelectorAll(sel).forEach(e => { e.textContent = name; }), t.rename);
-      const file = path.join(out, s.name + '.png');
+      const file = path.join(out, s.name + '.jpg');
       if (s.sel) {
         const box = await page.locator(s.sel).first().boundingBox();
-        await page.screenshot({ path: file, clip: { x: box.x, y: 0, width: box.width, height: dev.viewport.height } });
+        await page.screenshot({ path: file, type: 'jpeg', quality: 80, clip: { x: box.x, y: 0, width: box.width, height: dev.viewport.height } });
       } else {
-        await page.screenshot({ path: file });
+        await page.screenshot({ path: file, type: 'jpeg', quality: 80 });
       }
       console.log('찍음', path.relative(root, file));
       await ctx.close();

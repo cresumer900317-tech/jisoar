@@ -12,13 +12,14 @@
 3. API: 같은 폴더에서 `DATABASE_URL=… COOKIE_SECURE=0 WORKER_TOKEN=dev-worker ../.venv/Scripts/python -m uvicorn app.main:app --port 8000`
 4. 화면: `cd ../ranklab/web && npx vite --port 5173`
 5. 가짜 광고 채우기: `python -X utf8 scripts/capture/isis_demo_data.py`
-6. 찍기: `node scripts/capture/capture.mjs isis`
+6. 찍기: `node scripts/capture/capture.mjs isis` (jpg, 서비스 이름은 Toprise 로 바꿔 찍음)
 
 왼쪽 메뉴(서비스 이름·계정 정보)는 잘라 내고 본문만 찍습니다. 폰 화면은 통째로 찍습니다.
 
 ## RANKLAB 화면
 
-대시보드는 로그인이 필요해서 아직 자동으로 찍지 않습니다. 방법을 정한 뒤 `capture.mjs`의 `ranklab` 항목을 씁니다.
+로그인이 필요해서 자동으로 찍지 않습니다. 크롬에서 ranklab.co.kr 에 로그인한 뒤 **시장** 탭을 찍어 `assets/work/live/ranklab-market.jpg` 로 바꿉니다.
+계좌 대시보드(보유 종목·성적)는 공개하지 않기로 했으므로 찍지 않습니다.
 
 ## 준비물
 
