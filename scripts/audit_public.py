@@ -4,10 +4,10 @@ from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-ROUTES = ['', 'about', 'work', 'services', 'contact', 'products/friends',
+ROUTES = ['', 'about', 'work', 'services', 'contact',
           'products/wedding', 'products/guild-lounge', 'ranklab']
 JIPICK = 'https://jipick.com/'
-EXPECTED = {'주요 메뉴': ['/work/', '/services/', JIPICK, '/about/', '/contact/'],
+EXPECTED = {'주요 메뉴': ['/work/', '/services/', JIPICK, '/about/'],   # 문의하기 버튼은 10/20 부터 nav 밖
             '하단 메뉴': ['/work/', '/services/', '/ranklab/', JIPICK, '/about/', '/contact/']}
 
 class Page(HTMLParser):
@@ -42,7 +42,7 @@ def main():
             elif parsed.fragment and target.suffix=='.html':
                 if parsed.fragment not in Page(target.read_text(encoding='utf-8')).ids:
                     errors.append(f'{route}: missing anchor {url}')
-    print('\n'.join(errors) if errors else 'PASS: 10 public pages, navigation parity, H1, IDs, local links and anchors')
+    print('\n'.join(errors) if errors else 'PASS: 8 public pages, navigation parity, H1, IDs, local links and anchors')
     return bool(errors)
 
 if __name__=='__main__': raise SystemExit(main())
