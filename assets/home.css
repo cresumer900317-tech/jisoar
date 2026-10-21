@@ -64,6 +64,13 @@
 /* 움직임이 꺼지면(움직임 줄이기·멈춤·JS 없음) 긴 고정 구역을 평범한 구역으로 */
 html:not(.anim) .film{height:100vh;height:100svh}
 html:not(.anim) .lit,html:not(.anim) .scene{height:auto}
+/* 좁거나 낮은 화면: 영상 장면은 고정하지 않고 일반 흐름(지나가는 동안 영상 재생) */
+@media(max-width:1000px),(max-height:640px){
+  .scene{height:auto}
+  .scene .pin{position:static;height:auto;padding:88px 0;overflow:visible}
+  .tsteps span{max-height:none;opacity:1}
+  .tsteps li{color:var(--ink)}
+}
 html:not(.anim) .lit .wrap{position:static;height:auto;padding:120px var(--gut)}
 html:not(.anim) .scene .pin{position:static;height:auto;padding:100px 0}
 html:not(.anim) .scene .facts2,html:not(.anim) .scene .lead{display:block}
@@ -126,14 +133,8 @@ html:not(.anim) .tsteps li{color:var(--ink)}
   .apps{grid-template-columns:1fr;gap:48px}
   .h-sec{padding:88px 0}
   .scene-in,.scene-in.rev{grid-template-columns:1fr;gap:24px}
-  .scene{height:220vh}
   .scene .h2{font-size:clamp(28px,6vw,40px)}
-  .tsteps{margin:18px 0 12px}.tsteps li{padding:10px 0}
-  .scene .facts2,.scene .lead{display:none}
-  .scene .pin{padding-top:100px}
   .scene .clip{order:-1}
-  .scene .tsteps + .more{display:none}
-  .scene-in .txt .h2{margin-top:6px}
 }
 @media(max-width:720px){
   .apps article{grid-template-columns:130px minmax(0,1fr);gap:18px}

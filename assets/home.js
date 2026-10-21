@@ -26,7 +26,12 @@
 
   const clamp = v => Math.min(1, Math.max(0, v));
   // 구역 진행도: 고정 구역이 화면 맨 위에 붙은 순간 0, 풀리는 순간 1
-  const prog = el => { const r = el.getBoundingClientRect(); return clamp(-r.top / Math.max(1, r.height - innerHeight)); };
+  // 고정이 풀린 구역(좁은·낮은 화면)은 화면을 지나가는 동안을 0~1 로
+  const prog = el => {
+    const r = el.getBoundingClientRect();
+    if (r.height < innerHeight * 1.2) return clamp((innerHeight - r.top) / (innerHeight + r.height));
+    return clamp(-r.top / (r.height - innerHeight));
+  };
 
   // 스크롤로 재생하는 영상. 좁은 화면은 작은 파일
   const small = matchMedia('(max-width: 720px)').matches;
@@ -58,7 +63,7 @@
       if (r.bottom < 0 || r.top > innerHeight) continue;
       const t = prog(o.host) * (o.dur - 0.05);
       o.cur += (t - o.cur) * 0.18;
-      if (Math.abs(t - o.cur) > 0.01) again = true;
+      if (Math.abs(t - o.cur) > 0.01 || Math.abs(o.v.currentTime - t) > 0.04) again = true;
       if (Math.abs(o.v.currentTime - o.cur) > 0.03 && !o.v.seeking) o.v.currentTime = o.cur;
     }
     // 첫 화면: 테두리가 줄며 화면 가득, 글자는 세 번에 나눠 등장
@@ -88,7 +93,7 @@
   };
   const onScroll = () => { if (!raf) raf = requestAnimationFrame(frameTick); };
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
-  vids.forEach(o => o.v.addEventListener('loadedmetadata', onScroll));
+  vids.forEach(o => { o.v.addEventListener('loadedmetadata', onScroll); o.v.addEventListener('seeked', onScroll); });
 
   // 나머지 구역: 화면에 들어오면 떠오름
   document.querySelectorAll('.h-sec .h2, .h-sec .lead, .h-sec figure, .h-sec .apps article, .h-sec .pledge, .sec-head, .svc li, .close .wrap > div').forEach(el => el.classList.add('rv'));
