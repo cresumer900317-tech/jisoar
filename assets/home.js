@@ -84,14 +84,24 @@
 
   // 첫 화면 검색창(flex.team 식): 맡길 만한 일이 자모 단위(ㅈ → 정 → 정산 …)로 쳐지고, 잠시 뒤 지워지고 다음 문장
   const q = document.querySelector('.ask .q');
+  // 실제로 들어온 요청만. [실제] JISOAR가 받은 요청, [시장] 크몽 서비스 상품에 나온 고객 사례(Codex 53671ecf·9863fb3e 검토).
+  // 페이지를 열 때마다 순서를 섞음
   const asks = [
-    '정산 엑셀을 은행 대량이체 파일로 바꿔 주세요',
-    '광고 순위를 매일 정해진 시간에 자동으로 모아 주세요',
-    '영업팀이 같은 업체에 두 번 전화하지 않게 해 주세요',
-    '대표가 폰으로 오늘 현황을 바로 보게 해 주세요',
-    '엑셀로 하던 재고 관리를 웹으로 옮겨 주세요',
-    '우리 회사 시스템을 앱으로도 내 주세요',
-  ];
+    '정산 엑셀을 은행 대량이체 파일로 바꿔 주세요',            // [실제] Paylist
+    '같은 업체에 중복 연락하지 않게 기록을 같이 보고 싶어요',   // [실제] JIPICK
+    '광고별 순위와 작업 기간을 한 화면에서 관리하고 싶어요',     // [실제] Toprise
+    '광고 등록부터 정산까지 한곳에서 관리하고 싶어요',          // [실제] Toprise
+    '하객이 앱 설치 없이 사진을 올리게 해 주세요',              // [실제] Snapwed
+    '웹에서 쓰던 서비스를 앱으로도 낼 수 있나요?',              // [실제] Guild Lounge
+    '대표가 폰으로 진행 현황을 바로 보게 해 주세요',            // [실제] Toprise 대표 전용 계정
+    '지점마다 다른 발주 엑셀을 한 번에 합쳐 주세요',            // [시장] kmong.com/gig/697103
+    '매출 엑셀로 직원별 정산서를 뽑고 싶어요',                 // [시장] kmong.com/gig/697103
+    '주문 엑셀과 택배 송장 번호를 자동으로 맞춰 주세요',        // [시장] kmong.com/gig/748573
+    '마켓별 송장 업로드 파일을 한 번에 만들 수 있나요?',        // [시장] kmong.com/gig/748573
+    '회원과 수업 예약을 한 화면에서 관리하고 싶어요',           // [시장] kmong.com/gig/789158
+    '엑셀 고객 명단을 여러 직원이 같이 쓰게 해 주세요',         // [시장] kmong.com/gig/789158
+    '기간별 매출을 한눈에 보고 싶어요',                        // [시장] kmong.com/gig/789158
+  ].sort(() => Math.random() - 0.5);
   const jamo = ch => {
     const c = ch.charCodeAt(0) - 0xAC00;
     if (c < 0 || c > 11171) return [ch];
@@ -101,7 +111,9 @@
     return T ? [lead, open, ch] : [lead, ch];
   };
   let typing = 0, heroSeen = true;
-  const idle = () => !heroSeen || document.hidden;
+  // 화면 밖·숨은 탭·마우스를 올리거나 키보드로 고른 동안은 멈춤
+  let hold = false;
+  const idle = () => !heroSeen || document.hidden || hold;
   const caret = document.createElement('span');
   caret.className = 'caret';
   const show = t => { q.textContent = t; q.append(caret); q.scrollLeft = q.scrollWidth; };
@@ -133,6 +145,11 @@
     show('');
     typing = setTimeout(run, 900);
   };
+  const ask = q?.closest('.ask');
+  ask?.addEventListener('mouseenter', () => { hold = true; });
+  ask?.addEventListener('mouseleave', () => { hold = false; });
+  ask?.addEventListener('focus', () => { hold = true; });
+  ask?.addEventListener('blur', () => { hold = false; });
   if (q) new IntersectionObserver(es => { heroSeen = es[0].isIntersecting; }).observe(q);
 
   // 움직임 멈춤 버튼(자동으로 계속 움직이는 것 전부)
