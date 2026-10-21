@@ -82,53 +82,66 @@
     lio.observe(lit.querySelector('.lines') || lit);
   }
 
-  // 첫 화면 제목: 검색창에 치듯 자모 단위(ㅎ → 회 → 회사 …)로 저절로 쳐짐. 움직임이 꺼지면 바로 전체 표시
-  const words = [...document.querySelectorAll('#hero-h .w')];
+  // 첫 화면 검색창(flex.team 식): 맡길 만한 일이 자모 단위(ㅈ → 정 → 정산 …)로 쳐지고, 잠시 뒤 지워지고 다음 문장
+  const q = document.querySelector('.ask .q');
+  const asks = [
+    '정산 엑셀을 은행 대량이체 파일로 바꿔 주세요',
+    '광고 순위를 매일 정해진 시간에 자동으로 모아 주세요',
+    '영업팀이 같은 업체에 두 번 전화하지 않게 해 주세요',
+    '대표가 폰으로 오늘 현황을 바로 보게 해 주세요',
+    '엑셀로 하던 재고 관리를 웹으로 옮겨 주세요',
+    '우리 회사 시스템을 앱으로도 내 주세요',
+  ];
   const jamo = ch => {
     const c = ch.charCodeAt(0) - 0xAC00;
     if (c < 0 || c > 11171) return [ch];
     const L = Math.floor(c / 588), V = Math.floor(c % 588 / 28), T = c % 28;
-    const lead = String.fromCharCode('ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'.charCodeAt(L));
+    const lead = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'[L];
     const open = String.fromCharCode(0xAC00 + L * 588 + V * 28);
     return T ? [lead, open, ch] : [lead, ch];
   };
-  let typing = 0;
+  let typing = 0, heroSeen = true;
+  const idle = () => !heroSeen || document.hidden;
+  const caret = document.createElement('span');
+  caret.className = 'caret';
+  const show = t => { q.textContent = t; q.append(caret); q.scrollLeft = q.scrollWidth; };
   const typeOut = () => {
     clearTimeout(typing);
-    words.forEach(w => {
-      if (!w.dataset.full) { w.dataset.full = w.textContent; w.setAttribute('aria-hidden', 'true'); }
-      w.innerHTML = moving() ? `<span class="ghost">${w.dataset.full}</span><span class="typed"></span>` : w.dataset.full;
-    });
-    if (!moving()) return;
-    const steps = [];
-    words.forEach((w, wi) => {
-      const out = w.querySelector('.typed');
+    if (!q) return;
+    if (!moving()) { q.textContent = asks[0]; return; }
+    let n = 0;
+    const run = () => {
+      const text = asks[n++ % asks.length];
+      const steps = [];
       let done = '';
-      [...w.dataset.full].forEach(ch => {
-        jamo(ch).forEach(part => steps.push([out, done + part]));
-        done += ch;
-      });
-      steps.push([out, done, wi < words.length - 1 ? 380 : 0]);
-    });
-    const caret = document.createElement('span');
-    caret.className = 'caret';
-    let i = 0;
-    const tick = () => {
-      if (!moving()) return;
-      const [out, text, pause] = steps[i++];
-      out.textContent = text; out.append(caret);
-      if (i < steps.length) typing = setTimeout(tick, pause || 38 + Math.random() * 40);
-      else typing = setTimeout(() => caret.remove(), 3200);
+      [...text].forEach(ch => { jamo(ch).forEach(part => steps.push(done + part)); done += ch; });
+      let i = 0, back = text.length;
+      const type = () => {
+        if (!moving()) return;
+        if (idle()) { typing = setTimeout(type, 400); return; }
+        show(steps[i++]);
+        typing = i < steps.length ? setTimeout(type, 34 + Math.random() * 36) : setTimeout(erase, 2200);
+      };
+      const erase = () => {
+        if (!moving()) return;
+        if (idle()) { typing = setTimeout(erase, 400); return; }
+        show(text.slice(0, --back));
+        typing = back > 0 ? setTimeout(erase, 16) : setTimeout(run, 450);
+      };
+      type();
     };
-    typing = setTimeout(tick, 700);
+    show('');
+    typing = setTimeout(run, 900);
   };
+  if (q) new IntersectionObserver(es => { heroSeen = es[0].isIntersecting; }).observe(q);
+
   // 움직임 멈춤 버튼(자동으로 계속 움직이는 것 전부)
   const btn = document.getElementById('motion-toggle');
   const apply = () => {
     root.classList.toggle('anim', moving());
     if (btn) { btn.hidden = mq.matches; btn.setAttribute('aria-pressed', String(paused)); btn.textContent = paused ? '움직임 다시 켜기' : '움직임 멈추기'; }
     vids.forEach(sync);
-    if (words.length) typeOut();
+    typeOut();
   };
   btn?.addEventListener('click', () => { paused = !paused; apply(); });
   mq.addEventListener?.('change', apply);
