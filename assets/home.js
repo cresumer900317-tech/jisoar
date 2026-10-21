@@ -101,6 +101,7 @@
     return T ? [lead, open, ch] : [lead, ch];
   };
   let typing = 0, heroSeen = true;
+  const idle = () => !heroSeen || document.hidden;
   const caret = document.createElement('span');
   caret.className = 'caret';
   const show = t => { q.textContent = t; q.append(caret); q.scrollLeft = q.scrollWidth; };
@@ -117,12 +118,13 @@
       let i = 0, back = text.length;
       const type = () => {
         if (!moving()) return;
-        if (!heroSeen) { typing = setTimeout(type, 400); return; }
+        if (idle()) { typing = setTimeout(type, 400); return; }
         show(steps[i++]);
         typing = i < steps.length ? setTimeout(type, 34 + Math.random() * 36) : setTimeout(erase, 2200);
       };
       const erase = () => {
         if (!moving()) return;
+        if (idle()) { typing = setTimeout(erase, 400); return; }
         show(text.slice(0, --back));
         typing = back > 0 ? setTimeout(erase, 16) : setTimeout(run, 450);
       };
