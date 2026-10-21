@@ -58,6 +58,9 @@
 .scene .h2{font-size:clamp(30px,3.4vw,50px)}
 .clip video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:24px;background:#eef0f4}
 #work .clip video{border-radius:0;background:#fff}
+#own .scene-in.rev{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+#own .h2{font-size:clamp(28px,2.6vw,38px)}
+#own .lead{font-size:16px}
 .tsteps{margin:30px 0 26px;border-top:1px solid var(--ink)}
 .tsteps li{border-bottom:1px solid var(--line)}
 .tsteps button{display:block;width:100%;padding:16px 0;text-align:left;font:inherit;color:var(--mut);background:none;border:0;cursor:pointer;transition:color .3s}
@@ -132,7 +135,7 @@ html:not(.anim) .tsteps button{color:var(--ink);cursor:default}
   .case2.rev .txt{order:0}
   .apps{grid-template-columns:1fr;gap:48px}
   .h-sec{padding:88px 0}
-  .scene-in,.scene-in.rev{grid-template-columns:1fr;gap:24px}
+  .scene-in,.scene-in.rev,#own .scene-in.rev{grid-template-columns:1fr;gap:24px}
   .scene .h2{font-size:clamp(28px,6vw,40px)}
   .scene .clip{order:-1}
   .scene,.lit{padding:88px 0}

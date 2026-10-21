@@ -31,7 +31,7 @@
   const load = v => {
     if (v.getAttribute('src')) return;
     const big = v.hasAttribute('data-big') && innerWidth * (devicePixelRatio || 1) > 1600;
-    v.src = v.dataset.src + (small ? '-720.mp4' : big ? '-1920.mp4' : '-1280.mp4');
+    v.src = v.dataset.src + (small ? '-720' : big ? '-1920' : '-1280') + '.mp4?v=2';
   };
   // 재생이 막히면(저전력 모드 등) 조작 막대를 보여 직접 틀 수 있게. 첫 화면 영상은 포스터로 둠
   const sync = v => {
@@ -46,7 +46,9 @@
   vids.forEach(v => pre.observe(v));
   vids.forEach(v => vio.observe(v));
 
-  // Toprise 노트북 영상은 화면 세 개를 같은 길이로 차례로 보여 줌. 지금 화면에 맞춰 단계 표시, 누르면 그 화면으로
+  // 노트북 영상은 화면 세 개를 차례로 보여 주고 천천히 되돌아오는 왕복 영상(위치 = (1 - cos 2πu) / 2).
+  // 지금 화면에 맞춰 단계 표시, 누르면 그 화면으로
+  const pos = u => (1 - Math.cos(2 * Math.PI * u)) / 2;
   const work = document.getElementById('work');
   const wv = work?.querySelector('video');
   const steps = [...document.querySelectorAll('#work .tsteps li')];
@@ -55,7 +57,7 @@
     setCur(0);
     const mark = () => {
       if (!wv.duration) return;
-      const i = Math.min(steps.length - 1, Math.floor(wv.currentTime / wv.duration * steps.length));
+      const i = Math.min(steps.length - 1, Math.floor(pos(wv.currentTime / wv.duration) * steps.length));
       steps.forEach((s, k) => s.classList.toggle('on', k === i));
       setCur(i);
     };
@@ -63,7 +65,7 @@
     steps.forEach((s, i) => s.querySelector('button')?.addEventListener('click', () => {
       steps.forEach((x, k) => x.classList.toggle('on', k === i));
       setCur(i);
-      const go = () => { wv.currentTime = (i + 0.02) * wv.duration / steps.length; };
+      const go = () => { wv.currentTime = Math.acos(1 - 2 * (i + 0.5) / steps.length) / (2 * Math.PI) * wv.duration; };
       load(wv);
       wv.duration ? go() : wv.addEventListener('loadedmetadata', go, { once: true });
     }));
