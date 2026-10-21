@@ -1,5 +1,5 @@
 'use strict';
-// 홈 움직임: 큰 펼침 메뉴, 첫 화면 창 세우기, Toprise 탭 자동 넘김, 움직임 멈춤 버튼.
+// 홈 움직임: 큰 펼침 메뉴, 스크롤로 재생하는 영상 장면(토스식), 한 줄씩 밝아지는 문장(플렉스식), 구역 떠오름, 움직임 멈춤 버튼.
 // 움직임 줄이기 설정이거나 멈춤 버튼을 누르면 html.anim 을 빼서 전부 멈춤.
 (() => {
   const root = document.documentElement;
@@ -24,59 +24,90 @@
     document.addEventListener('focusin', e => { if (open && !bar.contains(e.target)) setMega(null); });
   }
 
-  // 첫 화면 창: 처음엔 뒤로 눕혀 있다가 내려가면 바로 섬
-  const win = document.getElementById('win');
-  const tilt = () => {
-    if (!win || !moving()) return;
-    const r = win.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight * 0.9)));
-    win.style.setProperty('--tilt', (14 * (1 - p)).toFixed(2) + 'deg');
-    win.style.setProperty('--sc', (0.95 + 0.05 * p).toFixed(3));
-  };
-  addEventListener('scroll', tilt, { passive: true }); addEventListener('resize', tilt);
+  const clamp = v => Math.min(1, Math.max(0, v));
+  // 구역 진행도: 고정 구역이 화면 맨 위에 붙은 순간 0, 풀리는 순간 1
+  const prog = el => { const r = el.getBoundingClientRect(); return clamp(-r.top / Math.max(1, r.height - innerHeight)); };
 
-  // Toprise 탭: 5초마다 다음 화면. 누르거나 방향키로 고르면 그 화면에서 멈춤
-  const list = document.getElementById('tp-tabs');
-  const tabs = list ? [...list.querySelectorAll('[role="tab"]')] : [];
-  const imgs = [...document.querySelectorAll('#tp-screens img')];
-  const panel = document.getElementById('tp-screens');
-  const cap = document.getElementById('tp-cap');
-  let cur = 0, rot = null, picked = false;
-  const show = (i, focus) => {
-    cur = i;
-    tabs.forEach((t, k) => {
-      const on = k === i;
-      t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
-      const b = t.querySelector('i'); b.style.animation = 'none'; void b.offsetWidth; b.style.animation = '';
-    });
-    imgs.forEach((im, k) => { im.classList.toggle('on', k === i); im.setAttribute('aria-hidden', String(k !== i)); });
-    panel.setAttribute('aria-labelledby', tabs[i].id);
-    cap.textContent = tabs[i].dataset.cap;
-    if (focus) tabs[i].focus();
-  };
-  const stopRot = () => { clearInterval(rot); rot = null; };
-  const startRot = () => { stopRot(); if (tabs.length && moving() && !picked) rot = setInterval(() => show((cur + 1) % imgs.length), 5000); };
-  const pick = (i, focus) => { picked = true; stopRot(); list.classList.add('stopped'); show(i, focus); };
-  tabs.forEach((t, k) => {
-    t.addEventListener('click', () => pick(k));
-    t.addEventListener('keydown', e => {
-      const n = tabs.length;
-      const to = { ArrowRight: (k + 1) % n, ArrowLeft: (k - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
-      if (to === undefined) return;
-      e.preventDefault(); pick(to, true);
-    });
+  // 스크롤로 재생하는 영상. 좁은 화면은 작은 파일
+  const small = matchMedia('(max-width: 720px)').matches;
+  const vids = [...document.querySelectorAll('video.sv')].map(v => {
+    const big = v.hasAttribute('data-big') && innerWidth * (devicePixelRatio || 1) > 1600;
+    v.src = v.dataset.src + (small ? '-720.mp4' : big ? '-1920.mp4' : '-1280.mp4');
+    const o = { v, host: v.closest('.film, .scene'), cur: 0 };
+    v.addEventListener('loadedmetadata', () => { o.dur = v.duration; });
+    return o;
   });
+  const film = document.getElementById('film');
+  const words = film ? [...film.querySelectorAll('.w')] : [];
+  const frame = film?.querySelector('.frame');
+  const cue = film?.querySelector('.cue');
+  const lines = [...document.querySelectorAll('.lit .l')];
+  const lit = document.querySelector('.lit');
+  const steps = [...document.querySelectorAll('#work .tsteps li')];
+  const work = document.getElementById('work');
+
+  let raf = 0;
+  const frameTick = () => {
+    raf = 0;
+    if (!moving()) return;
+    // 영상: 목표 시점으로 부드럽게 따라감
+    let again = false;
+    for (const o of vids) {
+      if (!o.dur) continue;
+      const r = o.host.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) continue;
+      const t = prog(o.host) * (o.dur - 0.05);
+      o.cur += (t - o.cur) * 0.18;
+      if (Math.abs(t - o.cur) > 0.01) again = true;
+      if (Math.abs(o.v.currentTime - o.cur) > 0.03 && !o.v.seeking) o.v.currentTime = o.cur;
+    }
+    // 첫 화면: 테두리가 줄며 화면 가득, 글자는 세 번에 나눠 등장
+    if (film) {
+      const p = prog(film);
+      const g = clamp(p / 0.35);
+      frame.style.setProperty('--in', `${(88 * (1 - g)).toFixed(1)}px ${(24 * (1 - g)).toFixed(1)}px ${(24 * (1 - g)).toFixed(1)}px`);
+      frame.style.setProperty('--rad', (28 * (1 - g)).toFixed(1) + 'px');
+      frame.style.setProperty('--shade', (0.12 + 0.26 * clamp((p - 0.1) / 0.5)).toFixed(3));
+      words.forEach((w, i) => {
+        const k = i === 0 ? 1 : clamp((p - (0.15 + i * 0.2)) / 0.15);
+        w.style.setProperty('--o', k.toFixed(3));
+        w.style.setProperty('--y', (24 * (1 - k)).toFixed(1) + 'px');
+      });
+      cue?.style.setProperty('--cue', (0.85 * (1 - clamp(p / 0.08))).toFixed(3));
+    }
+    // 문장 밝히기: 지나간 줄은 진하게, 지금 줄이 가장 밝게
+    if (lit) {
+      const p = prog(lit) * (lines.length + 0.6);
+      lines.forEach((l, i) => l.style.setProperty('--a', (0.16 + 0.84 * clamp(p - i)).toFixed(3)));
+    }
+    if (work && steps.length) {
+      const i = Math.min(steps.length - 1, Math.floor(prog(work) * steps.length));
+      steps.forEach((s, k) => s.classList.toggle('on', k === i));
+    }
+    if (again) raf = requestAnimationFrame(frameTick);
+  };
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(frameTick); };
+  addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll);
+  vids.forEach(o => o.v.addEventListener('loadedmetadata', onScroll));
+
+  // 나머지 구역: 화면에 들어오면 떠오름
+  document.querySelectorAll('.h-sec .h2, .h-sec .lead, .h-sec figure, .h-sec .apps article, .h-sec .pledge, .sec-head, .svc li, .close .wrap > div').forEach(el => el.classList.add('rv'));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
   // 움직임 멈춤 버튼(자동으로 계속 움직이는 것 전부)
   const btn = document.getElementById('motion-toggle');
   const apply = () => {
     root.classList.toggle('anim', moving());
     if (btn) { btn.hidden = mq.matches; btn.setAttribute('aria-pressed', String(paused)); btn.textContent = paused ? '움직임 다시 켜기' : '움직임 멈추기'; }
-    if (!moving() && win) { win.style.removeProperty('--tilt'); win.style.removeProperty('--sc'); }
-    tilt(); startRot();
+    if (!moving()) {
+      frame?.style.removeProperty('--in'); frame?.style.removeProperty('--rad');
+      [...words, ...lines].forEach(el => el.removeAttribute('style'));
+      steps.forEach(s => s.classList.remove('on'));
+    }
+    onScroll();
   };
   btn?.addEventListener('click', () => { paused = !paused; apply(); });
   mq.addEventListener?.('change', apply);
-  if (tabs.length) show(0);
   apply();
 })();
