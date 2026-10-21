@@ -1,4 +1,4 @@
-/* JISOAR 홈 2026-10-21: 토스식 한 화면 한 메시지 + 플렉스식 제품 화면 주인공.
+/* JISOAR 홈 2026-10-21: 스크롤에 묶지 않고 저절로 재생되는 모션. 토스식 한 화면 한 메시지 + 플렉스식 제품 화면 주인공.
    움직임은 실제 캡처(assets/work/live, scripts/capture 로 다시 찍음) 위에서만. jisoar.css 위에 얹는다. */
 
 /* 큰 펼침 메뉴(마우스를 올리면 열림, JS 없으면 그냥 링크) */
@@ -14,15 +14,21 @@
 .mi span{font-size:14px;color:var(--mut);line-height:1.5}
 .mi:hover b{color:var(--accent)}
 
-/* 첫 화면: 토스식. 둥근 영상이 스크롤에 맞춰 재생되며 화면 가득 커지고, 큰 글자가 하나씩 지나감 */
-.film{position:relative;height:320vh}
-.film .pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:flex-end}
+/* 첫 화면: 영상이 저절로 반복 재생. 들어올 때 화면이 펼쳐지고 큰 글자가 차례로 등장(스크롤과 무관) */
+.film{position:relative;height:100vh;height:100svh;min-height:520px}
+.film .pin{position:relative;height:100%;overflow:hidden;display:flex;align-items:flex-end}
 .film .frame{position:absolute;inset:var(--in,88px 24px 24px);border-radius:var(--rad,28px);overflow:hidden;background:#cfd6df}
 .film .frame video{width:100%;height:100%;object-fit:cover;display:block}
-.film .shade{position:absolute;inset:0;background:rgba(8,14,30,var(--shade,.18))}
+.film .shade{position:absolute;inset:0;background:rgba(8,14,30,.3)}
 .words{position:relative;width:100%;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:0 calc(24px + clamp(20px,3vw,48px)) calc(24px + clamp(28px,5vh,64px));color:#fff;font-size:clamp(30px,4.6vw,76px);line-height:1.1;font-weight:800;letter-spacing:-.045em}
-.words .w{display:block;opacity:var(--o,1);transform:translateY(var(--y,0));text-shadow:0 2px 30px rgba(0,0,0,.25)}
-.cue{position:absolute;left:50%;top:calc(88px + 22px);transform:translateX(-50%);color:#fff;font-size:13px;letter-spacing:.02em;opacity:var(--cue,.85)}
+.words .w{display:block;text-shadow:0 2px 30px rgba(0,0,0,.25)}
+.anim .film .frame{animation:h-open 1.4s cubic-bezier(.2,.7,.2,1) backwards}
+.anim .words .w{animation:h-up .9s cubic-bezier(.2,.7,.2,1) backwards}
+.anim .words .w:nth-child(1){animation-delay:.35s}
+.anim .words .w:nth-child(2){animation-delay:.85s}
+.anim .words .w:nth-child(3){animation-delay:1.35s}
+@keyframes h-open{from{transform:scale(.94);border-radius:44px;opacity:.4}}
+@keyframes h-up{from{opacity:0;transform:translateY(28px)}}
 
 .intro{padding:120px 0 0;text-align:center}
 .intro .big{font-size:clamp(26px,3.4vw,44px);line-height:1.3;font-weight:800;letter-spacing:-.04em;max-width:22em;margin:0 auto}
@@ -32,16 +38,20 @@
 .intro .facts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 28px;margin-top:30px;font-size:14px;color:var(--mut)}
 .intro .facts b{color:var(--ink);font-weight:600;margin-right:6px}
 
-/* 플렉스식: 스크롤하면 큰 문장이 한 줄씩 밝아짐 */
-.lit{height:240vh;position:relative}
-.lit .wrap{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;justify-content:center}
+/* 플렉스식: 화면에 들어오면 큰 문장이 한 줄씩 저절로 밝아짐 */
+.lit{padding:150px 0}
+.lit .wrap{display:flex;justify-content:center}
 .lines{text-align:center;font-size:clamp(30px,5.2vw,72px);line-height:1.22;font-weight:800;letter-spacing:-.045em}
-.lines .l{display:block;color:var(--ink);opacity:var(--a,1);transition:opacity .25s}
-.anim .lines .l{--a:.16}
+.lines .l{display:block;color:var(--ink)}
+.anim .lines .l{opacity:.16;transition:opacity .7s}
+.anim .lit.in .l{opacity:1}
+.anim .lit.in .l:nth-child(2){transition-delay:.5s}
+.anim .lit.in .l:nth-child(3){transition-delay:1s}
+.anim .lit.in .l:nth-child(4){transition-delay:1.5s}
+.anim .lit.in .l:nth-child(5){transition-delay:2s}
 
-/* 영상 장면: 화면에 고정된 채 스크롤로 영상이 재생 */
-.scene{position:relative;height:260vh}
-.scene .pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;overflow:hidden;padding-top:72px;box-sizing:border-box}
+/* 영상 장면: 화면에 보이는 동안 영상이 반복 재생. 스크롤은 평범하게 */
+.scene{padding:130px 0}
 .scene-in{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,9fr);gap:56px;align-items:center;width:100%}
 .scene-in.rev{grid-template-columns:minmax(0,9fr) minmax(0,4fr)}
 .clip{margin:0}
@@ -49,10 +59,12 @@
 .clip video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:24px;background:#eef0f4}
 #work .clip video{border-radius:0;background:#fff}
 .tsteps{margin:30px 0 26px;border-top:1px solid var(--ink)}
-.tsteps li{padding:16px 0;border-bottom:1px solid var(--line);color:var(--mut);transition:color .3s}
+.tsteps li{border-bottom:1px solid var(--line)}
+.tsteps button{display:block;width:100%;padding:16px 0;text-align:left;font:inherit;color:var(--mut);background:none;border:0;cursor:pointer;transition:color .3s}
+.tsteps button:hover{color:var(--ink)}
 .tsteps b{display:block;font-size:19px;font-weight:700}
 .tsteps span{display:block;margin-top:4px;font-size:15px;max-height:0;opacity:0;overflow:hidden;transition:max-height .4s,opacity .4s}
-.tsteps li.on{color:var(--ink)}
+.tsteps li.on button{color:var(--ink)}
 .tsteps li.on span{max-height:3em;opacity:1}
 .motion{position:fixed;right:16px;bottom:16px;z-index:30;display:block;font:500 13px var(--sans);color:var(--mut);background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
 .motion:hover{color:var(--ink);border-color:var(--ink)}
@@ -61,21 +73,9 @@
 /* 나머지 구역: 들어올 때 살짝 떠오름 */
 .anim .rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
 .anim .rv.in{opacity:1;transform:none}
-/* 움직임이 꺼지면(움직임 줄이기·멈춤·JS 없음) 긴 고정 구역을 평범한 구역으로 */
-html:not(.anim) .film{height:100vh;height:100svh}
-html:not(.anim) .lit,html:not(.anim) .scene{height:auto}
-/* 좁거나 낮은 화면: 영상 장면은 고정하지 않고 일반 흐름(지나가는 동안 영상 재생) */
-@media(max-width:1000px),(max-height:640px){
-  .scene{height:auto}
-  .scene .pin{position:static;height:auto;padding:88px 0;overflow:visible}
-  .tsteps span{max-height:none;opacity:1}
-  .tsteps li{color:var(--ink)}
-}
-html:not(.anim) .lit .wrap{position:static;height:auto;padding:120px var(--gut)}
-html:not(.anim) .scene .pin{position:static;height:auto;padding:100px 0}
-html:not(.anim) .scene .facts2,html:not(.anim) .scene .lead{display:block}
+/* 움직임이 꺼지면(움직임 줄이기·멈춤·JS 없음) 단계 설명은 전부 펼침 */
 html:not(.anim) .tsteps span{max-height:none;opacity:1}
-html:not(.anim) .tsteps li{color:var(--ink)}
+html:not(.anim) .tsteps button{color:var(--ink);cursor:default}
 
 /* 서비스 이름 흐르는 띠 */
 .belt{margin-top:96px;background:var(--ink);color:#fff;overflow:hidden;padding:22px 0}
@@ -135,6 +135,7 @@ html:not(.anim) .tsteps li{color:var(--ink)}
   .scene-in,.scene-in.rev{grid-template-columns:1fr;gap:24px}
   .scene .h2{font-size:clamp(28px,6vw,40px)}
   .scene .clip{order:-1}
+  .scene,.lit{padding:88px 0}
 }
 @media(max-width:720px){
   .apps article{grid-template-columns:130px minmax(0,1fr);gap:18px}
