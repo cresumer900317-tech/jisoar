@@ -24,14 +24,15 @@
     document.addEventListener('focusin', e => { if (open && !bar.contains(e.target)) setMega(null); });
   }
 
-  // 영상: 스크롤과 무관하게 반복 재생. 화면에 보일 때만 틀고 벗어나면 멈춤. 좁은 화면은 작은 파일
-  const small = matchMedia('(max-width: 720px)').matches;
+  // 영상: 스크롤과 무관하게 반복 재생(조금 느리게). 화면에 보일 때만 틀고 벗어나면 멈춤. 실제 픽셀 폭에 맞는 파일
+  const px = innerWidth * (devicePixelRatio || 1);
   const vids = [...document.querySelectorAll('video.sv')];
   const seen = new Set();
   const load = v => {
     if (v.getAttribute('src')) return;
-    const big = v.hasAttribute('data-big') && innerWidth * (devicePixelRatio || 1) > 1600;
-    v.src = v.dataset.src + (small ? '-720' : big ? '-1920' : '-1280') + '.mp4?v=2';
+    const big = v.hasAttribute('data-big') && px > 1600;
+    v.src = v.dataset.src + (px <= 800 ? '-720' : big ? '-1920' : '-1280') + '.mp4?v=2';
+    v.playbackRate = v.defaultPlaybackRate = 0.75;
   };
   // 재생이 막히면(저전력 모드 등) 조작 막대를 보여 직접 틀 수 있게. 첫 화면 영상은 포스터로 둠
   const sync = v => {
@@ -81,12 +82,53 @@
     lio.observe(lit.querySelector('.lines') || lit);
   }
 
+  // 첫 화면 제목: 검색창에 치듯 자모 단위(ㅎ → 회 → 회사 …)로 저절로 쳐짐. 움직임이 꺼지면 바로 전체 표시
+  const words = [...document.querySelectorAll('#hero-h .w')];
+  const jamo = ch => {
+    const c = ch.charCodeAt(0) - 0xAC00;
+    if (c < 0 || c > 11171) return [ch];
+    const L = Math.floor(c / 588), V = Math.floor(c % 588 / 28), T = c % 28;
+    const lead = String.fromCharCode('ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'.charCodeAt(L));
+    const open = String.fromCharCode(0xAC00 + L * 588 + V * 28);
+    return T ? [lead, open, ch] : [lead, ch];
+  };
+  let typing = 0;
+  const typeOut = () => {
+    clearTimeout(typing);
+    words.forEach(w => {
+      if (!w.dataset.full) { w.dataset.full = w.textContent; w.setAttribute('aria-hidden', 'true'); }
+      w.innerHTML = moving() ? `<span class="ghost">${w.dataset.full}</span><span class="typed"></span>` : w.dataset.full;
+    });
+    if (!moving()) return;
+    const steps = [];
+    words.forEach((w, wi) => {
+      const out = w.querySelector('.typed');
+      let done = '';
+      [...w.dataset.full].forEach(ch => {
+        jamo(ch).forEach(part => steps.push([out, done + part]));
+        done += ch;
+      });
+      steps.push([out, done, wi < words.length - 1 ? 380 : 0]);
+    });
+    const caret = document.createElement('span');
+    caret.className = 'caret';
+    let i = 0;
+    const tick = () => {
+      if (!moving()) return;
+      const [out, text, pause] = steps[i++];
+      out.textContent = text; out.append(caret);
+      if (i < steps.length) typing = setTimeout(tick, pause || 38 + Math.random() * 40);
+      else typing = setTimeout(() => caret.remove(), 3200);
+    };
+    typing = setTimeout(tick, 700);
+  };
   // 움직임 멈춤 버튼(자동으로 계속 움직이는 것 전부)
   const btn = document.getElementById('motion-toggle');
   const apply = () => {
     root.classList.toggle('anim', moving());
     if (btn) { btn.hidden = mq.matches; btn.setAttribute('aria-pressed', String(paused)); btn.textContent = paused ? '움직임 다시 켜기' : '움직임 멈추기'; }
     vids.forEach(sync);
+    if (words.length) typeOut();
   };
   btn?.addEventListener('click', () => { paused = !paused; apply(); });
   mq.addEventListener?.('change', apply);
