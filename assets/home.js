@@ -31,7 +31,7 @@
   const load = v => {
     if (v.getAttribute('src')) return;
     const big = v.hasAttribute('data-big') && innerWidth * (devicePixelRatio || 1) > 1600;
-    v.src = v.dataset.src + (small ? '-720.mp4' : big ? '-1920.mp4' : '-1280.mp4');
+    v.src = v.dataset.src + (small ? '-720' : big ? '-1920' : '-1280') + '.mp4?v=2';
   };
   // 재생이 막히면(저전력 모드 등) 조작 막대를 보여 직접 틀 수 있게. 첫 화면 영상은 포스터로 둠
   const sync = v => {
