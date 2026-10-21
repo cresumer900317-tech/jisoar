@@ -23,12 +23,13 @@
 .words{position:relative;width:100%;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:0 calc(24px + clamp(20px,3vw,48px)) calc(24px + clamp(28px,5vh,64px));color:#fff;font-size:clamp(30px,4.6vw,76px);line-height:1.1;font-weight:800;letter-spacing:-.045em}
 .words .w{display:block;text-shadow:0 2px 30px rgba(0,0,0,.25)}
 .anim .film .frame{animation:h-open 1.4s cubic-bezier(.2,.7,.2,1) backwards}
-.anim .words .w{animation:h-up .9s cubic-bezier(.2,.7,.2,1) backwards}
-.anim .words .w:nth-child(1){animation-delay:.35s}
-.anim .words .w:nth-child(2){animation-delay:.85s}
-.anim .words .w:nth-child(3){animation-delay:1.35s}
+/* 글자가 한 자씩 저절로 쳐짐(자모 단위). 자리는 투명한 원문이 미리 잡아 둬서 줄이 흔들리지 않음 */
+.words .w{position:relative}
+.words .ghost{visibility:hidden}
+.words .typed{position:absolute;left:0;top:0;right:0}
+.caret{display:inline-block;width:.07em;height:.92em;margin-left:.04em;margin-right:-.11em;vertical-align:-.08em;background:currentColor;animation:h-caret 1s steps(1) infinite}
+@keyframes h-caret{50%{opacity:0}}
 @keyframes h-open{from{transform:scale(.94);border-radius:44px;opacity:.4}}
-@keyframes h-up{from{opacity:0;transform:translateY(28px)}}
 
 .intro{padding:120px 0 0;text-align:center}
 .intro .big{font-size:clamp(26px,3.4vw,44px);line-height:1.3;font-weight:800;letter-spacing:-.04em;max-width:22em;margin:0 auto}
@@ -108,10 +109,7 @@ html:not(.anim) .tsteps button{color:var(--ink);cursor:default}
 .case2.rev .txt{order:2}
 .pan{position:relative;aspect-ratio:16/10;overflow:hidden;border:1px solid var(--line);background:var(--soft);box-shadow:0 30px 60px -36px rgba(16,26,51,.4)}
 .pan img{width:100%;height:100%;object-fit:cover;object-position:left top}
-.anim .pan img{position:absolute;left:0;top:0;width:118%;max-width:none;height:auto;object-fit:initial;animation:h-pan 20s ease-in-out infinite alternate}
-@keyframes h-pan{from{transform:translate(0,0)}to{transform:translate(-15%,-10%)}}
 .pan.wide{aspect-ratio:1552/744}
-.anim .pan.wide img{width:112%}
 
 /* 앱 두 개 */
 .apps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px;margin-top:56px}
@@ -145,7 +143,13 @@ html:not(.anim) .tsteps button{color:var(--ink);cursor:default}
   .facts2 li{grid-template-columns:110px minmax(0,1fr)}
   .belt ul{font-size:18px;gap:40px}
   .intro .facts{flex-direction:column;align-items:center}
-  .film .frame{--in:72px 12px 12px;--rad:20px}
-  .words{flex-direction:column;align-items:flex-start;gap:6px;padding:0 32px 40px;font-size:clamp(30px,9vw,44px)}
+  /* 폰: 세로 화면에 가로 영상을 꽉 채우면 가운데만 크게 잘려 흔들려 보임 → 큰 제목 먼저, 영상은 잘리지 않게 아래에 */
+  .film{height:auto;min-height:0}
+  .film .pin{flex-direction:column;align-items:stretch;height:auto;padding:112px 16px 0;gap:28px;overflow:visible}
+  .film .frame{position:relative;inset:auto;order:2;aspect-ratio:16/10;border-radius:16px}
+  .film .shade{display:none}
+  .intro{padding-top:72px}
+  .words{order:1;flex-direction:column;align-items:flex-start;gap:4px;padding:0 4px;color:var(--ink);font-size:clamp(32px,9vw,44px)}
+  .words .w{text-shadow:none}
 }
 @media(prefers-reduced-motion:reduce){.mi .th{transition:none}.mi:hover .th{transform:none}}
