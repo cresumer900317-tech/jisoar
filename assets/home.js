@@ -33,14 +33,17 @@
     const big = v.hasAttribute('data-big') && innerWidth * (devicePixelRatio || 1) > 1600;
     v.src = v.dataset.src + (small ? '-720.mp4' : big ? '-1920.mp4' : '-1280.mp4');
   };
+  // 재생이 막히면(저전력 모드 등) 조작 막대를 보여 직접 틀 수 있게. 첫 화면 영상은 포스터로 둠
   const sync = v => {
-    if (moving() && seen.has(v)) { load(v); v.play().catch(() => {}); } else v.pause();
+    if (moving() && seen.has(v)) { load(v); v.play().catch(() => { if (!v.hasAttribute('aria-hidden')) v.controls = true; }); } else v.pause();
   };
+  // 미리 받기(가까워지면)와 재생(실제로 보일 때)을 따로 판단
+  const pre = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && moving()) { load(e.target); pre.unobserve(e.target); } }), { rootMargin: '300px 0px' });
   const vio = new IntersectionObserver(es => es.forEach(e => {
     e.isIntersecting ? seen.add(e.target) : seen.delete(e.target);
-    if (e.isIntersecting) load(e.target);
     sync(e.target);
-  }), { rootMargin: '200px 0px' });
+  }));
+  vids.forEach(v => pre.observe(v));
   vids.forEach(v => vio.observe(v));
 
   // Toprise 노트북 영상은 화면 세 개를 같은 길이로 차례로 보여 줌. 지금 화면에 맞춰 단계 표시, 누르면 그 화면으로
@@ -48,14 +51,18 @@
   const wv = work?.querySelector('video');
   const steps = [...document.querySelectorAll('#work .tsteps li')];
   if (wv && steps.length) {
+    const setCur = i => steps.forEach((s, k) => { const b = s.querySelector('button'); k === i ? b?.setAttribute('aria-current', 'step') : b?.removeAttribute('aria-current'); });
+    setCur(0);
     const mark = () => {
       if (!wv.duration) return;
       const i = Math.min(steps.length - 1, Math.floor(wv.currentTime / wv.duration * steps.length));
       steps.forEach((s, k) => s.classList.toggle('on', k === i));
+      setCur(i);
     };
     wv.addEventListener('timeupdate', mark);
     steps.forEach((s, i) => s.querySelector('button')?.addEventListener('click', () => {
       steps.forEach((x, k) => x.classList.toggle('on', k === i));
+      setCur(i);
       const go = () => { wv.currentTime = (i + 0.02) * wv.duration / steps.length; };
       load(wv);
       wv.duration ? go() : wv.addEventListener('loadedmetadata', go, { once: true });
@@ -68,8 +75,8 @@
   document.querySelectorAll('.rv').forEach(el => io.observe(el));
   const lit = document.querySelector('.lit');
   if (lit) {
-    const lio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { lit.classList.add('in'); lio.disconnect(); } }), { threshold: 0.45 });
-    lio.observe(lit);
+    const lio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { lit.classList.add('in'); lio.disconnect(); } }), { threshold: 0.3 });
+    lio.observe(lit.querySelector('.lines') || lit);
   }
 
   // 움직임 멈춤 버튼(자동으로 계속 움직이는 것 전부)

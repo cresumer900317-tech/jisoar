@@ -65,7 +65,7 @@
 .tsteps b{display:block;font-size:19px;font-weight:700}
 .tsteps span{display:block;margin-top:4px;font-size:15px;max-height:0;opacity:0;overflow:hidden;transition:max-height .4s,opacity .4s}
 .tsteps li.on button{color:var(--ink)}
-.tsteps li.on span{max-height:3em;opacity:1}
+.tsteps li.on span{max-height:8em;opacity:1}
 .motion{position:fixed;right:16px;bottom:16px;z-index:30;display:block;font:500 13px var(--sans);color:var(--mut);background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
 .motion:hover{color:var(--ink);border-color:var(--ink)}
 .when{display:block;margin-top:14px;font-size:13px;color:var(--mut)}
