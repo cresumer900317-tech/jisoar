@@ -110,7 +110,7 @@
     const open = String.fromCharCode(0xAC00 + L * 588 + V * 28);
     return T ? [lead, open, ch] : [lead, ch];
   };
-  let typing = 0, heroSeen = true;
+  let typing = 0, heroSeen = true, currentAsk = asks[0];
   // 화면 밖·숨은 탭·마우스를 올리거나 키보드로 고른 동안은 멈춤
   let hold = false;
   const idle = () => !heroSeen || document.hidden || hold;
@@ -120,10 +120,11 @@
   const typeOut = () => {
     clearTimeout(typing);
     if (!q) return;
-    if (!moving()) { q.textContent = asks[0]; return; }
+    if (!moving()) { q.textContent = currentAsk = asks[0]; return; }
     let n = 0;
     const run = () => {
       const text = asks[n++ % asks.length];
+      currentAsk = text;
       const steps = [];
       let done = '';
       [...text].forEach(ch => { jamo(ch).forEach(part => steps.push(done + part)); done += ch; });
@@ -142,14 +143,15 @@
       };
       type();
     };
-    show('');
+    show(currentAsk = asks[0]);
     typing = setTimeout(run, 900);
   };
   const ask = q?.closest('.ask');
-  ask?.addEventListener('mouseenter', () => { hold = true; });
-  ask?.addEventListener('mouseleave', () => { hold = false; });
-  ask?.addEventListener('focus', () => { hold = true; });
-  ask?.addEventListener('blur', () => { hold = false; });
+  const updateHold = () => {
+    hold = ask.matches(':hover') || document.activeElement === ask;
+    if (hold && moving()) show(currentAsk);
+  };
+  ['mouseenter', 'mouseleave', 'focus', 'blur'].forEach(event => ask?.addEventListener(event, updateHold));
   if (q) new IntersectionObserver(es => { heroSeen = es[0].isIntersecting; }).observe(q);
 
   // 움직임 멈춤 버튼(자동으로 계속 움직이는 것 전부)
