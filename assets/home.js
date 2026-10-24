@@ -28,18 +28,23 @@
   const px = innerWidth * (devicePixelRatio || 1);
   const vids = [...document.querySelectorAll('video.sv')];
   const seen = new Set();
+  const connection = navigator.connection;
+  const videoAllowed = () => moving() && !connection?.saveData;
   const load = v => {
-    if (v.getAttribute('src')) return;
+    if (connection?.saveData) return false;
+    if (v.getAttribute('src')) return true;
     const big = v.hasAttribute('data-big') && px > 1600;
     v.src = v.dataset.src + (px <= 800 ? '-720' : big ? '-1920' : '-1280') + '.mp4?v=2';
     v.playbackRate = v.defaultPlaybackRate = 0.75;
+    return true;
   };
   // 재생이 막히면(저전력 모드 등) 조작 막대를 보여 직접 틀 수 있게. 첫 화면 영상은 포스터로 둠
   const sync = v => {
-    if (moving() && seen.has(v)) { load(v); v.play().catch(() => { if (!v.hasAttribute('aria-hidden')) v.controls = true; }); } else v.pause();
+    if (videoAllowed() && seen.has(v)) { load(v); v.play().catch(() => { if (!v.hasAttribute('aria-hidden')) v.controls = true; }); } else v.pause();
   };
+  connection?.addEventListener?.('change', () => vids.forEach(sync));
   // 미리 받기(가까워지면)와 재생(실제로 보일 때)을 따로 판단
-  const pre = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && moving()) { load(e.target); pre.unobserve(e.target); } }), { rootMargin: '300px 0px' });
+  const pre = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && videoAllowed()) { load(e.target); pre.unobserve(e.target); } }), { rootMargin: '300px 0px' });
   const vio = new IntersectionObserver(es => es.forEach(e => {
     e.isIntersecting ? seen.add(e.target) : seen.delete(e.target);
     sync(e.target);
@@ -67,8 +72,12 @@
       steps.forEach((x, k) => x.classList.toggle('on', k === i));
       setCur(i);
       const go = () => { wv.currentTime = Math.acos(1 - 2 * (i + 0.5) / steps.length) / (2 * Math.PI) * wv.duration; };
-      load(wv);
-      wv.duration ? go() : wv.addEventListener('loadedmetadata', go, { once: true });
+      if (!load(wv)) return;
+      if (wv.duration) go();
+      else {
+        wv.addEventListener('loadedmetadata', go, { once: true });
+        if (!moving()) wv.load(); // preload="none"도 수동 프레임 선택에서는 불러오되 재생하지 않음
+      }
     }));
   }
 
