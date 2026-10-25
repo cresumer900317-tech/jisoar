@@ -168,3 +168,25 @@ html:not(.anim) .tsteps button{color:var(--ink);cursor:default}
   .ask{display:flex;margin-top:28px;min-height:56px;padding:0 20px 0 22px;background:var(--ink);border-color:var(--ink)}
 }
 @media(prefers-reduced-motion:reduce){.mi .th{transition:none}.mi:hover .th{transform:none}}
+
+/* 업무 상담 → 대표 사례 → 가격: 기존 컴포넌트 안에서 탐색 순서를 명확히 한다. */
+.hero-actions{justify-content:center;margin-top:28px}
+.hero-actions .btn.line{color:#fff;border-color:#fff}
+.hero-actions .btn.line:hover{background:#fff;color:var(--ink)}
+.ask-label{margin-top:24px;font-size:13px;opacity:.85}
+.hero-c .ask{margin-top:8px;min-height:48px;font-size:15px}
+.workflow{margin-top:22px;display:grid;gap:6px;list-style:decimal;padding-left:22px;font-size:16px}
+.case-boundary{margin-top:14px;font-size:14px;color:var(--mut)}
+.focus-cases{padding-top:72px}
+.trust-card{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.trust-card h2{margin-top:12px;font-size:clamp(28px,3vw,40px);line-height:1.25}
+.trust-card .more{display:inline-block;margin-top:18px}
+.project-jumps{display:flex;flex-wrap:wrap;gap:12px 28px;padding-top:24px;padding-bottom:24px;border-block:1px solid var(--line)}
+@media(max-width:720px){
+  .film .pin{padding-top:48px}
+  .hero-actions{justify-content:flex-start}
+  .hero-actions .btn.line{color:var(--ink);border-color:var(--ink)}
+  .hero-actions .btn.line:hover{color:#fff;background:var(--ink)}
+  .trust-card{grid-template-columns:1fr;gap:22px}
+}
+.motion[hidden]{display:none}

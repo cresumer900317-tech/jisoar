@@ -359,3 +359,16 @@ nav .ext::after{content:"↗";margin-left:2px;font-size:.85em}
 .own2 .duel dd{font-size:clamp(32px,3.2vw,44px)}
 .own2 .duel>div{padding-right:22px}.own2 .duel>div+div{padding-left:22px}
 .wk th:last-child,.wk td:last-child{padding-left:28px}
+
+/* 기존 단가의 예시 구성과 비용 구분 */
+.calc-guide{margin-bottom:28px;padding:24px;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
+.calc-guide p+p{margin-top:10px}
+.preset-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.preset-actions[hidden]{display:none}
+.preset-actions .btn{min-height:44px;padding:10px 14px;font-size:14px}
+.preset-status{font-size:14px;color:var(--accent);min-height:1.7em}
+.calc-guide details{margin-top:16px}
+.calc-guide summary{font-weight:600;cursor:pointer}
+.calc-guide .inc{margin-top:12px}
+.calc-cost-note{margin-top:10px;font-size:13px;color:var(--mut);grid-column:1/-1}
+.draft-unsent{margin-bottom:16px;font-weight:600;color:var(--ink)}

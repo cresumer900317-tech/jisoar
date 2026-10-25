@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@5.2.8/latin-600.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@5.2.8/latin-700.css">
-<link rel="stylesheet" href="/assets/jisoar.css?v=20261017c">
+<link rel="stylesheet" href="/assets/jisoar.css?v=20261024content1">
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -50,6 +50,12 @@
 <section class="sec" id="price" aria-labelledby="pr-h"><div class="wrap">
 <div class="sec-head"><div><h2 id="pr-h">가격 계산기</h2><p><span class="s">업무 시스템 단가표입니다.</span><span class="s">필요한 것만 고르면 합계가 바로 나옵니다.</span><span class="s">부가세 별도.</span></p></div></div>
 <div class="sec-body">
+<div class="calc-guide"><p><b>처음 합계가 140만원인 이유</b></p><p>기본 틀 100만원 + 필수 데이터 관리 화면 1종 40만원 = 140만원(부가세 포함 154만원)입니다. 화면은 1~20종에서 고를 수 있습니다.</p>
+<p>아래는 기존 단가를 조합한 예시이며 고정 상품이 아닙니다. 예시를 고르면 이전 선택을 초기화하며, 이후 필요한 기능을 직접 바꿀 수 있습니다.</p>
+<div class="preset-actions" id="calc-presets" hidden><button type="button" class="btn line" data-preset="basic">기본 구성 · 140만원</button><button type="button" class="btn line" data-preset="team">팀 고객 관리 예시 · 190만원</button><button type="button" class="btn line" data-preset="orders">주문·정산 예시 · 310만원</button></div>
+<p class="preset-status" id="preset-status" role="status"></p>
+<noscript><p>예시 구성: 기본 140만원(부가세 포함 154만원), 팀 고객 관리 190만원(209만원), 주문·정산 310만원(341만원). JavaScript를 켜면 선택을 바꿔 계산할 수 있습니다. 아래 단가표를 보고 이메일이나 카카오톡으로 문의하셔도 됩니다.</p></noscript>
+<details><summary>개발비와 운영비는 어떻게 다른가요?</summary><ul class="inc"><li>개발비는 한 번 정한 범위에 대한 금액입니다. 착수 50%, 납품 후 50%입니다.</li><li>월 유지보수는 선택이며 월 15만원(부가세 포함 16만 5천원)입니다. 자동 수집이 있으면 수집처 1곳당 운영비 월 30만원(부가세 별도)이 더해집니다.</li><li>납품 후 3개월 무상 하자보수는 월 유지보수 가입 여부와 별개입니다.</li><li>서버·도메인·유료 API·스토어 등록비 같은 외부 비용은 실비로 따로 듭니다.</li><li>서버 없는 업무 자동화 도구 50만원은 이 업무 시스템 계산기와 별도입니다.</li></ul><a class="more" href="#care">유지보수 포함·별도 범위</a></details></div>
 <form class="calc" id="calc" aria-label="업무 시스템 가격 계산기">
 <div class="calc-list">
 <div class="crow on"><span class="ck" aria-hidden="true">✓</span><span class="nm"><b>기본 틀</b><small>서버 구성·배포·매일 백업, 로그인(비밀번호 암호화·실패 시 잠금), 화면 디자인, PC·휴대폰 대응</small></span><span class="pr">100만원</span></div>
@@ -59,9 +65,9 @@
 <label><input type="radio" name="role" value="70" data-name="계정·권한 3단계 이상"> 3단계 이상 (예: 본사·대리점·고객) <em>70만원</em></label>
 </div></fieldset>
 <div class="crow"><span class="ck" aria-hidden="true">✓</span><label class="nm" for="c-scr"><b>데이터 관리 화면</b><small>등록·조회·수정·삭제·검색이 되는 화면 1종. 예: 고객, 주문, 재고</small></label><span class="pr qty"><input id="c-scr" type="number" name="screens" min="1" max="20" step="1" value="1" data-unit="40" inputmode="numeric"> 종 × 40만원</span></div>
-<label class="crow"><input type="checkbox" value="20" data-name="엑셀 일괄 등록·내려받기"><span class="nm"><b>엑셀 일괄 등록·내려받기</b><small>수백 줄을 한 번에 올리고, 목록을 엑셀로 받습니다. 선택한 모든 관리 화면에 적용</small></span><span class="pr">20만원</span></label>
-<label class="crow"><input type="checkbox" value="50" data-name="계산·정산"><span class="nm"><b>계산·정산</b><small>등급별 단가와 금액 계산, 일별 마감 기록. 계산 규칙 1종 기준</small></span><span class="pr">50만원</span></label>
-<label class="crow"><input type="checkbox" value="30" data-name="통계·그래프"><span class="nm"><b>통계·그래프</b><small>기간별 추이, 구간별 분포를 그래프로. 통계 화면 1개 기준</small></span><span class="pr">30만원</span></label>
+<label class="crow"><input type="checkbox" value="20" data-name="엑셀 일괄 등록·내려받기" data-feature="excel"><span class="nm"><b>엑셀 일괄 등록·내려받기</b><small>수백 줄을 한 번에 올리고, 목록을 엑셀로 받습니다. 선택한 모든 관리 화면에 적용</small></span><span class="pr">20만원</span></label>
+<label class="crow"><input type="checkbox" value="50" data-name="계산·정산" data-feature="settlement"><span class="nm"><b>계산·정산</b><small>등급별 단가와 금액 계산, 일별 마감 기록. 계산 규칙 1종 기준</small></span><span class="pr">50만원</span></label>
+<label class="crow"><input type="checkbox" value="30" data-name="통계·그래프" data-feature="stats"><span class="nm"><b>통계·그래프</b><small>기간별 추이, 구간별 분포를 그래프로. 통계 화면 1개 기준</small></span><span class="pr">30만원</span></label>
 <label class="crow"><input type="checkbox" value="50" data-name="보안 강화"><span class="nm"><b>보안 강화</b><small>요청 횟수 제한, Cloudflare 보호, 서버 직접 접속 차단</small></span><span class="pr">50만원</span></label>
 <label class="crow"><input type="checkbox" value="10" data-name="수정 이력"><span class="nm"><b>수정 이력</b><small>누가 언제 무엇을 바꿨는지 조회</small></span><span class="pr">10만원</span></label>
 <label class="crow"><input type="checkbox" value="10" data-name="공지·FAQ"><span class="nm"><b>공지·FAQ</b><small>게시판과 편집 화면</small></span><span class="pr">10만원</span></label>
@@ -72,6 +78,7 @@
 <p class="t">합계 (부가세 별도)</p>
 <p class="won" role="status" aria-atomic="true"><b id="c-total">140</b>만원<span id="c-from" hidden>부터</span></p>
 <p class="vat" id="c-vat">부가세 포함 154만원</p>
+<p class="calc-cost-note">일회성 개발비입니다. 월 유지보수는 선택(월 15만원, 부가세 별도)이며 외부 비용은 실비 별도입니다.</p>
 <p class="note" id="c-note" hidden>자동 수집은 대상 사이트를 확인한 뒤 고정 금액을 확정합니다.</p>
 <a class="btn blue" id="c-mail" href="mailto:hello@jisoar.com">이 구성으로 문의하기</a>
 <p class="small"><span class="s">확정한 개발비는 늘어나지 않습니다.</span><span class="s">서버·도메인 같은 외부 비용만 실비로 따로 듭니다.</span><span class="s">착수 50%, 납품 후 50%.</span></p>
@@ -121,6 +128,6 @@
 </main>
 <footer><div class="wrap"><span>© 2026 JISOAR · 지소어 · 사업자등록번호 294-03-01774</span><nav aria-label="하단 메뉴"><a href="/work/">작업 사례</a><a href="/services/">서비스</a><a href="https://jirading.com/" target="_blank" rel="noopener">지레이딩</a><a href="https://jipick.com/" class="ext" target="_blank" rel="noopener">지픽</a><a href="/about/">소개</a><a href="/contact/">문의</a></nav><a href="mailto:hello@jisoar.com">hello@jisoar.com</a></div></footer>
 <script src="/assets/marketing.js?v=20260911b" defer></script>
-<script src="/assets/price.js?v=2" defer></script>
+<script src="/assets/price.js?v=20261024content1" defer></script>
 </body>
 </html>
