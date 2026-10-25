@@ -25,12 +25,12 @@
     output.hidden = false;
     status.textContent = longMessage
       ? '초안이 길어 이메일에 자동 입력하지 않습니다. 아래 내용을 복사한 뒤 이메일 또는 카카오톡에 붙여넣어 주세요.'
-      : '문의 초안을 만들었습니다. 내용을 확인한 뒤 이메일이나 카카오톡으로 보내주세요.';
+      : '문의 내용을 확인해 주세요. 아직 전송되지 않았습니다.';
     text.focus();
   });
   form.addEventListener('input', () => { form.elements.namedItem('goal').setCustomValidity(''); output.hidden = true; status.textContent = ''; });
   document.getElementById('brief-copy').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(text.value); status.textContent = '복사했습니다. 카카오톡 대화창에 붙여넣어 주세요.'; }
-    catch { text.focus(); text.select(); status.textContent = '자동 복사를 사용할 수 없습니다. 선택된 내용을 직접 복사해 주세요.'; }
+    try { await navigator.clipboard.writeText(text.value); status.textContent = '복사했습니다. 아직 전송되지 않았습니다. 이메일이나 카카오톡에 붙여넣은 뒤 직접 보내 주세요.'; }
+    catch { text.focus(); text.select(); status.textContent = '자동 복사를 사용할 수 없습니다. 선택된 내용을 직접 복사한 뒤 이메일이나 카카오톡으로 보내 주세요. 아직 전송되지 않았습니다.'; }
   });
 })();
