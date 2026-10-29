@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오후공방 원데이 클래스 예약 (시연)</title>
+<meta name="description" content="JISOAR가 만든 예약 페이지 시연본. 가상의 도예 공방입니다.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --paper: #faf8f4; --ink: #1d1d1b; --sub: #6b665e; --line: #d9d4ca; --soft: #efebe3;
+    --clay: #b5532f; --clay-ink: #ffffff;
+    --serif: 'Noto Serif KR', serif; --sans: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.6; }
+  a { color: inherit; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+
+  .demo { background: var(--ink); color: #f3efe7; font-size: 13px; padding: 9px 16px; text-align: center; }
+  .demo a { color: #fff; font-weight: 600; text-underline-offset: 3px; }
+
+  header.top { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 18px 24px; }
+  .logo { font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; text-decoration: none; }
+  .logo small { display: block; font-family: var(--sans); font-size: 11px; font-weight: 400; color: var(--sub); letter-spacing: .02em; }
+  nav.menu { display: flex; gap: 32px; font-size: 14px; }
+  nav.menu a { text-decoration: none; color: var(--sub); }
+  nav.menu a.on { color: var(--ink); font-weight: 600; }
+
+  .hero { position: relative; height: clamp(240px, 34vw, 400px); background: #8a7a68 url('img/hero.jpg') center 60% / cover no-repeat; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(30,24,18,.5), rgba(30,24,18,.15) 55%, rgba(30,24,18,0)); }
+  .hero h1 { position: absolute; left: max(24px, calc((100vw - 1200px) / 2 + 24px)); bottom: 18%; margin: 0;
+    font-family: var(--serif); font-weight: 400; color: #fff; font-size: clamp(30px, 4.6vw, 54px); letter-spacing: -.02em;
+    text-shadow: 0 1px 18px rgba(0,0,0,.25); }
+  .hero p { position: absolute; left: max(24px, calc((100vw - 1200px) / 2 + 24px)); bottom: calc(18% - 34px); margin: 0; color: #f3efe7; font-size: 15px; }
+
+  main { max-width: 760px; margin: 0 auto; padding: 24px 24px 96px; }
+  .step { display: grid; grid-template-columns: 56px 1fr; padding: 36px 0 32px; border-bottom: 1px solid var(--ink); }
+  .step:last-of-type { border-bottom: 0; }
+  .num { font-family: var(--serif); font-size: 44px; line-height: 1; }
+  .step h2 { margin: 2px 0 2px; font-family: var(--serif); font-size: 22px; font-weight: 600; }
+  .step .hint { margin: 0 0 18px; color: var(--sub); font-size: 14px; }
+  .step.locked { opacity: .38; pointer-events: none; }
+
+  .classes { border-top: 1px solid var(--line); }
+  .cl { display: grid; grid-template-columns: 112px 1fr auto; gap: 18px; align-items: center; width: 100%; padding: 14px 0;
+    background: none; border: 0; border-bottom: 1px solid var(--line); text-align: left; cursor: pointer; }
+  .cl img { width: 112px; height: 76px; object-fit: cover; display: block; background: var(--soft); }
+  .cl b { display: block; font-size: 17px; }
+  .cl span { display: block; color: var(--sub); font-size: 13.5px; }
+  .cl .meta { margin-top: 4px; color: var(--ink); font-size: 13.5px; }
+  .cl .pick { width: 22px; height: 22px; border: 1px solid var(--ink); border-radius: 50%; position: relative; }
+  .cl[aria-pressed="true"] .pick::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: var(--clay); }
+  .cl[aria-pressed="true"] b { color: var(--clay); }
+
+  .days { display: grid; grid-template-columns: repeat(7, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .day { padding: 10px 0 8px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: none; cursor: pointer; line-height: 1.25; }
+  .day b { display: block; font-size: 16px; font-weight: 600; }
+  .day small { font-size: 12px; color: var(--sub); }
+  .day.sun small, .day.sun b { color: #a33a2a; }
+  .day[disabled] { cursor: default; color: #b9b3a8; }
+  .day[disabled] small, .day[disabled] b { color: #b9b3a8; }
+  .day[aria-pressed="true"] { background: var(--clay); color: var(--clay-ink); }
+  .day[aria-pressed="true"] small, .day[aria-pressed="true"] b { color: var(--clay-ink); }
+
+  .times { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 18px; border-top: 1px solid var(--line); }
+  .tm { padding: 12px 0; border: 0; border-bottom: 1px solid var(--line); background: none; cursor: pointer; line-height: 1.3; }
+  .tm b { display: block; font-size: 17px; font-family: var(--serif); }
+  .tm small { font-size: 12.5px; color: var(--sub); }
+  .tm[disabled] { cursor: default; color: #b9b3a8; }
+  .tm[disabled] b { text-decoration: line-through; }
+  .tm[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .tm[aria-pressed="true"] small { color: #d9d4ca; }
+  .few { color: var(--clay) !important; font-weight: 600; }
+
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+  .f label { display: block; font-size: 13px; color: var(--sub); margin-bottom: 4px; }
+  .f input, .f textarea, .f select { width: 100%; padding: 11px 12px; border: 1px solid var(--line); background: #fff; border-radius: 0; font-size: 16px; }
+  .f input:focus, .f textarea:focus, .f select:focus { outline: 2px solid var(--ink); outline-offset: -1px; border-color: var(--ink); }
+  .f.wide { grid-column: 1 / -1; }
+  .f textarea { min-height: 72px; resize: vertical; }
+  .err { color: #a33a2a; font-size: 13px; min-height: 18px; margin-top: 3px; }
+  .agree { display: flex; gap: 10px; align-items: flex-start; margin-top: 18px; font-size: 14px; color: var(--sub); }
+  .agree input { margin-top: 4px; accent-color: var(--ink); }
+
+  .summary { margin-top: 26px; border-top: 1px solid var(--ink); }
+  .summary dl { display: grid; grid-template-columns: 96px 1fr; margin: 0; }
+  .summary dt, .summary dd { margin: 0; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .summary dt { color: var(--sub); }
+  .total dd { font-size: 19px; font-weight: 700; }
+
+  .submit { width: 100%; margin-top: 22px; padding: 17px; border: 0; background: var(--ink); color: #fff; font-size: 17px; font-weight: 600; cursor: pointer; }
+  .submit[disabled] { background: #b9b3a8; cursor: not-allowed; }
+  .pay { margin: 10px 0 0; font-size: 13px; color: var(--sub); text-align: center; }
+
+  .done { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+  .done .num { font-size: 15px; font-family: var(--sans); color: var(--sub); }
+  .done h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 40px); font-weight: 400; margin: 6px 0 8px; line-height: 1.3; }
+  .done .code { font-family: var(--serif); font-size: 22px; letter-spacing: .04em; }
+  .done .acts { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+  .btn { padding: 13px 20px; border: 1px solid var(--ink); background: none; cursor: pointer; text-decoration: none; font-size: 15px; }
+  .btn.solid { background: var(--ink); color: #fff; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 24px 40px; color: var(--sub); font-size: 13px; text-align: center; }
+  footer a { font-weight: 600; color: var(--ink); }
+
+  @media (max-width: 720px) {
+    header.top { padding: 14px 16px; }
+    nav.menu { display: none; }
+    .hero h1, .hero p { left: 16px; }
+    main, .done { padding-left: 16px; padding-right: 16px; }
+    .step { grid-template-columns: 40px 1fr; padding: 28px 0 26px; }
+    .num { font-size: 32px; }
+    .cl { grid-template-columns: 84px 1fr 22px; gap: 12px; }
+    .cl img { width: 84px; height: 64px; }
+    .cl b { font-size: 15.5px; }
+    .cl span.d { display: none; }
+    .times { grid-template-columns: repeat(2, 1fr); }
+    .fields { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="demo">JISOAR가 만든 시연용 가상 공방입니다. 예약을 넣어 보면 <a href="admin.html" target="_blank" rel="noopener">관리자 화면</a>에 바로 나타납니다.</div>
+
+<header class="top">
+  <a class="logo" href="./">오후공방<small>도예 공방 · 원데이 클래스</small></a>
+  <nav class="menu"><a href="#">클래스 소개</a><a href="#" class="on">원데이 클래스</a><a href="#">작품 갤러리</a><a href="#">오시는 길</a></nav>
+</header>
+
+<div class="hero" role="img" aria-label="물레 위에서 그릇을 빚는 손">
+  <h1>흙을 만지는 두 시간</h1>
+  <p>처음이어도 괜찮습니다. 구운 작품은 3주 뒤 받아 가세요.</p>
+</div>
+
+<main id="form">
+  <section class="step" id="s1">
+    <div class="num">1</div>
+    <div>
+      <h2>클래스 선택</h2>
+      <p class="hint">만들고 싶은 것을 하나 고르세요.</p>
+      <div class="classes" id="classes"></div>
+    </div>
+  </section>
+
+  <section class="step locked" id="s2">
+    <div class="num">2</div>
+    <div>
+      <h2>날짜와 시간</h2>
+      <p class="hint">월요일은 쉽니다. 2주 안의 날짜만 예약할 수 있어요.</p>
+      <div class="days" id="days"></div>
+      <div class="times" id="times"></div>
+    </div>
+  </section>
+
+  <section class="step locked" id="s3">
+    <div class="num">3</div>
+    <div>
+      <h2>예약자 정보</h2>
+      <p class="hint">예약 확인 문자를 보내 드립니다.</p>
+      <div class="fields">
+        <div class="f"><label for="name">이름</label><input id="name" autocomplete="name" maxlength="20" placeholder="홍길동"><div class="err" id="e-name"></div></div>
+        <div class="f"><label for="phone">휴대폰 번호</label><input id="phone" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-1234-5678"><div class="err" id="e-phone"></div></div>
+        <div class="f"><label for="people">인원</label><select id="people"></select><div class="err"></div></div>
+        <div class="f wide"><label for="memo">요청 사항 (선택)</label><textarea id="memo" maxlength="200" placeholder="예: 아이와 함께 갑니다"></textarea></div>
+      </div>
+      <label class="agree"><input type="checkbox" id="agree"> 예약 확인을 위해 이름과 휴대폰 번호를 수집하는 데 동의합니다. 수업 하루 전까지 취소하면 전액 환불됩니다.</label>
+
+      <div class="summary"><dl id="sum"></dl></div>
+      <button class="submit" id="submit" disabled>예약하기</button>
+      <p class="pay">결제는 공방에서 현장 결제합니다. (시연에서는 실제 예약·문자가 발생하지 않습니다)</p>
+    </div>
+  </section>
+</main>
+
+<section class="done" id="done" hidden>
+  <div class="num">예약이 접수됐습니다</div>
+  <h2 id="done-title"></h2>
+  <div class="summary"><dl id="done-sum"></dl></div>
+  <div class="acts">
+    <a class="btn solid" href="admin.html" target="_blank" rel="noopener">관리자 화면에서 확인하기</a>
+    <button class="btn" id="again">다른 예약 하기</button>
+  </div>
+</section>
+
+<footer>오후공방은 시연용 가상 공방입니다. 이 화면과 관리자 화면은 <a href="https://jisoar.com" target="_blank" rel="noopener">JISOAR</a>가 만들었습니다.</footer>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  var O = window.OHU, db = O.load();
+  var st = { classId: null, date: null, time: null };
+  var $ = function (id) { return document.getElementById(id); };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function renderClasses() {
+    $('classes').innerHTML = O.CLASSES.map(function (c) {
+      return '<button class="cl" data-id="' + c.id + '" aria-pressed="' + (st.classId === c.id) + '">' +
+        '<img src="' + c.img + '" alt="" loading="lazy">' +
+        '<div><b>' + esc(c.name) + '</b><span class="d">' + esc(c.desc) + '</span>' +
+        '<span class="meta">' + (c.mins / 60 === 2 ? '2시간' : '1시간 30분') + '  ·  ' + O.won(c.price) + ' / 1인  ·  정원 ' + c.cap + '명</span></div>' +
+        '<i class="pick" aria-hidden="true"></i></button>';
+    }).join('');
+  }
+
+  function dayList() {
+    var t = O.today(), out = [];
+    for (var i = 0; i < 14; i++) out.push(O.addDays(t, i));
+    return out;
+  }
+
+  function renderDays() {
+    $('days').innerHTML = dayList().map(function (d, i) {
+      var key = O.ymd(d), closed = O.isClosed(d);
+      return '<button class="day' + (d.getDay() === 0 ? ' sun' : '') + '" data-d="' + key + '"' + (closed ? ' disabled title="휴무"' : '') +
+        ' aria-pressed="' + (st.date === key) + '"><b>' + (i === 0 || d.getDate() === 1 ? (d.getMonth() + 1) + '.' + d.getDate() : d.getDate()) + '</b><small>' + (closed ? '휴무' : O.WD[d.getDay()]) + '</small></button>';
+    }).join('');
+  }
+
+  function isPast(date, time) {
+    var p = O.parse(date), hm = time.split(':');
+    p.setHours(+hm[0], +hm[1]);
+    return p.getTime() - Date.now() < 60 * 60 * 1000; // 시작 1시간 전 마감
+  }
+
+  function renderTimes() {
+    if (!st.date || !st.classId) { $('times').innerHTML = ''; return; }
+    var c = O.cls(st.classId);
+    $('times').innerHTML = O.TIMES.map(function (t) {
+      var left = c.cap - O.used(db, st.date, t, c.id), past = isPast(st.date, t);
+      var off = past || left <= 0;
+      var label = past ? '마감' : left <= 0 ? '매진' : left <= 2 ? '<span class="few">' + left + '자리 남음</span>' : left + '자리 남음';
+      return '<button class="tm" data-t="' + t + '"' + (off ? ' disabled' : '') + ' aria-pressed="' + (st.time === t) + '"><b>' + t + '</b><small>' + label + '</small></button>';
+    }).join('');
+  }
+
+  function renderPeople() {
+    var sel = $('people'), keep = +sel.value || 1, max = 4;
+    if (st.classId && st.date && st.time) {
+      var c = O.cls(st.classId);
+      max = Math.min(4, c.cap - O.used(db, st.date, st.time, c.id));
+    }
+    sel.innerHTML = '';
+    for (var i = 1; i <= Math.max(1, max); i++) sel.add(new Option(i + '명', i));
+    sel.value = Math.min(keep, Math.max(1, max));
+  }
+
+  function fmtDate(s) { var d = O.parse(s); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 (' + O.WD[d.getDay()] + ')'; }
+
+  function sumRows(b) {
+    var c = O.cls(b.classId);
+    return '<dt>클래스</dt><dd>' + esc(c.name) + '</dd>' +
+      '<dt>일시</dt><dd>' + (b.date ? fmtDate(b.date) : '-') + (b.time ? ' ' + b.time : '') + '</dd>' +
+      '<dt>인원</dt><dd>' + b.people + '명</dd>' +
+      '<div class="total" style="display:contents"><dt>금액</dt><dd>' + O.won(c.price * b.people) + '</dd></div>';
+  }
+
+  function renderSummary() {
+    if (!st.classId) { $('sum').innerHTML = ''; return; }
+    $('sum').innerHTML = sumRows({ classId: st.classId, date: st.date, time: st.time, people: +$('people').value || 1 });
+  }
+
+  function phoneFmt(v) {
+    var d = v.replace(/\D/g, '').slice(0, 11);
+    if (d.length < 4) return d;
+    if (d.length < 8) return d.slice(0, 3) + '-' + d.slice(3);
+    return d.slice(0, 3) + '-' + d.slice(3, d.length - 4) + '-' + d.slice(-4);
+  }
+
+  function valid(show) {
+    var ok = true, n = $('name').value.trim(), p = $('phone').value.replace(/\D/g, '');
+    var en = n.length < 2 ? '이름을 2글자 이상 적어 주세요.' : '';
+    var ep = !/^01[016789]\d{7,8}$/.test(p) ? '휴대폰 번호를 확인해 주세요.' : '';
+    if (show) { $('e-name').textContent = n ? en : ''; $('e-phone').textContent = p ? ep : ''; }
+    if (en || ep || !$('agree').checked || !st.classId || !st.date || !st.time) ok = false;
+    return ok;
+  }
+
+  function refresh() {
+    $('s2').classList.toggle('locked', !st.classId);
+    $('s3').classList.toggle('locked', !st.time);
+    renderTimes(); renderPeople(); renderSummary();
+    $('submit').disabled = !valid(true);
+  }
+
+  $('classes').addEventListener('click', function (e) {
+    var b = e.target.closest('.cl'); if (!b) return;
+    st.classId = b.dataset.id; st.time = null;
+    renderClasses(); refresh();
+  });
+  $('days').addEventListener('click', function (e) {
+    var b = e.target.closest('.day'); if (!b || b.disabled) return;
+    st.date = b.dataset.d; st.time = null;
+    renderDays(); refresh();
+  });
+  $('times').addEventListener('click', function (e) {
+    var b = e.target.closest('.tm'); if (!b || b.disabled) return;
+    st.time = b.dataset.t; refresh();
+    if (window.innerWidth < 720) $('s3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('phone').addEventListener('input', function () { this.value = phoneFmt(this.value); refresh(); });
+  ['name', 'people', 'memo', 'agree'].forEach(function (id) {
+    $(id).addEventListener(id === 'people' || id === 'agree' ? 'change' : 'input', refresh);
+  });
+
+  $('submit').addEventListener('click', function () {
+    db = O.load(); // 다른 탭에서 바뀌었을 수 있으니 다시 읽는다
+    var c = O.cls(st.classId), people = +$('people').value;
+    if (c.cap - O.used(db, st.date, st.time, c.id) < people) {
+      alertInline('방금 다른 분이 예약해서 자리가 부족합니다. 시간을 다시 골라 주세요.');
+      st.time = null; refresh(); return;
+    }
+    var b = O.add(db, { classId: c.id, date: st.date, time: st.time, name: $('name').value.trim(),
+      phone: $('phone').value, people: people, memo: $('memo').value.trim() });
+    $('form').hidden = true; $('done').hidden = false;
+    $('done-title').innerHTML = esc(b.name) + '님, ' + fmtDate(b.date) + ' ' + b.time + '에 뵙겠습니다.<br><span class="code">' + b.id + '</span>';
+    $('done-sum').innerHTML = sumRows(b);
+    window.scrollTo({ top: $('done').offsetTop - 20, behavior: 'smooth' });
+  });
+
+  function alertInline(msg) { $('e-phone').textContent = msg; }
+
+  $('again').addEventListener('click', function () {
+    st = { classId: null, date: null, time: null };
+    ['name', 'phone', 'memo'].forEach(function (id) { $(id).value = ''; });
+    $('agree').checked = false;
+    $('done').hidden = true; $('form').hidden = false;
+    db = O.load(); renderClasses(); renderDays(); refresh();
+    window.scrollTo({ top: $('form').offsetTop, behavior: 'smooth' });
+  });
+
+  window.addEventListener('storage', function (e) { if (e.key === O.KEY) { db = O.load(); refresh(); } });
+
+  // 첫 화면: 오늘이 휴무면 다음 날을 기본 선택
+  var first = dayList().filter(function (d) {
+    var k = O.ymd(d);
+    return !O.isClosed(d) && O.TIMES.some(function (t) { return !isPast(k, t); });
+  })[0];
+  st.date = O.ymd(first);
+  renderClasses(); renderDays(); refresh();
+})();
+</script>
+</body>
+</html>
