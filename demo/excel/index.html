@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주문 엑셀 정리 (시연)</title>
+<meta name="description" content="JISOAR가 만든 엑셀 자동화 시연본. 쇼핑몰 세 곳의 주문 파일을 한 번에 합치고 정산·택배 발송표를 만듭니다.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root { --bg: #fff; --ink: #101a33; --sub: #5f6878; --line: #dde2ea; --head: #f5f7fa; --blue: #174eca; --mark: #fff1a8; --red: #c8352b; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif; font-size: 15px; line-height: 1.6; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  a { color: var(--blue); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .top { border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; justify-content: space-between; align-items: center; height: 52px; font-size: 13.5px; color: var(--sub); }
+  .top b { color: var(--ink); }
+
+  .hero { padding: 64px 0 40px; border-bottom: 1px solid var(--ink); }
+  .hero h1 { margin: 0 0 18px; font-size: clamp(32px, 5vw, 56px); line-height: 1.18; letter-spacing: -.035em; font-weight: 800; }
+  .hero p { margin: 0; max-width: 640px; color: var(--sub); font-size: 16.5px; }
+  .hero p span { display: block; }
+
+  section.step { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 24px; padding: 36px 0; border-bottom: 1px solid var(--line); }
+  .step > h2 { margin: 0; font-size: 15px; font-weight: 700; }
+  .step > h2 small { display: block; color: var(--sub); font-weight: 400; font-size: 13px; margin-top: 4px; }
+  .step.off { opacity: .35; pointer-events: none; }
+
+  .files { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); }
+  .file { padding: 14px 16px; border-right: 1px solid var(--line); min-height: 92px; }
+  .file:last-child { border-right: 0; }
+  .file b { display: block; font-size: 15px; }
+  .file small { display: block; color: var(--sub); font-size: 12.5px; }
+  .file .st { margin-top: 8px; font-size: 13px; color: var(--sub); }
+  .file.ok .st { color: var(--blue); font-weight: 600; }
+  .drop { margin-top: 12px; border: 1px solid var(--ink); padding: 22px; text-align: center; transition: background .15s; }
+  .drop.over { background: #f0f4ff; }
+  .drop p { margin: 0 0 12px; color: var(--sub); }
+  .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn { padding: 11px 18px; border: 1px solid var(--ink); background: #fff; font-size: 15px; }
+  .btn:hover { background: var(--head); }
+  .btn.solid { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
+  .btn.solid:hover { background: #123fa6; }
+  .note { margin: 10px 0 0; font-size: 13px; color: var(--sub); }
+  .warn { color: var(--red); font-size: 14px; margin: 10px 0 0; }
+
+  .big { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .big b { font-size: clamp(30px, 4vw, 44px); letter-spacing: -.03em; line-height: 1; }
+  .big span { color: var(--sub); }
+  .fixes { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); }
+  .fixes div { display: flex; justify-content: space-between; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); margin-right: 16px; }
+  .fixes div b { font-variant-numeric: tabular-nums; }
+  .fixes .hl b { background: var(--mark); padding: 0 4px; }
+
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--ink); margin-top: 28px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .tab { padding: 10px 16px; border: 0; background: none; font-size: 15px; color: var(--sub); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .tab[aria-selected="true"] { color: var(--ink); font-weight: 700; border-bottom-color: var(--blue); }
+  .legend { margin: 10px 0; font-size: 13px; color: var(--sub); }
+  .legend i { background: var(--mark); font-style: normal; padding: 0 6px; color: var(--ink); }
+  .tablebox { overflow: auto; max-height: 520px; border: 1px solid var(--line); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; white-space: nowrap; }
+  th { position: sticky; top: 0; background: var(--head); font-weight: 600; z-index: 1; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  td.fx { background: var(--mark); }
+  td.chk { color: var(--red); font-weight: 600; }
+  select.pick { font: inherit; font-size: 13px; padding: 3px 6px; border: 1px solid var(--red); border-radius: 0; background: #fff; color: var(--red); }
+  td small { color: var(--sub); }
+  tr.sum td { font-weight: 700; border-top: 1px solid var(--ink); }
+  .tag { font-size: 12px; font-weight: 600; color: var(--blue); }
+  .sub-h { margin: 18px 0 6px; font-size: 14px; font-weight: 700; }
+
+  .end { padding: 56px 0 72px; }
+  .end h2 { margin: 0 0 10px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02em; }
+  .end p { margin: 0 0 18px; color: var(--sub); }
+  .end p span { display: block; }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 0 16px; }
+    .hero { padding: 40px 0 28px; }
+    section.step { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 28px 0; }
+    .files { grid-template-columns: 1fr; }
+    .file { border-right: 0; border-bottom: 1px solid var(--line); min-height: 0; }
+    .file:last-child { border-bottom: 0; }
+    .fixes { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .fixes div span { overflow-wrap: anywhere; }
+    .fixes div { margin-right: 12px; font-size: 14px; }
+    .top .wrap span:last-child { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap"><span><b>JISOAR</b> 시연 · 엑셀 자동화</span><span>가상 상점 데이터입니다. 실제 고객 정보가 아닙니다.</span></div></div>
+
+<div class="wrap">
+  <header class="hero">
+    <h1>쇼핑몰 세 곳 주문 엑셀,<br>올리면 바로 정리됩니다.</h1>
+    <p><span>가상의 잼 가게 '작은부엌'은 A몰, B몰, 자사몰에서 주문을 받습니다.</span>
+      <span>파일마다 칸 이름도, 전화번호 모양도, 금액 적는 법도 다릅니다.</span>
+      <span>매일 저녁 손으로 합치던 일을 파일 올리기 한 번으로 바꾼 예시입니다.</span></p>
+  </header>
+
+  <section class="step" id="s1">
+    <h2>1. 주문 파일 올리기<small>세 곳 파일을 한꺼번에</small></h2>
+    <div>
+      <div class="files" id="files"></div>
+      <div class="drop" id="drop">
+        <p>엑셀 파일을 여기에 끌어다 놓거나, 예시 파일로 바로 해 보세요.</p>
+        <div class="row">
+          <button class="btn solid" id="try">예시 파일로 바로 해 보기</button>
+          <button class="btn" id="pick">내 컴퓨터에서 파일 고르기</button>
+          <button class="btn" id="samples">예시 파일 3개 받기</button>
+          <button class="btn" id="reset" hidden>처음부터 다시</button>
+        </div>
+        <input type="file" id="input" accept=".xlsx,.xls,.csv" multiple hidden>
+      </div>
+      <p class="note">파일은 이 브라우저 안에서만 처리되고 어디에도 올라가지 않습니다. 시연이라 예시 파일과 같은 형식만 읽습니다.</p>
+      <p class="warn" id="warn" hidden></p>
+    </div>
+  </section>
+
+  <section class="step off" id="s2">
+    <h2>2. 정리된 결과<small>노란 칸이 고친 곳</small></h2>
+    <div>
+      <div class="big" id="big"></div>
+      <div class="fixes" id="fixes"></div>
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div id="view"></div>
+    </div>
+  </section>
+
+  <section class="step off" id="s3">
+    <h2>3. 엑셀로 받기<small>시트 4개</small></h2>
+    <div>
+      <button class="btn solid" id="download">정리된 엑셀 받기</button>
+      <p class="note">통합 주문 · 택배 발송 · 쇼핑몰별 정산 · 상품별 판매 시트가 한 파일에 들어 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="end">
+    <h2>우리 가게 엑셀도 이렇게 바꿀 수 있습니다.</h2>
+    <p><span>정산표, 발주서, 대량 이체 파일, 재고표처럼 매번 같은 방식으로 손보는 엑셀이면 됩니다.</span>
+      <span>지금 쓰는 파일(개인정보를 지운 것)과 원하는 결과를 보내 주시면 가능한지 먼저 알려 드립니다.</span></p>
+    <a class="btn solid" href="https://jisoar.com/contact/" style="text-decoration:none;display:inline-block">JISOAR에 문의하기</a>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="app.js"></script>
+<script>
+(function () {
+  var X = window.XDEMO, $ = function (id) { return document.getElementById(id); };
+  var loaded = {}, result = null, tab = 'orders', fixes = {};
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function won(n) { return Math.round(n).toLocaleString('ko-KR'); }
+
+  function renderFiles() {
+    $('files').innerHTML = Object.keys(X.CHANNELS).map(function (k) {
+      var c = X.CHANNELS[k], f = loaded[k];
+      return '<div class="file' + (f ? ' ok' : '') + '"><b>' + c.name + '</b><small>' + (f ? esc(f.fileName) : c.file) + '</small>' +
+        '<div class="st">' + (f ? (f.rows.length - 1) + '줄 읽음' : '아직 없음') + '</div></div>';
+    }).join('');
+  }
+
+  function rowsOf(ws) { return XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: '' }); }
+
+  function addFiles(list) {
+    var msg = [];
+    list.forEach(function (f) {
+      if (f.error) { msg.push(f.fileName + ': 파일을 열 수 없습니다(손상됐거나 엑셀 파일이 아님)'); return; }
+      var ch = f.rows ? X.detect(f.rows[0]) : null;
+      if (!ch) { msg.push(f.fileName + ': 예시와 다른 형식이라 읽지 않았습니다'); return; }
+      if (loaded[ch]) { msg.push(f.fileName + ': ' + X.CHANNELS[ch].name + ' 파일이 이미 있습니다. 바꾸려면 "처음부터 다시"를 누르세요'); return; }
+      loaded[ch] = f;
+    });
+    $('warn').hidden = !msg.length;
+    $('warn').innerHTML = msg.map(esc).join('<br>') + (msg.length ? '<br>(시연은 예시 파일 형식만 읽습니다. 실제 작업에서는 고객님 파일에 맞춥니다)' : '');
+    $('reset').hidden = !Object.keys(loaded).length;
+    renderFiles(); run();
+  }
+
+  function readFiles(fileList) {
+    var arr = [].slice.call(fileList), out = [], left = arr.length;
+    if (!left) return;
+    arr.forEach(function (file) {
+      var fr = new FileReader();
+      function done(item) { out.push(item); if (--left === 0) addFiles(out); }
+      fr.onload = function () {
+        try {
+          var wb = XLSX.read(new Uint8Array(fr.result), { type: 'array' });
+          var d1904 = !!(wb.Workbook && wb.Workbook.WBProps && wb.Workbook.WBProps.date1904);
+          // 안내 시트가 앞에 있어도 되도록, 형식이 맞는 첫 시트를 찾는다
+          var found = null;
+          wb.SheetNames.some(function (n) { var rows = rowsOf(wb.Sheets[n]); if (X.detect(rows[0])) { found = rows; return true; } return false; });
+          done({ fileName: file.name, rows: found || rowsOf(wb.Sheets[wb.SheetNames[0]]), date1904: d1904 });
+        } catch (e) { done({ fileName: file.name, error: true }); }
+      };
+      fr.onerror = fr.onabort = function () { done({ fileName: file.name, error: true }); };
+      fr.readAsArrayBuffer(file);
+    });
+  }
+
+  function run() {
+    var list = Object.keys(loaded).map(function (k) { return loaded[k]; });
+    if (!list.length) { $('s2').classList.add('off'); $('s3').classList.add('off'); $('big').innerHTML = $('fixes').innerHTML = $('view').innerHTML = ''; return; }
+    var t0 = performance.now();
+    result = X.process(list, fixes);
+    var ms = Math.max(1, Math.round(performance.now() - t0));
+    var s = result.stats;
+    $('s2').classList.remove('off'); $('s3').classList.remove('off');
+    $('big').innerHTML = '<b>' + s.raw + '줄 → ' + s.orders + '줄 정리</b><span>' + (s.check ? '확인 필요 ' + s.check + '줄 · ' : '') + '택배 ' + result.ship.length + '상자 · ' + (ms < 1000 ? '1초 안에' : (ms / 1000).toFixed(1) + '초 만에') + ' 끝</span>';
+    var items = [['중복 줄 지움', s.dup], ['취소 주문 뺌', s.cancel], ['빈 줄 뺌', s.blank], ['전화번호 모양 통일', s.phone, 1], ['상품명 통일', s.item, 1],
+      ['금액 글자 → 숫자', s.amount, 1], ['주소 띄어쓰기 정리', s.addr, 1], ['같은 집 합포장', s.merged], [s.manual ? '직접 고른 상품' : '사람이 확인할 줄', s.manual ? s.manual : s.check]];
+    $('fixes').innerHTML = items.map(function (x) { return '<div' + (x[2] ? ' class="hl"' : '') + '><span>' + x[0] + '</span><b>' + x[1] + '</b></div>'; }).join('');
+    renderTabs(); renderView();
+    if (window.innerWidth < 760 && !run.quiet) $('s2').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  var TABS = [['orders', '통합 주문'], ['ship', '택배 발송'], ['settle', '쇼핑몰별 정산'], ['product', '상품별 판매'], ['raw', '원본 파일']];
+  function renderTabs() {
+    $('tabs').innerHTML = TABS.map(function (t) { return '<button class="tab" role="tab" data-t="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + t[1] + '</button>'; }).join('');
+  }
+  $('tabs').addEventListener('click', function (e) { var b = e.target.closest('.tab'); if (!b) return; tab = b.dataset.t; renderTabs(); renderView(); });
+
+  function table(head, rows, numCols) {
+    numCols = numCols || [];
+    return '<div class="tablebox"><table><thead><tr>' + head.map(function (h, i) { return '<th' + (numCols.indexOf(i) >= 0 ? ' class="n"' : '') + '>' + h + '</th>'; }).join('') +
+      '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  function td(v, cls, title) { return '<td' + (cls ? ' class="' + cls + '"' : '') + (title ? ' title="' + esc(title) + '"' : '') + '>' + v + '</td>'; }
+
+  function renderView() {
+    var r = result, h = '';
+    if (tab === 'orders') {
+      var opts = '<option value="">상품 고르기</option>' + X.PRODUCTS.map(function (p) { return '<option value="' + p.id + '">' + esc(p.name) + '</option>'; }).join('');
+      var rows = r.orders.slice().sort(function (a, b) { return b.check.length - a.check.length; }); // 확인할 줄을 맨 위로
+      h = '<p class="legend"><i>노란 칸</i>은 자동으로 고친 곳, <b style="color:var(--red)">빨간 글자</b>는 사람이 확인할 곳입니다. 칸에 마우스를 올리면 원래 값이 보입니다.' +
+        (result.stats.check ? ' 확인할 줄은 맨 위에 있고, 정산·발송표에서는 빠져 있습니다.' : '') + '</p>' +
+        table(['쇼핑몰', '주문번호', '주문일', '상품', '수량', '금액', '받는 분', '연락처', '주소'], rows.map(function (o) {
+          var f = function (k) { return o.fix.indexOf(k) >= 0; }, c = function (k) { return o.check.indexOf(k) >= 0; };
+          var cls = function (k, fk) { return c(k) ? 'chk' : f(fk || k) ? 'fx' : ''; };
+          var item = c('상품') ? '<select class="pick" data-key="' + esc(o.key) + '" title="원본: ' + esc(o.raw.item) + '">' + opts + '</select> <small>' + esc(o.raw.item) + '</small>' : esc(o.product);
+          return '<tr>' + td(o.chName) + td(esc(o.no), cls('주문번호 없음')) + td(esc(o.date), cls('날짜'), '원본: ' + o.raw.date) +
+            td(item, c('상품') ? '' : f('직접 고름') || f('상품명') ? 'fx' : '', c('상품') ? '' : '원본: ' + o.raw.item) +
+            td(c('수량') ? '?' : o.qty, 'n ' + cls('수량')) + td(c('금액') ? esc(o.raw.amt) : won(o.amount), 'n ' + cls('금액'), '원본: ' + o.raw.amt) +
+            td(esc(o.name), cls('받는 분')) + td(esc(o.phone), cls('전화번호'), '원본: ' + o.raw.phone) +
+            td(esc(o.addr), cls('주소', '주소 공백'), '원본: "' + o.raw.addr + '"') + '</tr>';
+        }), [4, 5]);
+    } else if (tab === 'ship') {
+      h = '<p class="legend">이름·번호·주소가 같은 주문 두 건 이상은 한 상자로 묶었습니다(<span class="tag">합포장</span>). 쇼핑몰이 달라도 묶입니다.</p>' +
+        table(['받는 분', '연락처', '주소', '보낼 상품', '주문번호'], r.ship.map(function (g) {
+          return '<tr>' + td(esc(g.name) + (g.merged ? ' <span class="tag">합포장</span>' : '')) + td(esc(g.phone)) + td(esc(g.addr)) +
+            td(esc(g.summary), g.merged ? 'fx' : '') + td(esc(g.orders.join(', '))) + '</tr>';
+        }));
+    } else if (tab === 'settle') {
+      var t = { orders: 0, sales: 0, fee: 0, net: 0 };
+      var rows = r.settle.map(function (s) {
+        t.orders += s.orders; t.sales += s.sales; t.fee += s.fee; t.net += s.net;
+        return '<tr>' + td(s.name) + td(s.orders, 'n') + td(won(s.sales), 'n') + td((s.rate * 100).toFixed(1) + '%', 'n') + td(won(s.fee), 'n') + td(won(s.net), 'n') + '</tr>';
+      });
+      rows.push('<tr class="sum">' + td('합계') + td(t.orders, 'n') + td(won(t.sales), 'n') + td('') + td(won(t.fee), 'n') + td(won(t.net), 'n') + '</tr>');
+      h = '<p class="legend">수수료율은 시연용 가정값입니다. 실제 작업에서는 계약 수수료를 넣습니다. 주문 수는 주문번호 기준, 확인 필요 줄은 뺐습니다.</p>' +
+        table(['쇼핑몰', '주문', '매출(원)', '수수료율', '수수료(원)', '정산 예정(원)'], rows, [1, 2, 3, 4, 5]);
+    } else if (tab === 'product') {
+      var tq = 0, ts = 0;
+      var pr = r.byProduct.map(function (p) { tq += p.qty; ts += p.sales; return '<tr>' + td(p.name) + td(p.qty, 'n') + td(won(p.sales), 'n') + '</tr>'; });
+      pr.push('<tr class="sum">' + td('합계') + td(tq, 'n') + td(won(ts), 'n') + '</tr>');
+      h = '<p class="legend">세 곳에서 다르게 적힌 상품 이름을 같은 상품으로 묶어 셌습니다. 확인 필요 줄은 뺐습니다.</p>' + table(['상품', '판매 수량', '매출(원)'], pr, [1, 2]);
+    } else {
+      h = Object.keys(loaded).map(function (k) {
+        var f = loaded[k], rows = f.rows.slice(1, 16);
+        return '<p class="sub-h">' + X.CHANNELS[k].name + ' 원본 (' + esc(f.fileName) + ', 앞 15줄)</p>' +
+          table(f.rows[0].map(esc), rows.map(function (row) { return '<tr>' + row.map(function (v) { return td(esc(v)); }).join('') + '</tr>'; }));
+      }).join('');
+    }
+    $('view').innerHTML = h;
+  }
+
+  function sheet(aoa, widths) { var ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = widths.map(function (w) { return { wch: w }; }); return ws; }
+  function safe(v) { return typeof v === 'string' && /^[\s]*[=+\-@\t\r]/.test(v) ? "'" + v : v; } // 엑셀 수식으로 읽히지 않게
+
+  $('download').addEventListener('click', function () {
+    if (!result) return;
+    var r = result, wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, sheet([['쇼핑몰', '주문번호', '주문일', '상품', '수량', '금액', '받는 분', '연락처', '주소', '고친 것', '확인 필요']].concat(r.orders.map(function (o) {
+      return [o.chName, o.no, o.date, o.product, o.qty, o.amount, o.name, o.phone, o.addr, o.fix.join(', '), o.check.join(', ')].map(safe);
+    })), [8, 14, 11, 18, 6, 10, 8, 14, 44, 16, 14]), '통합 주문');
+    XLSX.utils.book_append_sheet(wb, sheet([['받는 분', '연락처', '주소', '보낼 상품', '합포장', '주문번호']].concat(r.ship.map(function (g) {
+      return [g.name, g.phone, g.addr, g.summary, g.merged ? 'O' : '', g.orders.join(', ')].map(safe);
+    })), [8, 14, 44, 30, 7, 30]), '택배 발송');
+    XLSX.utils.book_append_sheet(wb, sheet([['쇼핑몰', '주문', '매출', '수수료율', '수수료', '정산 예정']].concat(r.settle.map(function (s) {
+      return [s.name, s.orders, s.sales, s.rate, s.fee, s.net];
+    })), [10, 8, 12, 10, 12, 12]), '쇼핑몰별 정산');
+    XLSX.utils.book_append_sheet(wb, sheet([['상품', '판매 수량', '매출']].concat(r.byProduct.map(function (p) { return [p.name, p.qty, p.sales]; })), [18, 10, 12]), '상품별 판매');
+    XLSX.writeFile(wb, '작은부엌_주문정리_2026-10-28.xlsx');
+  });
+
+  $('samples').addEventListener('click', function () {
+    var s = X.makeSamples();
+    [['A', s.A], ['B', s.B], ['C', s.C]].forEach(function (x, i) {
+      setTimeout(function () {
+        var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(x[1]), 'Sheet1');
+        XLSX.writeFile(wb, X.CHANNELS[x[0]].file);
+      }, i * 400);
+    });
+  });
+
+  $('try').addEventListener('click', function () {
+    loaded = {}; fixes = {};
+    var s = X.makeSamples();
+    addFiles([['A', s.A], ['B', s.B], ['C', s.C]].map(function (x) {
+      // 실제 파일과 똑같이 엑셀로 한 번 썼다가 읽어서 처리한다
+      var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(x[1]), 'Sheet1');
+      var back = XLSX.read(XLSX.write(wb, { type: 'array', bookType: 'xlsx' }), { type: 'array' });
+      return { fileName: X.CHANNELS[x[0]].file, rows: rowsOf(back.Sheets.Sheet1) };
+    }));
+  });
+
+  $('view').addEventListener('change', function (e) {
+    if (!e.target.classList.contains('pick') || !e.target.value) return;
+    fixes[e.target.dataset.key] = e.target.value; run.quiet = true; run(); run.quiet = false;
+  });
+  $('reset').addEventListener('click', function () {
+    loaded = {}; fixes = {}; result = null; $('warn').hidden = true; this.hidden = true; renderFiles(); run();
+  });
+
+  $('pick').addEventListener('click', function () { $('input').click(); });
+  $('input').addEventListener('change', function () { readFiles(this.files); this.value = ''; });
+  var drop = $('drop');
+  ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+  ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+  drop.addEventListener('drop', function (e) { readFiles(e.dataTransfer.files); });
+
+  renderFiles();
+})();
+</script>
+</body>
+</html>
