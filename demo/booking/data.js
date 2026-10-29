@@ -73,7 +73,13 @@
   function load() {
     var db = null;
     try { db = JSON.parse(localStorage.getItem(KEY)); } catch (e) { db = null; }
-    if (!db || !db.bookings) { db = seed(); save(db); }
+    if (!db || !Array.isArray(db.bookings)) { db = seed(); save(db); }
+    else if (db.seededFor !== ymd(today())) {
+      // 하루가 지나면 예시 예약만 새 날짜 기준으로 다시 만들고, 손님이 넣은 예약은 그대로 둔다
+      var web = db.bookings.filter(function (b) { return b.source === 'web'; });
+      var fresh = seed(); fresh.bookings = fresh.bookings.concat(web);
+      db = fresh; save(db);
+    }
     return db;
   }
   function save(db) { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { /* 시크릿 창 등 */ } }
@@ -98,11 +104,18 @@
     return b;
   }
 
+  // 엑셀이 수식으로 읽지 않도록 =, +, -, @ 로 시작하는 글자 앞에 ' 를 붙인다
+  function cell(v) {
+    var s = String(v == null ? '' : v);
+    if (typeof v === 'string' && /^[=+\-@\t\r]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+
   function won(n) { return n.toLocaleString('ko-KR') + '원'; }
 
   window.OHU = {
     KEY: KEY, CLASSES: CLASSES, TIMES: TIMES, STATUSES: STATUSES, WD: WD,
     ymd: ymd, parse: parse, addDays: addDays, today: today, isClosed: isClosed, cls: cls,
-    load: load, save: save, reset: reset, used: used, add: add, won: won
+    load: load, save: save, cell: cell, reset: reset, used: used, add: add, won: won
   };
 })();

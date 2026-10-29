@@ -37,6 +37,7 @@
   .stats span { padding: 0 14px; border-left: 1px solid var(--line); color: var(--sub); }
   .stats span:first-child { padding-left: 0; border-left: 0; color: var(--ink); font-weight: 600; }
   .stats b { color: var(--ink); font-weight: 600; }
+  .newbtn { padding: 2px 8px; border: 0; background: var(--mark); font-weight: 600; cursor: pointer; }
   .tools { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .tools input { flex: 1; min-width: 200px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 0; }
   .tools input:focus { outline: 2px solid var(--blue); outline-offset: -1px; }
@@ -149,7 +150,7 @@
 <script>
 (function () {
   var O = window.OHU, db = O.load();
-  var day = O.ymd(O.today()), selId = null, seen = {};
+  var day = O.ymd(O.today()), selId = null, seen = {}, showNew = false;
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function fmt(s) { var d = O.parse(s); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 (' + O.WD[d.getDay()] + ')'; }
@@ -179,7 +180,7 @@
       '<span class="s-확정">확정 ' + c.확정 + '</span><span>방문완료 ' + c.방문완료 + '</span>' +
       '<span>취소 ' + c.취소 + '</span><span>노쇼 ' + c.노쇼 + '</span>' +
       '<span>예상 매출 <b>' + O.won(sales) + '</b></span>' +
-      (news ? '<span style="background:var(--mark);color:var(--ink);font-weight:600">새 예약 ' + news + '건</span>' : '');
+      (news ? '<span><button class="newbtn" id="newbtn">새 예약 ' + news + '건 보기</button></span>' : '');
   }
 
   function bkHtml(b) {
@@ -191,6 +192,7 @@
 
   function renderBoard() {
     var q = $('q').value.trim();
+    if (showNew) return renderList('홈페이지로 들어온 새 예약', db.bookings.filter(isNew));
     if (q) return renderSearch(q);
     var d = O.parse(day);
     if (O.isClosed(d)) { $('board').innerHTML = '<div class="closed">월요일은 휴무입니다.</div>'; return; }
@@ -215,10 +217,15 @@
 
   function renderSearch(q) {
     var k = q.toLowerCase(), digits = q.replace(/\D/g, '');
-    var res = db.bookings.filter(function (b) {
+    renderList('"' + q + '" 검색 결과', db.bookings.filter(function (b) {
       return b.name.indexOf(q) >= 0 || b.id.toLowerCase().indexOf(k) >= 0 || (digits.length >= 3 && b.phone.replace(/\D/g, '').indexOf(digits) >= 0);
-    }).sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
-    $('board').innerHTML = '<p style="color:var(--sub);margin:0 0 8px">"' + esc(q) + '" 검색 결과 ' + res.length + '건 (전체 날짜)</p>' +
+    }));
+  }
+
+  function renderList(title, res) {
+    res = res.slice().sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
+    $('board').innerHTML = '<p style="color:var(--sub);margin:0 0 8px">' + esc(title) + ' ' + res.length + '건 (전체 날짜)' +
+      (showNew ? ' · <a href="#" id="back">표로 돌아가기</a>' : '') + '</p>' +
       '<table class="results"><thead><tr><th>예약번호</th><th>이름</th><th>일시</th><th>클래스</th><th>인원</th><th>상태</th></tr></thead><tbody>' +
       res.map(function (b) {
         return '<tr data-id="' + b.id + '"><td>' + b.id + '</td><td>' + esc(b.name) + '</td><td>' + fmt(b.date) + ' ' + b.time + '</td><td>' +
@@ -262,7 +269,9 @@
   }
 
   $('board').addEventListener('click', function (e) {
+    if (e.target.id === 'back') { e.preventDefault(); showNew = false; renderAll(); return; }
     var el = e.target.closest('[data-id]'); if (!el) return;
+    showNew = false;
     var b = find(el.dataset.id);
     if (b && b.date !== day) { $('q').value = ''; day = b.date; $('cur').textContent = fmt(day); }
     select(el.dataset.id);
@@ -270,11 +279,15 @@
 
   $('panel').addEventListener('click', function (e) {
     var btn = e.target.closest('button'); if (!btn || btn.disabled) return;
-    var b = find(selId); if (!b) return;
+    db = O.load(); var b = find(selId); if (!b) return;
     if (btn.dataset.sms) { toast(b.name + '님께 확인 문자를 보냈습니다. (시연이라 실제로 보내지지 않습니다)'); return; }
     var to = btn.dataset.st;
     if (to === '취소' && b.status === '확정' && !btn.dataset.sure) {
       btn.dataset.sure = '1'; btn.textContent = '한 번 더 누르면 취소됩니다'; return;
+    }
+    if (b.status === '취소' && to !== '취소') {
+      var left = O.cls(b.classId).cap - O.used(db, b.date, b.time, b.classId);
+      if (left < b.people) { toast('그 사이 자리가 차서 되돌릴 수 없습니다. (남은 자리 ' + Math.max(0, left) + '명)'); return; }
     }
     b.log = b.log || [];
     b.log.unshift(new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) + '  ' + b.status + ' → ' + to);
@@ -284,14 +297,19 @@
 
   $('panel').addEventListener('input', function (e) {
     if (e.target.id !== 'note') return;
-    var b = find(selId); if (!b) return;
+    db = O.load(); var b = find(selId); if (!b) return;
     b.note = e.target.value; $('nc').textContent = b.note.length; O.save(db);
+  });
+
+  $('stats').addEventListener('click', function (e) {
+    if (e.target.id !== 'newbtn') return;
+    showNew = true; $('q').value = ''; renderAll();
   });
 
   $('prev').onclick = function () { setDay(O.ymd(O.addDays(O.parse(day), -1))); };
   $('next').onclick = function () { setDay(O.ymd(O.addDays(O.parse(day), 1))); };
   $('today').onclick = function () { setDay(O.ymd(O.today())); };
-  $('q').addEventListener('input', renderBoard);
+  $('q').addEventListener('input', function () { showNew = false; renderBoard(); });
 
   $('csv').onclick = function () {
     var rows = [['예약번호', '날짜', '시간', '클래스', '이름', '연락처', '인원', '금액', '상태', '요청사항', '메모']];
@@ -299,7 +317,7 @@
       var c = O.cls(b.classId);
       rows.push([b.id, b.date, b.time, c.short, b.name, b.phone, b.people, c.price * b.people, b.status, b.memo || '', b.note || '']);
     });
-    var csv = '﻿' + rows.map(function (r) { return r.map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','); }).join('\r\n');
+    var csv = '﻿' + rows.map(function (r) { return r.map(O.cell).join(','); }).join('\r\n');
     var a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
     a.download = '오후공방_예약_' + day + '.csv'; a.click();
