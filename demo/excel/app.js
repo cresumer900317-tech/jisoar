@@ -70,7 +70,7 @@
     // 같은 사람이 두 곳에서 주문한 경우를 몇 건 만든다(합포장 대상).
     for (i = 0; i < 5; i++) {
       p = people[i * 9]; pr = prod(); d = when();
-      A.push(['A' + (2610279000 + i), '2026.10.28 ' + pad(10 + i) + ':1' + i, '수제 ' + pr.name.split(' ')[0], '250g', 1, pr.price, p.name, p.phone, p.addr]);
+      A.push(['A' + (2610279000 + i), '2026.10.28 ' + pad(10 + i) + ':1' + i, pr.id === 'set' ? '수제잼 선물세트' : '수제 ' + pr.name.split(' ')[0], pr.id === 'set' ? '3종 구성' : '250g', 1, pr.price, p.name, p.phone, p.addr]);
       C.push([41 + i, '10월 28일', nick[pr.id][0], '1개', pr.price.toLocaleString('ko-KR') + '원', p.name, '010-' + p.phone.slice(3, 7) + '-' + p.phone.slice(7), p.addr, '']);
     }
     return { A: A, B: B, C: C };
@@ -78,36 +78,48 @@
 
   // ---------- 정리 규칙 ----------
   function digits(s) { return String(s == null ? '' : s).replace(/\D/g, ''); }
+  // 휴대폰 번호만 받는다(010·011·016~019). 숫자 칸에 저장돼 앞 0이 빠진 10자리(1012345678)도 되살린다.
   function phoneOf(s) {
     var d = digits(s);
     if (d.indexOf('82') === 0 && d.length >= 11) d = '0' + d.slice(2);
-    if (d.length === 11) return d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7);
-    if (d.length === 10) return d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
-    return null;
+    if (/^1[016789]\d{7,8}$/.test(d)) d = '0' + d;
+    if (!/^01[016789]\d{7,8}$/.test(d)) return null;
+    return d.length === 11 ? d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7) : d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
   }
+  // 세트는 '세트'라는 말로만 판단한다. 단품 맛이 둘 이상 적혀 있으면 사람이 확인하게 남긴다.
   function productOf(s) {
     var t = String(s || '').toLowerCase();
-    for (var i = PRODUCTS.length - 1; i >= 0; i--) { // 세트를 먼저 본다 (세트 이름에 무화과·딸기가 같이 들어 있음)
-      var p = PRODUCTS[i];
-      for (var k = 0; k < p.keys.length; k++) if (t.indexOf(p.keys[k]) >= 0) return p;
+    if (t.indexOf('세트') >= 0 || t.indexOf('set') >= 0) return PRODUCTS[3];
+    var hits = PRODUCTS.slice(0, 3).filter(function (p) {
+      return p.keys.some(function (k) { return t.indexOf(k) >= 0; });
+    });
+    return hits.length === 1 ? hits[0] : null;
+  }
+  function validYmd(y, m, d) {
+    var x = new Date(y, m - 1, d);
+    return x.getFullYear() === y && x.getMonth() === m - 1 && x.getDate() === d ? y + '-' + pad(m) + '-' + pad(d) : null;
+  }
+  // 연도가 없는 날짜("10월 27일")는 파일 안 다른 날짜의 연도, 없으면 올해로 본다.
+  function dateOf(s, year, date1904) {
+    if (typeof s === 'number' && isFinite(s)) {
+      var d = new Date(Math.round((s - 25569 + (date1904 ? 1462 : 0)) * 864e5));
+      return validYmd(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
     }
-    return null;
-  }
-  function dateOf(s) {
-    if (typeof s === 'number') { var d = new Date(Math.round((s - 25569) * 864e5)); return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); }
     var t = String(s || ''), m;
-    if ((m = t.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/))) return m[1] + '-' + pad(m[2]) + '-' + pad(m[3]);
-    if ((m = t.match(/(\d{1,2})월\s*(\d{1,2})일/))) return '2026-' + pad(m[1]) + '-' + pad(m[2]);
+    if ((m = t.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/))) return validYmd(+m[1], +m[2], +m[3]);
+    if ((m = t.match(/(\d{1,2})월\s*(\d{1,2})일/))) return validYmd(year || new Date().getFullYear(), +m[1], +m[2]);
     return null;
   }
-  function numOf(s) { if (typeof s === 'number') return s; var d = digits(s); return d ? +d : null; }
-
-  function detect(header) {
-    var h = header.map(function (x) { return String(x || '').trim(); }).join('|');
-    if (h.indexOf('주문번호') >= 0 && h.indexOf('옵션') >= 0) return 'A';
-    if (h.indexOf('주문ID') >= 0) return 'B';
-    if (h.indexOf('품목') >= 0 && h.indexOf('고객명') >= 0) return 'C';
-    return null;
+  // 수량: 양의 정수만("2", "2개"). 금액: 0 이상 정수만("19,600원", 19600). 그 밖은 확인 필요.
+  function qtyOf(v) {
+    if (typeof v === 'number') return v > 0 && Math.floor(v) === v ? v : null;
+    var m = String(v || '').trim().match(/^(\d{1,4})\s*개?$/);
+    return m && +m[1] > 0 ? +m[1] : null;
+  }
+  function amountOf(v) {
+    if (typeof v === 'number') return isFinite(v) && v >= 0 && Math.floor(v) === v ? v : null;
+    var m = String(v || '').trim().match(/^(\d{1,3}(,\d{3})*|\d+)\s*원?$/);
+    return m ? +m[1].replace(/,/g, '') : null;
   }
 
   var MAP = {
@@ -116,63 +128,91 @@
     C: { no: '번호', date: '날짜', item: '품목', qty: '개수', amt: '금액', name: '고객명', phone: '핸드폰', addr: '주소', status: '상태' }
   };
 
-  function process(files) {
-    // files: [{ fileName, rows: [[...], ...] }]
-    var out = [], st = { raw: 0, blank: 0, dup: 0, cancel: 0, phone: 0, item: 0, amount: 0, addr: 0, check: 0 }, seen = {}, unknown = [], used = {};
+  // 필요한 칸이 전부 있어야 그 쇼핑몰 형식으로 본다.
+  function detect(header) {
+    var h = (header || []).map(function (x) { return String(x == null ? '' : x).trim(); });
+    for (var ch in MAP) {
+      var m = MAP[ch], ok = Object.keys(m).every(function (k) { return h.indexOf(m[k]) >= 0; });
+      if (ok) return ch;
+    }
+    return null;
+  }
+
+  // files: [{ fileName, rows, date1904 }], fixes: { 줄키: 상품id } 사람이 직접 고른 상품
+  function process(files, fixes) {
+    fixes = fixes || {};
+    var out = [], st = { raw: 0, blank: 0, dup: 0, cancel: 0, phone: 0, item: 0, amount: 0, addr: 0, check: 0, manual: 0 }, used = {};
     files.forEach(function (f) {
-      var ch = detect(f.rows[0] || []);
-      if (!ch) { unknown.push(f.fileName); return; }
-      if (used[ch]) { unknown.push(f.fileName + ' (같은 쇼핑몰 파일이 이미 있음)'); return; }
+      var ch = detect(f.rows[0]);
+      if (!ch || used[ch]) return;
       used[ch] = 1;
-      var head = f.rows[0].map(function (x) { return String(x || '').trim(); }), m = MAP[ch];
+      var head = f.rows[0].map(function (x) { return String(x == null ? '' : x).trim(); }), m = MAP[ch];
       var col = {}; Object.keys(m).forEach(function (k) { col[k] = head.indexOf(m[k]); });
-      f.rows.slice(1).forEach(function (row) {
+      var year = null, seen = {};
+      f.rows.slice(1).some(function (row) { var t = String(row[col.date] || '').match(/(\d{4})[.\-\/]/); if (t) { year = +t[1]; return true; } return false; });
+      f.rows.slice(1).forEach(function (row, idx) {
         st.raw++;
-        var g = function (k) { return col[k] >= 0 ? row[col[k]] : ''; };
+        var g = function (k) { return col[k] >= 0 && row[col[k]] != null ? row[col[k]] : ''; };
         if (row.every(function (v) { return String(v == null ? '' : v).trim() === ''; })) { st.blank++; return; }
         if (String(g('status')).indexOf('취소') >= 0) { st.cancel++; return; }
-        var no = ch === 'C' ? 'C-' + pad(g('no'), 4) : String(g('no')).trim();
-        if (seen[ch + no]) { st.dup++; return; }
-        seen[ch + no] = 1;
-        var fix = [], rawItem = String(g('item')) + (g('opt') ? ' ' + g('opt') : '');
-        var p = productOf(rawItem), qty = numOf(g('qty')) || 1, amt = numOf(g('amt'));
-        if (!p) { st.check++; fix.push('상품 확인 필요'); }
-        else if (rawItem.trim() !== p.name) { st.item++; fix.push('상품명'); }
-        if (typeof g('amt') !== 'number') { st.amount++; fix.push('금액'); }
+        // 완전히 같은 줄만 중복으로 본다(같은 주문번호에 상품이 여러 줄인 경우는 살린다)
+        var sig = JSON.stringify(row.map(function (v) { return String(v == null ? '' : v).trim(); }));
+        if (seen[sig]) { st.dup++; return; }
+        seen[sig] = 1;
+        var key = ch + ':' + (idx + 2), fix = [], check = [];
+        var no = String(g('no')).trim();
+        if (!no) check.push('주문번호 없음');
+        else if (ch === 'C') no = 'C-' + pad(no, 4);
+        var rawItem = (String(g('item')) + (g('opt') !== '' ? ' ' + g('opt') : '')).trim();
+        var p = fixes[key] ? PRODUCTS.filter(function (x) { return x.id === fixes[key]; })[0] : productOf(rawItem);
+        if (fixes[key]) { st.manual++; fix.push('직접 고름'); }
+        else if (!p) check.push('상품');
+        else if (rawItem !== p.name) { st.item++; fix.push('상품명'); }
+        var qty = qtyOf(g('qty')); if (qty == null) check.push('수량');
+        var amt = amountOf(g('amt'));
+        if (amt == null) check.push('금액');
+        else if (typeof g('amt') !== 'number') { st.amount++; fix.push('금액'); }
+        var date = dateOf(g('date'), year, f.date1904); if (!date) check.push('날짜');
         var ph = phoneOf(g('phone'));
-        if (!ph) { st.check++; fix.push('번호 확인 필요'); ph = String(g('phone')); }
+        if (!ph) check.push('전화번호');
         else if (String(g('phone')) !== ph) { st.phone++; fix.push('전화번호'); }
-        var addr = String(g('addr') || '').replace(/\s+/g, ' ').trim();
-        if (addr !== String(g('addr') || '')) { st.addr++; fix.push('주소 공백'); }
-        out.push({ ch: ch, chName: CHANNELS[ch].name, no: no, date: dateOf(g('date')) || String(g('date')), product: p ? p.name : rawItem, pid: p ? p.id : null,
-          qty: qty, amount: amt || 0, name: String(g('name')).trim(), phone: ph, addr: addr, fix: fix, raw: { item: rawItem, phone: String(g('phone')), amt: g('amt'), addr: String(g('addr') || '') } });
+        var rawAddr = String(g('addr')), addr = rawAddr.replace(/\s+/g, ' ').trim();
+        if (!addr) check.push('주소');
+        else if (addr !== rawAddr) { st.addr++; fix.push('주소 공백'); }
+        var name = String(g('name')).trim(); if (!name) check.push('받는 분');
+        if (check.length) st.check++;
+        out.push({ key: key, ch: ch, chName: CHANNELS[ch].name, no: no || '(없음)', date: date || String(g('date')), product: p ? p.name : rawItem, pid: p ? p.id : null,
+          qty: qty || 0, amount: amt || 0, name: name, phone: ph || String(g('phone')), addr: addr, fix: fix, check: check,
+          raw: { item: rawItem, phone: String(g('phone')), amt: String(g('amt')), addr: rawAddr, date: String(g('date')) } });
       });
     });
     out.sort(function (a, b) { return (a.date + a.ch + a.no).localeCompare(b.date + b.ch + b.no); });
+    var ok = out.filter(function (o) { return !o.check.length; }); // 확인할 줄은 합계·발송에서 뺀다
 
     var byProduct = PRODUCTS.map(function (p) {
-      var q = 0, s = 0; out.forEach(function (o) { if (o.pid === p.id) { q += o.qty; s += o.amount; } });
+      var q = 0, s = 0; ok.forEach(function (o) { if (o.pid === p.id) { q += o.qty; s += o.amount; } });
       return { name: p.name, qty: q, sales: s };
     });
-    var unk = out.filter(function (o) { return !o.pid; });
-    if (unk.length) byProduct.push({ name: '확인 필요 (상품을 알 수 없음)', qty: unk.reduce(function (a, o) { return a + o.qty; }, 0), sales: unk.reduce(function (a, o) { return a + o.amount; }, 0) });
     var settle = Object.keys(CHANNELS).filter(function (k) { return used[k]; }).map(function (k) {
-      var c = CHANNELS[k], n = 0, s = 0; out.forEach(function (o) { if (o.ch === k) { n++; s += o.amount; } });
+      var c = CHANNELS[k], nos = {}, s = 0; ok.forEach(function (o) { if (o.ch === k) { nos[o.no] = 1; s += o.amount; } });
       var fee = Math.round(s * c.fee);
-      return { name: c.name, orders: n, sales: s, rate: c.fee, fee: fee, net: s - fee };
+      return { name: c.name, orders: Object.keys(nos).length, sales: s, rate: c.fee, fee: fee, net: s - fee };
     });
     var groups = {}, ship = [];
-    out.forEach(function (o) {
-      var key = o.name + '|' + digits(o.phone) + '|' + o.addr.replace(/\s/g, '');
-      if (!groups[key]) { groups[key] = { name: o.name, phone: o.phone, addr: o.addr, items: {}, orders: [], chs: {} }; ship.push(groups[key]); }
-      var g = groups[key]; g.items[o.product] = (g.items[o.product] || 0) + o.qty; g.orders.push(o.no); g.chs[o.chName] = 1;
+    ok.forEach(function (o) {
+      var k = o.name + '|' + digits(o.phone) + '|' + o.addr.replace(/\s/g, '');
+      if (!groups[k]) { groups[k] = { name: o.name, phone: o.phone, addr: o.addr, items: {}, orders: [], chs: {} }; ship.push(groups[k]); }
+      var g = groups[k]; g.items[o.product] = (g.items[o.product] || 0) + o.qty;
+      if (g.orders.indexOf(o.no) < 0) g.orders.push(o.no);
+      g.chs[o.chName] = 1;
     });
     ship.forEach(function (g) {
       g.summary = Object.keys(g.items).map(function (k) { return k.replace(' 250g', '') + ' ' + g.items[k]; }).join(', ');
       g.merged = g.orders.length > 1;
     });
     st.merged = ship.filter(function (g) { return g.merged; }).length;
-    return { orders: out, byProduct: byProduct, settle: settle, ship: ship, stats: st, unknown: unknown };
+    st.orders = ok.length;
+    return { orders: out, byProduct: byProduct, settle: settle, ship: ship, stats: st };
   }
 
   window.XDEMO = { PRODUCTS: PRODUCTS, CHANNELS: CHANNELS, makeSamples: makeSamples, process: process, detect: detect };
