@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오후공방 관리 (시연)</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #ffffff; --ink: #111418; --sub: #6a7079; --line: #dfe2e6; --head: #f6f7f9;
+    --blue: #174eca; --red: #c8352b; --grey: #8a9099; --mark: #fff4c2;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif; font-size: 14px; line-height: 1.5; }
+  button, input, textarea { font: inherit; color: inherit; }
+
+  .demo { background: var(--head); border-bottom: 1px solid var(--line); color: var(--sub); font-size: 12.5px; padding: 7px 24px; }
+  .demo a { color: var(--blue); font-weight: 600; }
+
+  header { display: flex; align-items: center; gap: 18px; padding: 16px 24px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 26px; letter-spacing: -.02em; }
+  header .desc { color: var(--sub); }
+  .datenav { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .datenav .cur { font-size: 20px; font-weight: 600; min-width: 150px; text-align: center; }
+  .icon { width: 34px; height: 34px; border: 1px solid transparent; background: none; cursor: pointer; font-size: 18px; }
+  .icon:hover { border-color: var(--line); }
+  .plain { padding: 6px 12px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+  .plain:hover { border-color: var(--ink); }
+
+  .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 360px; min-height: calc(100vh - 110px); }
+  .main { padding: 18px 24px 40px; min-width: 0; }
+  aside { border-left: 1px solid var(--line); padding: 20px 24px 40px; }
+
+  .stats { display: flex; flex-wrap: wrap; align-items: center; gap: 0; margin-bottom: 14px; }
+  .stats span { padding: 0 14px; border-left: 1px solid var(--line); color: var(--sub); }
+  .stats span:first-child { padding-left: 0; border-left: 0; color: var(--ink); font-weight: 600; }
+  .stats b { color: var(--ink); font-weight: 600; }
+  .newbtn { padding: 2px 8px; border: 0; background: var(--mark); font-weight: 600; cursor: pointer; }
+  .tools { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tools input { flex: 1; min-width: 200px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 0; }
+  .tools input:focus { outline: 2px solid var(--blue); outline-offset: -1px; }
+
+  table.grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .grid th, .grid td { border: 1px solid var(--line); vertical-align: top; }
+  .grid thead th { background: var(--head); font-weight: 600; padding: 10px 8px; text-align: center; }
+  .grid thead th small { display: block; font-weight: 400; color: var(--sub); }
+  .grid th.t { width: 72px; font-size: 16px; vertical-align: middle; background: #fff; }
+  .grid td { padding: 6px; }
+  .cap { display: flex; justify-content: space-between; color: var(--sub); font-size: 12px; padding: 2px 4px 4px; }
+  .cap .full { color: var(--red); font-weight: 600; }
+  .bk { display: block; width: 100%; text-align: left; padding: 7px 8px; border: 1px solid transparent; background: none; cursor: pointer; }
+  .bk + .bk { border-top: 1px solid var(--line); }
+  .bk:hover { background: var(--head); }
+  .bk.sel { border: 1px solid var(--blue); background: #f2f6ff; }
+  .bk.new { background: var(--mark); }
+  .bk .n { font-weight: 600; font-size: 15px; }
+  .bk .new-tag { font-size: 11.5px; color: var(--ink); font-weight: 600; margin-left: 6px; }
+  .bk .s { font-size: 12.5px; }
+  .bk .p { color: var(--sub); font-size: 12.5px; }
+  .s-확정 { color: var(--blue); }
+  .s-방문완료 { color: var(--grey); }
+  .s-취소 { color: var(--red); }
+  .s-노쇼 { color: var(--red); font-weight: 600; }
+  .bk.cx .n { text-decoration: line-through; color: var(--grey); }
+  .empty { color: #b3b8bf; font-size: 12.5px; padding: 6px 8px; }
+
+  .closed { padding: 60px 0; text-align: center; color: var(--sub); border: 1px solid var(--line); }
+  .results { width: 100%; border-collapse: collapse; }
+  .results th, .results td { border-bottom: 1px solid var(--line); padding: 9px 8px; text-align: left; }
+  .results th { background: var(--head); font-weight: 600; }
+  .results tr { cursor: pointer; }
+  .results tbody tr:hover { background: var(--head); }
+
+  aside h2 { margin: 0 0 12px; font-size: 16px; }
+  .who { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .who b { font-size: 22px; }
+  .who .s { font-size: 15px; font-weight: 600; }
+  aside dl { display: grid; grid-template-columns: 76px 1fr; margin: 0 0 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  aside dt { color: var(--sub); padding: 4px 0; }
+  aside dd { margin: 0; padding: 4px 0; word-break: break-all; }
+  .acts { display: grid; gap: 8px; margin-bottom: 18px; }
+  .acts button { padding: 9px; border: 1px solid var(--blue); background: #fff; color: var(--blue); cursor: pointer; }
+  .acts button:hover { background: #f2f6ff; }
+  .acts button.danger { border-color: var(--red); color: var(--red); }
+  .acts button[disabled] { border-color: var(--line); color: #b3b8bf; cursor: default; background: #fff; }
+  aside textarea { width: 100%; min-height: 90px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 0; resize: vertical; }
+  aside textarea:focus { outline: 2px solid var(--blue); outline-offset: -1px; }
+  .count { text-align: right; color: var(--sub); font-size: 12px; }
+  .placeholder { color: var(--sub); padding: 30px 0; }
+  .log { margin-top: 18px; color: var(--sub); font-size: 12.5px; }
+  .log div { padding: 3px 0; border-top: 1px dashed var(--line); }
+
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 11px 18px; font-size: 14px; display: none; z-index: 9; max-width: calc(100vw - 32px); }
+
+  @media (max-width: 960px) {
+    .wrap { grid-template-columns: 1fr; }
+    aside { border-left: 0; border-top: 1px solid var(--ink); }
+  }
+  @media (max-width: 720px) {
+    header { padding: 12px 16px; gap: 8px; }
+    header h1 { font-size: 21px; }
+    header .desc { display: none; }
+    .datenav { margin-left: 0; width: 100%; justify-content: space-between; }
+    .datenav .cur { font-size: 17px; min-width: 0; }
+    .demo { padding: 7px 16px; }
+    .main, aside { padding-left: 16px; padding-right: 16px; }
+    .stats span { padding: 0 8px; font-size: 13px; }
+    /* 좁은 화면: 시간 줄마다 수업을 세로로 쌓는다 */
+    table.grid, .grid tbody, .grid tr, .grid td, .grid th { display: block; width: 100% !important; }
+    .grid thead { display: none; }
+    .grid th.t { text-align: left; padding: 10px 8px; background: var(--head); border-bottom: 0; }
+    .grid td { border-top: 0; }
+    .grid td::before { content: attr(data-c); display: block; font-weight: 600; padding: 2px 4px; }
+    .results thead { display: none; }
+    .results td:nth-child(5) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="demo">시연용 관리자 화면입니다. 로그인은 생략했고, 데이터는 이 브라우저에만 저장됩니다. <a href="./" target="_blank" rel="noopener">손님 예약 화면 열기</a></div>
+
+<header>
+  <h1>오후공방 관리</h1>
+  <span class="desc">도자기 원데이 클래스 예약 관리</span>
+  <div class="datenav">
+    <button class="icon" id="prev" aria-label="이전 날">&#8249;</button>
+    <span class="cur" id="cur"></span>
+    <button class="icon" id="next" aria-label="다음 날">&#8250;</button>
+    <button class="plain" id="today">오늘</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="main">
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <input id="q" type="search" placeholder="이름, 번호 뒷자리, 예약번호로 찾기">
+      <button class="plain" id="csv">이 날짜 엑셀(CSV) 받기</button>
+      <button class="plain" id="reset">시연 데이터 처음으로</button>
+    </div>
+    <div id="board"></div>
+  </div>
+  <aside id="panel"></aside>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  var O = window.OHU, db = O.load();
+  var day = O.ymd(O.today()), selId = null, seen = {}, showNew = false;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fmt(s) { var d = O.parse(s); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 (' + O.WD[d.getDay()] + ')'; }
+  function find(id) { for (var i = 0; i < db.bookings.length; i++) if (db.bookings[i].id === id) return db.bookings[i]; return null; }
+
+  // 손님 화면에서 들어온 예약 중 아직 열어 보지 않은 것은 노랗게 표시
+  try { seen = JSON.parse(localStorage.getItem('ohu-demo-seen') || '{}'); } catch (e) { seen = {}; }
+  function markSeen(id) { seen[id] = 1; try { localStorage.setItem('ohu-demo-seen', JSON.stringify(seen)); } catch (e) {} }
+  function isNew(b) { return b.source === 'web' && !seen[b.id]; }
+
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.style.display = 'block';
+    clearTimeout(toast.h); toast.h = setTimeout(function () { t.style.display = 'none'; }, 2600);
+  }
+
+  function dayBookings() { return db.bookings.filter(function (b) { return b.date === day; }); }
+
+  function renderStats() {
+    var list = dayBookings(), c = { 확정: 0, 방문완료: 0, 취소: 0, 노쇼: 0 }, people = 0, sales = 0;
+    list.forEach(function (b) {
+      c[b.status]++;
+      if (b.status !== '취소') { people += b.people; if (b.status !== '노쇼') sales += O.cls(b.classId).price * b.people; }
+    });
+    var news = db.bookings.filter(isNew).length;
+    $('stats').innerHTML = '<span>총 예약 ' + list.length + '건</span>' +
+      '<span>인원 <b>' + people + '명</b></span>' +
+      '<span class="s-확정">확정 ' + c.확정 + '</span><span>방문완료 ' + c.방문완료 + '</span>' +
+      '<span>취소 ' + c.취소 + '</span><span>노쇼 ' + c.노쇼 + '</span>' +
+      '<span>예상 매출 <b>' + O.won(sales) + '</b></span>' +
+      (news ? '<span><button class="newbtn" id="newbtn">새 예약 ' + news + '건 보기</button></span>' : '');
+  }
+
+  function bkHtml(b) {
+    var cx = b.status === '취소' ? ' cx' : '';
+    return '<button class="bk' + cx + (b.id === selId ? ' sel' : '') + (isNew(b) ? ' new' : '') + '" data-id="' + b.id + '">' +
+      '<span class="n">' + esc(b.name) + '</span>' + (isNew(b) ? '<span class="new-tag">새 예약</span>' : '') +
+      '<div class="p"><span class="s s-' + b.status + '">' + b.status + '</span> · ' + b.people + '명' + (b.memo ? ' · 요청 있음' : '') + '</div></button>';
+  }
+
+  function renderBoard() {
+    var q = $('q').value.trim();
+    if (showNew) return renderList('홈페이지로 들어온 새 예약', db.bookings.filter(isNew));
+    if (q) return renderSearch(q);
+    var d = O.parse(day);
+    if (O.isClosed(d)) { $('board').innerHTML = '<div class="closed">월요일은 휴무입니다.</div>'; return; }
+    var list = dayBookings();
+    var h = '<table class="grid"><thead><tr><th class="t">시간</th>' + O.CLASSES.map(function (c) {
+      return '<th>' + esc(c.short) + '<small>정원 ' + c.cap + '명</small></th>';
+    }).join('') + '</tr></thead><tbody>';
+    O.TIMES.forEach(function (t) {
+      h += '<tr><th class="t">' + t + '</th>';
+      O.CLASSES.forEach(function (c) {
+        var items = list.filter(function (b) { return b.time === t && b.classId === c.id; })
+          .sort(function (a, b) { return (a.status === '취소') - (b.status === '취소'); });
+        var used = O.used(db, day, t, c.id);
+        h += '<td data-c="' + esc(c.short) + '"><div class="cap"><span>' + used + ' / ' + c.cap + '명</span>' +
+          (used >= c.cap ? '<span class="full">마감</span>' : '<span>' + (c.cap - used) + '자리</span>') + '</div>' +
+          (items.length ? items.map(bkHtml).join('') : '<div class="empty">예약 없음</div>') + '</td>';
+      });
+      h += '</tr>';
+    });
+    $('board').innerHTML = h + '</tbody></table>';
+  }
+
+  function renderSearch(q) {
+    var k = q.toLowerCase(), digits = q.replace(/\D/g, '');
+    renderList('"' + q + '" 검색 결과', db.bookings.filter(function (b) {
+      return b.name.indexOf(q) >= 0 || b.id.toLowerCase().indexOf(k) >= 0 || (digits.length >= 3 && b.phone.replace(/\D/g, '').indexOf(digits) >= 0);
+    }));
+  }
+
+  function renderList(title, res) {
+    res = res.slice().sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
+    $('board').innerHTML = '<p style="color:var(--sub);margin:0 0 8px">' + esc(title) + ' ' + res.length + '건 (전체 날짜)' +
+      (showNew ? ' · <a href="#" id="back">표로 돌아가기</a>' : '') + '</p>' +
+      '<table class="results"><thead><tr><th>예약번호</th><th>이름</th><th>일시</th><th>클래스</th><th>인원</th><th>상태</th></tr></thead><tbody>' +
+      res.map(function (b) {
+        return '<tr data-id="' + b.id + '"><td>' + b.id + '</td><td>' + esc(b.name) + '</td><td>' + fmt(b.date) + ' ' + b.time + '</td><td>' +
+          esc(O.cls(b.classId).short) + '</td><td>' + b.people + '명</td><td class="s-' + b.status + '">' + b.status + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function renderPanel() {
+    var b = selId && find(selId);
+    if (!b) {
+      $('panel').innerHTML = '<h2>예약 상세 정보</h2><p class="placeholder">왼쪽 표에서 예약을 누르면 자세한 내용과 처리 버튼이 나옵니다.</p>';
+      return;
+    }
+    var c = O.cls(b.classId);
+    $('panel').innerHTML = '<h2>예약 상세 정보</h2>' +
+      '<div class="who"><b>' + esc(b.name) + '</b><span class="s s-' + b.status + '">' + b.status + '</span></div>' +
+      '<dl><dt>예약번호</dt><dd>' + b.id + '</dd><dt>일시</dt><dd>' + fmt(b.date) + ' ' + b.time + '</dd>' +
+      '<dt>클래스</dt><dd>' + esc(c.name) + '</dd><dt>인원</dt><dd>' + b.people + '명</dd>' +
+      '<dt>금액</dt><dd>' + O.won(c.price * b.people) + ' (현장 결제)</dd>' +
+      '<dt>연락처</dt><dd>' + esc(b.phone) + '</dd><dt>요청사항</dt><dd>' + (b.memo ? esc(b.memo) : '-') + '</dd>' +
+      '<dt>접수</dt><dd>' + new Date(b.createdAt).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) + (b.source === 'web' ? ' · 홈페이지' : '') + '</dd></dl>' +
+      '<h2>예약 관리</h2><div class="acts">' +
+      '<button data-st="방문완료"' + (b.status === '방문완료' ? ' disabled' : '') + '>방문 완료 처리</button>' +
+      '<button data-st="확정"' + (b.status === '확정' ? ' disabled' : '') + '>확정으로 되돌리기</button>' +
+      '<button data-sms="1">확인 문자 보내기</button>' +
+      '<button class="danger" data-st="노쇼"' + (b.status === '노쇼' ? ' disabled' : '') + '>노쇼 처리</button>' +
+      '<button class="danger" data-st="취소"' + (b.status === '취소' ? ' disabled' : '') + '>예약 취소</button></div>' +
+      '<h2>메모</h2><textarea id="note" maxlength="200" placeholder="내부 메모 (손님에게 보이지 않습니다)">' + esc(b.note || '') + '</textarea>' +
+      '<div class="count"><span id="nc">' + (b.note || '').length + '</span>/200</div>' +
+      (b.log && b.log.length ? '<div class="log">' + b.log.map(function (l) { return '<div>' + esc(l) + '</div>'; }).join('') + '</div>' : '');
+  }
+
+  function renderAll() { renderStats(); renderBoard(); renderPanel(); }
+  function setDay(d) { day = d; $('cur').textContent = fmt(day) + (day === O.ymd(O.today()) ? ' · 오늘' : ''); renderAll(); }
+
+  function select(id) {
+    selId = id; var b = find(id);
+    if (b && isNew(b)) markSeen(id);
+    renderAll();
+    if (window.innerWidth <= 960) $('panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  $('board').addEventListener('click', function (e) {
+    if (e.target.id === 'back') { e.preventDefault(); showNew = false; renderAll(); return; }
+    var el = e.target.closest('[data-id]'); if (!el) return;
+    showNew = false;
+    var b = find(el.dataset.id);
+    if (b && b.date !== day) { $('q').value = ''; day = b.date; $('cur').textContent = fmt(day); }
+    select(el.dataset.id);
+  });
+
+  $('panel').addEventListener('click', function (e) {
+    var btn = e.target.closest('button'); if (!btn || btn.disabled) return;
+    db = O.load(); var b = find(selId); if (!b) return;
+    if (btn.dataset.sms) { toast(b.name + '님께 확인 문자를 보냈습니다. (시연이라 실제로 보내지지 않습니다)'); return; }
+    var to = btn.dataset.st;
+    if (to === '취소' && b.status === '확정' && !btn.dataset.sure) {
+      btn.dataset.sure = '1'; btn.textContent = '한 번 더 누르면 취소됩니다'; return;
+    }
+    if (b.status === '취소' && to !== '취소') {
+      var left = O.cls(b.classId).cap - O.used(db, b.date, b.time, b.classId);
+      if (left < b.people) { toast('그 사이 자리가 차서 되돌릴 수 없습니다. (남은 자리 ' + Math.max(0, left) + '명)'); return; }
+    }
+    b.log = b.log || [];
+    b.log.unshift(new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) + '  ' + b.status + ' → ' + to);
+    b.status = to; O.save(db); renderAll();
+    toast(b.name + '님 예약을 ' + to + (to === '취소' ? '했습니다.' : ' 처리했습니다.'));
+  });
+
+  $('panel').addEventListener('input', function (e) {
+    if (e.target.id !== 'note') return;
+    db = O.load(); var b = find(selId); if (!b) return;
+    b.note = e.target.value; $('nc').textContent = b.note.length; O.save(db);
+  });
+
+  $('stats').addEventListener('click', function (e) {
+    if (e.target.id !== 'newbtn') return;
+    showNew = true; $('q').value = ''; renderAll();
+  });
+
+  $('prev').onclick = function () { setDay(O.ymd(O.addDays(O.parse(day), -1))); };
+  $('next').onclick = function () { setDay(O.ymd(O.addDays(O.parse(day), 1))); };
+  $('today').onclick = function () { setDay(O.ymd(O.today())); };
+  $('q').addEventListener('input', function () { showNew = false; renderBoard(); });
+
+  $('csv').onclick = function () {
+    var rows = [['예약번호', '날짜', '시간', '클래스', '이름', '연락처', '인원', '금액', '상태', '요청사항', '메모']];
+    dayBookings().sort(function (a, b) { return a.time.localeCompare(b.time); }).forEach(function (b) {
+      var c = O.cls(b.classId);
+      rows.push([b.id, b.date, b.time, c.short, b.name, b.phone, b.people, c.price * b.people, b.status, b.memo || '', b.note || '']);
+    });
+    var csv = '﻿' + rows.map(function (r) { return r.map(O.cell).join(','); }).join('\r\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = '오후공방_예약_' + day + '.csv'; a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  };
+
+  $('reset').onclick = function () {
+    var btn = this;
+    if (!btn.dataset.sure) { btn.dataset.sure = '1'; btn.textContent = '한 번 더 누르면 초기화'; setTimeout(function () { delete btn.dataset.sure; btn.textContent = '시연 데이터 처음으로'; }, 3000); return; }
+    db = O.reset(); seen = {}; try { localStorage.removeItem('ohu-demo-seen'); } catch (e) {}
+    selId = null; delete btn.dataset.sure; btn.textContent = '시연 데이터 처음으로';
+    setDay(O.ymd(O.today())); toast('시연 데이터를 처음 상태로 되돌렸습니다.');
+  };
+
+  // 손님 화면(다른 탭)에서 예약하면 바로 반영
+  window.addEventListener('storage', function (e) {
+    if (e.key !== O.KEY) return;
+    var before = db.bookings.length; db = O.load();
+    if (db.bookings.length > before) {
+      var b = db.bookings[db.bookings.length - 1];
+      toast('새 예약: ' + b.name + '님, ' + fmt(b.date) + ' ' + b.time);
+    }
+    renderAll();
+  });
+
+  setDay(day);
+})();
+</script>
+</body>
+</html>
