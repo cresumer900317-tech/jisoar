@@ -6,7 +6,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ROUTES = ['', 'about', 'work', 'services', 'contact',
-          'products/wedding', 'products/guild-lounge']
+          'products/wedding', 'products/guild-lounge', 'privacy']
 REDIRECTS = {'ranklab': 'https://jirading.com/'}
 JIPICK = 'https://jipick.com/'
 EXPECTED = {'주요 메뉴': ['/work/', '/services/', JIPICK, '/about/'],
@@ -91,7 +91,7 @@ def audit(root=ROOT):
 def main():
     errors = audit()
     print('\n'.join(errors) if errors else
-          'PASS: 7 public pages and 1 redirect; navigation, H1, IDs, local links, anchors and media variants')
+          'PASS: 8 public pages and 1 redirect; navigation, H1, IDs, local links, anchors and media variants')
     return bool(errors)
 
 
